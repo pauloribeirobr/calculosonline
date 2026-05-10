@@ -1,0 +1,32 @@
+{
+  "name": "@calculosonline/core",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Core engine de cálculo do calculosonline.com.br — funções TypeScript puras, sem dependência de UI",
+  "exports": {
+    ".": "./src/index.ts",
+    "./trabalhista": "./src/trabalhista/index.ts",
+    "./impostos": "./src/impostos/index.ts",
+    "./financeiro": "./src/financeiro/index.ts",
+    "./investimentos": "./src/investimentos/index.ts",
+    "./saude": "./src/saude/index.ts",
+    "./negocios": "./src/negocios/index.ts",
+    "./tabelas": "./src/tabelas/index.ts",
+    "./utils": "./src/utils/index.ts"
+  },
+  "scripts": {
+    "build": "echo 'Core engine é consumido como source TS — sem build separado'",
+    "lint": "eslint src",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@calculosonline/tsconfig": "workspace:*",
+    "@vitest/coverage-v8": "^2.1.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0"
+  }
+}

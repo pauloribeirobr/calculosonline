@@ -1,0 +1,2 @@
+# Será preenchido com o Publisher ID do AdSense após aprovação
+# google.com, pub-XXXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

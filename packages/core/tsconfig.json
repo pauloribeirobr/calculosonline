@@ -1,0 +1,5 @@
+{
+  "extends": "@calculosonline/tsconfig/library.json",
+  "include": ["src/**/*", "vitest.config.ts"],
+  "exclude": ["node_modules", "dist", "coverage"]
+}

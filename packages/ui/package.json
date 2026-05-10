@@ -1,0 +1,26 @@
+{
+  "name": "@calculosonline/ui",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Componentes React reutilizáveis do calculosonline (formulários e resultados de calculadora)",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@calculosonline/tsconfig": "workspace:*",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.7.0"
+  }
+}

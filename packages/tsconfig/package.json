@@ -1,0 +1,11 @@
+{
+  "name": "@calculosonline/tsconfig",
+  "version": "0.0.1",
+  "private": true,
+  "exports": {
+    "./base.json": "./base.json",
+    "./nextjs.json": "./nextjs.json",
+    "./library.json": "./library.json"
+  },
+  "files": ["base.json", "nextjs.json", "library.json"]
+}
