@@ -1,5 +1,9 @@
 /**
- * Cálculos trabalhistas (CLT, FGTS, hora extra, rescisão, férias, 13º).
- * Implementações ficam para a Sprint 0.2.
+ * Cálculos trabalhistas (CLT, hora extra, rescisão, férias, 13º).
+ * Sprint 0.2: 5 calculadoras prioritárias implementadas.
  */
-export {}
+export * from './salario-liquido'
+export * from './hora-extra'
+export * from './decimo-terceiro'
+export * from './ferias'
+export * from './rescisao'

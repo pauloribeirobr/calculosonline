@@ -1,6 +1,6 @@
 /**
  * Tipos compartilhados pelo core engine.
- * Toda função de cálculo retorna um ResultadoCalculo padronizado.
+ * Toda função de cálculo retorna um ResultadoOuErro padronizado.
  */
 
 export interface ItemDetalhamento {
@@ -10,9 +10,11 @@ export interface ItemDetalhamento {
   formula?: string
 }
 
-export interface ResultadoCalculo<T = number> {
-  /** Valor principal do cálculo */
-  resultado: T
+export interface ResultadoCalculo<T = unknown> {
+  /** Valor numérico principal exibido como headline para o usuário */
+  resultado: number
+  /** Estrutura completa com todos os campos calculados */
+  dados: T
   /** Detalhamento linha a linha do cálculo */
   detalhamento: ItemDetalhamento[]
   /** Fórmula ou base de cálculo aplicada */
