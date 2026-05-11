@@ -25,7 +25,7 @@ export interface FieldMeta {
   prefix?: string
   /** Símbolo à direita do input ("/mês", "anos") */
   suffix?: string
-  type?: 'number' | 'text' | 'select' | 'radio'
+  type?: 'number' | 'text' | 'select' | 'radio' | 'date'
   options?: Array<{ value: string; label: string }>
 }
 
@@ -122,7 +122,11 @@ export function CalculatorForm<T extends ZodRawShape>({
                 <input
                   id={name}
                   type={fieldMeta.type ?? 'number'}
-                  inputMode={fieldMeta.type === 'text' ? 'text' : 'decimal'}
+                  inputMode={
+                    fieldMeta.type === 'text' || fieldMeta.type === 'date'
+                      ? 'text'
+                      : 'decimal'
+                  }
                   placeholder={fieldMeta.placeholder}
                   {...register(fieldName, {
                     valueAsNumber: (fieldMeta.type ?? 'number') === 'number',

@@ -1,26 +1,20 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import {
+  calculatorRegistry,
+  findCalculator,
+  getRelacionadas,
+} from '@/lib/calculators'
+import { gerarSchemasCalculadora } from '@/lib/schema'
+import { siteConfig } from '@/lib/seo'
+import { CalculadoraPageClient } from '@/components/calculadoras/CalculadoraPageClient'
 
-const CALCULADORAS = [
-  'rescisao-trabalhista',
-  'ferias',
-  'decimo-terceiro',
-  'hora-extra',
-  'fgts',
-  'salario-liquido',
-] as const
-
-type Slug = (typeof CALCULADORAS)[number]
-
-function isSlug(value: string): value is Slug {
-  return (CALCULADORAS as readonly string[]).includes(value)
-}
-
+// SSG — gera todas as páginas em build time
 export async function generateStaticParams() {
-  return CALCULADORAS.map((slug) => ({ slug }))
+  return calculatorRegistry.map((c) => ({ slug: c.slug }))
 }
 
-// ISR: revalida a cada 24h para refletir mudanças nas tabelas legislativas
+// ISR — revalida a cada 24h para refletir mudanças nas tabelas legislativas
 export const revalidate = 86400
 
 export async function generateMetadata({
@@ -29,13 +23,32 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const titulo = slug
-    .split('-')
-    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
-    .join(' ')
+  const calc = findCalculator(slug)
+  if (!calc) return {}
+
+  const title = `${calc.tituloLongo} Online e Gratuita 2026`
+  const url = `${siteConfig.url}/calculadora/${calc.slug}`
+
   return {
-    title: `Calculadora de ${titulo} Online e Gratuita`,
-    description: `Calcule ${titulo.toLowerCase()} online de forma gratuita, precisa e atualizada com a legislação vigente em 2026.`,
+    title,
+    description: calc.descricao,
+    keywords: calc.palavrasChave,
+    openGraph: {
+      title,
+      description: calc.descricao,
+      url,
+      siteName: siteConfig.name,
+      locale: 'pt_BR',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: calc.descricao,
+    },
+    alternates: {
+      canonical: `/calculadora/${calc.slug}`,
+    },
   }
 }
 
@@ -45,19 +58,22 @@ export default async function CalculadoraPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
+  const calc = findCalculator(slug)
+  if (!calc) notFound()
 
-  if (!isSlug(slug)) {
-    notFound()
-  }
+  const relacionadas = getRelacionadas(calc.relacionadas)
+  const schemas = gerarSchemasCalculadora(calc)
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-        Calculadora: <span className="text-brand-700">{slug}</span>
-      </h1>
-      <p className="mt-4 text-gray-600">
-        Em desenvolvimento — implementação completa na Sprint 1.2 (UI) e Sprint 1.3 (página).
-      </p>
-    </main>
+    <>
+      {schemas.map((schema, i) => (
+        <script
+          key={i}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
+      <CalculadoraPageClient config={calc} relacionadas={relacionadas} />
+    </>
   )
 }

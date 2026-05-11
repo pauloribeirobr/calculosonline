@@ -1,0 +1,48 @@
+'use client'
+
+import { z } from 'zod'
+import { CalculatorForm } from '@calculosonline/ui'
+import { calcularPoupanca } from '@calculosonline/core/investimentos'
+import type { FormProps } from './types'
+
+const schema = z.object({
+  valorInicial: z.number().min(0, 'Valor não pode ser negativo'),
+  prazoMeses: z.number().positive('Prazo deve ser positivo'),
+  aporteMensal: z.number().min(0).default(0),
+  selicAnual: z.number().min(0).default(0.1325),
+})
+
+export function PoupancaForm({ onResult, onError, isLoading }: FormProps) {
+  function handleSubmit(data: z.infer<typeof schema>) {
+    const r = calcularPoupanca(data)
+    if (r.sucesso) onResult(r.dados)
+    else onError?.(r.erros)
+  }
+
+  return (
+    <CalculatorForm
+      schema={schema}
+      fields={{
+        valorInicial: {
+          label: 'Valor inicial',
+          prefix: 'R$',
+          placeholder: '5000',
+          type: 'number',
+        },
+        prazoMeses: { label: 'Prazo', suffix: 'meses', placeholder: '12' },
+        aporteMensal: {
+          label: 'Aporte mensal',
+          prefix: 'R$',
+          hint: 'Contribuição mensal adicional (opcional)',
+        },
+        selicAnual: {
+          label: 'SELIC anual (decimal)',
+          hint: 'Default 0,1325 (13,25% — referência 2026)',
+        },
+      }}
+      onSubmit={handleSubmit}
+      submitLabel="Calcular Poupança"
+      isLoading={!!isLoading}
+    />
+  )
+}
