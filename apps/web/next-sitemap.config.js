@@ -2,6 +2,7 @@
 module.exports = {
   siteUrl: 'https://calculosonline.com.br',
   generateRobotsTxt: false, // robots.txt já existe em public/
+  generateIndexSitemap: false,
   changefreq: 'weekly',
   priority: 0.8,
   sitemapSize: 5000,
