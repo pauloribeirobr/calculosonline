@@ -1,0 +1,141 @@
+# Calculadora de Empréstimo Pessoal Online 2026
+
+Antes de contratar um empréstimo, é fundamental comparar o **Custo Efetivo Total (CET)** —
+não apenas a taxa de juros anunciada. Nossa calculadora mostra a parcela, o total pago e
+o custo real do crédito.
+
+## Sistemas de amortização: Price, SAC e SAM
+
+A escolha do sistema de amortização impacta diretamente o valor das parcelas e o total pago.
+
+### Sistema Price (parcelas iguais)
+
+O mais comum em empréstimos pessoais e financiamentos de veículos. As parcelas são iguais
+do início ao fim, mas a composição muda: no início paga-se mais juros e menos amortização;
+no final, o inverso.
+
+```
+PMT = P × [i × (1 + i)^n] ÷ [(1 + i)^n − 1]
+```
+
+Onde:
+- **PMT** = parcela mensal
+- **P** = valor do empréstimo
+- **i** = taxa de juros mensal (em decimal)
+- **n** = número de parcelas
+
+### Sistema SAC (amortização constante)
+
+A amortização (capital devolvido) é sempre igual, mas os juros decrescem ao longo do tempo.
+Por isso, a **primeira parcela é a maior** e a última a menor.
+
+```
+Amortização = P ÷ n (constante)
+Juros_k = Saldo devedor_k × i
+Parcela_k = Amortização + Juros_k
+```
+
+### Comparativo: Price vs. SAC
+
+Para um empréstimo de R$ 20.000 a 2% ao mês por 24 meses:
+
+| | Sistema Price | Sistema SAC |
+|---|:---:|:---:|
+| 1ª parcela | R$ 1.029,82 | R$ 1.233,33 |
+| Última parcela | R$ 1.029,82 | R$ 849,65 |
+| **Total pago** | **R$ 24.715,68** | **R$ 24.300,74** |
+| Economia | — | R$ 414,94 |
+
+O SAC é mais barato no total, mas as parcelas iniciais são maiores.
+
+### Sistema SAM (misto)
+
+Média aritmética das parcelas do Price e do SAC. Pouco usado em empréstimos pessoais —
+mais comum em programas habitacionais.
+
+## O que é o CET (Custo Efetivo Total)?
+
+O **CET** engloba todos os custos da operação de crédito: taxa de juros, tarifas, IOF,
+seguros obrigatórios e outros encargos. É expresso em percentual ao ano e deve ser
+informado obrigatoriamente pelas instituições financeiras (Resolução CMN nº 3.517/2007).
+
+**Sempre compare o CET**, não apenas a taxa de juros. Uma oferta com taxa de 1,8% ao mês
+mas com tarifas altas pode ter CET maior que uma com taxa de 2% ao mês sem tarifas.
+
+## IOF no empréstimo pessoal
+
+O IOF (Imposto sobre Operações Financeiras) incide sobre empréstimos pessoais:
+
+- **IOF diário:** 0,0082% ao dia sobre o saldo devedor (limitado a 365 dias)
+- **IOF adicional:** 0,38% sobre o valor total do empréstimo
+
+Para empréstimos longos (mais de 1 ano), o IOF diário tem limite máximo de 3% sobre o valor.
+
+## Tipos de empréstimo pessoal no Brasil
+
+| Tipo | Taxa média | Garantia | Indicado para |
+|---|:---:|---|---|
+| Empréstimo pessoal banco | 3–5% a.m. | Sem garantia real | Necessidades imediatas |
+| Consignado (CLT/aposentado) | 1,5–2,5% a.m. | Desconto em folha | Melhor custo-benefício |
+| Consignado FGTS | ~1,5% a.m. | FGTS | Quem tem saldo |
+| Crédito pessoal fintech | 2–4% a.m. | Análise de dados | Formalização digital |
+| Cheque especial | 8–15% a.m. | Sem garantia | Emergência de curtíssimo prazo |
+| Cartão de crédito rotativo | 10–17% a.m. | Sem garantia | Evitar — custo altíssimo |
+
+## Consignado FGTS: como funciona
+
+O empréstimo consignado com garantia de FGTS (Lei 14.431/2022) permite usar saldo do FGTS
+como garantia. As parcelas são debitadas diretamente do FGTS a cada aniversário. O tomador
+não precisa ser CLT ativo — aposentados também podem usar.
+
+Limite de comprometimento: até 10% do saldo do FGTS + 100% do valor que receberia no
+saque-aniversário.
+
+## Quitação antecipada
+
+A quitação antecipada de empréstimos gera desconto nos juros futuros. O cálculo usa o
+**valor presente** das parcelas restantes, descontado pela taxa contratada.
+
+No sistema Price, o desconto na antecipação pode ser menor do que parece, pois os juros
+maiores foram pagos nas parcelas iniciais (início do contrato).
+
+## Portabilidade de crédito
+
+A portabilidade permite migrar um empréstimo de um banco para outro com taxa menor, sem
+pagar taxa de portabilidade (proibida pelo Banco Central). O banco receptor quita a dívida
+original e emite novo contrato com as mesmas condições de prazo e saldo devedor.
+
+**Vale a pena quando** a diferença de taxa for significativa (acima de 0,3 p.p. ao mês)
+e ainda houver muitas parcelas a pagar.
+
+## Perguntas frequentes sobre empréstimos
+
+**Qual a taxa máxima de juros para empréstimo pessoal?**
+
+No Brasil, não há teto legal de juros para empréstimos pessoais (exceto consignado). O Banco
+Central divulga as taxas médias de mercado, que servem como referência. Taxas acima da
+média cobrada pelo mercado podem ser contestadas judicialmente como abusivas, com base no
+Código de Defesa do Consumidor.
+
+**Empréstimo no nome de terceiro é crime?**
+
+Sim. Usar o nome de outra pessoa para obter crédito sem autorização é estelionato (art. 171
+do Código Penal). O titular do empréstimo responde pela dívida perante o banco, independentemente
+de quem recebeu o dinheiro.
+
+**Como funciona o score para aprovação?**
+
+As instituições financeiras analisam o histórico de pagamentos (Serasa, SPC, Quod),
+comprometimento de renda atual, tempo de relacionamento com o banco e dados cadastrais.
+Score alto não garante aprovação, mas taxas menores.
+
+**Posso quitar parcelas do empréstimo adiantadas?**
+
+Sim. O Código de Defesa do Consumidor garante o direito de quitar antecipadamente com
+redução proporcional de juros. O banco não pode cobrar multa pela antecipação.
+
+**Empréstimo entre pessoas físicas é legal?**
+
+Sim, mas deve ser formalizado em contrato. Juros acima de 1% ao mês (12% ao ano) podem
+caracterizar usura criminal (Decreto 22.626/1933). Empréstimos entre amigos e familiares
+sem juros não têm problema legal, mas recomenda-se formalização escrita.

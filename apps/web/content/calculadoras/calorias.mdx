@@ -1,0 +1,161 @@
+# Calculadora de Calorias e Gasto Energético Online
+
+A calculadora de calorias estima seu **Gasto Energético Total Diário (GET)** com base no
+metabolismo basal e no nível de atividade física. Use esse número como base para emagrecer,
+manter ou ganhar peso de forma saudável.
+
+## Taxa Metabólica Basal (TMB): o que é?
+
+A **TMB** (ou BMR, em inglês) é a quantidade de calorias que seu corpo queima em repouso
+total — apenas para manter funções vitais como respiração, circulação e temperatura corporal.
+Representa 60–75% do gasto calórico total.
+
+## Fórmula de Mifflin-St Jeor (mais precisa)
+
+A equação de Mifflin-St Jeor (1990) é atualmente a mais recomendada pela American Dietetic
+Association:
+
+**Para homens:**
+```
+TMB = (10 × peso em kg) + (6,25 × altura em cm) − (5 × idade) + 5
+```
+
+**Para mulheres:**
+```
+TMB = (10 × peso em kg) + (6,25 × altura em cm) − (5 × idade) − 161
+```
+
+**Exemplo:** mulher, 30 anos, 65 kg, 1,65 m (165 cm):
+
+```
+TMB = (10 × 65) + (6,25 × 165) − (5 × 30) − 161
+TMB = 650 + 1.031,25 − 150 − 161
+TMB = 1.370 kcal/dia
+```
+
+## Fórmula de Harris-Benedict revisada
+
+Alternativa frequentemente usada, publicada em 1984 (revisão de Roza & Shizgal):
+
+**Para homens:**
+```
+TMB = 88,362 + (13,397 × peso) + (4,799 × altura cm) − (5,677 × idade)
+```
+
+**Para mulheres:**
+```
+TMB = 447,593 + (9,247 × peso) + (3,098 × altura cm) − (4,330 × idade)
+```
+
+## Fator de atividade física (TDEE)
+
+O **Gasto Energético Total (GET ou TDEE)** multiplica a TMB pelo fator de atividade:
+
+| Nível de atividade | Descrição | Multiplicador |
+|---|---|:---:|
+| Sedentário | Sem exercício ou trabalho de escritório | TMB × 1,2 |
+| Levemente ativo | Exercício leve 1–3 dias/semana | TMB × 1,375 |
+| Moderadamente ativo | Exercício moderado 3–5 dias/semana | TMB × 1,55 |
+| Muito ativo | Exercício intenso 6–7 dias/semana | TMB × 1,725 |
+| Extremamente ativo | Atleta de alto rendimento / trabalho físico pesado | TMB × 1,9 |
+
+**Exemplo:** continuando o caso da mulher (TMB = 1.370 kcal), com atividade moderada:
+
+```
+TDEE = 1.370 × 1,55 = 2.123 kcal/dia
+```
+
+## Déficit calórico para emagrecer
+
+A relação entre calorias e peso é aproximada pelo **princípio de 7.700 kcal por kg de
+gordura**:
+
+```
+Déficit de 500 kcal/dia → perda de ~0,5 kg de gordura por semana
+Déficit de 1.000 kcal/dia → perda de ~1 kg de gordura por semana
+```
+
+**Déficit mínimo recomendado:** nunca coma menos de 1.200 kcal/dia (mulheres) ou 1.500
+kcal/dia (homens) sem acompanhamento médico — abaixo disso há risco de deficiências
+nutricionais e perda de massa muscular.
+
+**Déficit máximo seguro:** 500–1.000 kcal abaixo do TDEE. Déficits maiores aumentam a
+perda de músculo e reduzem o metabolismo basal.
+
+## Superávit calórico para ganho de massa
+
+Para ganhar massa muscular magra:
+
+```
+Superávit de 200–500 kcal/dia → ganho de ~0,5 kg/semana (incluindo músculo e alguma gordura)
+```
+
+Superávits maiores tendem a gerar mais gordura que músculo — especialmente em iniciantes
+que já passaram da fase inicial de ganhos rápidos.
+
+## Distribuição de macronutrientes
+
+As calorias vêm de três macronutrientes:
+
+| Macronutriente | Calorias por grama | Função principal |
+|---|:---:|---|
+| Proteína | 4 kcal/g | Construção muscular, saciedade |
+| Carboidrato | 4 kcal/g | Energia (glicogênio) |
+| Gordura | 9 kcal/g | Hormônios, vitaminas lipossolúveis |
+
+**Distribuição recomendada por objetivo:**
+
+| Objetivo | Proteína | Carboidrato | Gordura |
+|---|:---:|:---:|:---:|
+| Manutenção | 15–20% | 50–55% | 25–30% |
+| Emagrecimento | 25–35% | 35–45% | 25–30% |
+| Ganho muscular | 25–30% | 45–55% | 20–25% |
+
+## Calorias de alimentos comuns
+
+| Alimento | Porção | Calorias |
+|---|---|:---:|
+| Arroz branco cozido | 100g | 128 kcal |
+| Feijão cozido | 100g | 77 kcal |
+| Frango grelhado (peito) | 100g | 165 kcal |
+| Ovo cozido | 1 unidade (50g) | 78 kcal |
+| Banana | 1 média (100g) | 89 kcal |
+| Pão francês | 1 unidade (50g) | 134 kcal |
+| Azeite de oliva | 1 colher (13g) | 115 kcal |
+| Refrigerante cola | 350ml (lata) | 140 kcal |
+
+## Perguntas frequentes sobre calorias
+
+**As fórmulas de TMB são precisas para mim?**
+
+As fórmulas de TMB têm margem de erro de 10–15%. Fatores como composição corporal (mais
+músculo = metabolismo mais alto), histórico de dietas e genética afetam o resultado real.
+Use o resultado como ponto de partida e ajuste conforme a resposta do seu corpo ao longo
+de 2–4 semanas.
+
+**Posso perder peso sem contar calorias?**
+
+Sim. Contar calorias é uma ferramenta, não obrigação. Estratégias como comer alimentos
+minimamente processados, priorizando proteína e fibras, reduzindo açúcar e bebidas
+calóricas, tendem a criar déficit calórico naturalmente. O déficit é necessário — mas a
+forma de criá-lo pode variar.
+
+**Exercício compensa uma alimentação ruim?**
+
+Parcialmente. Uma hora de corrida moderada queima ~400–600 kcal — o equivalente a um
+fast food médio. Para emagrecimento, a dieta é mais eficiente que o exercício para criar
+déficit calórico. O exercício é fundamental para saúde, preservação muscular, humor e
+manutenção do peso a longo prazo.
+
+**Calorias de alimentos diet e light são zero?**
+
+Alimentos diet têm restrição de algum nutriente (geralmente açúcar para diabéticos) mas
+não são necessariamente hipocalóricos. Alimentos light têm pelo menos 25% menos calorias
+que o produto convencional — mas isso não significa que têm poucas calorias. Verifique
+sempre a tabela nutricional.
+
+**Água tem calorias?**
+
+Não. Água, chá e café sem açúcar têm zero calorias. Bebidas como suco de fruta natural,
+leite, achocolatado e bebidas alcoólicas têm calorias significativas e devem ser contadas.
+O álcool tem 7 kcal/g — quase o dobro do açúcar.

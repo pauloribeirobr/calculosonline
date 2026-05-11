@@ -8,6 +8,7 @@ import {
 import { gerarSchemasCalculadora } from '@/lib/schema'
 import { siteConfig } from '@/lib/seo'
 import { CalculadoraPageClient } from '@/components/calculadoras/CalculadoraPageClient'
+import { ContentLoader } from '@/components/ContentLoader'
 
 // SSG — gera todas as páginas em build time
 export async function generateStaticParams() {
@@ -74,6 +75,7 @@ export default async function CalculadoraPage({
         />
       ))}
       <CalculadoraPageClient config={calc} relacionadas={relacionadas} />
+      <ContentLoader slug={slug} />
     </>
   )
 }
