@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import * as Explainability from '../explainability'
 import {
   anosCompletos,
   arredondar,
@@ -117,5 +118,48 @@ describe('formatarBRL', () => {
 
   it('formata zero', () => {
     expect(formatarBRL(0)).toContain('0,00')
+  })
+})
+
+describe('criarMemoriaCalculo', () => {
+  it('gera passos reproduzíveis a partir do detalhamento', () => {
+    const memoria = Explainability.criarMemoriaCalculo(
+      [
+        { descricao: 'Salário Base', valor: 3000, tipo: 'neutro' },
+        {
+          descricao: 'INSS',
+          valor: 280,
+          tipo: 'debito',
+          formula: 'Tabela progressiva por faixa',
+        },
+        { descricao: 'Total Líquido', valor: 2720, tipo: 'neutro' },
+      ],
+      { baseCalculo: 'Salário bruto - INSS' },
+    )
+
+    expect(memoria.resumo).toBe('Salário bruto - INSS')
+    expect(memoria.passos).toHaveLength(3)
+    expect(memoria.passos[0]).toMatchObject({
+      id: 'passo-01-salario-base',
+      ordem: 1,
+      tipo: 'entrada',
+    })
+    expect(memoria.passos[1]?.formula).toBe('Tabela progressiva por faixa')
+    expect(memoria.passos[2]?.tipo).toBe('resultado')
+  })
+
+  it('classifica avisos por termos configuráveis', () => {
+    const memoria = Explainability.criarMemoriaCalculo(
+      [
+        {
+          descricao: 'ATENÇÃO: faturamento acima do teto MEI',
+          valor: 97000,
+          tipo: 'debito',
+        },
+      ],
+      { baseCalculo: 'Limite anual MEI' },
+    )
+
+    expect(memoria.passos[0]?.tipo).toBe('aviso')
   })
 })

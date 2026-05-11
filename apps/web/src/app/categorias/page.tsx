@@ -7,6 +7,7 @@ import {
   type CategoriaCalc,
 } from '@/lib/calculators'
 import { Breadcrumbs } from '@/components/common/Breadcrumbs'
+import { CalculatorIcon, CategoryIcon } from '@/components/common/CalculatorIcon'
 
 export const metadata: Metadata = {
   title: 'Todas as Categorias de Calculadoras',
@@ -49,7 +50,7 @@ export default function CategoriasPage() {
                   href={`/categoria/${slug}`}
                   className="inline-flex items-center gap-2 hover:text-brand-700"
                 >
-                  <span aria-hidden>{cat.emoji}</span>
+                  <CategoryIcon categoria={slug} size="sm" />
                   {cat.label}
                 </Link>
               </h2>
@@ -67,10 +68,8 @@ export default function CategoriasPage() {
                     href={`/calculadora/${calc.slug}`}
                     className="flex flex-col gap-1 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-brand-300 hover:shadow-sm"
                   >
-                    <span className="font-medium text-gray-900">
-                      <span className="mr-1" aria-hidden>
-                        {calc.icone}
-                      </span>
+                    <span className="flex items-center gap-2 font-medium text-gray-900">
+                      <CalculatorIcon icon={calc.icone} categoria={calc.categoria} size="sm" />
                       {calc.titulo}
                     </span>
                     <span className="line-clamp-2 text-xs text-gray-500">

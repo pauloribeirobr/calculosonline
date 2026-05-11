@@ -24,6 +24,9 @@ export function CalculadoraPageClient({ config, relacionadas }: Props) {
   const [erros, setErros] = useState<ErroValidacao[]>([])
 
   const FormComponent = getCalculadoraForm(config.slug)
+  const resultProps = config.formatoResultado
+    ? { formato: config.formatoResultado }
+    : {}
 
   return (
     <CalculatorLayout
@@ -75,7 +78,11 @@ export function CalculadoraPageClient({ config, relacionadas }: Props) {
           </p>
         )
       }
-      result={resultado ? <CalculatorResult resultado={resultado} titulo="Resultado" /> : null}
+      result={
+        resultado ? (
+          <CalculatorResult resultado={resultado} titulo="Resultado" {...resultProps} />
+        ) : null
+      }
       content={
         <>
           <h2>Sobre esta calculadora</h2>

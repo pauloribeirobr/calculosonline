@@ -9,6 +9,7 @@ import {
 } from '@/lib/calculators'
 import { siteConfig } from '@/lib/seo'
 import { Breadcrumbs } from '@/components/common/Breadcrumbs'
+import { CalculatorIcon, CategoryIcon } from '@/components/common/CalculatorIcon'
 
 export async function generateStaticParams() {
   return Object.keys(CATEGORIAS).map((categoria) => ({ categoria }))
@@ -62,9 +63,7 @@ export default async function CategoriaPage({
 
       <header>
         <div className="mb-2 flex items-center gap-3">
-          <span className="text-4xl" aria-hidden>
-            {cat.emoji}
-          </span>
+          <CategoryIcon categoria={categoria} size="xl" />
           <h1 className="text-2xl font-bold text-gray-900 md:text-3xl">
             Calculadoras {cat.label}
           </h1>
@@ -82,7 +81,7 @@ export default async function CategoriaPage({
               className="flex flex-col gap-2 rounded-xl border border-gray-200 bg-white p-5 transition-all hover:border-brand-400 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
             >
               <div className="flex items-center gap-2">
-                <span aria-hidden>{calc.icone}</span>
+                <CalculatorIcon icon={calc.icone} categoria={calc.categoria} size="sm" />
                 <h2 className="font-semibold text-gray-900">{calc.titulo}</h2>
               </div>
               <p className="line-clamp-2 text-sm text-gray-500">{calc.descricaoCurta}</p>

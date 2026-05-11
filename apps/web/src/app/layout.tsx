@@ -30,6 +30,14 @@ export const metadata: Metadata = {
     'DAS MEI',
   ],
   metadataBase: new URL(siteConfig.url),
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon-48.svg', sizes: '48x48', type: 'image/svg+xml' },
+      { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
   openGraph: {
     type: 'website',
     locale: 'pt_BR',

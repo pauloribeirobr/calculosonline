@@ -5,6 +5,7 @@ import {
   calculatorsFeatured,
   type CategoriaCalc,
 } from '@/lib/calculators'
+import { CalculatorIcon } from '@/components/common/CalculatorIcon'
 
 const categoriaCor: Record<CategoriaCalc, { bg: string; border: string; text: string }> = {
   trabalhista: {
@@ -58,9 +59,7 @@ export function CalculatorTypes() {
                   href={`/calculadora/${calc.slug}`}
                   className={`group rounded-xl border-2 ${cor.border} ${cor.bg} p-6 transition-all hover:-translate-y-1 hover:shadow-lg`}
                 >
-                  <span className="text-3xl" aria-hidden>
-                    {calc.icone}
-                  </span>
+                  <CalculatorIcon icon={calc.icone} categoria={calc.categoria} size="lg" />
                   <h4 className="mt-3 text-lg font-bold text-gray-900">{calc.titulo}</h4>
                   <p className="mt-1 text-sm text-gray-600">{calc.descricaoCurta}</p>
                   <span
@@ -89,9 +88,7 @@ export function CalculatorTypes() {
                   className="group flex flex-col gap-1 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-2xl" aria-hidden>
-                      {calc.icone}
-                    </span>
+                    <CalculatorIcon icon={calc.icone} categoria={calc.categoria} size="md" />
                     <span
                       className={`rounded-full ${cor.bg} px-2 py-0.5 text-[10px] font-semibold uppercase ${cor.text}`}
                     >

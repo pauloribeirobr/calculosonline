@@ -11,6 +11,30 @@ export type CategoriaCalc =
   | 'saude'
   | 'negocios'
 
+export type ResultadoFormato = 'currency' | 'percent' | 'number' | 'integer' | 'kcal'
+
+export type IconeCalculadora =
+  | 'rescisao'
+  | 'ferias'
+  | 'decimoTerceiro'
+  | 'horaExtra'
+  | 'fgts'
+  | 'salarioLiquido'
+  | 'inss'
+  | 'irrf'
+  | 'irpf'
+  | 'dasMei'
+  | 'porcentagem'
+  | 'jurosCompostos'
+  | 'emprestimo'
+  | 'financiamento'
+  | 'cdb'
+  | 'poupanca'
+  | 'tesouroDireto'
+  | 'imc'
+  | 'calorias'
+  | 'margemLucro'
+
 export interface CalculadoraRegistro {
   slug: string
   /** Nome curto exibido no header da calculadora e em listagens */
@@ -20,7 +44,7 @@ export interface CalculadoraRegistro {
   descricaoCurta: string
   descricao: string
   categoria: CategoriaCalc
-  icone: string
+  icone: IconeCalculadora
   fonteJuridica: string
   /** Data ISO de última atualização das tabelas legislativas */
   dataAtualizacao: string
@@ -28,6 +52,8 @@ export interface CalculadoraRegistro {
   relacionadas: string[]
   /** Aparece no bloco "Mais buscadas" da home */
   featured?: boolean
+  /** Formato do valor principal exibido no resultado */
+  formatoResultado?: ResultadoFormato
   /** Slot AdSense específico — fallback para variáveis de ambiente */
   adSlotTop?: string
   adSlotMid?: string
@@ -36,37 +62,31 @@ export interface CalculadoraRegistro {
 
 export const CATEGORIAS: Record<
   CategoriaCalc,
-  { label: string; descricao: string; emoji: string }
+  { label: string; descricao: string }
 > = {
   trabalhista: {
     label: 'Trabalhistas',
     descricao: 'CLT, rescisão, férias, 13º e mais',
-    emoji: '👔',
   },
   impostos: {
     label: 'Impostos',
     descricao: 'INSS, IRRF, IRPF, MEI e mais',
-    emoji: '🧾',
   },
   financeiro: {
     label: 'Financeiras',
     descricao: 'Juros, empréstimos, porcentagem',
-    emoji: '💰',
   },
   investimentos: {
     label: 'Investimentos',
     descricao: 'CDB, poupança, Tesouro Direto',
-    emoji: '📈',
   },
   saude: {
     label: 'Saúde',
     descricao: 'IMC, calorias, peso ideal',
-    emoji: '❤️',
   },
   negocios: {
     label: 'Negócios',
     descricao: 'Margem, markup, precificação',
-    emoji: '🏢',
   },
 }
 
@@ -90,7 +110,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Calcule as verbas rescisórias com precisão: saldo de salário, aviso prévio, férias, 13º e multa FGTS. Atualizado com a CLT 2026.',
     categoria: 'trabalhista',
-    icone: '🧾',
+    icone: 'rescisao',
     fonteJuridica: 'CLT arts. 477–487 | Lei 12.506/2011 | Lei 8.036/1990',
     dataAtualizacao: '2026-01-01',
     palavrasChave: [
@@ -110,7 +130,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Calcule férias com 1/3 constitucional, abono pecuniário e descontos de INSS e IRRF. Base na CLT 2026.',
     categoria: 'trabalhista',
-    icone: '🏖️',
+    icone: 'ferias',
     fonteJuridica: 'CLT arts. 129–153 | CF/88 art. 7º, XVII',
     dataAtualizacao: '2026-01-01',
     palavrasChave: [
@@ -129,7 +149,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Calcule o 13º salário proporcional com 1ª e 2ª parcelas e descontos de INSS e IRRF. Tabelas 2026.',
     categoria: 'trabalhista',
-    icone: '🎁',
+    icone: 'decimoTerceiro',
     fonteJuridica: 'Lei 4.090/1962 | Lei 4.749/1965',
     dataAtualizacao: '2026-01-01',
     palavrasChave: [
@@ -148,7 +168,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Calcule horas extras com adicional de 50% (dia útil) ou 100% (domingo/feriado).',
     categoria: 'trabalhista',
-    icone: '⏱️',
+    icone: 'horaExtra',
     fonteJuridica: 'CLT art. 59 | CF/88 art. 7º, XVI',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['hora extra', 'calcular hora extra', 'adicional hora extra'],
@@ -162,7 +182,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Calcule depósitos mensais (8%), multa rescisória (40% e 20%) e saque-aniversário do FGTS.',
     categoria: 'trabalhista',
-    icone: '🏦',
+    icone: 'fgts',
     fonteJuridica: 'Lei 8.036/1990 | Lei 13.932/2019',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['FGTS', 'multa FGTS', 'saque aniversário FGTS', 'calcular FGTS'],
@@ -176,7 +196,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Descubra seu salário líquido após INSS e IRRF. Tabela progressiva 2026 com detalhamento completo.',
     categoria: 'trabalhista',
-    icone: '💼',
+    icone: 'salarioLiquido',
     fonteJuridica: 'Decreto 11.936/2024 (INSS) | RIR/2018 (IRRF)',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['salário líquido', 'calcular salário líquido', 'desconto INSS IRRF'],
@@ -193,7 +213,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Calcule a contribuição ao INSS pela tabela progressiva 2026. Suporta empregado CLT, autônomo, facultativo e MEI.',
     categoria: 'impostos',
-    icone: '🇧🇷',
+    icone: 'inss',
     fonteJuridica: 'Decreto 11.936/2024',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['calcular INSS', 'tabela INSS 2026', 'contribuição INSS'],
@@ -207,7 +227,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Calcule o Imposto de Renda Retido na Fonte com tabela progressiva 2026, dependentes e deduções.',
     categoria: 'impostos',
-    icone: '📊',
+    icone: 'irrf',
     fonteJuridica: 'RIR/2018 (Decreto 9.580/2018) | Lei 11.482/2007',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['IRRF', 'imposto de renda retido', 'tabela IRRF 2026'],
@@ -221,7 +241,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Simule sua declaração do Imposto de Renda 2026: simplificado vs. completo, restituição ou imposto a pagar.',
     categoria: 'impostos',
-    icone: '📑',
+    icone: 'irpf',
     fonteJuridica: 'Lei 9.250/1995 | IN RFB 2.178/2024',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['IRPF 2026', 'declaração imposto de renda', 'restituição IR'],
@@ -236,7 +256,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Calcule o DAS mensal do MEI: INSS, ICMS e ISS. Verifique se está dentro do limite anual de faturamento.',
     categoria: 'impostos',
-    icone: '🪪',
+    icone: 'dasMei',
     fonteJuridica: 'LC 123/2006 art. 18-A | Resolução CGSN 140/2018',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['DAS MEI', 'calcular MEI', 'imposto MEI', 'boleto MEI 2026'],
@@ -252,9 +272,10 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Calcule percentuais: valor de X%, variação percentual, acréscimo, desconto, percentual de e mais.',
     categoria: 'financeiro',
-    icone: '％',
+    icone: 'porcentagem',
     fonteJuridica: 'Matemática básica',
     dataAtualizacao: '2026-01-01',
+    formatoResultado: 'number',
     palavrasChave: ['calcular porcentagem', 'porcentagem de um valor', 'desconto percentual'],
     relacionadas: ['juros-compostos', 'margem-lucro', 'imc', 'emprestimo'],
   },
@@ -266,7 +287,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Calcule o montante final com juros compostos. Suporte a aportes mensais e diferentes periodicidades.',
     categoria: 'financeiro',
-    icone: '📈',
+    icone: 'jurosCompostos',
     fonteJuridica: 'Matemática financeira',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['juros compostos', 'calcular juros compostos', 'montante final'],
@@ -281,7 +302,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Simule empréstimos pela Tabela Price ou SAC. Veja parcelas, total de juros e CET (Custo Efetivo Total).',
     categoria: 'financeiro',
-    icone: '💳',
+    icone: 'emprestimo',
     fonteJuridica: 'Res. CMN 3.517/2007 (CET)',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['calcular empréstimo', 'simulador empréstimo', 'tabela price SAC'],
@@ -295,7 +316,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Simule financiamentos imobiliários e de veículos pela Tabela Price ou SAC. Evolução completa do saldo devedor.',
     categoria: 'financeiro',
-    icone: '🏠',
+    icone: 'financiamento',
     fonteJuridica: 'Res. CMN 3.517/2007 | Circular BCB 2.905/1999',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['calcular financiamento', 'simulador financiamento imóvel', 'CET'],
@@ -311,7 +332,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Calcule o rendimento líquido do CDB: prefixado, % CDI ou IPCA+. IR regressivo já abatido.',
     categoria: 'investimentos',
-    icone: '💰',
+    icone: 'cdb',
     fonteJuridica: 'Lei 11.033/2004 | Decreto 6.306/2007',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['calcular CDB', 'rendimento CDB', 'CDB CDI', 'CDB prefixado'],
@@ -325,7 +346,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Simule o rendimento da poupança com a regra atual (Selic > 8,5%). Compare com CDB e Tesouro Direto.',
     categoria: 'investimentos',
-    icone: '🐷',
+    icone: 'poupanca',
     fonteJuridica: 'Lei 8.177/1991 | Lei 12.703/2012',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['calcular poupança', 'rendimento poupança 2026', 'quanto rende poupança'],
@@ -339,7 +360,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Simule Tesouro Selic, Prefixado e IPCA+. Rentabilidade líquida com IR regressivo e taxa B3.',
     categoria: 'investimentos',
-    icone: '🏛️',
+    icone: 'tesouroDireto',
     fonteJuridica: 'Lei 11.033/2004 | Resolução B3 — taxa de custódia',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['tesouro direto', 'tesouro selic', 'tesouro prefixado', 'tesouro IPCA'],
@@ -355,9 +376,10 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Calcule seu Índice de Massa Corporal e descubra o peso ideal segundo a OMS.',
     categoria: 'saude',
-    icone: '⚖️',
+    icone: 'imc',
     fonteJuridica: 'OMS — World Health Organization (1997)',
     dataAtualizacao: '2026-01-01',
+    formatoResultado: 'number',
     palavrasChave: ['calcular IMC', 'índice de massa corporal', 'peso ideal'],
     relacionadas: ['calorias', 'porcentagem'],
     featured: true,
@@ -370,9 +392,10 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Calcule seu gasto calórico diário (TDEE) e a meta de calorias para perda, manutenção ou ganho de peso. Inclui macronutrientes.',
     categoria: 'saude',
-    icone: '🥗',
+    icone: 'calorias',
     fonteJuridica: 'Mifflin-St Jeor (1990) | OMS',
     dataAtualizacao: '2026-01-01',
+    formatoResultado: 'kcal',
     palavrasChave: ['calcular calorias', 'TDEE', 'taxa metabólica basal', 'dieta calorias'],
     relacionadas: ['imc', 'porcentagem'],
   },
@@ -386,7 +409,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     descricao:
       'Calcule margem de lucro, markup e preço de venda a partir do custo. Essencial para precificação.',
     categoria: 'negocios',
-    icone: '🏷️',
+    icone: 'margemLucro',
     fonteJuridica: 'Contabilidade de custos',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['margem de lucro', 'calcular markup', 'preço de venda', 'precificação'],

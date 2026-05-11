@@ -78,4 +78,35 @@ body {
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
+
+  @keyframes hero-card-drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    25% {
+      transform: translate3d(4px, -8px, 0) rotate(0.7deg);
+    }
+    50% {
+      transform: translate3d(-3px, -14px, 0) rotate(-0.6deg);
+    }
+    75% {
+      transform: translate3d(-6px, -5px, 0) rotate(0.5deg);
+    }
+  }
+
+  .animate-hero-card-drift {
+    animation-name: hero-card-drift;
+    animation-duration: 8s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float,
+    .animate-hero-card-drift {
+      animation: none;
+    }
+  }
 }
