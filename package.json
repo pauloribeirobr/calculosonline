@@ -1,6 +1,6 @@
 {
   "name": "calculosonline",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "description": "Plataforma de calculadoras online para o mercado brasileiro",
   "scripts": {
