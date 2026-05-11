@@ -15,6 +15,14 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
+  "dependencies": {
+    "@calculosonline/core": "workspace:*",
+    "@hookform/resolvers": "^3.10.0",
+    "clsx": "^2.1.1",
+    "react-hook-form": "^7.54.0",
+    "tailwind-merge": "^2.5.0",
+    "zod": "^3.24.0"
+  },
   "devDependencies": {
     "@calculosonline/tsconfig": "workspace:*",
     "@types/react": "^19.0.0",

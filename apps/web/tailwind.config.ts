@@ -7,6 +7,7 @@ const config: Config = {
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    '../../packages/ui/src/**/*.{ts,tsx}',
   ],
   theme: {
     extend: {
@@ -24,6 +25,10 @@ const config: Config = {
           negative: '#dc2626',
           neutral: '#6b7280',
         },
+      },
+      fontFamily: {
+        sans: ['"Inter Variable"', 'Inter', 'system-ui', 'sans-serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       fontSize: {
         'result-lg': ['2rem', { lineHeight: '2.5rem', fontWeight: '700' }],
