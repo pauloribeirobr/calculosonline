@@ -11,7 +11,6 @@ export default defineConfig({
         // Re-export barrels (sem lógica)
         'src/index.ts',
         'src/trabalhista/index.ts',
-        // Módulos placeholder reservados para sprints futuras
         'src/impostos/index.ts',
         'src/financeiro/index.ts',
         'src/investimentos/index.ts',
