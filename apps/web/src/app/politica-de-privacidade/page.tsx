@@ -4,7 +4,7 @@ import { Breadcrumbs } from '@/components/common/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Política de Privacidade',
   description:
-    'Saiba como o Calculos Online coleta, usa e protege seus dados. Política de cookies, Google AdSense e Google Analytics.',
+    'Saiba como o Calculos Online coleta, usa e protege seus dados. Política de cookies, Google AdSense, Google Analytics, Vercel Analytics e Microsoft Clarity.',
   alternates: { canonical: '/politica-de-privacidade' },
 }
 
@@ -40,8 +40,10 @@ export default function PoliticaPrivacidadePage() {
         </p>
         <p>
           Coletamos automaticamente, de forma anônima e agregada, dados de uso do site
-          (páginas visitadas, tempo de sessão, país/região) por meio do Google Analytics 4
-          com a opção de anonimização de IP ativada.
+          (páginas visitadas, tempo de sessão, país/região, erros técnicos e uso das
+          calculadoras) por meio do Google Analytics 4, Vercel Analytics e Microsoft
+          Clarity. Os valores digitados nos formulários não são enviados como eventos de
+          analytics.
         </p>
 
         <h2>3. Cookies</h2>
@@ -49,7 +51,8 @@ export default function PoliticaPrivacidadePage() {
         <ul>
           <li>
             <strong>Cookies de análise</strong> — Google Analytics 4, para medir a audiência de
-            forma anonimizada. Você pode optar por sair em{' '}
+            forma agregada. Também usamos Vercel Analytics e Microsoft Clarity para entender
+            desempenho, navegação e erros de uso. Você pode optar por sair do Google Analytics em{' '}
             <a
               href="https://tools.google.com/dlpage/gaoptout"
               target="_blank"
