@@ -1,5 +1,8 @@
 /**
- * Cálculos tributários (IRPF, IRRF, INSS, DAS MEI).
- * Implementações ficam para a Sprint 1.1.
+ * Cálculos tributários (INSS standalone, IRRF, IRPF anual, DAS-MEI).
+ * Sprint 1.1.
  */
-export {}
+export * from './inss'
+export * from './irrf'
+export * from './irpf'
+export * from './das-mei'

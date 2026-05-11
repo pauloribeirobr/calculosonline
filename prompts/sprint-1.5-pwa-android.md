@@ -6,6 +6,7 @@
 ## PRÉ-REQUISITO
 
 - Sprint 1.3 concluída: site publicado em produção no domínio `calculosonline.com.br` via Vercel
+- Sprint 1.4.1 concluída: memória de cálculo, tipografia numérica, logo e favicons prontos
 - Domínio com HTTPS ativo (obrigatório para Service Worker e TWA)
 
 ---

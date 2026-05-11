@@ -1,5 +1,14 @@
 import type { Metadata, Viewport } from 'next'
 import '@fontsource-variable/inter'
+import { Analytics } from '@vercel/analytics/react'
+import { GoogleAnalytics } from '@next/third-parties/google'
+import { Header } from '@/components/common/Header'
+import { Footer } from '@/components/common/Footer'
+import { ScrollToTop } from '@/components/common/ScrollToTop'
+import { MicrosoftClarity } from '@/components/analytics/MicrosoftClarity'
+import { ErrorLogger } from '@/components/analytics/ErrorLogger'
+import { WebsiteJsonLd, OrganizationJsonLd } from '@/components/seo/JsonLd'
+import { siteConfig } from '@/lib/seo'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -7,13 +16,40 @@ export const metadata: Metadata = {
     default: 'Calculos Online — Calculadoras Online Grátis e Atualizadas para 2026',
     template: '%s | Calculos Online',
   },
-  description:
-    'Calculadoras online grátis para o Brasil: rescisão, férias, 13º, IRPF, INSS, juros compostos, IMC e mais. Tabelas atualizadas em 2026 com base legal verificada.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://calculosonline.com.br'),
+  description: siteConfig.description,
+  keywords: [
+    'calculadoras online',
+    'rescisão trabalhista',
+    'férias',
+    '13º salário',
+    'FGTS',
+    'IRPF',
+    'INSS',
+    'juros compostos',
+    'IMC',
+    'DAS MEI',
+  ],
+  metadataBase: new URL(siteConfig.url),
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon-48.svg', sizes: '48x48', type: 'image/svg+xml' },
+      { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
-    siteName: 'Calculos Online',
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    title: 'Calculos Online — Calculadoras Online Grátis e Atualizadas para 2026',
+    description: siteConfig.description,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Calculos Online — Calculadoras Online Grátis',
+    description: siteConfig.description,
   },
   alternates: {
     canonical: '/',
@@ -35,9 +71,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body>
+        <WebsiteJsonLd />
+        <OrganizationJsonLd />
         <div className="flex min-h-screen flex-col">
+          <Header />
           <main className="flex-grow">{children}</main>
+          <Footer />
         </div>
+        <ScrollToTop />
+        <Analytics />
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+        )}
+        <MicrosoftClarity />
+        <ErrorLogger />
       </body>
     </html>
   )

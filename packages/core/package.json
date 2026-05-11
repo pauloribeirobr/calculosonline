@@ -12,6 +12,7 @@
     "./investimentos": "./src/investimentos/index.ts",
     "./saude": "./src/saude/index.ts",
     "./negocios": "./src/negocios/index.ts",
+    "./explainability": "./src/explainability/index.ts",
     "./tabelas": "./src/tabelas/index.ts",
     "./utils": "./src/utils/index.ts"
   },

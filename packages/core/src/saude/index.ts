@@ -1,5 +1,6 @@
 /**
- * Cálculos de saúde (IMC, calorias).
- * Implementações ficam para a Sprint 1.1.
+ * Cálculos de saúde (IMC, calorias / TDEE).
+ * Sprint 1.1.
  */
-export {}
+export * from './imc'
+export * from './calorias'

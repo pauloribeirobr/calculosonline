@@ -1,0 +1,162 @@
+# Calculadora de Juros Compostos Online 2026
+
+Os **juros compostos** são o fundamento de todo o sistema financeiro moderno. Entender como
+eles funcionam é essencial para investir com inteligência e evitar dívidas que crescem
+exponencialmente.
+
+## Juros simples vs. compostos
+
+| | Juros Simples | Juros Compostos |
+|---|---|---|
+| **Cálculo** | Sempre sobre o capital inicial | Sobre o capital + juros anteriores ("juros sobre juros") |
+| **Crescimento** | Linear | Exponencial |
+| **Uso comum** | Cheque especial (parte), algumas multas | Investimentos, financiamentos, crédito rotativo |
+
+**Exemplo comparativo:** R$ 1.000 a 10% ao mês por 12 meses
+
+```
+Juros simples: 1.000 × (1 + 0,10 × 12) = R$ 2.200
+Juros compostos: 1.000 × (1 + 0,10)^12 = R$ 3.138,43
+```
+
+A diferença é de R$ 938 — mais de 40% a mais com juros compostos. Isso tanto beneficia
+investidores quanto prejudica devedores.
+
+## Fórmula dos juros compostos
+
+```
+M = P × (1 + i)^n
+```
+
+Onde:
+- **M** = Montante final
+- **P** = Capital inicial (Principal)
+- **i** = Taxa de juros por período (em decimal)
+- **n** = Número de períodos
+
+**Exemplo:** R$ 5.000 aplicados a 1% ao mês por 24 meses:
+
+```
+M = 5.000 × (1 + 0,01)^24
+M = 5.000 × 1,2697
+M = R$ 6.348,67
+```
+
+Juros gerados: R$ 6.348,67 − R$ 5.000 = **R$ 1.348,67**
+
+## Convertendo taxa mensal para anual e vice-versa
+
+**Erro comum:** multiplicar a taxa mensal por 12 para obter a anual. Isso é a taxa nominal —
+não a taxa real (efetiva).
+
+**Taxa anual efetiva equivalente à taxa mensal:**
+
+```
+Taxa anual = (1 + taxa mensal)^12 − 1
+```
+
+**Exemplo:** 1% ao mês → taxa anual efetiva = (1,01)^12 − 1 = **12,68% ao ano**
+
+**Taxa mensal equivalente à taxa anual:**
+
+```
+Taxa mensal = (1 + taxa anual)^(1/12) − 1
+```
+
+**Exemplo:** 12% ao ano → taxa mensal efetiva = (1,12)^(1/12) − 1 = **0,949% ao mês**
+
+## O poder dos aportes mensais
+
+Investir regularmente amplifica enormemente o resultado final. A fórmula com aportes mensais é:
+
+```
+M = P × (1 + i)^n + A × [(1 + i)^n − 1] ÷ i
+```
+
+Onde **A** = aporte mensal.
+
+**Exemplo:** R$ 1.000 inicial + R$ 500/mês por 10 anos a 1% ao mês:
+
+```
+Montante do capital inicial = 1.000 × (1,01)^120 = R$ 3.300,39
+Montante dos aportes = 500 × [(1,01)^120 − 1] ÷ 0,01 = R$ 115.016,74
+Total = R$ 118.317,13
+Total investido = 1.000 + (500 × 120) = R$ 61.000
+Rendimento gerado = R$ 57.317,13
+```
+
+## A Regra do 72: tempo para dobrar o capital
+
+A **Regra do 72** é uma aproximação rápida para estimar em quanto tempo um capital dobra:
+
+```
+Tempo (períodos) ≈ 72 ÷ taxa (em %)
+```
+
+**Exemplos:**
+
+| Taxa ao mês | Tempo para dobrar (aprox.) |
+|:---:|---|
+| 0,5% a.m. (poupança) | 144 meses = 12 anos |
+| 1% a.m. (CDB 100% CDI) | 72 meses = 6 anos |
+| 2% a.m. | 36 meses = 3 anos |
+| 5% a.m. (alto risco) | ~15 meses |
+
+## Juros compostos em dívidas: o lado negativo
+
+O mesmo mecanismo que faz investimentos crescerem também faz dívidas explodirem:
+
+| Dívida | Taxa mensal | Valor após 1 ano |
+|---|:---:|---|
+| R$ 1.000 no cartão de crédito | 15% a.m. | R$ 5.350 |
+| R$ 1.000 no cheque especial | 8% a.m. | R$ 2.518 |
+| R$ 1.000 em empréstimo pessoal | 3% a.m. | R$ 1.426 |
+
+A taxa do cartão de crédito rotativo (em média 15-17% ao mês no Brasil) é predatória.
+R$ 1.000 em 2 anos vira mais de R$ 28.000 se não pago.
+
+## Inflação e a taxa de juros real
+
+O retorno real de um investimento deve ser calculado descontando a inflação:
+
+```
+Taxa real = [(1 + taxa nominal) ÷ (1 + inflação)] − 1
+```
+
+**Exemplo:** CDB a 12% a.a. com inflação de 5% a.a.:
+
+```
+Taxa real = (1,12 ÷ 1,05) − 1 = 6,67% a.a.
+```
+
+## Perguntas frequentes sobre juros compostos
+
+**Qual é o melhor investimento para juros compostos?**
+
+Não existe "melhor" universal — depende do prazo, liquidez e tolerância a risco. Para
+curto prazo (menos de 1 ano): CDB ou Tesouro Selic. Para médio prazo (1-5 anos): CDB
+IPCA+ ou Tesouro IPCA+. Para longo prazo (10+ anos): ações e fundos de ações tendem
+a superar a renda fixa historicamente.
+
+**Poupança usa juros compostos?**
+
+Sim. A poupança rende 0,5% ao mês + TR (quando a Selic > 8,5%), com capitalização mensal
+(aniversário da poupança). Em 10 anos, R$ 10.000 na poupança se tornam aproximadamente
+R$ 17.908 — mas o CDB 100% CDI renderia em torno de R$ 23.674 no mesmo período.
+
+**Como calcular juros compostos no Excel?**
+
+Use a função `FVSC` (ou `VF` em PT): `=VF(taxa_mensal; num_meses; aporte_mensal; -capital_inicial)`.
+Para apenas crescimento de capital sem aportes: `=capital_inicial * (1 + taxa)^n`.
+
+**O que é capitalização mensal vs. anual?**
+
+A capitalização define quando os juros são incorporados ao saldo. Capitalização mensal
+(mais comum em investimentos) significa que os juros de cada mês são reinvestidos no mês
+seguinte, gerando mais juros. Capitalização anual gera rendimento menor ao longo do ano.
+
+**Qual a diferença entre taxa de juros e taxa de retorno?**
+
+Taxa de juros é o custo de um empréstimo ou rendimento de uma aplicação. Taxa de retorno
+considera o resultado líquido (após impostos e inflação). Comparar investimentos sempre
+pelo retorno real líquido.

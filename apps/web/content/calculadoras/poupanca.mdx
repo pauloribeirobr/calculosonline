@@ -1,0 +1,132 @@
+# Calculadora de Poupança Online 2026
+
+A **poupança** é a aplicação financeira mais popular do Brasil — simples, isenta de IR e
+garantida pelo FGC. Nossa calculadora simula o rendimento com aportes mensais e compara
+com outras aplicações.
+
+## Como a poupança rende em 2026?
+
+O rendimento da poupança segue regras definidas pelo Banco Central:
+
+### Regra da Taxa Selic
+
+| Selic | Rendimento poupança |
+|:---:|---|
+| **Selic > 8,5% a.a.** | 0,5% ao mês + TR (Taxa Referencial) |
+| **Selic ≤ 8,5% a.a.** | 70% da Selic + TR |
+
+Em 2026, com a Selic acima de 8,5%, a poupança rende **0,5% ao mês + TR**.
+
+> **O que é a TR?** A Taxa Referencial é calculada diariamente pelo Banco Central.
+> Após ficou zerada por anos, voltou a ser positiva com a alta da Selic. Em 2024–2025,
+> a TR ficou em torno de 0,05–0,10% ao mês.
+
+### Rendimento anual efetivo aproximado
+
+```
+Rendimento anual ≈ (1 + 0,005 + TR_mensal)^12 − 1
+≈ (1,0055)^12 − 1
+≈ 6,8% ao ano (variando conforme a TR)
+```
+
+## Data de aniversário: quando a poupança rende?
+
+A poupança NÃO rende todo dia — ela rende **uma vez ao mês**, na data de aniversário:
+
+- Depósito feito no dia 5 → rende todo dia 5
+- Depósito feito no dia 31 → aniversário é dia 1º do mês seguinte
+- Sacar antes do aniversário = **perde os juros do período**
+
+**Estratégia:** saques devem ser feitos logo após o aniversário, para não perder rendimentos.
+
+## Poupança vs. outras aplicações de renda fixa
+
+Simulação de R$ 10.000 por 2 anos (Selic 13% a.a., CDI ≈ Selic):
+
+| Aplicação | Rendimento bruto | IR | Rendimento líquido | Valor final |
+|---|:---:|:---:|:---:|:---:|
+| Poupança | ~6,8% a.a. | Isenta | ~6,8% a.a. | R$ 11.407 |
+| CDB 100% CDI | ~13% a.a. | 15% | ~11,05% a.a. | R$ 12.325 |
+| CDB 110% CDI | ~14,3% a.a. | 15% | ~12,16% a.a. | R$ 12.579 |
+| Tesouro Selic | ~13,1% a.a. | 15% | ~11,14% a.a. | R$ 12.350 |
+| LCI/LCA | ~10% a.a. | Isenta | ~10% a.a. | R$ 12.100 |
+
+**Conclusão:** a poupança é a pior opção dentre as de renda fixa quando a Selic está alta.
+CDB de liquidez diária com taxa acima de 85% do CDI rende mais e mantém a praticidade.
+
+## Quando a poupança faz sentido?
+
+A poupança pode ser interessante quando:
+
+1. O valor é pequeno e não atingiria a taxa mínima de outros investimentos
+2. O investidor quer simplicidade absoluta sem precisar acompanhar taxas
+3. Para crianças menores (conta poupança de menores, isenta de CPMF histórica)
+4. Reserva de emergência de curtíssimo prazo (saques noturnos e nos finais de semana)
+
+Mas mesmo nesses casos, contas digitais com rendimento automático de 100%+ CDI (Nubank,
+PicPay, Mercado Pago, C6 Bank) oferecem vantagens equivalentes com maior rentabilidade.
+
+## Garantia do FGC na poupança
+
+Assim como o CDB, a poupança é garantida pelo **FGC** em até **R$ 250.000 por CPF por
+instituição**. A cobertura inclui o principal e os juros acumulados.
+
+## Simulação com aportes mensais
+
+Para o modelo de construção de reserva com aportes regulares:
+
+```
+M = P × (1 + i)^n + A × [(1 + i)^n − 1] ÷ i
+```
+
+**Exemplo:** R$ 0 inicial + R$ 300/mês por 5 anos na poupança a 0,5% a.m.:
+
+```
+M = 300 × [(1,005)^60 − 1] ÷ 0,005
+M = 300 × 69,77 = R$ 20.931
+
+Total depositado = R$ 300 × 60 = R$ 18.000
+Rendimento = R$ 2.931
+```
+
+O mesmo aporte em CDB 100% CDI (estimado a 1,05% a.m., descontado 17,5% IR):
+
+```
+Taxa líquida mensal ≈ 1,05% × (1 − 0,175) ≈ 0,866% a.m.
+M ≈ 300 × [(1,00866)^60 − 1] ÷ 0,00866 ≈ R$ 22.473
+Rendimento ≈ R$ 4.473 (50% a mais que a poupança)
+```
+
+## Perguntas frequentes sobre poupança
+
+**A poupança perde para a inflação?**
+
+Historicamente, em períodos de Selic baixa (como 2020–2021, quando estava em 2% a.a.), a
+poupança rendia menos que a inflação — ou seja, havia perda real de poder de compra. Em
+períodos de Selic alta (acima de 8,5%), a poupança rende 6-7% ao ano, o que pode ser
+próximo ou levemente acima da inflação, mas ainda abaixo de alternativas como CDB e Tesouro
+Direto.
+
+**Posso sacar da poupança a qualquer momento?**
+
+Sim, mas o saque antes da data de aniversário perde os juros do período. O saldo principal
+e os juros de períodos anteriores não são afetados.
+
+**Poupança tem tarifas?**
+
+Poupança não tem tarifas para movimentação, extrato ou transferência entre contas da
+mesma instituição. Alguns bancos tradicionais cobram tarifa de manutenção de conta corrente
+vinculada, mas a poupança em si é isenta. Bancos digitais oferecem contas poupança
+gratuitas.
+
+**É seguro deixar dinheiro na poupança?**
+
+Sim, até o limite FGC (R$ 250.000). Para valores maiores, distribua entre diferentes
+bancos. No Brasil, diferente do exterior, o risco de banco grande quebrar é muito baixo
+— mas a proteção FGC existe justamente para garantir isso.
+
+**Qual a diferença entre poupança e conta de pagamento remunerada?**
+
+Contas de pagamento remuneradas (como as fintechs que rendem 100% do CDI automaticamente)
+são tecnicamente diferentes da poupança — não têm aniversário, rendem todo dia útil e
+têm IR regressivo. São superiores à poupança em retorno, mas igualmente simples de usar.

@@ -9,6 +9,7 @@
 export * from './types'
 export * as Tabelas from './tabelas'
 export * as Utils from './utils'
+export * as Explainability from './explainability'
 
 // Reservados para sprints futuras (mantém o tree-shaking funcionando)
 export * as Trabalhista from './trabalhista'
