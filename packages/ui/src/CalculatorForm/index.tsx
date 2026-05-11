@@ -64,6 +64,7 @@ export function CalculatorForm<T extends ZodRawShape>({
       className="space-y-4"
       noValidate
       aria-label="Formulário de cálculo"
+      data-clarity-mask="true"
     >
       {Object.entries(fields).map(([name, meta]) => {
         const fieldMeta = meta as FieldMeta
@@ -94,6 +95,7 @@ export function CalculatorForm<T extends ZodRawShape>({
                   )}
                   aria-invalid={!!error}
                   aria-describedby={error ? `${name}-error` : undefined}
+                  data-clarity-mask="true"
                 >
                   {fieldMeta.options?.map((opt) => (
                     <option key={opt.value} value={opt.value}>
@@ -113,6 +115,7 @@ export function CalculatorForm<T extends ZodRawShape>({
                         value={opt.value}
                         {...register(fieldName)}
                         className="accent-brand-600"
+                        data-clarity-mask="true"
                       />
                       <span className="text-sm">{opt.label}</span>
                     </label>
@@ -144,6 +147,7 @@ export function CalculatorForm<T extends ZodRawShape>({
                       .filter(Boolean)
                       .join(' ') || undefined
                   }
+                  data-clarity-mask="true"
                 />
               )}
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { analytics } from '@/lib/analytics'
 
 const CHUNK_RELOAD_KEY = 'co_chunk_reload_attempted'
 
@@ -17,7 +18,7 @@ function isChunkLoadFailure(target: EventTarget | null, error?: Error): boolean 
   return /Loading (CSS )?chunk \d+ failed/i.test(error.message)
 }
 
-function attemptRecoveryReload() {
+function attemptRecoveryReload(reason: string) {
   if (typeof window === 'undefined') return
   try {
     if (sessionStorage.getItem(CHUNK_RELOAD_KEY)) return
@@ -25,6 +26,9 @@ function attemptRecoveryReload() {
   } catch {
     return
   }
+  analytics.errorOccurred(new Error(`chunk_load_failure_recovered: ${reason}`), {
+    digest: 'chunk_load_recovery',
+  })
   window.location.reload()
 }
 
@@ -32,22 +36,28 @@ export function ErrorLogger() {
   useEffect(() => {
     const handleError = (event: ErrorEvent) => {
       if (isChunkLoadFailure(event.target, event.error)) {
-        attemptRecoveryReload()
+        attemptRecoveryReload(event.message || 'error_event')
         return
       }
-      // Sem backend dedicado: registramos no console — Vercel Analytics e
-      // Microsoft Clarity capturam os erros do lado deles.
-      console.error('[ErrorLogger]', event.message, event.error)
+      analytics.jsError(
+        event.message,
+        event.filename,
+        event.lineno,
+        event.colno,
+        event.error,
+      )
     }
 
     const handleRejection = (event: PromiseRejectionEvent) => {
       const error =
         event.reason instanceof Error ? event.reason : new Error(String(event.reason))
       if (isChunkLoadFailure(null, error)) {
-        attemptRecoveryReload()
+        attemptRecoveryReload(error.message)
         return
       }
-      console.error('[ErrorLogger] unhandledrejection', error)
+      analytics.errorOccurred(error, {
+        digest: 'unhandled_promise_rejection',
+      })
     }
 
     window.addEventListener('error', handleError, true)

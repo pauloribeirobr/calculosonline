@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import { Suspense } from 'react'
 import '@fontsource-variable/inter'
 import { Analytics } from '@vercel/analytics/react'
 import { GoogleAnalytics } from '@next/third-parties/google'
@@ -7,6 +8,7 @@ import { Footer } from '@/components/common/Footer'
 import { ScrollToTop } from '@/components/common/ScrollToTop'
 import { MicrosoftClarity } from '@/components/analytics/MicrosoftClarity'
 import { ErrorLogger } from '@/components/analytics/ErrorLogger'
+import { RouteTracker } from '@/components/analytics/RouteTracker'
 import { WebsiteJsonLd, OrganizationJsonLd } from '@/components/seo/JsonLd'
 import { siteConfig } from '@/lib/seo'
 import './globals.css'
@@ -79,6 +81,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Footer />
         </div>
         <ScrollToTop />
+        <Suspense fallback={null}>
+          <RouteTracker />
+        </Suspense>
         <Analytics />
         {process.env.NEXT_PUBLIC_GA_ID && (
           <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />

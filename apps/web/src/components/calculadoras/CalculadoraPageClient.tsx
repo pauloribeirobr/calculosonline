@@ -11,6 +11,7 @@ import {
   CATEGORIAS,
   type CalculadoraRegistro,
 } from '@/lib/calculators'
+import { analytics } from '@/lib/analytics'
 import { Breadcrumbs } from '@/components/common/Breadcrumbs'
 import { getCalculadoraForm } from './forms'
 
@@ -53,10 +54,17 @@ export function CalculadoraPageClient({ config, relacionadas }: Props) {
               onResult={(r) => {
                 setErros([])
                 setResultado(r)
+                analytics.calculatorCalculated(config.slug, config.categoria)
               }}
               onError={(e) => {
                 setErros(e)
                 setResultado(null)
+                analytics.calculatorValidationError(
+                  config.slug,
+                  config.categoria,
+                  e.length,
+                  e.map((erro) => erro.campo),
+                )
               }}
             />
             {erros.length > 0 && (
