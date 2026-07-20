@@ -132,7 +132,14 @@ export function CalculatorForm<T extends ZodRawShape>({
                   }
                   placeholder={fieldMeta.placeholder}
                   {...register(fieldName, {
-                    valueAsNumber: (fieldMeta.type ?? 'number') === 'number',
+                    // Não usar `valueAsNumber`: ele converte campo vazio em NaN, e o
+                    // `.default(0)` do Zod só resgata `undefined` — NaN faz a validação
+                    // falhar mesmo em campos opcionais deixados em branco. `undefined`
+                    // deixa o default do schema (quando houver) assumir corretamente.
+                    setValueAs:
+                      (fieldMeta.type ?? 'number') === 'number'
+                        ? (v: string) => (v === '' ? undefined : Number(v))
+                        : (v: string) => v,
                   })}
                   className={cn(
                     'w-full rounded-lg border px-3 py-2.5 text-sm',

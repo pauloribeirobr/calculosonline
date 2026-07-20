@@ -1,10 +1,12 @@
 import { siteConfig } from '@/lib/seo'
 import { CATEGORIAS, type CalculadoraRegistro } from '@/lib/calculators'
+import { getFaqFromContent } from '@/lib/faq'
 
 /**
  * Bundle de JSON-LD por página de calculadora.
- * Inclui WebApplication, BreadcrumbList e FAQPage (genéricas — o conteúdo
- * editorial MDX da Sprint 1.4 substituirá pelas perguntas reais).
+ * Inclui WebApplication, BreadcrumbList e FAQPage — as perguntas do FAQPage
+ * vêm da seção "Perguntas frequentes" do MDX de cada calculadora
+ * (ver lib/faq.ts), com fallback genérico apenas se o MDX ainda não existir.
  */
 export function gerarSchemasCalculadora(calc: CalculadoraRegistro): unknown[] {
   const url = `${siteConfig.url}/calculadora/${calc.slug}`
@@ -45,35 +47,32 @@ export function gerarSchemasCalculadora(calc: CalculadoraRegistro): unknown[] {
   }
 
   const dataLabel = new Date(calc.dataAtualizacao + 'T12:00:00').toLocaleDateString('pt-BR')
+  const faqFromContent = getFaqFromContent(calc.slug)
+  const faqItems =
+    faqFromContent.length > 0
+      ? faqFromContent
+      : [
+          {
+            question: `A ${calc.tituloLongo} está atualizada para 2026?`,
+            answer: `Sim. As tabelas foram atualizadas em ${dataLabel} com base na legislação vigente: ${calc.fonteJuridica}.`,
+          },
+          {
+            question: 'Os cálculos são gratuitos?',
+            answer: 'Sim. Todas as calculadoras são 100% gratuitas, sem cadastro e sem limites de uso.',
+          },
+        ]
+
   const faq = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: `Como usar a ${calc.tituloLongo}?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `Preencha os campos com seus dados e clique em Calcular. O resultado aparece instantaneamente com detalhamento linha a linha baseado em ${calc.fonteJuridica}.`,
-        },
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
       },
-      {
-        '@type': 'Question',
-        name: `A ${calc.tituloLongo} está atualizada para 2026?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `Sim. As tabelas foram atualizadas em ${dataLabel} com base na legislação vigente: ${calc.fonteJuridica}.`,
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Os cálculos são gratuitos?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Sim. Todas as calculadoras são 100% gratuitas, sem cadastro e sem limites de uso.',
-        },
-      },
-    ],
+    })),
   }
 
   return [webApp, breadcrumb, faq]
