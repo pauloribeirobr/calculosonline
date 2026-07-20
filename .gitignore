@@ -44,3 +44,4 @@ coverage
 .vitest-cache
 playwright-report
 test-results
+gsc/

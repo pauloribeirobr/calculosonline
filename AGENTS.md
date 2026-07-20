@@ -12,6 +12,7 @@ Stack: **Next.js + TypeScript** em monorepo **Turborepo**, com aplicativos **Tau
 - [docs/PLANO_IMPLEMENTACAO.md](docs/PLANO_IMPLEMENTACAO.md) — fases, checklists e loops de retroalimentação
 - [docs/IDENTIDADE_VISUAL.md](docs/IDENTIDADE_VISUAL.md) — espelho do Recibo Fácil + tokens + estrutura de pastas
 - [prompts/](prompts/) — `sprint-*.md`: prompts de IA por sprint (0.1 a 2.4)
+- [CHANGELOG.md](CHANGELOG.md) — funcionalidades entregues em produção, versionado por app (mesmo padrão do Recibo Fácil)
 
 ## Projeto irmão — Recibo Fácil
 - Localização: `/home/paulo/projects/next/recibofacil` (em produção em recibofacil.com.br)
@@ -55,7 +56,7 @@ calculosonline/
 
 ---
 
-## Estado atual das sprints (atualizado em 2026-05-11)
+## Estado atual das sprints (atualizado em 2026-07-19)
 
 ### ✅ Sprint 0.1 — Setup do monorepo
 Turborepo + pnpm workspaces configurados. Pacotes `@calculosonline/core` e `@calculosonline/ui` criados.
@@ -94,8 +95,8 @@ Componentes globais: `Header`, `Footer`, `PageSeo`, `JsonLd`.
   por slug abaixo do formulário de cada calculadora.
 - **MDX configurado** em `next.config.ts` com remark-gfm, rehype-slug, rehype-autolink-headings.
 - **`@tailwindcss/typography`** configurado — classe `prose` usada no ContentLoader.
-- **next-sitemap** configurado em `apps/web/next-sitemap.config.js`; script `postbuild` no
-  `apps/web/package.json`; gera `public/sitemap.xml` com 33 URLs (prioridade 0.9 para calculadoras).
+- ~~next-sitemap configurado em `apps/web/next-sitemap.config.js`~~ — substituído na Sprint 1.4.2
+  por `app/sitemap.ts` nativo (ver abaixo).
 - **IndexNow** — rota `apps/web/src/app/api/indexnow/route.ts` (POST autenticado por `INTERNAL_API_KEY`).
 
 ### ✅ Sprint 1.4.1 — Memória de cálculo + identidade visual
@@ -120,6 +121,33 @@ Componentes globais: `Header`, `Footer`, `PageSeo`, `JsonLd`.
 - Validação executada: `pnpm --filter @calculosonline/core test`, `pnpm --filter @calculosonline/core typecheck`,
   `pnpm --filter @calculosonline/ui typecheck`, `pnpm --filter web typecheck` e `pnpm --filter web build`.
 
+### ✅ Sprint 1.4.2 — Correções de SEO (diagnóstico GSC) + sitemap nativo + Playwright E2E
+- **Diagnóstico:** export do Search Console (`gsc/`, 2026-07-17, últimos 3 meses) mostrou
+  ~1.120 impressões e apenas 2 cliques — CTR ~0% inclusive em páginas já na 1ª página
+  (`margem-lucro` pos. 9.6, `porcentagem` pos. 9.1, `das-mei` pos. 10.3). Causa raiz: title
+  genérico e FAQPage com perguntas idênticas em todas as calculadoras.
+- **Title por calculadora** — `buildCalculatorTitle()` em `apps/web/src/lib/seo.ts` substitui o
+  padrão fixo `"... Online e Gratuita 2026"` por `"... 2026 — Grátis, sem Cadastro"`. Corrige de
+  quebra um bug real: `inss`, `irpf` e `das-mei` já tinham "2026" no `tituloLongo`, duplicando o
+  ano no title final.
+- **FAQPage real** — `apps/web/src/lib/faq.ts` (novo) faz parsing da seção "Perguntas
+  frequentes" de cada MDX em `content/calculadoras/[slug].mdx` (101 perguntas nas 20
+  calculadoras) e alimenta o schema em `lib/schema.ts`, no lugar das 3 perguntas genéricas
+  fixas. Fallback genérico mantido só para calculadora futura sem MDX ainda.
+- **Sitemap/robots nativos** — `next-sitemap` removido (dependência, `next-sitemap.config.js`,
+  script `postbuild`, `public/sitemap.xml` e `public/robots.txt` estáticos). Substituído por
+  `apps/web/src/app/sitemap.ts` e `apps/web/src/app/robots.ts` (`MetadataRoute`), no mesmo
+  padrão usado no Recibo Fácil: `lastModified` real por calculadora (`calc.dataAtualizacao` do
+  registry, não data de build) e prioridade maior (0.95) para calculadoras `featured`. Também
+  corrige um bug do sitemap antigo: incluía `/privacidade` (rota que só redireciona) em vez da
+  canônica `/politica-de-privacidade`.
+- **Playwright E2E** — `apps/web/playwright.config.ts` + `apps/web/tests/e2e/` (mesmo padrão do
+  Recibo Fácil: `testDir: ./tests/e2e`, `webServer` reaproveitando o dev server, projeto único
+  `chromium`). Specs: `calculadora-margem-lucro.spec.ts` (fluxo completo do form ao resultado,
+  como referência para as demais calculadoras), `seo-metadata.spec.ts` (trava o fix de title e
+  FAQPage acima), `sitemap-robots.spec.ts` (trava o sitemap/robots nativos acima),
+  `categorias-navegacao.spec.ts`. Scripts `test:e2e`/`test:e2e:ui` em `apps/web/package.json`.
+
 ### ⏭️ Sprint 1.5 — PWA + Android (próxima)
 
 ---
@@ -131,8 +159,9 @@ Componentes globais: `Header`, `Footer`, `PageSeo`, `JsonLd`.
   opcionais; construir objetos condicionalmente antes de chamar funções do core.
 - **MDX em `apps/web/content/`** (não na raiz `content/`) — necessário para o import
   dinâmico do webpack funcionar a partir de `apps/web/src/components/ContentLoader.tsx`.
-- **next-sitemap sem `require()` de TS** — o config usa `transform` em vez de `additionalPaths`
-  com `require('./src/lib/calculators')`, pois CommonJS não resolve TypeScript.
+- **Sitemap via `app/sitemap.ts` nativo, não `next-sitemap`** — evita o problema de o config
+  CommonJS do next-sitemap não conseguir importar `lib/calculators.ts` (TS) diretamente; o
+  sitemap nativo roda no mesmo runtime do app e importa o registry sem fricção.
 - **Memória de cálculo como contrato de API** — cada cálculo pode retornar `memoriaCalculo`;
   quando ausente, a UI gera uma versão compatível a partir de `detalhamento` via
   `Explainability.criarMemoriaCalculo`.

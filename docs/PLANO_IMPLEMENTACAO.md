@@ -70,7 +70,7 @@ FASE 3: Consolidação      (Semanas 25–52) → 100+ calc + API + liderança d
 - [ ] Criar app Next.js 14+ com App Router
 - [ ] Configurar SSG para páginas de calculadoras (`generateStaticParams`)
 - [ ] Configurar ISR (revalidation) para tabelas legislativas (revalidar a cada 24h)
-- [ ] Configurar `next-sitemap` para geração automática do sitemap.xml
+- [x] Configurar geração automática do sitemap.xml (`app/sitemap.ts` nativo do Next — não `next-sitemap`, ver AGENTS.md)
 - [ ] Configurar Open Graph e meta tags padrão
 - [ ] Instalar e configurar Tailwind CSS
 

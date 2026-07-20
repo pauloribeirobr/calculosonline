@@ -6,7 +6,7 @@ import {
   getRelacionadas,
 } from '@/lib/calculators'
 import { gerarSchemasCalculadora } from '@/lib/schema'
-import { siteConfig } from '@/lib/seo'
+import { buildCalculatorTitle, siteConfig } from '@/lib/seo'
 import { CalculadoraPageClient } from '@/components/calculadoras/CalculadoraPageClient'
 import { ContentLoader } from '@/components/ContentLoader'
 
@@ -27,7 +27,7 @@ export async function generateMetadata({
   const calc = findCalculator(slug)
   if (!calc) return {}
 
-  const title = `${calc.tituloLongo} Online e Gratuita 2026`
+  const title = buildCalculatorTitle(calc)
   const url = `${siteConfig.url}/calculadora/${calc.slug}`
 
   return {
