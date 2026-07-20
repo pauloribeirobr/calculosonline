@@ -177,6 +177,12 @@ Componentes globais: `Header`, `Footer`, `PageSeo`, `JsonLd`.
 
 ## Decisões técnicas registradas
 
+- **Sem gate de cobertura 100% no CI** (2026-07-20) — `packages/core/vitest.config.ts` tinha
+  `thresholds: { lines/functions/branches/statements: 100 }`, e o CI rodava
+  `test:coverage` (falhava a cada branch não coberto, ex.: `explainability/index.ts`).
+  Removido (thresholds do vitest.config.ts + step do CI trocado para `test` sem `--coverage`) a
+  pedido do Paulo — o Recibo Fácil não usa esse tipo de gate de cobertura, e aqui também não.
+  `test:coverage` continua disponível localmente como relatório informativo, só não falha mais.
 - **Tailwind 3** (não v4) — compatibilidade com Recibo Fácil.
 - **`exactOptionalPropertyTypes: true`** no TypeScript — não passar `undefined` para props
   opcionais; construir objetos condicionalmente antes de chamar funções do core.
