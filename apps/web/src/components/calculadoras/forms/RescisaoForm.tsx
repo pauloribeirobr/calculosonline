@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularRescisao } from '@calculosonline/core/trabalhista'
+import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -38,6 +39,7 @@ export function RescisaoForm({ onResult, onError, isLoading }: FormProps) {
           prefix: 'R$',
           placeholder: '3000',
           type: 'number',
+          quickAdd: QUICK_ADD_SALARIO,
         },
         dataAdmissao: { label: 'Data de Admissão', type: 'date' },
         dataRescisao: { label: 'Data de Rescisão', type: 'date' },

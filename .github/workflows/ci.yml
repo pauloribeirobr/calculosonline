@@ -34,8 +34,8 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Test core engine (coverage report)
-        run: pnpm --filter @calculosonline/core test:coverage
+      - name: Test core engine
+        run: pnpm --filter @calculosonline/core test
 
       - name: Build
         run: pnpm build

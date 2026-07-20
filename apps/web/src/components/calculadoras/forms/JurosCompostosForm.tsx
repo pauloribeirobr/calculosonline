@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularJurosCompostos } from '@calculosonline/core/financeiro'
+import { QUICK_ADD_INVESTIMENTO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -24,7 +25,13 @@ export function JurosCompostosForm({ onResult, onError, isLoading }: FormProps) 
     <CalculatorForm
       schema={schema}
       fields={{
-        principal: { label: 'Capital inicial', prefix: 'R$', placeholder: '10000', type: 'number' },
+        principal: {
+          label: 'Capital inicial',
+          prefix: 'R$',
+          placeholder: '10000',
+          type: 'number',
+          quickAdd: QUICK_ADD_INVESTIMENTO,
+        },
         taxaJuros: {
           label: 'Taxa de juros',
           suffix: '(decimal)',

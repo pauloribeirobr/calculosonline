@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularMargemLucro } from '@calculosonline/core/negocios'
+import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -28,7 +29,13 @@ export function MargemLucroForm({ onResult, onError, isLoading }: FormProps) {
     <CalculatorForm
       schema={schema}
       fields={{
-        custoTotal: { label: 'Custo total', prefix: 'R$', placeholder: '100', type: 'number' },
+        custoTotal: {
+          label: 'Custo total',
+          prefix: 'R$',
+          placeholder: '100',
+          type: 'number',
+          quickAdd: QUICK_ADD_SALARIO,
+        },
         modo: {
           label: 'Calcular a partir de',
           type: 'select',

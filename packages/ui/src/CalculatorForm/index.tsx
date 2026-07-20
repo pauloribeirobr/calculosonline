@@ -12,6 +12,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import type { z, ZodObject, ZodRawShape } from 'zod'
 import { cn } from '../utils/cn'
 
+/** Um chip de valor rápido — soma `value` ao valor atual do campo ao clicar. */
+export interface QuickAddButton {
+  label: string
+  value: number
+}
+
 /**
  * Metadados descritivos por campo. Combinados com o schema Zod,
  * permitem renderizar formulários de calculadora automaticamente.
@@ -27,6 +33,12 @@ export interface FieldMeta {
   suffix?: string
   type?: 'number' | 'text' | 'select' | 'radio' | 'date'
   options?: Array<{ value: string; label: string }>
+  /**
+   * Chips de valor rápido abaixo do campo, mesmo padrão visual do Recibo
+   * Fácil: "Zerar" zera o campo; cada chip SOMA ao valor atual (não
+   * substitui). Só se aplica a campos numéricos simples (não select/radio).
+   */
+  quickAdd?: QuickAddButton[]
 }
 
 export interface CalculatorFormProps<T extends ZodRawShape> {
@@ -52,11 +64,23 @@ export function CalculatorForm<T extends ZodRawShape>({
   const {
     register,
     handleSubmit,
+    setValue,
+    getValues,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema) as unknown as Resolver<FormValues>,
     defaultValues: defaultValues as DefaultValues<FormValues>,
   })
+
+  function handleQuickAdd(fieldName: Path<FormValues>, addValue: number) {
+    const atual = Number(getValues(fieldName)) || 0
+    const proximo = Math.round((atual + addValue) * 100) / 100
+    setValue(fieldName, proximo as never, { shouldValidate: true, shouldDirty: true })
+  }
+
+  function handleClearField(fieldName: Path<FormValues>) {
+    setValue(fieldName, 0 as never, { shouldValidate: true, shouldDirty: true })
+  }
 
   return (
     <form
@@ -164,6 +188,32 @@ export function CalculatorForm<T extends ZodRawShape>({
                 </span>
               )}
             </div>
+
+            {fieldMeta.quickAdd && fieldMeta.quickAdd.length > 0 && (
+              <div className="mt-1.5 flex flex-wrap gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => handleClearField(fieldName)}
+                  disabled={isLoading}
+                  title="Zerar valor"
+                  className="inline-flex items-center gap-1 rounded-md border border-gray-300 bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <span aria-hidden>×</span> Zerar
+                </button>
+                {fieldMeta.quickAdd.map((btn) => (
+                  <button
+                    key={btn.label}
+                    type="button"
+                    onClick={() => handleQuickAdd(fieldName, btn.value)}
+                    disabled={isLoading}
+                    title={`Adicionar ${fieldMeta.prefix ?? ''} ${btn.value.toLocaleString('pt-BR')}`.trim()}
+                    className="inline-flex items-center rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {btn.label}
+                  </button>
+                ))}
+              </div>
+            )}
 
             {fieldMeta.hint && !error && (
               <p id={`${name}-hint`} className="text-xs text-gray-500">

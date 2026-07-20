@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularDecimoTerceiro } from '@calculosonline/core/trabalhista'
+import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -33,6 +34,7 @@ export function DecimoTerceiroForm({ onResult, onError, isLoading }: FormProps) 
           prefix: 'R$',
           placeholder: '3000',
           type: 'number',
+          quickAdd: QUICK_ADD_SALARIO,
         },
         mesAdmissao: {
           label: 'Mês de admissão (1-12)',

@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularDASMEI } from '@calculosonline/core/impostos'
+import { QUICK_ADD_VALOR_GRANDE } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -41,6 +42,7 @@ export function DASMEIForm({ onResult, onError, isLoading }: FormProps) {
           label: 'Faturamento anual (opcional)',
           prefix: 'R$',
           hint: 'Para verificar se está dentro do teto MEI (R$ 81.000)',
+          quickAdd: QUICK_ADD_VALOR_GRANDE,
         },
       }}
       onSubmit={handleSubmit}

@@ -54,7 +54,9 @@ test.describe('metadata das páginas de calculadora', () => {
     }
   })
 
-  test('WebApplication e BreadcrumbList continuam presentes no JSON-LD', async ({ page }) => {
+  test('WebApplication, BreadcrumbList e HowTo continuam presentes no JSON-LD', async ({
+    page,
+  }) => {
     await page.goto('/calculadora/porcentagem')
 
     const types = await page.evaluate(() =>
@@ -63,6 +65,8 @@ test.describe('metadata das páginas de calculadora', () => {
       ),
     )
 
-    expect(types).toEqual(expect.arrayContaining(['WebApplication', 'BreadcrumbList', 'FAQPage']))
+    expect(types).toEqual(
+      expect.arrayContaining(['WebApplication', 'BreadcrumbList', 'HowTo', 'FAQPage']),
+    )
   })
 })

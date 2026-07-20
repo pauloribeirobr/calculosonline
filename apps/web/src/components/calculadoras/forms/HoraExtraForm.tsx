@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularHoraExtra } from '@calculosonline/core/trabalhista'
+import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -23,7 +24,13 @@ export function HoraExtraForm({ onResult, onError, isLoading }: FormProps) {
     <CalculatorForm
       schema={schema}
       fields={{
-        salarioBruto: { label: 'Salário Bruto', prefix: 'R$', placeholder: '3000', type: 'number' },
+        salarioBruto: {
+          label: 'Salário Bruto',
+          prefix: 'R$',
+          placeholder: '3000',
+          type: 'number',
+          quickAdd: QUICK_ADD_SALARIO,
+        },
         jornadaMensalHoras: {
           label: 'Jornada contratual',
           type: 'select',
