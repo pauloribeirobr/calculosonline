@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularIRPF } from '@calculosonline/core/impostos'
+import { QUICK_ADD_VALOR_GRANDE } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -32,6 +33,7 @@ export function IRPFForm({ onResult, onError, isLoading }: FormProps) {
           prefix: 'R$',
           placeholder: '60000',
           hint: 'Total bruto recebido no ano',
+          quickAdd: QUICK_ADD_VALOR_GRANDE,
         },
         irrfRetidoFonte: {
           label: 'IRRF retido na fonte (anual)',

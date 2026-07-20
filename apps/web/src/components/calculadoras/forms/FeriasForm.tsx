@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularFerias } from '@calculosonline/core/trabalhista'
+import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -28,7 +29,13 @@ export function FeriasForm({ onResult, onError, isLoading }: FormProps) {
     <CalculatorForm
       schema={schema}
       fields={{
-        salarioBruto: { label: 'Salário Bruto', prefix: 'R$', placeholder: '3000', type: 'number' },
+        salarioBruto: {
+          label: 'Salário Bruto',
+          prefix: 'R$',
+          placeholder: '3000',
+          type: 'number',
+          quickAdd: QUICK_ADD_SALARIO,
+        },
         diasFaltas: {
           label: 'Dias de faltas injustificadas',
           suffix: 'dias',

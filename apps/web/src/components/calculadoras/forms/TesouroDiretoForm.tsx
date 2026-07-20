@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularTesouroDireto } from '@calculosonline/core/investimentos'
+import { QUICK_ADD_INVESTIMENTO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -25,7 +26,13 @@ export function TesouroDiretoForm({ onResult, onError, isLoading }: FormProps) {
     <CalculatorForm
       schema={schema}
       fields={{
-        valorInicial: { label: 'Valor inicial', prefix: 'R$', placeholder: '10000', type: 'number' },
+        valorInicial: {
+          label: 'Valor inicial',
+          prefix: 'R$',
+          placeholder: '10000',
+          type: 'number',
+          quickAdd: QUICK_ADD_INVESTIMENTO,
+        },
         tipo: {
           label: 'Tipo de título',
           type: 'select',

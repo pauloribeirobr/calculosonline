@@ -148,6 +148,29 @@ Componentes globais: `Header`, `Footer`, `PageSeo`, `JsonLd`.
   FAQPage acima), `sitemap-robots.spec.ts` (trava o sitemap/robots nativos acima),
   `categorias-navegacao.spec.ts`. Scripts `test:e2e`/`test:e2e:ui` em `apps/web/package.json`.
 
+### ✅ Sprint 1.4.3 — Fix lastmod do sitemap + schema HowTo + chips de valor rápido
+- **Fix do sitemap:** `dataAtualizacao` (data de revisão das tabelas legislativas, fixa em
+  2026-01-01 em todas as 20 calculadoras) estava sendo usada sozinha como `lastmod`, então a
+  mudança de title/FAQ da Sprint 1.4.2 não movia o sinal de freshness no sitemap de produção
+  (reportado pelo Paulo direto no `calculosonline.com.br/sitemap.xml`). Fix em
+  `apps/web/src/app/sitemap.ts`: nova constante `seoRefreshDate`, bumpada manualmente a cada
+  mudança de SEO relevante — `lastmod` de cada calculadora usa a mais recente entre as duas
+  datas, sem alterar o que é mostrado ao usuário como data de revisão legislativa.
+- **Schema `HowTo`** adicionado em `apps/web/src/lib/schema.ts` (3 passos genéricos: preencher,
+  calcular, ver detalhamento) — fecha a lacuna do plano de negócios (seção 3.1) que pedia
+  `HowTo`/`FAQPage` para rich snippets.
+- **Chips de valor rápido** — portado o `CurrencyInputWithQuickAdd` do Recibo Fácil (mesmas
+  classes Tailwind: chip cinza "Zerar" + chips azuis "+N") como opção `quickAdd` em `FieldMeta`
+  do `CalculatorForm` compartilhado (`packages/ui/src/CalculatorForm/index.tsx`): "Zerar" zera o
+  campo, cada chip soma ao valor atual (não substitui, arredondado a 2 casas). Aplicado no campo
+  de valor principal de 16 formulários / 17 calculadoras com campo R$ (todas exceto
+  IMC/Calorias/Porcentagem), com 3 presets por escala em
+  `apps/web/src/lib/quickAddPresets.ts` (`QUICK_ADD_SALARIO`, `QUICK_ADD_INVESTIMENTO`,
+  `QUICK_ADD_VALOR_GRANDE`).
+- Validação: `pnpm typecheck` + `pnpm lint` + `pnpm build` limpos, 22/22 e2e verdes (17 da
+  Sprint 1.4.2 + 5 novos em `quick-add-chips.spec.ts`). Web app versionado 0.3.0. Ver
+  [CHANGELOG.md](CHANGELOG.md).
+
 ### ⏭️ Sprint 1.5 — PWA + Android (próxima)
 
 ---

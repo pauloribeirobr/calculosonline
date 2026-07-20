@@ -10,7 +10,7 @@
  */
 
 export { CalculatorForm } from './CalculatorForm'
-export type { CalculatorFormProps, FieldMeta } from './CalculatorForm'
+export type { CalculatorFormProps, FieldMeta, QuickAddButton } from './CalculatorForm'
 
 export { CalculatorResult } from './CalculatorResult'
 export type { CalculatorResultProps, CalculatorResultFormato } from './CalculatorResult'

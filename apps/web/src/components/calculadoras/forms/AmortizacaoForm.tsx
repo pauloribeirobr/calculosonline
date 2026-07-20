@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularAmortizacao } from '@calculosonline/core/financeiro'
+import { QUICK_ADD_VALOR_GRANDE } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 interface AmortizacaoFormProps extends FormProps {
@@ -41,6 +42,7 @@ export function AmortizacaoForm({
           prefix: 'R$',
           placeholder: '10000',
           type: 'number',
+          quickAdd: QUICK_ADD_VALOR_GRANDE,
         },
         taxaMensalJuros: {
           label: 'Taxa mensal de juros',

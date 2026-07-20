@@ -4,8 +4,8 @@ import { getFaqFromContent } from '@/lib/faq'
 
 /**
  * Bundle de JSON-LD por página de calculadora.
- * Inclui WebApplication, BreadcrumbList e FAQPage — as perguntas do FAQPage
- * vêm da seção "Perguntas frequentes" do MDX de cada calculadora
+ * Inclui WebApplication, BreadcrumbList, HowTo e FAQPage — as perguntas do
+ * FAQPage vêm da seção "Perguntas frequentes" do MDX de cada calculadora
  * (ver lib/faq.ts), com fallback genérico apenas se o MDX ainda não existir.
  */
 export function gerarSchemasCalculadora(calc: CalculadoraRegistro): unknown[] {
@@ -46,6 +46,36 @@ export function gerarSchemasCalculadora(calc: CalculadoraRegistro): unknown[] {
     ],
   }
 
+  const howTo = {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: `Como usar a ${calc.tituloLongo}`,
+    description: calc.descricao,
+    inLanguage: 'pt-BR',
+    isAccessibleForFree: true,
+    totalTime: 'PT1M',
+    step: [
+      {
+        '@type': 'HowToStep',
+        position: 1,
+        name: 'Preencha os dados',
+        text: `Informe os valores solicitados no formulário da ${calc.titulo.toLowerCase()}.`,
+      },
+      {
+        '@type': 'HowToStep',
+        position: 2,
+        name: 'Clique em calcular',
+        text: 'O resultado aparece instantaneamente, sem cadastro e sem envio de dados a servidores.',
+      },
+      {
+        '@type': 'HowToStep',
+        position: 3,
+        name: 'Veja o detalhamento',
+        text: `Abra "Ver detalhamento do cálculo" para conferir cada etapa com base em ${calc.fonteJuridica}.`,
+      },
+    ],
+  }
+
   const dataLabel = new Date(calc.dataAtualizacao + 'T12:00:00').toLocaleDateString('pt-BR')
   const faqFromContent = getFaqFromContent(calc.slug)
   const faqItems =
@@ -75,5 +105,5 @@ export function gerarSchemasCalculadora(calc: CalculadoraRegistro): unknown[] {
     })),
   }
 
-  return [webApp, breadcrumb, faq]
+  return [webApp, breadcrumb, howTo, faq]
 }

@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularIRRF } from '@calculosonline/core/impostos'
+import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -23,7 +24,13 @@ export function IRRFForm({ onResult, onError, isLoading }: FormProps) {
     <CalculatorForm
       schema={schema}
       fields={{
-        salarioBruto: { label: 'Salário Bruto', prefix: 'R$', placeholder: '5000', type: 'number' },
+        salarioBruto: {
+          label: 'Salário Bruto',
+          prefix: 'R$',
+          placeholder: '5000',
+          type: 'number',
+          quickAdd: QUICK_ADD_SALARIO,
+        },
         numeroDependentes: { label: 'Dependentes', suffix: 'pessoas' },
         pensaoAlimenticia: { label: 'Pensão alimentícia', prefix: 'R$' },
         outrasDeducoes: {

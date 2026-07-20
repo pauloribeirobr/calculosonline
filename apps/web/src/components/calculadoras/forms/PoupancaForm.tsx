@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularPoupanca } from '@calculosonline/core/investimentos'
+import { QUICK_ADD_INVESTIMENTO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -28,6 +29,7 @@ export function PoupancaForm({ onResult, onError, isLoading }: FormProps) {
           prefix: 'R$',
           placeholder: '5000',
           type: 'number',
+          quickAdd: QUICK_ADD_INVESTIMENTO,
         },
         prazoMeses: { label: 'Prazo', suffix: 'meses', placeholder: '12' },
         aporteMensal: {

@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularINSS } from '@calculosonline/core/impostos'
+import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -27,6 +28,7 @@ export function INSSForm({ onResult, onError, isLoading }: FormProps) {
           placeholder: '3000',
           type: 'number',
           hint: 'Ignorado para MEI (usa o salário mínimo)',
+          quickAdd: QUICK_ADD_SALARIO,
         },
         categoria: {
           label: 'Categoria',
