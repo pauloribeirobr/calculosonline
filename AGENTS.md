@@ -13,6 +13,8 @@ Stack: **Next.js + TypeScript** em monorepo **Turborepo**, com aplicativos **Tau
 - [docs/IDENTIDADE_VISUAL.md](docs/IDENTIDADE_VISUAL.md) — espelho do Recibo Fácil + tokens + estrutura de pastas
 - [prompts/](prompts/) — `sprint-*.md`: prompts de IA por sprint (0.1 a 2.4)
 - [CHANGELOG.md](CHANGELOG.md) — funcionalidades entregues em produção, versionado por app (mesmo padrão do Recibo Fácil)
+- [FEATURES.md](FEATURES.md) — lista numerada de features (`F1`, `F2`, ...), histórico + backlog, mesmo padrão do Recibo Fácil
+- [MEMORY.md](MEMORY.md) — diário de decisões/growth (o "porquê" por trás do Changelog/Features), mesmo padrão do Recibo Fácil. **Ao encerrar uma sessão com decisão de growth/negócio ou feature nova, atualizar `FEATURES.md`/`MEMORY.md` em vez de só crescer a seção "Estado atual das sprints" abaixo.**
 
 ## Projeto irmão — Recibo Fácil
 - Localização: `/home/paulo/projects/next/recibofacil` (em produção em recibofacil.com.br)
@@ -199,7 +201,13 @@ Componentes globais: `Header`, `Footer`, `PageSeo`, `JsonLd`.
 - **Cache local do Next** — erro em dev como `Cannot find module './vendor-chunks/zod@...'`
   normalmente indica `.next` corrompido/misturado entre `next dev` e `next build`; parar o
   servidor antigo e recriar `apps/web/.next` resolve. Em 2026-05-11, o cache quebrado foi movido
-  para `/tmp/calculosonline-next-cache-broken-20260511-2301`.
+  para `/tmp/calculosonline-next-cache-broken-20260511-2301`. **Reincidiu 2x em 2026-07-25/26**
+  durante e2e (Playwright, `reuseExistingServer: true`, roda `next dev`): 1ª vez por rodar
+  `pnpm build` (produção) antes do `test:e2e` no mesmo `.next`; 2ª vez por matar servidores `next
+  dev` concorrentes com `kill -9`/`fuser -k` em vez de deixar encerrar sozinho. Sintoma nos dois
+  casos: página renderiza sem CSS nenhum e sem JSON-LD, causando falhas de e2e espalhadas e sem
+  relação aparente com o código alterado. **Antes de rodar `test:e2e` depois de um `build` de
+  produção, ou depois de matar um `next dev` à força, apagar `apps/web/.next` primeiro.**
 
 ---
 

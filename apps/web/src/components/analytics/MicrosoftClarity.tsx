@@ -12,7 +12,10 @@ export function MicrosoftClarity() {
   if (process.env.NODE_ENV !== 'production' || !projectId) return null
 
   return (
-    <Script id="microsoft-clarity" strategy="afterInteractive">
+    // lazyOnload (não afterInteractive): o Clarity não é crítico e custa ~80–130ms de
+    // bloqueio da main thread (medido no Lighthouse, mesmo achado do Recibo Fácil).
+    // Carregando no idle pós-load, sai do caminho crítico e melhora TBT/INP no mobile.
+    <Script id="microsoft-clarity" strategy="lazyOnload">
       {`(function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
