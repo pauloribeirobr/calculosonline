@@ -19,7 +19,7 @@ test.describe('calculadora de margem de lucro', () => {
     await expect(resultado).toBeVisible()
     await expect(resultado).toContainText('R$ 150,00')
 
-    await page.getByRole('button', { name: 'Ver detalhamento do cálculo' }).click()
+    // Detalhamento fica sempre visível (sem toggle) — não precisa clicar pra abrir.
     const detalhamento = page.getByRole('list', { name: 'Detalhamento linha a linha' })
     await expect(detalhamento).toContainText('Margem de Lucro')
     await expect(detalhamento).toContainText('33,33%')

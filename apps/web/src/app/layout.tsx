@@ -72,6 +72,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://www.clarity.ms" />
+      </head>
       <body>
         <WebsiteJsonLd />
         <OrganizationJsonLd />

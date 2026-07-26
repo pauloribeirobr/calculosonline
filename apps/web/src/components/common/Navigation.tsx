@@ -12,13 +12,6 @@ interface NavigationProps {
   onItemClick?: () => void
 }
 
-const simpleLinks = [
-  { name: 'Categorias', href: '/categorias' },
-  { name: 'Blog', href: '/blog' },
-  { name: 'Sobre', href: '/sobre' },
-  { name: 'Contato', href: '/contato' },
-]
-
 // Quais categorias aparecem como dropdowns no topo (compactas).
 const navCategorias: CategoriaCalc[] = [
   'trabalhista',
@@ -55,22 +48,6 @@ export function Navigation({ mobile = false, onItemClick }: NavigationProps) {
             ))}
           </div>
         ))}
-        <div className="border-t border-gray-200 pt-2">
-          {simpleLinks.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={handleClick}
-              className={`block px-3 py-2 text-base ${
-                isActive(item.href)
-                  ? 'bg-brand-50 text-brand-600'
-                  : 'text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              {item.name}
-            </Link>
-          ))}
-        </div>
       </div>
     )
   }
@@ -114,17 +91,6 @@ export function Navigation({ mobile = false, onItemClick }: NavigationProps) {
             </Menu.Items>
           </Transition>
         </Menu>
-      ))}
-      {simpleLinks.map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          className={`text-sm font-semibold ${
-            isActive(item.href) ? 'text-brand-600' : 'text-gray-900 hover:text-brand-600'
-          }`}
-        >
-          {item.name}
-        </Link>
       ))}
     </>
   )

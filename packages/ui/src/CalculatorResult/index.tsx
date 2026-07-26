@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import type { ItemDetalhamento, ResultadoCalculo } from '@calculosonline/core'
 import { cn } from '../utils/cn'
 
@@ -40,6 +39,11 @@ function corNatureza(tipo: ItemDetalhamento['tipo']) {
     debito: 'text-result-negative',
     neutro: 'text-gray-700',
   }[tipo]
+}
+
+/** Prefixo (+)/(-) por linha — só nos itens que entram na soma (crédito/débito). */
+function sinalNatureza(tipo: ItemDetalhamento['tipo']): string {
+  return { credito: '+ ', debito: '− ', neutro: '' }[tipo]
 }
 
 type FormatoItem =
@@ -98,8 +102,6 @@ function formatarItem(item: ItemDetalhamento): string {
 }
 
 export function CalculatorResult({ resultado, formato, titulo }: CalculatorResultProps) {
-  const [aberto, setAberto] = useState(false)
-
   return (
     <div
       className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm"
@@ -127,61 +129,42 @@ export function CalculatorResult({ resultado, formato, titulo }: CalculatorResul
       )}
 
       <div className="divide-y divide-gray-100">
-        <button
-          type="button"
-          onClick={() => setAberto(!aberto)}
-          className={cn(
-            'flex w-full items-center justify-between px-4 py-3',
-            'text-sm font-medium text-gray-700 hover:bg-gray-50',
-            'focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500',
-          )}
-          aria-expanded={aberto}
-          aria-controls="detalhamento-lista"
+        <p className="px-4 py-3 text-sm font-medium text-gray-700">Detalhamento do cálculo</p>
+
+        <ul
+          id="detalhamento-lista"
+          className="space-y-1 px-4 py-2"
+          role="list"
+          aria-label="Detalhamento linha a linha"
         >
-          <span>Ver detalhamento do cálculo</span>
-          <span
-            className={cn('transition-transform duration-200', aberto && 'rotate-180')}
-            aria-hidden
-          >
-            ▼
-          </span>
-        </button>
+          {resultado.detalhamento.map((item, i) => {
+            const valorFormatado = formatarItem(item)
 
-        {aberto && (
-          <ul
-            id="detalhamento-lista"
-            className="space-y-1 px-4 py-2"
-            role="list"
-            aria-label="Detalhamento linha a linha"
-          >
-            {resultado.detalhamento.map((item, i) => {
-              const valorFormatado = formatarItem(item)
-
-              return (
-                <li key={i} className="flex items-baseline justify-between py-1">
-                  <span className="flex-1 pr-4 text-sm text-gray-600">
-                    {item.descricao}
-                    {item.formula && (
-                      <span className="ml-1 font-mono text-xs text-gray-400">
-                        ({item.formula})
-                      </span>
-                    )}
-                  </span>
-                  {valorFormatado && (
-                    <span
-                      className={cn(
-                        'text-sm font-medium tabular-nums',
-                        corNatureza(item.tipo),
-                      )}
-                    >
-                      {valorFormatado}
+            return (
+              <li key={i} className="flex items-baseline justify-between py-1">
+                <span className="flex-1 pr-4 text-sm text-gray-600">
+                  {item.descricao}
+                  {item.formula && (
+                    <span className="ml-1 font-mono text-xs text-gray-400">
+                      ({item.formula})
                     </span>
                   )}
-                </li>
-              )
-            })}
-          </ul>
-        )}
+                </span>
+                {valorFormatado && (
+                  <span
+                    className={cn(
+                      'text-sm font-medium tabular-nums',
+                      corNatureza(item.tipo),
+                    )}
+                  >
+                    {sinalNatureza(item.tipo)}
+                    {valorFormatado}
+                  </span>
+                )}
+              </li>
+            )
+          })}
+        </ul>
       </div>
 
       <div className="border-t border-gray-100 bg-gray-50 px-4 py-3">

@@ -50,6 +50,30 @@ export interface CalculatorFormProps<T extends ZodRawShape> {
   defaultValues?: Partial<z.infer<ZodObject<T>>>
 }
 
+/**
+ * Deriva os valores iniciais visíveis no formulário a partir dos `.default()`
+ * já declarados no schema Zod de cada calculadora — em vez de deixar campos
+ * opcionais (dependentes, descontos, meses etc.) em branco até o envio, o
+ * mesmo valor que o schema assumiria (0, "não", "moderado"...) já aparece
+ * preenchido. Evita duplicar o default em cada formulário e mantém uma única
+ * fonte de verdade (o schema). Campos obrigatórios (sem `.default()`) não são
+ * tocados — continuam em branco, com placeholder de exemplo.
+ */
+function extractSchemaDefaults<T extends ZodRawShape>(
+  schema: ZodObject<T>,
+): Partial<Record<keyof T, unknown>> {
+  const defaults: Partial<Record<keyof T, unknown>> = {}
+  for (const key of Object.keys(schema.shape) as Array<keyof T>) {
+    const fieldSchema = schema.shape[key] as unknown as {
+      _def?: { typeName?: string; defaultValue?: () => unknown }
+    }
+    if (fieldSchema?._def?.typeName === 'ZodDefault' && typeof fieldSchema._def.defaultValue === 'function') {
+      defaults[key] = fieldSchema._def.defaultValue()
+    }
+  }
+  return defaults
+}
+
 export function CalculatorForm<T extends ZodRawShape>({
   schema,
   fields,
@@ -61,6 +85,11 @@ export function CalculatorForm<T extends ZodRawShape>({
   // react-hook-form não consome bem os generics de Zod em wrappers, então
   // tratamos o estado interno como FieldValues e expomos o tipo correto no onSubmit.
   type FormValues = z.infer<typeof schema> & FieldValues
+  const resolvedDefaultValues = {
+    ...extractSchemaDefaults(schema),
+    ...defaultValues,
+  } as DefaultValues<FormValues>
+
   const {
     register,
     handleSubmit,
@@ -69,7 +98,7 @@ export function CalculatorForm<T extends ZodRawShape>({
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema) as unknown as Resolver<FormValues>,
-    defaultValues: defaultValues as DefaultValues<FormValues>,
+    defaultValues: resolvedDefaultValues,
   })
 
   function handleQuickAdd(fieldName: Path<FormValues>, addValue: number) {

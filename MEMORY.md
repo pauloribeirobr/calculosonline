@@ -1,0 +1,670 @@
+# Memory — Calculos Online
+
+Diário de decisões e contexto de growth (GSC/GA4/Clarity/negócio), no mesmo
+espírito do `MEMORY.md` do projeto irmão
+[Recibo Fácil](../recibofacil/MEMORY.md). Complementar a:
+
+- [`FEATURES.md`](FEATURES.md) — lista numerada de features (o "quê/quando").
+- [`CHANGELOG.md`](CHANGELOG.md) — detalhe técnico versionado (o "como").
+- [`AGENTS.md`](AGENTS.md) — stack, convenções, estrutura de pastas e fases
+  do roadmap (o "onde/padrão").
+
+Este arquivo é o "porquê" — decisões, diagnósticos e o histórico narrativo
+que não cabe em nenhum dos outros três.
+
+---
+
+## Ao voltar (resumo rápido)
+
+- **Correção importante (25/07, parte 4):** a hipótese "site com ~0 visitas
+  há 3 meses" **não é o que os dados mostram**. Cruzando o export novo do
+  GSC (25/07) com um export de GA4 que apareceu em `gsc/` na mesma sessão:
+  o site tem **230 usuários ativos reais nos últimos 28 dias** (2.352
+  eventos, 333 `calculator_calculated` — gente usando as calculadoras de
+  verdade), vindos de **Bing orgânico (179 sessões), Direto (52), Yahoo
+  referral (28) e — chamativo — "AI Assistant" via ChatGPT/Copilot (17
+  sessões, de graça, sem nenhuma otimização de GEO feita ainda)**. O que é
+  realmente ~0 é **especificamente o Google**: GA4 não registra nenhuma
+  sessão de "google / organic" no período, e o GSC (3 meses) mostra 1.133
+  impressões no Brasil mas só **2 cliques totais**. Ou seja: produto e
+  conteúdo já estão validados por uso real em outros canais — o problema é
+  autoridade/confiança especificamente no Google, não o site estar "morto".
+  Isso muda a leitura de risco (menos "está tudo quebrado", mais "falta
+  construir autoridade pro Google confiar") — ver detalhe completo em
+  [2026-07-25 (parte 4)](#2026-07-25-parte-4).
+- **Decisão de reestruturação (25/07): antes do AdSense, o roadmap prioriza
+  aquisição de tráfego no Google — Backlinks + `llms.txt`/GEO + Google
+  Ads** — ver seção P0 abaixo, agora com alvos específicos (as calculadoras
+  de trabalhista de maior volume/pior posição, não as 4 que já estão perto
+  da página 1).
+- **GA4 verificado (25/07) e ativo em produção** — `G-DZ6CT8JSZW` correto
+  (`NEXT_PUBLIC_GA_ID`), confirmado tanto pelo HTML de produção quanto pelos
+  230 usuários reais do export. Não há bug de tracking.
+- **Sprint atual:** 1.4.3 entregue (v0.3.0), Clarity ativado em 0.3.1.
+  Próxima planejada: **Sprint 1.5 — PWA + Android** (`AGENTS.md`) — Paulo
+  deve confirmar se ainda fura a fila à frente da aquisição (P0 abaixo).
+- **Fase 2 do plano de negócios (+30 calculadoras) está PAUSADA** desde
+  2026-07-19, reafirmada em 25/07 com dado real — até o Google mandar
+  tráfego para as 20 atuais. Não iniciar calculadoras novas sem revisitar
+  essa decisão.
+- **AdSense ainda não está ativo** — é a Sprint 1.6
+  (`docs/PLANO_IMPLEMENTACAO.md`), gate formal de `Fase 1 → Fase 2`, e
+  continua explicitamente **depois** de Backlinks + `llms.txt` + Google Ads
+  no roadmap (P0 abaixo).
+- **Nenhum "Aspecto de pesquisa" (rich result) registrado no GSC em 3
+  meses**, apesar de `FAQPage` (F10) e `HowTo` (F12) já implementados —
+  investigar com o Rich Results Test do Google antes de assumir que é só
+  falta de autoridade de domínio (ver F18 no `FEATURES.md`).
+
+---
+
+## Backlog ativo
+
+### P0 — Aquisição de tráfego no Google (antes do AdSense)
+
+Inserido em 2026-07-25 por pedido do Paulo, **refinado no mesmo dia** depois
+de cruzar o export novo do GSC com um export de GA4 (ver diário, parte 4).
+Racional revisado: o problema não é "site sem tráfego" (230 usuários/mês
+reais via Bing/Direct/AI), é o **Google especificamente** não confiar/
+rankear as páginas — GSC mostra 1.133 impressões/3 meses no Brasil e só 2
+cliques. AdSense sem tráfego do Google não serve pra nada; backlinks e GEO
+(`llms.txt`) atacam diretamente autoridade/confiança, que é o gargalo real,
+não só on-page (title/FAQ já foram corrigidos em F10/F12 e não resolveram
+sozinhos).
+
+**Alvos priorizados (não são as 4 calculadoras já perto da página 1):** as 7
+calculadoras com **mais impressão e pior posição** no GSC — ou seja, o
+Google já entende que são relevantes para a busca (aparecem), só não confia
+autoridade suficiente pra rankear bem:
+
+| Calculadora | Impressões (3m) | Posição média |
+|---|---|---|
+| `poupanca` | 191 | 65.9 |
+| `ferias` | 173 | 87.3 |
+| `fgts` | 166 | 90.7 |
+| `rescisao-trabalhista` | 134 | 91.9 |
+| `hora-extra` | 109 | 86.2 |
+| `decimo-terceiro` | 83 | 75.9 |
+| `financiamento` | 68 | 87.1 |
+
+(Para contraste: `margem-lucro` pos. 10.2, `porcentagem` pos. 9.3, `das-mei`
+pos. 12.3, `calorias` pos. 13.6 — essas já estão perto da página 1 e
+dependem mais de CTR pontual/backlink leve do que de uma campanha de
+autoridade.)
+
+1. ~~Confirmar o diagnóstico de tráfego~~ — ✅ resolvido nesta sessão (ver
+   "Ao voltar" e diário parte 4).
+2. **Backlinks — plano de link building**, focado nas 7 calculadoras acima:
+   - Diretórios BR de ferramentas/utilidades online e listas "melhores
+     calculadoras grátis" — baixo esforço, primeiro passo natural.
+   - Parcerias/guest posts em blogs de finanças pessoais, contabilidade e RH
+     linkando especificamente para férias/FGTS/rescisão/hora-extra/décimo
+     terceiro (o cluster trabalhista é 10 das 20 calculadoras e o de maior
+     volume de busca real, segundo o próprio GSC).
+   - **Cross-link editorial com o Recibo Fácil** (mesmo autor, público
+     adjacente): link contextual pontual em posts do blog do Recibo Fácil,
+     não footer-wide (evitar parecer PBN aos olhos do Google).
+   - Menções orgânicas em fóruns/comunidades BR quando genuinamente
+     relevantes, nunca spam.
+   - **Falta:** priorizar por esforço/impacto e decidir quem executa.
+3. **`llms.txt` + GEO — promovido de P2 para P0.** O GA4 mostra o canal "AI
+   Assistant" (ChatGPT + Copilot) já trazendo ~17 sessões/mês **sem
+   nenhuma otimização feita** — sinal validado de que vale investir aqui
+   antes até de backlinks amadurecerem (ciclo de meses) ou Ads rodarem.
+   Recibo Fácil já tem `frontend/public/llms.txt` como referência.
+4. **Google Ads — piloto de aquisição paga**, mesmos alvos do item 2:
+   - Objetivo: gerar tráfego/dado **atribuível ao Google especificamente**
+     (o produto já está validado via outros canais — 333
+     `calculator_calculated` em 28 dias), não "provar que o site funciona".
+   - Focar nas 7 calculadoras trabalhistas acima (maior volume real de
+     busca, ainda sem posição boa) em vez dos 4 termos já quase na página 1.
+   - **Falta decidir com o Paulo:** orçamento mensal, duração (referência:
+     4-6 semanas), e validar CPC real via Keyword Planner/Semrush antes de
+     criar as campanhas.
+5. **Investigar Rich Results.** `Aspecto da pesquisa.csv` do GSC veio vazio
+   nos últimos 3 meses — nenhum rich snippet concedido apesar de `FAQPage`
+   e `HowTo` já implementados. Rodar o Rich Results Test do Google em 2-3
+   páginas antes de assumir que é só falta de autoridade.
+6. **Sprint 1.6 — AdSense** — continua depois dos itens acima. Só ativar
+   quando houver tráfego real e atribuível ao Google.
+
+### P1 — próximas 2-3 semanas
+- **Centralizar SEO como no Recibo Fácil (parcial).** `HowTo` já portado
+  (F12, 2026-07-20). Falta: `buildMetadata()` com canonical alternates (evita
+  canibalização — relevante quando existirem páginas quase-duplicadas, ver
+  cauda longa em P2) e o resto de `JsonLd.tsx` do Recibo Fácil (`Article`,
+  `ItemList`, `BreadcrumbList` com `@id` — hoje o `BreadcrumbList` do
+  calculosonline não usa `@id`).
+- **Blog sazonal** — maior lacuna do plano de negócios (seção 3.2), nunca
+  implementado. GSC mostra cauda longa que um blog capturaria (variações de
+  "calculadora férias 2025/2026", "como calcular hora extra" etc.). Recibo
+  Fácil tem padrão pronto: `(marketing)/blog/*` + páginas segmentadas por
+  público. Decisão de escopo (quantos posts, quais temas primeiro) pendente.
+
+### P2 — impacto médio, mais barato
+- ~~`llms.txt` (SEO de IA/GEO)~~ — **promovido para P0** em 25/07 (canal AI
+  Assistant já validado com tráfego real, ver acima).
+- **Cauda longa via páginas programáticas** — `Consultas.csv` do GSC mostra
+  450+ variações de query para os mesmos ~15 conceitos (ex. 37 variações só
+  de "calculadora férias", quase todas com posição pior que 60). Recibo
+  Fácil resolve algo parecido com o pipeline de "modelos estáticos" via
+  Playwright (`frontend/scripts/check-modelos.mjs`); adaptar a ideia para
+  variações de título/H1 por calculadora, cuidando de canonical alternates.
+- **Tráfego internacional irrelevante** (Índia, Filipinas, Vietnã etc., 0
+  cliques) — baixa prioridade, só confirmar que não há problema de
+  hreflang/geo-targeting no Search Console.
+
+### P3 — decisão estratégica de roadmap
+- **Fase 2 pausada** (+30 calculadoras, prevista mês 3-6 no plano de
+  negócios) até resolver CTR/conteúdo das 20 atuais — cada calculadora nova
+  hoje herda o mesmo gargalo de conversão em vez de ajudar a resolvê-lo. Ver
+  candidatos já levantados na seção abaixo.
+- ~~Criar `docs/GROWTH.md`~~ — resolvido criando este próprio `MEMORY.md` na
+  raiz, no padrão do Recibo Fácil, em vez de um doc à parte em `docs/`.
+
+---
+
+## Candidatos de expansão de catálogo (Fase 2 — não priorizados)
+
+Registrado a pedido do Paulo em 2026-07-25 (ver [diário](#2026-07-25)).
+**Nenhuma dessas calculadoras foi implementada.** Padrão de componente a
+reutilizar é o mesmo das 20 atuais em todos os casos: registro em
+`calculatorRegistry` (`apps/web/src/lib/calculators.ts`), formulário +
+`CalculatorForm`/`CalculatorResult` (`@calculosonline/ui`), MDX editorial em
+`content/calculadoras/[slug].mdx` (fórmula + FAQ + base legal quando
+aplicável), `RelatedCalculators` no rodapé — **sem arquitetura nova**.
+
+**Bloqueios antes de priorizar a ordem final:**
+1. Fase 2 pausada (P3 acima) — revisitar só depois do CTR melhorar.
+2. Validação de volume de busca e KD no Semrush **ainda não foi feita** para
+   nenhum termo abaixo — é tarefa separada, a rodar antes de decidir ordem de
+   implementação (mesmo processo que o Recibo Fácil usa antes de priorizar
+   documentos novos do Hub).
+3. Confirmado nesta sessão: `calorias.mdx` já cobre TMB/TDEE/macros — as
+   novas calculadoras de Saúde abaixo não duplicam esse conteúdo.
+
+### Categoria nova: Tempo (`/categoria/tempo`)
+
+| Ordem | Calculadora | Slug proposto |
+|---|---|---|
+| 1 | Diferença entre datas | `diferenca-entre-datas` |
+| 2 | Calculadora de idade (anos/meses/dias/horas) — maior potencial de tráfego orgânico/viral | `idade` |
+| 3 | Dia da semana de uma data | `dia-da-semana` |
+| 4 | Conversor de fuso horário | `fuso-horario` |
+| 5 | Dias até o fim de semana | `dias-ate-fim-de-semana` |
+| 6 | Semana do ano (ISO) | `semana-do-ano` |
+| 7 | Prazo processual/dias úteis | `prazo-processual` |
+
+Item 7 reaproveita a mesma base legal (`LegalBadge`) já usada nas
+calculadoras de Trabalhistas.
+
+### Categoria Saúde (hoje: IMC, Calorias)
+
+| Calculadora | Slug proposto |
+|---|---|
+| Água recomendada por peso | `agua-diaria` |
+| Ritmo de corrida (pace) | `ritmo-corrida` |
+| 1RM (musculação) | `1rm` |
+| Dias férteis | `dias-ferteis` |
+| Idade gestacional | `idade-gestacional` |
+| Frequência cardíaca máxima | `frequencia-cardiaca-maxima` |
+| Percentual de gordura corporal | `percentual-gordura-corporal` |
+
+### Categoria Negócios (hoje: Margem de Lucro)
+
+| Calculadora | Slug proposto |
+|---|---|
+| Ponto de equilíbrio | `ponto-equilibrio` |
+| Markup e precificação | `markup-precificacao` |
+| Custo por funcionário (CLT) | `custo-funcionario-clt` |
+
+### Categoria Financeiras (dia a dia — hoje: 4 já existentes)
+
+| Calculadora | Slug proposto |
+|---|---|
+| Quanto economizar por dia para uma meta | `meta-economia-diaria` |
+| Calculadora de troco (notas/moedas) | `troco` |
+| Divisor de conta/gorjeta entre amigos | `divisor-conta-gorjeta` |
+| Quanto vale seu tempo por hora (baseado em salário) | `valor-hora-trabalho` |
+| Simulador de aposentadoria simples | `aposentadoria-simples` |
+
+---
+
+## Palavras-chave pendentes de validação no Semrush
+
+Consolidado em 2026-07-25 (antes estava espalhado em menções soltas de
+"validação de volume/KD pendente" em várias entradas). Paulo tem acesso ao
+Semrush e vai rodar volume de busca BR + KD para essas; assim que tiver os
+números, reordenar as prioridades abaixo de acordo.
+
+**Grupo 1 — decisão de backlink (mais urgente):** calculadora de décimo
+terceiro salário · calculadora 13º salário · calculadora de décimo terceiro
+· calculadora de férias · calculadora de férias clt · calcular férias
+online. Recomendação atual: décimo terceiro como alvo primário (posição
+atual melhor no GSC, 75.9, e timing sazonal — pico de busca nov/dez,
+backlink comprado em julho tem ~4 meses para maturar antes do pico); férias
+como alternativa/complemento (mais demanda total, evergreen, mas mais longe
+da página 1, 87.3). Concorrência checada via busca (25/07): sites
+independentes de porte parecido (meutudo.com.br, calcule.net, genyo.com.br,
+mobills.com.br, calcularferias.com.br, investnews.com.br, infinitepay.io)
+— não é bancão nem gov.br, disputa vencível.
+
+**Dados reais (25/07, Keyword Surfer do Paulo — volume BR, algumas com
+CPC):**
+
+| Termo | Volume/mês | CPC |
+|---|---|---|
+| decimo terceiro salario | **550.000** | — |
+| calculadora salario liquido (+ variantes: calcular/calculo, líquido/liquido) | **246.000** | — |
+| calculadora de ferias (+ variantes: calculadora/calcule/calculo, ferias/férias) | **201.000** | — |
+| calcular decimo terceiro | 135.000 | US$0,06 |
+| calculadora decimo terceiro / calcular décimo terceiro / cálculo décimo terceiro / décimo terceiro cálculo | 135.000 | — |
+| calcular ferias | ≥135.000 (corte na captura) | — |
+| calcular 13 salario | 40.500 | US$0,05 |
+
+**Leitura:** décimo terceiro é de longe o maior cluster (550k no termo-
+cabeça sozinho) — mantém a recomendação de alvo primário, reforçada pelo
+timing sazonal (nov/dez) já registrado acima. **Achado novo importante:**
+`salario-liquido` **não estava nos 7 alvos originais** (esses foram
+escolhidos só por impressão no GSC, e essa página tinha só 31) — mas é a
+**única página com clique real no GSC** e a **melhor posição de todas
+(54,8, bem menos distância até a página 1 que as outras)**, e agora sabemos
+que a demanda é de 246k/mês. Isso a torna uma concorrente séria ao décimo
+terceiro para o link primário — potencialmente mais rápida de mover (menos
+distância + já converte um pouco) mesmo tendo menos volume total. CPC
+baixíssimo (US$0,05-0,06) nos termos com dado confirma perfil informacional
+ideal pra AdSense. **Ainda faltam:** números de férias com CPC, e revisitar
+se `salario-liquido` deve entrar na lista de alvos do P0 no lugar de um dos
+7 originais (provavelmente `financiamento`, que é o mais competitivo e
+mais fraco em intenção pura do grupo).
+
+**Grupo 2 — as outras 5 páginas-alvo do P0** (decide se entram na fila de
+backlink/Ads depois da primeira): calculadora de fgts · calculadora de
+rescisão trabalhista · calculadora de hora extra · calculadora de poupança
+· simulador de financiamento.
+
+**Grupo 3 — candidatos de expansão de catálogo** (Fase 2 pausada, ver
+§Candidatos de expansão de catálogo acima — validação já pendente desde a
+reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
+- Tempo: calculadora de diferença entre datas · calcular idade exata · que
+  dia da semana foi · conversor de fuso horário · quantos dias faltam para
+  o fim de semana · que semana do ano é hoje · calculadora de prazo
+  processual (dias úteis)
+- Saúde: quanto de água devo beber por dia · calculadora de ritmo de
+  corrida (pace) · calculadora de 1RM · calculadora de dias férteis ·
+  calculadora de idade gestacional · calculadora de frequência cardíaca
+  máxima · calculadora de percentual de gordura corporal
+- Negócios: calculadora de ponto de equilíbrio · calculadora de markup ·
+  calculadora de custo por funcionário CLT
+- Financeiras: calculadora quanto economizar por dia · calculadora de
+  troco · divisor de conta entre amigos · quanto vale minha hora de
+  trabalho · simulador de aposentadoria simples
+
+## Diário
+
+### 2026-07-26 (parte 9) — `pnpm dev` caindo sozinho (falso alarme de "navbar quebrada")
+
+Paulo reportou navbar e depois FAQ "não funcionando" (prints do dropdown de
+categorias e do accordion de FAQ na home). Testei os dois via Playwright
+num servidor recém-subido e **ambos funcionaram normalmente** — dropdown
+abre com os 6 itens certos, FAQ expande a resposta. Antes de descartar como
+"não reproduz", Paulo mandou o print decisivo: o terminal dele mostrando
+`pnpm dev` (via `turbo run dev`) **encerrando sozinho** depois de ~1min35,
+voltando pro prompt do shell.
+
+**Causa real:** `turbo.json` tinha `"ui": "tui"` — o modo de terminal
+interativo do Turborepo 2.x, com bug conhecido de encerrar tarefas
+`persistent: true` (como `dev`) sem aviso em certos terminais. Quando o
+servidor morre no meio da sessão, qualquer interação para de responder —
+exatamente o sintoma que parecia "navbar/FAQ quebrados", mas era o site
+inteiro órfão de servidor. Como hoje só `web` tem script `dev` (nem `core`
+nem `ui` têm), o TUI não coordena nada em paralelo aqui — era overhead
+puro. **Fix (F30, v0.4.2):** `"ui": "stream"` (log sequencial clássico,
+sem essa instabilidade). Validado: processo `pnpm dev` ficou vivo 100s+
+(antes morria ~90s); navbar e FAQ retestados no servidor saudável, ambos
+OK — confirma que o código deles nunca teve o bug.
+
+**Erro de processo encontrado e corrigido nesta entrada:** um edit meu
+anterior (registro do F29) tinha apagado sem querer a linha de cabeçalho
+da tabela do `CHANGELOG.md` (`old_string`/`new_string` da edição não
+preservou o cabeçalho) — passou despercebido até eu conferir a estrutura
+do arquivo agora. Restaurado. **Lição:** ao inserir uma linha nova no topo
+de uma tabela markdown via edição, sempre incluir o cabeçalho inteiro no
+`new_string`, não só a âncora da linha anterior — conferir a saída depois
+de edições em sequência rápida no mesmo arquivo.
+
+### 2026-07-26 (parte 8) — Detalhamento sempre aberto + sinal (+)/(−)
+
+Continuação da parte 7: Paulo mandou um print do resultado de
+`salario-liquido` achando que tinha visto "3000" preenchido no Salário
+Bruto com um erro "Required" ao mesmo tempo — parecia bug de sincronismo.
+Comecei a reproduzir com Playwright (`type` char a char) antes de concluir
+qualquer coisa, mas o próprio Paulo confirmou que "3000" era só o
+placeholder (texto cinza) — sem bug, só uma leitura errada do print.
+**Anotado como sugestão de UX pendente:** placeholder com número plausível
+(ex. "3000") pode ser confundido com valor real preenchido — considerar
+estilo mais claramente "exemplo" (ex. prefixo "Ex:") numa próxima rodada de
+UX, não feito nesta sessão.
+
+**Implementado (F29, v0.4.1):** (1) `CalculatorResult` — removido o toggle
+"Ver detalhamento do cálculo" (useState + botão); a lista de detalhamento
+agora renderiza sempre aberta, sem clique necessário, virando um header
+estático "Detalhamento do cálculo". (2) Cada linha ganhou prefixo "+ "
+(crédito) ou "− " (débito) além da cor já existente — `sinalNatureza()`
+usa o mesmo campo `tipo` do `ItemDetalhamento` que já alimentava
+`corNatureza()`. Linha final/neutra (ex. "Salário Líquido") continua sem
+sinal. Ajustado 1 e2e que clicava no botão removido.
+
+**`.next` corrompeu de novo, causa diferente desta vez:** 1ª rodada pós-fix
+veio com falhas espalhadas de novo (mesmo padrão de 25/07 — sem CSS, sem
+JSON-LD). Desta vez não foi `build`+`dev` misturado — foi eu matando
+servidores `next dev` concorrentes (das minhas próprias verificações
+ad-hoc com Playwright) via `kill -9`/`fuser -k` em vez de deixar encerrar
+sozinho, deixando o `.next` num estado inconsistente de novo. Resolvido do
+mesmo jeito (apagar `.next`), reforçado no `AGENTS.md` com a causa nova.
+22/22 e2e verdes na rodada limpa.
+
+### 2026-07-25/26 (parte 7) — UX de preenchimento + limpeza de navbar
+
+Paulo notou que o preenchimento das 20 calculadoras não é amigável — nenhum
+campo tem valor padrão visível (nem 0) — e pediu pra comparar com
+calculadoras/sistemas de boa UX e sugerir mudanças.
+
+**Fix implementado (F28, v0.4.0):** auditoria achou que os 19 formulários já
+declaravam `.default(0)`/`.default('nao')`/etc. nos schemas Zod, mas nenhum
+form passava `defaultValues` pro `CalculatorForm` — o default só valia no
+cálculo pós-envio, nunca aparecia visualmente. Corrigido de forma
+centralizada: `CalculatorForm` (`packages/ui/src/CalculatorForm/index.tsx`)
+ganhou `extractSchemaDefaults()`, que lê os `.default()` do próprio schema
+via introspecção e pré-popula o form — uma única mudança beneficia as 19
+calculadoras, sem duplicar valor em cada uma (fonte única de verdade = o
+schema). Campos obrigatórios (sem `.default()`, ex. Salário Bruto) ficam
+em branco de propósito, só com placeholder — pré-preencher um valor falso
+num campo que representa a situação real do usuário (salário, valor de
+empréstimo) seria arriscado numa calculadora trabalhista/legal, ao contrário
+de calculadoras "de brincar com número" tipo hipoteca do NerdWallet.
+Verificado com Playwright ad-hoc (sem `chromium-cli` no ambiente, script
+`.mjs` direto contra `playwright-core` do pnpm store) + screenshot real:
+campos opcionais renderizam pré-preenchidos, campo obrigatório continua
+vazio. Navbar também simplificada no mesmo commit (pedido à parte, mesma
+sessão): removidos "Categorias" (duplicava o botão em destaque já
+existente), "Blog", "Sobre", "Contato" do menu superior (`Navigation.tsx`)
+— os 3 últimos continuam no rodapé, mesma decisão já tomada no Recibo Fácil.
+
+**Susto de CI que não era bug:** 1ª rodada de e2e pós-mudança veio com 18/22
+falhas espalhadas (categoria, JSON-LD, margem-lucro, chips) — screenshot
+mostrou página renderizando **sem CSS nenhum**. Causa: rodei `pnpm build`
+(produção) antes do `pnpm test:e2e` (que sobe `next dev`) — reincidência
+exata do gotcha já documentado em `AGENTS.md` ("Cache local do Next"):
+misturar `build`/`dev` no mesmo `.next` corrompe o cache. Resolvido
+apagando `apps/web/.next` antes de rodar e2e de novo — 22/22 verdes.
+**Reforça a lição:** sempre limpar/isolar `.next` antes de rodar e2e depois
+de um `build` de produção na mesma sessão.
+
+**Sugestões de UX ainda não implementadas** (comparação com Omni
+Calculator, NerdWallet, TurboTax — registradas pra decisão futura, não
+executadas ainda):
+- **Cálculo ao vivo** (sem clicar em "Calcular"): resultado atualiza
+  enquanto o usuário digita (debounced), como Omni Calculator/NerdWallet.
+  Mudança estrutural maior — afeta a semântica do evento
+  `calculator_calculated` (hoje disparado só no submit) e precisa de
+  debounce cuidadoso pra não gerar evento a cada tecla.
+- **Progressive disclosure** nos formulários mais longos (Calorias tem 16
+  campos, IRPF 8, Rescisão 13): esconder campos opcionais/avançados atrás
+  de um "Mais opções ▾", reduzindo a sensação de formulário grande — padrão
+  comum em calculadoras fiscais (TurboTax) e no próprio Omni Calculator.
+- Ambas ficam como candidatas de UX pra retomar quando o foco não estiver
+  em aquisição de tráfego (P0 continua prioridade).
+
+### 2026-07-25 (parte 5) — Plano de backlink + retargeting de SEO
+
+Paulo perguntou se dá pra replicar aqui o que funcionou no Recibo Fácil:
+página + FAQ + snippets 100% focados em SEO antes de comprar o backlink de
+autoridade (lá foi `/recibo-simples`, retargetado para "Recibo de Pagamento
+Simples" antes do link com âncora "recibo online").
+
+**Auditoria da página-alvo (`/calculadora/decimo-terceiro`) encontrou o
+mesmo tipo de descasamento** que motivou o retargeting do Recibo Fácil:
+title, H1, corpo inteiro e FAQ usavam só "13º salário" — nenhuma menção a
+"décimo terceiro" por extenso em lugar nenhum da página. Mas os dados do
+Keyword Surfer (parte 4) mostram que o termo de **maior volume do cluster
+inteiro é "decimo terceiro salario" (550.000/mês)**, com "calculadora/
+calcular decimo terceiro" (135.000/mês cada) logo atrás — a página não
+tinha praticamente nenhum sinal textual pra Google casar com a busca de
+maior volume. **Corrigido nesta sessão** (F27, v0.3.2): `tituloLongo` do
+registry retargetado para "Calculadora de Décimo Terceiro Salário (13º)",
+H1/abertura do MDX reescritos pra introduzir "décimo terceiro salário" na
+primeira frase, 2 perguntas novas na FAQ ("é a mesma coisa que 13º?", "como
+calcular o proporcional?") — entram no `FAQPage` automaticamente via
+`lib/faq.ts`. `titulo` curto (cards/nav) mantido "13º Salário" de propósito,
+pra não confundir quem já usa o produto.
+
+**Diferença estrutural vs. Recibo Fácil, registrada pra não se perder:** lá
+o backlink apontou pra **raiz do domínio** porque "recibo online" É o que a
+home representa. Aqui não existe um "modelo estático pra baixar" (PNG/PDF/
+Word) equivalente — calculosonline é calculadora com resultado na tela, não
+gerador de documento — então a tática de "capturar intenção de modelo
+pronto pra baixar" do Recibo Fácil não se aplica 1:1. O que replica 100% é
+a parte de **title/H1/FAQ retargetados pro termo de maior volume antes do
+link**, que é o que foi feito agora.
+
+## Plano de backlink e página (revisado 25/07, parte 6 — sazonalidade)
+
+Paulo trouxe um ponto que revisou a escolha inicial: décimo terceiro tem
+**risco de calendário** — autoridade de backlink demora de semanas a meses
+pra maturar (imprevisível), e se atrasar, a janela sazonal (nov/dez) passa
+e o retorno só viria em dezembro do ano seguinte, quase um ano perdido.
+`salario-liquido` não tem esse risco (demanda o ano inteiro) e além disso já
+é a página mais "quente" do site: posição 54,8 (melhor de todas as
+candidatas, incluindo as 7 originais do P0), único clique real em 3 meses
+no GSC, `featured: true` no registry, e title/H1/FAQ **já corretos** (não
+teve o problema de descasamento que o décimo terceiro tinha — auditado
+nesta sessão, sem necessidade de fix).
+
+- **Página do primeiro link (revisado): `/calculadora/salario-liquido`.**
+  Palavra-chave/âncora: "calculadora de salário líquido" ou "calcular
+  salário líquido", embutida numa frase natural (ex.: "...descubra quanto
+  cai na conta com uma **calculadora de salário líquido** como a do
+  Calculos Online"). Evitar âncora isolada.
+- **Por quê:** posição já é a melhor do site (54,8, menor distância até a
+  página 1), único sinal de conversão real, demanda de ~333k/mês
+  (246k + 60,5k + 27,1k, CPC US$0,02 — perfil informacional ainda mais
+  limpo que décimo terceiro), sem risco de calendário, pronta pro link hoje
+  sem precisar de fix de conteúdo antes.
+- **Página do segundo link: `/calculadora/decimo-terceiro`** (já retargetada,
+  F27/v0.3.2). Âncora: "décimo terceiro salário"/"calculadora de décimo
+  terceiro salário". Maior cluster de todos (~860k/mês) — comprar **até
+  setembro no mais tardar**, pra manter margem de segurança antes do pico
+  de nov/dez (a lógica de timing sazonal continua válida, só não é mais o
+  primeiro/único link).
+- **Tipo de site ideal para os posts pagos:** blog de finanças pessoais,
+  RH, contabilidade ou carreira — mesmo perfil de quem já rankeia bem pros
+  dois termos (meutudo.com.br, calcule.net, genyo.com.br, mobills.com.br,
+  investnews.com.br) — não precisa ser gigante, precisa ser editorialmente
+  relevante ao tema.
+- **Pendente do Paulo:** escolher o(s) veículo(s) e executar a compra;
+  validar números de férias (Grupo 1) se quiser um terceiro candidato.
+- **Após a compra:** acompanhar posição de `salario-liquido` (referência:
+  pos. 54,8 em 25/07) no próximo export do GSC — sinal mais rápido que
+  décimo terceiro pra validar se a estratégia de backlink está funcionando,
+  já que não depende de esperar a sazonalidade de fim de ano.
+
+### 2026-07-25 (parte 4)
+Paulo pediu para avaliar a pasta `gsc/` e combinar com as estratégias já
+definidas (parte 2) para os próximos passos. A pasta tinha 2 coisas novas:
+um **export de GSC atualizado** (`calculosonline.com.br-Performance-on-Search-2026-07-25/`,
+substituindo o de 17/07) e, inesperadamente, **4 exports de GA4** na raiz de
+`gsc/` (relatórios padrão em pt-BR: tráfego, resumo, geração de leads,
+engajamento/retenção — últimos 28 dias, 27/06 a 24/07).
+
+**Achado principal — corrige a premissa "0 visitas há 3 meses":** o GA4
+mostra **230 usuários ativos, 226 novos, 2.352 eventos, 333
+`calculator_calculated`** nos últimos 28 dias. Tráfego real existe e as
+pessoas realmente usam as calculadoras. Por origem/mídia de sessão: **bing /
+organic 179**, (direct) 52, **br.search.yahoo.com / referral 28**, **chatgpt.com
+/ ai-assistant 16 + copilot.com / ai-assistant 1** (canal "AI Assistant" do
+GA4, 14-17 usuários novos), duckduckgo/organic 2, vercel.com/referral 2,
+yahoo/organic 1 — e **nenhuma linha de "google / organic"**. O agrupamento
+de canais confirma: "Organic Search: 174 novos usuários" bate com
+Bing+DuckDuckGo+Yahoo, não com Google. Cruzando com o GSC (3 meses,
+Web-only): 1.133 impressões no Brasil, **2 cliques totais** (`salario-liquido`
+1 clique/31 impr./CTR 3.23%, `inss` 1 clique/5 impr./CTR 20%). **Conclusão:
+o site não está sem tráfego — está sem tráfego do Google, especificamente.**
+Bing, Yahoo, direto e assistentes de IA já validam produto/conteúdo; falta
+confiança/autoridade no Google.
+
+**Achado secundário — granularidade por página muda o diagnóstico de
+"CTR" para "autoridade":** só 4 calculadoras estão perto da página 1
+(`margem-lucro` pos. 10.2, `porcentagem` pos. 9.3, `das-mei` pos. 12.3,
+`calorias` pos. 13.6) — essas sim se beneficiam de CTR/title, já corrigido
+em F10. Mas as calculadoras com **mais impressões** (ou seja, que o Google
+já considera relevantes para a busca) estão **enterradas** em posições
+75-92: `poupanca` (191 impr., pos. 65.9), `ferias` (173, pos. 87.3), `fgts`
+(166, pos. 90.7), `rescisao-trabalhista` (134, pos. 91.9), `hora-extra`
+(109, pos. 86.2), `decimo-terceiro` (83, pos. 75.9), `financiamento` (68,
+pos. 87.1). Isso é autoridade de domínio, não title/FAQ — reforça backlinks
+como a alavanca certa, com alvo específico (não as 4 que já estão bem).
+
+**Achados menores:**
+- `Aspecto da pesquisa.csv` (rich results) veio **vazio** — nenhum FAQPage/
+  HowTo rich snippet concedido em 3 meses apesar de já implementados
+  (F10/F12). Registrado como F18 no `FEATURES.md` para investigar via Rich
+  Results Test antes de assumir que é só falta de autoridade.
+- Home (`/`) rankeia muito bem (pos. 2.8) mas só tem 5 impressões — a marca
+  "calculosonline" ainda não é buscada, esperado para um domínio de ~2,5
+  meses de conteúdo real.
+- `Gráfico.csv` mostra posição oscilando muito dia a dia (de 4 a 95) e um
+  pico de 105 impressões em 19/07 (dia da correção de title/FAQ) — sinal de
+  que mudanças on-page têm efeito rápido de re-avaliação do Google, mas não
+  bastam sozinhas.
+- Tráfego internacional (Índia, Filipinas, Vietnã etc., 0 cliques)
+  reconfirmado irrelevante no export novo — já era P2/baixa prioridade,
+  sem mudança.
+
+**Decisão:** `FEATURES.md` reordenado (P0 vira F14-F19: diagnóstico
+resolvido, backlinks e Ads ganham alvo específico — as 7 calculadoras
+trabalhistas de cima —, `llms.txt`/GEO promovido de P2 para P0 dado o canal
+AI Assistant já funcionando de graça, e novo item de investigar rich
+results). `MEMORY.md` atualizado com a correção do diagnóstico em "Ao
+voltar" e a tabela de alvos na seção P0.
+
+### 2026-07-25 (parte 3)
+Paulo pediu para "implementar o Clarity assim como no Recibo Fácil" — achado:
+o componente `MicrosoftClarity.tsx` **já existia** no calculosonline (mesmo
+padrão condicionado a `NODE_ENV`/env var), mas nunca tinha um Project ID
+real configurado — o `curl` de produção confirmou que o script não estava
+carregando. Paulo forneceu o ID real (`xs93eywu1y`, já criado no painel do
+Clarity). Comparado com o `MicrosoftClarity.tsx` do Recibo Fácil (fonte da
+verdade, ver `[[calculosonline-base-project]]` na memória pessoal) e
+corrigidas 2 diferenças reais: **estratégia de carregamento** — Recibo Fácil
+usa `lazyOnload` (não `afterInteractive`), decisão documentada lá por custar
+~80-130ms de bloqueio da main thread no Lighthouse; calculosonline
+carregava com `afterInteractive`, agora alinhado. **Preconnect** —
+`<link rel="preconnect" href="https://www.clarity.ms" />` adicionado no
+`<head>` do `layout.tsx` (calculosonline não tinha `<head>` manual
+nenhum antes). **Diferença mantida de propósito, não copiada:** o Recibo
+Fácil tem um ID hardcoded como fallback no código
+(`PROVIDED_CLARITY_PROJECT_ID`) caso a env var não esteja setada; decidido
+não replicar isso no calculosonline — o padrão atual (só renderiza com env
+var presente, igual ao GA4) é mais limpo e evita ID de tracking commitado no
+código. `apps/web/.env.local` criado localmente com o ID para builds de
+produção locais (o componente só renderiza com `NODE_ENV=production`, então
+não aparece em `next dev`). **Pendente do Paulo:** configurar
+`NEXT_PUBLIC_CLARITY_PROJECT_ID=xs93eywu1y` no Vercel (Production, e Preview
+se quiser gravação em PRs) e redeployar — sem isso o Clarity continua
+inativo em produção. `pnpm --filter web typecheck` limpo após as mudanças.
+
+### 2026-07-25 (parte 2)
+Paulo reportou o site com **~0 visitas há 3 meses** e pediu para reestruturar
+o roadmap incluindo **backlinks e Google Ads antes do AdSense**. Antes de
+mexer na priorização, checagem técnica rápida para descartar bug óbvio de
+tracking: `apps/web/src/app/layout.tsx` só renderiza `<GoogleAnalytics>`
+quando `process.env.NEXT_PUBLIC_GA_ID` existe; o HTML de produção
+(`curl https://calculosonline.com.br/`) mostra o measurement ID real
+(`G-DZ6CT8JSZW`) no preload do `gtag/js`, então a env var está configurada
+certo no Vercel. **Achado à parte (não é a causa):** o `.env.example` da
+raiz do repo documenta a variável errada (`NEXT_PUBLIC_GA4_MEASUREMENT_ID`),
+divergente da que o código realmente lê (`NEXT_PUBLIC_GA_ID`, em
+`apps/web/.env.example`) — inofensivo hoje porque o Vercel já está com o
+nome certo, mas pode confundir uma reconfiguração futura; vale alinhar os
+dois arquivos numa próxima limpeza. `robots.txt` também está saudável
+(`Allow: /`, sitemap referenciado). Como o `curl` só vê o HTML estático (o
+script real do gtag é injetado client-side pelo Next), a confirmação
+definitiva fica pendente: comparar **Vercel Analytics** (menos afetado por
+ad-blocker) com o GA4 — registrado como ação pendente do Paulo em "Ao
+voltar". **Decisão de reestruturação:** nova seção P0 no backlog
+(Confirmar tráfego → Backlinks → Google Ads → só então AdSense), com o
+racional de que ativar AdSense sem tráfego real não serve pra nada e que
+autoridade de domínio (backlinks) provavelmente é o que trava as posições
+borderline (9-10) vistas no GSC mesmo com on-page corrigido. `FEATURES.md`
+renumerado (F15-F18) para refletir a nova ordem.
+
+### 2026-07-25 (parte 1)
+Paulo pediu para avaliar um prompt de expansão de catálogo (categoria Tempo
++ 22 calculadoras novas em Tempo/Saúde/Negócios/Financeiras) contra
+`CHANGELOG.md`, memória e `README.md`. Achado principal: o prompt conflita
+com a decisão P3 de 2026-07-19 de **pausar a Fase 2** até resolver o CTR
+~0% — nenhuma calculadora nova ajuda enquanto o problema de conversão das 20
+atuais não for endereçado, e o gate formal `Fase 1 → Fase 2`
+(`docs/PLANO_IMPLEMENTACAO.md`) exige AdSense ativo, que ainda não existe
+(próxima sprint é 1.5, PWA/Android; AdSense é 1.6). Confirmado por leitura
+direta do MDX que `calorias.mdx` já cobre TMB/TDEE/macros, então a checagem
+anti-duplicação pedida no prompt passa. Decisão: registrar os candidatos
+(nomes/slugs/categoria/padrão de componente) na seção acima **sem
+implementar nada**, sinalizando os dois bloqueios (Fase 2 pausada, Semrush
+não rodado). Na mesma sessão, Paulo pediu para portar os controles de
+processo do Recibo Fácil (`FEATURES.md` + `MEMORY.md`) para cá, "para ter a
+mesma forma de pensamento" — este arquivo e `FEATURES.md` nasceram dessa
+conversa, reconstruídos a partir do `git log`, `CHANGELOG.md` e do backlog de
+SEO já em andamento.
+
+### 2026-07-20
+**Fix do `lastmod` do sitemap** — `dataAtualizacao` sozinha (fixa em
+2026-01-01 em todas as 20 calculadoras, também exibida ao usuário como selo
+de confiança) não refletia mudanças de SEO; nova constante `seoRefreshDate`
+em `app/sitemap.ts` (mesmo padrão do Recibo Fácil), usa a mais recente entre
+as duas datas. **Schema `HowTo`** adicionado (3 passos genéricos) — fecha a
+parte "HowTo" do item de SEO centralizado (o resto, `buildMetadata`/canonical
+alternates/`Article`/`ItemList`, ainda não foi portado). **Chips de valor
+rápido** (pedido à parte, fora do escopo original de SEO) — `quickAdd` em
+`FieldMeta` do `CalculatorForm`, aplicado em 16 formulários/17 calculadoras
+com campo R$, mesmo CSS do `CurrencyInputWithQuickAdd` do Recibo Fácil.
+22/22 e2e verdes. Web app 0.3.0 (F12). Ajuste de CI no mesmo dia (F13).
+
+### 2026-07-19
+**Diagnóstico Search Console** (`gsc/`, export de 2026-07-17, últimos 3
+meses): ~1.120 impressões e só 2 cliques (CTR ~0%), inclusive em páginas já
+na 1ª página (`margem-lucro` pos. 9.6, `porcentagem` pos. 9.1, `das-mei` pos.
+10.3, home pos. 3.3). Comparado com o código do calculosonline e com os
+padrões técnicos mais maduros do Recibo Fácil (mesmo autor). **P0 — Title
+único + FAQPage real** (F10, v0.1.0): `buildCalculatorTitle()` substitui o
+padrão fixo "Online e Gratuita 2026" por "... 2026 — Grátis, sem Cadastro"
+(corrige de quebra a duplicação de "2026" em inss/irpf/das-mei); `lib/faq.ts`
+extrai as perguntas reais dos MDX (101 perguntas, 20 calculadoras) para o
+schema `FAQPage`, no lugar das 3 genéricas fixas. **P1 (parcial) — Sitemap/
+robots nativos** (F11, v0.2.0): `next-sitemap` removido, `app/sitemap.ts` +
+`app/robots.ts` nativos no padrão do Recibo Fácil (`lastModified` real,
+prioridade maior para `featured`); corrige bug de `/privacidade` (redirect)
+no lugar da canônica `/politica-de-privacidade`. **Playwright E2E** no mesmo
+padrão do Recibo Fácil (17 testes) — o próprio teste revelou que campo
+numérico opcional em branco virava `NaN` (não `undefined`), quebrando o
+`.default(0)` do Zod em quase todas as 20 calculadoras; corrigido na raiz em
+`packages/ui/src/CalculatorForm/index.tsx`. **Decisão P3:** pausar a Fase 2
+do plano de negócios (+30 calculadoras, prevista mês 3-6) até o CTR/conteúdo
+das 20 atuais melhorar — registrado aqui para não ser esquecido em sessões
+futuras.
+
+### 2026-05-10 → 2026-05-11
+Sprints 0.1 a 1.4.1 (setup do monorepo, core engine, 20 calculadoras, UI
+compartilhada, páginas, SEO/conteúdo editorial, memória de cálculo e
+identidade visual — ver F1–F7 no `FEATURES.md`), deploy 1.0.0 e Google
+Analytics (F8–F9). Detalhe técnico de cada sprint documentado em
+`AGENTS.md` (§Estado atual das sprints). Sem atividade registrada entre
+2026-05-11 e 2026-07-19.
+
+---
+
+**Como aplicar:** ao retomar este projeto, ler primeiro "Ao voltar" acima.
+Ao adicionar uma feature nova (implementada ou só planejada), criar/atualizar
+a entrada correspondente em `FEATURES.md` e, se envolver uma decisão de
+growth/negócio (não só técnica), registrar o racional aqui no Diário.
