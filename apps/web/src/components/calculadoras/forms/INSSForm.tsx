@@ -7,7 +7,7 @@ import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
-  salarioBruto: z.number().min(0, 'Salário não pode ser negativo'),
+  salarioBruto: z.number().min(0, 'Salário não pode ser negativo').default(0),
   categoria: z.enum(['empregado', 'autonomo', 'facultativo', 'mei']).default('empregado'),
 })
 
@@ -25,7 +25,6 @@ export function INSSForm({ onResult, onError, isLoading }: FormProps) {
         salarioBruto: {
           label: 'Salário Bruto',
           prefix: 'R$',
-          placeholder: '3000',
           type: 'number',
           hint: 'Ignorado para MEI (usa o salário mínimo)',
           quickAdd: QUICK_ADD_SALARIO,

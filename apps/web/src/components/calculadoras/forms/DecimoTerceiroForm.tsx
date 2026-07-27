@@ -6,8 +6,23 @@ import { calcularDecimoTerceiro } from '@calculosonline/core/trabalhista'
 import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
+const MESES = [
+  'Janeiro',
+  'Fevereiro',
+  'Março',
+  'Abril',
+  'Maio',
+  'Junho',
+  'Julho',
+  'Agosto',
+  'Setembro',
+  'Outubro',
+  'Novembro',
+  'Dezembro',
+]
+
 const schema = z.object({
-  salarioBruto: z.number().positive('Salário deve ser positivo'),
+  salarioBruto: z.number().positive('Salário deve ser positivo').default(0),
   mesAdmissao: z.number().min(0).max(12).default(0),
   parcela: z.enum(['primeira', 'segunda', 'total']).default('total'),
   numeroDependentesIRRF: z.number().min(0).default(0),
@@ -32,13 +47,16 @@ export function DecimoTerceiroForm({ onResult, onError, isLoading }: FormProps) 
         salarioBruto: {
           label: 'Salário Bruto',
           prefix: 'R$',
-          placeholder: '3000',
           type: 'number',
           quickAdd: QUICK_ADD_SALARIO,
         },
         mesAdmissao: {
-          label: 'Mês de admissão (1-12)',
-          hint: '0 se já trabalhava antes do ano corrente',
+          label: 'Mês de admissão',
+          type: 'select',
+          options: [
+            { value: '0', label: '0 — Já trabalhava antes do ano corrente' },
+            ...MESES.map((mes, i) => ({ value: String(i + 1), label: `${i + 1} — ${mes}` })),
+          ],
         },
         parcela: {
           label: 'Parcela',

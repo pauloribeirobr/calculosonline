@@ -7,7 +7,7 @@ import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
-  custoTotal: z.number().positive('Custo deve ser positivo'),
+  custoTotal: z.number().positive('Custo deve ser positivo').default(0),
   modo: z.enum(['preco', 'markup']).default('preco'),
   precoVenda: z.number().min(0).default(0),
   markupPercent: z.number().min(0).default(0),
@@ -32,7 +32,6 @@ export function MargemLucroForm({ onResult, onError, isLoading }: FormProps) {
         custoTotal: {
           label: 'Custo total',
           prefix: 'R$',
-          placeholder: '100',
           type: 'number',
           quickAdd: QUICK_ADD_SALARIO,
         },

@@ -36,11 +36,11 @@ test.describe('chips de valor rápido', () => {
     await expect(salario).toHaveValue('0')
   })
 
-  test('chips funcionam a partir de campo vazio (soma sobre 0)', async ({ page }) => {
+  test('chips funcionam a partir do valor padrão 0 (soma sobre 0)', async ({ page }) => {
     await page.goto('/calculadora/rescisao-trabalhista')
 
     const salario = page.getByLabel('Salário Bruto')
-    await expect(salario).toHaveValue('')
+    await expect(salario).toHaveValue('0')
 
     await page.getByRole('button', { name: '+100', exact: true }).click()
     await expect(salario).toHaveValue('100')

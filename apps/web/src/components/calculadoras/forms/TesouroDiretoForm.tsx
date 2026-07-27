@@ -7,12 +7,12 @@ import { QUICK_ADD_INVESTIMENTO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
-  valorInicial: z.number().positive('Valor deve ser positivo'),
+  valorInicial: z.number().positive('Valor deve ser positivo').default(0),
   tipo: z
     .enum(['selic', 'prefixado', 'ipca_plus', 'prefixado_cupom', 'ipca_cupom'])
     .default('selic'),
   taxaAnual: z.number().min(0).default(0),
-  prazoMeses: z.number().positive('Prazo deve ser positivo'),
+  prazoMeses: z.number().positive('Prazo deve ser positivo').default(0),
 })
 
 export function TesouroDiretoForm({ onResult, onError, isLoading }: FormProps) {
@@ -29,7 +29,6 @@ export function TesouroDiretoForm({ onResult, onError, isLoading }: FormProps) {
         valorInicial: {
           label: 'Valor inicial',
           prefix: 'R$',
-          placeholder: '10000',
           type: 'number',
           quickAdd: QUICK_ADD_INVESTIMENTO,
         },
@@ -47,9 +46,8 @@ export function TesouroDiretoForm({ onResult, onError, isLoading }: FormProps) {
         taxaAnual: {
           label: 'Taxa anual (decimal)',
           hint: 'Prefixado: 0.12 = 12% a.a. | IPCA+: 0.06 = 6% real | SELIC: ignore',
-          placeholder: '0.12',
         },
-        prazoMeses: { label: 'Prazo', suffix: 'meses', placeholder: '24' },
+        prazoMeses: { label: 'Prazo', suffix: 'meses' },
       }}
       onSubmit={handleSubmit}
       submitLabel="Calcular Tesouro Direto"

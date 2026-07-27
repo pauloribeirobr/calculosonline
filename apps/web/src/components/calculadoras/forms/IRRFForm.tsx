@@ -7,7 +7,7 @@ import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
-  salarioBruto: z.number().positive('Salário deve ser positivo'),
+  salarioBruto: z.number().positive('Salário deve ser positivo').default(0),
   numeroDependentes: z.number().min(0).default(0),
   pensaoAlimenticia: z.number().min(0).default(0),
   outrasDeducoes: z.number().min(0).default(0),
@@ -27,7 +27,6 @@ export function IRRFForm({ onResult, onError, isLoading }: FormProps) {
         salarioBruto: {
           label: 'Salário Bruto',
           prefix: 'R$',
-          placeholder: '5000',
           type: 'number',
           quickAdd: QUICK_ADD_SALARIO,
         },

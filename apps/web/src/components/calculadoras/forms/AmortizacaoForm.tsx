@@ -12,9 +12,9 @@ interface AmortizacaoFormProps extends FormProps {
 }
 
 const schema = z.object({
-  valorFinanciado: z.number().positive('Valor deve ser positivo'),
-  taxaMensalJuros: z.number().positive('Taxa deve ser positiva'),
-  prazoMeses: z.number().positive('Prazo deve ser positivo'),
+  valorFinanciado: z.number().positive('Valor deve ser positivo').default(0),
+  taxaMensalJuros: z.number().positive('Taxa deve ser positiva').default(0),
+  prazoMeses: z.number().positive('Prazo deve ser positivo').default(0),
   sistema: z.enum(['price', 'sac']).default('price'),
   taxaSeguroMensal: z.number().min(0).default(0),
 })
@@ -40,20 +40,17 @@ export function AmortizacaoForm({
         valorFinanciado: {
           label: isFinanciamento ? 'Valor financiado' : 'Valor do empréstimo',
           prefix: 'R$',
-          placeholder: '10000',
           type: 'number',
           quickAdd: QUICK_ADD_VALOR_GRANDE,
         },
         taxaMensalJuros: {
           label: 'Taxa mensal de juros',
           suffix: '(decimal)',
-          placeholder: '0.015',
           hint: '0.015 = 1,5% ao mês',
         },
         prazoMeses: {
           label: 'Prazo',
           suffix: 'meses',
-          placeholder: '24',
         },
         sistema: {
           label: 'Sistema de amortização',

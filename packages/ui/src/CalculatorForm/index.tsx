@@ -74,6 +74,20 @@ function extractSchemaDefaults<T extends ZodRawShape>(
   return defaults
 }
 
+/** Desembrulha ZodDefault/ZodOptional pra achar o tipo base do campo (ex. detectar um <select> que representa um número, como "mês"). */
+function isNumericSchemaField<T extends ZodRawShape>(schema: ZodObject<T>, key: string): boolean {
+  let fieldSchema = schema.shape[key as keyof T] as unknown as {
+    _def?: { typeName?: string; innerType?: unknown }
+  }
+  while (
+    fieldSchema?._def?.typeName === 'ZodDefault' ||
+    fieldSchema?._def?.typeName === 'ZodOptional'
+  ) {
+    fieldSchema = fieldSchema._def.innerType as typeof fieldSchema
+  }
+  return fieldSchema?._def?.typeName === 'ZodNumber'
+}
+
 export function CalculatorForm<T extends ZodRawShape>({
   schema,
   fields,
@@ -140,7 +154,12 @@ export function CalculatorForm<T extends ZodRawShape>({
               {fieldMeta.type === 'select' ? (
                 <select
                   id={name}
-                  {...register(fieldName)}
+                  {...register(
+                    fieldName,
+                    isNumericSchemaField(schema, name)
+                      ? { setValueAs: (v: string) => (v === '' ? undefined : Number(v)) }
+                      : undefined,
+                  )}
                   className={cn(
                     'w-full rounded-lg border bg-white px-3 py-2.5 text-sm',
                     'focus:outline-none focus:ring-2 focus:ring-brand-500',
