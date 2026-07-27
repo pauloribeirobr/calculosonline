@@ -7,8 +7,8 @@ import { QUICK_ADD_INVESTIMENTO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
-  valorInicial: z.number().min(0, 'Valor não pode ser negativo'),
-  prazoMeses: z.number().positive('Prazo deve ser positivo'),
+  valorInicial: z.number().min(0, 'Valor não pode ser negativo').default(0),
+  prazoMeses: z.number().positive('Prazo deve ser positivo').default(0),
   aporteMensal: z.number().min(0).default(0),
   selicAnual: z.number().min(0).default(0.1325),
 })
@@ -27,11 +27,10 @@ export function PoupancaForm({ onResult, onError, isLoading }: FormProps) {
         valorInicial: {
           label: 'Valor inicial',
           prefix: 'R$',
-          placeholder: '5000',
           type: 'number',
           quickAdd: QUICK_ADD_INVESTIMENTO,
         },
-        prazoMeses: { label: 'Prazo', suffix: 'meses', placeholder: '12' },
+        prazoMeses: { label: 'Prazo', suffix: 'meses' },
         aporteMensal: {
           label: 'Aporte mensal',
           prefix: 'R$',

@@ -6,8 +6,8 @@ import { calcularIMC } from '@calculosonline/core/saude'
 import type { FormProps } from './types'
 
 const schema = z.object({
-  peso: z.number().positive('Peso deve ser positivo'),
-  altura: z.number().positive('Altura deve ser positiva'),
+  peso: z.number().positive('Peso deve ser positivo').default(0),
+  altura: z.number().positive('Altura deve ser positiva').default(0),
 })
 
 export function IMCForm({ onResult, onError, isLoading }: FormProps) {
@@ -21,11 +21,10 @@ export function IMCForm({ onResult, onError, isLoading }: FormProps) {
     <CalculatorForm
       schema={schema}
       fields={{
-        peso: { label: 'Peso', suffix: 'kg', placeholder: '70', type: 'number' },
+        peso: { label: 'Peso', suffix: 'kg', type: 'number' },
         altura: {
           label: 'Altura',
           suffix: 'm',
-          placeholder: '1.75',
           hint: 'Em metros, com ponto decimal (ex.: 1.75)',
         },
       }}

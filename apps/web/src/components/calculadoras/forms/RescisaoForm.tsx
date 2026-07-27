@@ -7,7 +7,7 @@ import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
-  salarioBruto: z.number().positive('Salário deve ser positivo'),
+  salarioBruto: z.number().positive('Salário deve ser positivo').default(0),
   dataAdmissao: z.string().min(10, 'Data inválida'),
   dataRescisao: z.string().min(10, 'Data inválida'),
   motivoRescisao: z.enum([
@@ -18,7 +18,7 @@ const schema = z.object({
     'acordo_mutuo',
     'aposentadoria',
   ]),
-  saldoFGTS: z.number().min(0, 'FGTS não pode ser negativo'),
+  saldoFGTS: z.number().min(0, 'FGTS não pode ser negativo').default(0),
   numeroDependentesIRRF: z.number().min(0).default(0),
   feriasVencidas: z.number().min(0).max(2).default(0),
 })
@@ -37,7 +37,6 @@ export function RescisaoForm({ onResult, onError, isLoading }: FormProps) {
         salarioBruto: {
           label: 'Salário Bruto',
           prefix: 'R$',
-          placeholder: '3000',
           type: 'number',
           quickAdd: QUICK_ADD_SALARIO,
         },

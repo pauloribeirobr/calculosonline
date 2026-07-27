@@ -6,9 +6,9 @@ import { calcularCalorias } from '@calculosonline/core/saude'
 import type { FormProps } from './types'
 
 const schema = z.object({
-  peso: z.number().positive('Peso deve ser positivo'),
-  altura: z.number().positive('Altura deve ser positiva'),
-  idade: z.number().positive('Idade deve ser positiva'),
+  peso: z.number().positive('Peso deve ser positivo').default(0),
+  altura: z.number().positive('Altura deve ser positiva').default(0),
+  idade: z.number().positive('Idade deve ser positiva').default(0),
   sexo: z.enum(['masculino', 'feminino']).default('masculino'),
   nivelAtividade: z
     .enum(['sedentario', 'leve', 'moderado', 'intenso', 'muito_intenso'])
@@ -27,14 +27,13 @@ export function CaloriasForm({ onResult, onError, isLoading }: FormProps) {
     <CalculatorForm
       schema={schema}
       fields={{
-        peso: { label: 'Peso', suffix: 'kg', placeholder: '70', type: 'number' },
+        peso: { label: 'Peso', suffix: 'kg', type: 'number' },
         altura: {
           label: 'Altura',
           suffix: 'cm',
-          placeholder: '175',
           hint: 'Em centímetros (ex.: 175)',
         },
-        idade: { label: 'Idade', suffix: 'anos', placeholder: '30' },
+        idade: { label: 'Idade', suffix: 'anos' },
         sexo: {
           label: 'Sexo biológico',
           type: 'radio',

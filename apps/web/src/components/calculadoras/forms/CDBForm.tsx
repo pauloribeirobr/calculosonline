@@ -7,10 +7,10 @@ import { QUICK_ADD_INVESTIMENTO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
-  valorInicial: z.number().positive('Valor deve ser positivo'),
-  taxaAnual: z.number().positive('Taxa deve ser positiva'),
+  valorInicial: z.number().positive('Valor deve ser positivo').default(0),
+  taxaAnual: z.number().positive('Taxa deve ser positiva').default(0),
   tipo: z.enum(['cdi', 'prefixado', 'ipca_mais']).default('cdi'),
-  prazoMeses: z.number().positive('Prazo deve ser positivo'),
+  prazoMeses: z.number().positive('Prazo deve ser positivo').default(0),
 })
 
 export function CDBForm({ onResult, onError, isLoading }: FormProps) {
@@ -27,7 +27,6 @@ export function CDBForm({ onResult, onError, isLoading }: FormProps) {
         valorInicial: {
           label: 'Valor inicial',
           prefix: 'R$',
-          placeholder: '10000',
           type: 'number',
           quickAdd: QUICK_ADD_INVESTIMENTO,
         },
@@ -43,9 +42,8 @@ export function CDBForm({ onResult, onError, isLoading }: FormProps) {
         taxaAnual: {
           label: 'Taxa',
           hint: 'CDI: 1.10 = 110% do CDI | Prefixado: 0.12 = 12% a.a. | IPCA+: 0.06 = 6% real',
-          placeholder: '1.10',
         },
-        prazoMeses: { label: 'Prazo', suffix: 'meses', placeholder: '12' },
+        prazoMeses: { label: 'Prazo', suffix: 'meses' },
       }}
       onSubmit={handleSubmit}
       submitLabel="Calcular CDB"

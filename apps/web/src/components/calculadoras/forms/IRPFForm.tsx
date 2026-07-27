@@ -7,7 +7,7 @@ import { QUICK_ADD_VALOR_GRANDE } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
-  rendimentosTributaveis: z.number().min(0, 'Rendimentos não podem ser negativos'),
+  rendimentosTributaveis: z.number().min(0, 'Rendimentos não podem ser negativos').default(0),
   irrfRetidoFonte: z.number().min(0).default(0),
   numeroDependentes: z.number().min(0).default(0),
   despesasMedicas: z.number().min(0).default(0),
@@ -31,7 +31,6 @@ export function IRPFForm({ onResult, onError, isLoading }: FormProps) {
         rendimentosTributaveis: {
           label: 'Rendimentos tributáveis (anual)',
           prefix: 'R$',
-          placeholder: '60000',
           hint: 'Total bruto recebido no ano',
           quickAdd: QUICK_ADD_VALOR_GRANDE,
         },

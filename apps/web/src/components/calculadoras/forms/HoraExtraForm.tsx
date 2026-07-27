@@ -7,9 +7,9 @@ import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
-  salarioBruto: z.number().positive('Salário deve ser positivo'),
+  salarioBruto: z.number().positive('Salário deve ser positivo').default(0),
   jornadaMensalHoras: z.enum(['44h', '40h', '36h', '30h']).default('44h'),
-  quantidadeHoras: z.number().positive('Quantidade deve ser positiva'),
+  quantidadeHoras: z.number().positive('Quantidade deve ser positiva').default(0),
   tipoHora: z.enum(['util', 'domingo', 'feriado', 'noturna']).default('util'),
 })
 
@@ -27,7 +27,6 @@ export function HoraExtraForm({ onResult, onError, isLoading }: FormProps) {
         salarioBruto: {
           label: 'Salário Bruto',
           prefix: 'R$',
-          placeholder: '3000',
           type: 'number',
           quickAdd: QUICK_ADD_SALARIO,
         },
@@ -44,7 +43,6 @@ export function HoraExtraForm({ onResult, onError, isLoading }: FormProps) {
         quantidadeHoras: {
           label: 'Quantidade de horas extras',
           suffix: 'horas',
-          placeholder: '10',
         },
         tipoHora: {
           label: 'Tipo de hora extra',

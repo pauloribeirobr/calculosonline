@@ -16,8 +16,8 @@ const schema = z.object({
       'porcentagem_inversa',
     ])
     .default('valor_de_percent'),
-  valorA: z.number(),
-  valorB: z.number(),
+  valorA: z.number().default(0),
+  valorB: z.number().default(0),
 })
 
 export function PorcentagemForm({ onResult, onError, isLoading }: FormProps) {
@@ -43,8 +43,8 @@ export function PorcentagemForm({ onResult, onError, isLoading }: FormProps) {
             { value: 'porcentagem_inversa', label: 'Se X é Y% de algo, qual o total?' },
           ],
         },
-        valorA: { label: 'Valor A', placeholder: '100' },
-        valorB: { label: 'Valor B (ou %)', placeholder: '15' },
+        valorA: { label: 'Valor A' },
+        valorB: { label: 'Valor B (ou %)' },
       }}
       onSubmit={handleSubmit}
       submitLabel="Calcular"

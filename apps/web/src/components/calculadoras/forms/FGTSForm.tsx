@@ -7,7 +7,7 @@ import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
-  salarioBruto: z.number().positive('Salário deve ser positivo'),
+  salarioBruto: z.number().positive('Salário deve ser positivo').default(0),
   mesesTrabalhados: z.number().min(0, 'Meses não pode ser negativo').default(12),
   saldoAtual: z.number().min(0, 'Saldo não pode ser negativo').default(0),
   modalidade: z
@@ -29,7 +29,6 @@ export function FGTSForm({ onResult, onError, isLoading }: FormProps) {
         salarioBruto: {
           label: 'Salário Bruto',
           prefix: 'R$',
-          placeholder: '3000',
           type: 'number',
           quickAdd: QUICK_ADD_SALARIO,
         },

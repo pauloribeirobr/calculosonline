@@ -41,8 +41,9 @@ Mesmo padrão do projeto irmão [Recibo Fácil](../recibofacil/FEATURES.md).
 | F28 | 2026-07-25 | Valores padrão automáticos nos 19 formulários (derivados do `.default()` do próprio schema Zod, fix centralizado em `CalculatorForm`) + navbar simplificada (removidos links duplicados/redundantes "Categorias"/"Blog"/"Sobre"/"Contato" do menu superior) — **v0.4.0** |
 | F29 | 2026-07-26 | Detalhamento do cálculo sempre visível (sem toggle) + sinal (+)/(−) em cada linha do detalhamento, além da cor — **v0.4.1** |
 | F30 | 2026-07-26 | Fix: `pnpm dev` caindo sozinho após ~1min30 — `turbo.json` `"ui": "tui"` → `"ui": "stream"` (bug conhecido do Turborepo 2.x com tarefas persistentes) — **v0.4.2** |
+| F31 | 2026-07-26 | Valor padrão 0 também em campos obrigatórios (reverte decisão da F28/0.4.0, 24 campos/16 formulários) + mês de admissão do 13º com nome do mês (`<select>` numérico, 1º do projeto) — **v0.4.3** |
 
-> F25, F27, F28, F29 e F30 saíram de ordem (implementados direto, fora do backlog planejado em F14-F24) e por isso ganharam número novo em sequência em vez de reutilizar um número já reservado — mesmo critério usado no Recibo Fácil para features implementadas fora da fila. F26 está reservado no backlog (Fase 2, ainda não implementado).
+> F25, F27, F28, F29, F30 e F31 saíram de ordem (implementados direto, fora do backlog planejado em F14-F24) e por isso ganharam número novo em sequência em vez de reutilizar um número já reservado — mesmo critério usado no Recibo Fácil para features implementadas fora da fila. F26 está reservado no backlog (Fase 2, ainda não implementado).
 
 ## 2. Próximas melhorias (backlog)
 

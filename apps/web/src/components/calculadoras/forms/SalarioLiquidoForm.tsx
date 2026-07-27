@@ -7,7 +7,7 @@ import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
-  salarioBruto: z.number().positive('Salário deve ser positivo'),
+  salarioBruto: z.number().positive('Salário deve ser positivo').default(0),
   numeroDependentesIRRF: z.number().min(0).default(0),
   outrasDeducoes: z.number().min(0).default(0),
   outrosDescontos: z.number().min(0).default(0),
@@ -34,7 +34,6 @@ export function SalarioLiquidoForm({ onResult, onError, isLoading }: FormProps) 
         salarioBruto: {
           label: 'Salário Bruto',
           prefix: 'R$',
-          placeholder: '3000',
           type: 'number',
           quickAdd: QUICK_ADD_SALARIO,
         },
