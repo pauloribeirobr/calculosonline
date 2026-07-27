@@ -16,10 +16,10 @@ const schema = z.object({
   objetivo: z.enum(['perda', 'manutencao', 'ganho']).default('manutencao'),
 })
 
-export function CaloriasForm({ onResult, onError, isLoading }: FormProps) {
+export function CaloriasForm({ onResult, onError, isLoading, sharedData, autoSubmit }: FormProps) {
   function handleSubmit(data: z.infer<typeof schema>) {
     const r = calcularCalorias(data)
-    if (r.sucesso) onResult(r.dados)
+    if (r.sucesso) onResult(r.dados, data)
     else onError?.(r.erros)
   }
 
@@ -66,6 +66,8 @@ export function CaloriasForm({ onResult, onError, isLoading }: FormProps) {
       onSubmit={handleSubmit}
       submitLabel="Calcular Calorias"
       isLoading={!!isLoading}
+      defaultValues={sharedData as Partial<z.infer<typeof schema>> | undefined}
+      autoSubmit={autoSubmit}
     />
   )
 }

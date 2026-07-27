@@ -13,14 +13,14 @@ const schema = z.object({
   faturamentoAnual: z.number().min(0).default(0),
 })
 
-export function DASMEIForm({ onResult, onError, isLoading }: FormProps) {
+export function DASMEIForm({ onResult, onError, isLoading, sharedData, autoSubmit }: FormProps) {
   function handleSubmit(data: z.infer<typeof schema>) {
     const params: Parameters<typeof calcularDASMEI>[0] = {
       atividadePrincipal: data.atividadePrincipal,
     }
     if (data.faturamentoAnual > 0) params.faturamentoAnual = data.faturamentoAnual
     const r = calcularDASMEI(params)
-    if (r.sucesso) onResult(r.dados)
+    if (r.sucesso) onResult(r.dados, data)
     else onError?.(r.erros)
   }
 
@@ -48,6 +48,8 @@ export function DASMEIForm({ onResult, onError, isLoading }: FormProps) {
       onSubmit={handleSubmit}
       submitLabel="Calcular DAS"
       isLoading={!!isLoading}
+      defaultValues={sharedData as Partial<z.infer<typeof schema>> | undefined}
+      autoSubmit={autoSubmit}
     />
   )
 }

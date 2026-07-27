@@ -23,10 +23,10 @@ const schema = z.object({
   feriasVencidas: z.number().min(0).max(2).default(0),
 })
 
-export function RescisaoForm({ onResult, onError, isLoading }: FormProps) {
+export function RescisaoForm({ onResult, onError, isLoading, sharedData, autoSubmit }: FormProps) {
   function handleSubmit(data: z.infer<typeof schema>) {
     const r = calcularRescisao(data)
-    if (r.sucesso) onResult(r.dados)
+    if (r.sucesso) onResult(r.dados, data)
     else onError?.(r.erros)
   }
 
@@ -47,7 +47,10 @@ export function RescisaoForm({ onResult, onError, isLoading }: FormProps) {
           type: 'select',
           options: [
             { value: 'sem_justa_causa', label: 'Demissão sem justa causa' },
-            { value: 'com_justa_causa_emp', label: 'Rescisão indireta (justa causa do empregador)' },
+            {
+              value: 'com_justa_causa_emp',
+              label: 'Rescisão indireta (justa causa do empregador)',
+            },
             { value: 'justa_causa', label: 'Justa causa do empregado' },
             { value: 'pedido_demissao', label: 'Pedido de demissão' },
             { value: 'acordo_mutuo', label: 'Acordo mútuo (art. 484-A)' },
@@ -72,6 +75,8 @@ export function RescisaoForm({ onResult, onError, isLoading }: FormProps) {
       onSubmit={handleSubmit}
       submitLabel="Calcular Rescisão"
       isLoading={!!isLoading}
+      defaultValues={sharedData as Partial<z.infer<typeof schema>> | undefined}
+      autoSubmit={autoSubmit}
     />
   )
 }

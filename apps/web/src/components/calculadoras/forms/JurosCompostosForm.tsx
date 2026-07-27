@@ -14,10 +14,16 @@ const schema = z.object({
   aporteMensal: z.number().min(0).default(0),
 })
 
-export function JurosCompostosForm({ onResult, onError, isLoading }: FormProps) {
+export function JurosCompostosForm({
+  onResult,
+  onError,
+  isLoading,
+  sharedData,
+  autoSubmit,
+}: FormProps) {
   function handleSubmit(data: z.infer<typeof schema>) {
     const r = calcularJurosCompostos(data)
-    if (r.sucesso) onResult(r.dados)
+    if (r.sucesso) onResult(r.dados, data)
     else onError?.(r.erros)
   }
 
@@ -58,6 +64,8 @@ export function JurosCompostosForm({ onResult, onError, isLoading }: FormProps) 
       onSubmit={handleSubmit}
       submitLabel="Calcular Montante"
       isLoading={!!isLoading}
+      defaultValues={sharedData as Partial<z.infer<typeof schema>> | undefined}
+      autoSubmit={autoSubmit}
     />
   )
 }

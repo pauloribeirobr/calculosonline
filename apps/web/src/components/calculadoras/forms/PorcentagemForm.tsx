@@ -20,10 +20,16 @@ const schema = z.object({
   valorB: z.number().default(0),
 })
 
-export function PorcentagemForm({ onResult, onError, isLoading }: FormProps) {
+export function PorcentagemForm({
+  onResult,
+  onError,
+  isLoading,
+  sharedData,
+  autoSubmit,
+}: FormProps) {
   function handleSubmit(data: z.infer<typeof schema>) {
     const r = calcularPorcentagem(data)
-    if (r.sucesso) onResult(r.dados)
+    if (r.sucesso) onResult(r.dados, data)
     else onError?.(r.erros)
   }
 
@@ -49,6 +55,8 @@ export function PorcentagemForm({ onResult, onError, isLoading }: FormProps) {
       onSubmit={handleSubmit}
       submitLabel="Calcular"
       isLoading={!!isLoading}
+      defaultValues={sharedData as Partial<z.infer<typeof schema>> | undefined}
+      autoSubmit={autoSubmit}
     />
   )
 }

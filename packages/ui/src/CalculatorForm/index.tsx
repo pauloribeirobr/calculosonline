@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import {
   useForm,
   type DefaultValues,
@@ -47,7 +48,13 @@ export interface CalculatorFormProps<T extends ZodRawShape> {
   onSubmit: (data: z.infer<ZodObject<T>>) => void
   submitLabel?: string
   isLoading?: boolean
-  defaultValues?: Partial<z.infer<ZodObject<T>>>
+  defaultValues?: Partial<z.infer<ZodObject<T>>> | undefined
+  /**
+   * Quando true, dispara o cálculo automaticamente assim que `defaultValues`
+   * chega — usado ao abrir um link de cálculo compartilhado (a página já
+   * chega com o resultado calculado, sem exigir clique em "Calcular").
+   */
+  autoSubmit?: boolean | undefined
 }
 
 /**
@@ -67,7 +74,10 @@ function extractSchemaDefaults<T extends ZodRawShape>(
     const fieldSchema = schema.shape[key] as unknown as {
       _def?: { typeName?: string; defaultValue?: () => unknown }
     }
-    if (fieldSchema?._def?.typeName === 'ZodDefault' && typeof fieldSchema._def.defaultValue === 'function') {
+    if (
+      fieldSchema?._def?.typeName === 'ZodDefault' &&
+      typeof fieldSchema._def.defaultValue === 'function'
+    ) {
       defaults[key] = fieldSchema._def.defaultValue()
     }
   }
@@ -95,6 +105,7 @@ export function CalculatorForm<T extends ZodRawShape>({
   submitLabel = 'Calcular',
   isLoading,
   defaultValues,
+  autoSubmit,
 }: CalculatorFormProps<T>) {
   // react-hook-form não consome bem os generics de Zod em wrappers, então
   // tratamos o estado interno como FieldValues e expomos o tipo correto no onSubmit.
@@ -109,11 +120,21 @@ export function CalculatorForm<T extends ZodRawShape>({
     handleSubmit,
     setValue,
     getValues,
+    reset,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema) as unknown as Resolver<FormValues>,
     defaultValues: resolvedDefaultValues,
   })
+
+  const autoSubmitDone = useRef(false)
+  useEffect(() => {
+    if (autoSubmit && defaultValues && !autoSubmitDone.current) {
+      autoSubmitDone.current = true
+      reset(resolvedDefaultValues)
+      void handleSubmit(onSubmit as SubmitHandler<FormValues>)()
+    }
+  }, [autoSubmit, defaultValues, handleSubmit, onSubmit, reset, resolvedDefaultValues])
 
   function handleQuickAdd(fieldName: Path<FormValues>, addValue: number) {
     const atual = Number(getValues(fieldName)) || 0
@@ -162,7 +183,7 @@ export function CalculatorForm<T extends ZodRawShape>({
                   )}
                   className={cn(
                     'w-full rounded-lg border bg-white px-3 py-2.5 text-sm',
-                    'focus:outline-none focus:ring-2 focus:ring-brand-500',
+                    'focus:ring-brand-500 focus:outline-none focus:ring-2',
                     error ? 'border-red-400' : 'border-gray-300',
                   )}
                   aria-invalid={!!error}
@@ -178,10 +199,7 @@ export function CalculatorForm<T extends ZodRawShape>({
               ) : fieldMeta.type === 'radio' ? (
                 <fieldset className="flex flex-wrap gap-3">
                   {fieldMeta.options?.map((opt) => (
-                    <label
-                      key={opt.value}
-                      className="flex cursor-pointer items-center gap-2"
-                    >
+                    <label key={opt.value} className="flex cursor-pointer items-center gap-2">
                       <input
                         type="radio"
                         value={opt.value}
@@ -198,9 +216,7 @@ export function CalculatorForm<T extends ZodRawShape>({
                   id={name}
                   type={fieldMeta.type ?? 'number'}
                   inputMode={
-                    fieldMeta.type === 'text' || fieldMeta.type === 'date'
-                      ? 'text'
-                      : 'decimal'
+                    fieldMeta.type === 'text' || fieldMeta.type === 'date' ? 'text' : 'decimal'
                   }
                   placeholder={fieldMeta.placeholder}
                   {...register(fieldName, {
@@ -215,7 +231,7 @@ export function CalculatorForm<T extends ZodRawShape>({
                   })}
                   className={cn(
                     'w-full rounded-lg border px-3 py-2.5 text-sm',
-                    'focus:outline-none focus:ring-2 focus:ring-brand-500',
+                    'focus:ring-brand-500 focus:outline-none focus:ring-2',
                     fieldMeta.prefix && 'pl-10',
                     fieldMeta.suffix && 'pr-14',
                     error ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-white',
@@ -281,8 +297,8 @@ export function CalculatorForm<T extends ZodRawShape>({
         type="submit"
         disabled={isLoading}
         className={cn(
-          'w-full rounded-lg bg-brand-600 px-4 py-3 text-sm font-semibold text-white',
-          'hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+          'bg-brand-600 w-full rounded-lg px-4 py-3 text-sm font-semibold text-white',
+          'hover:bg-brand-700 focus:ring-brand-500 focus:outline-none focus:ring-2 focus:ring-offset-2',
           'disabled:cursor-not-allowed disabled:opacity-50',
           'transition-colors duration-150',
         )}

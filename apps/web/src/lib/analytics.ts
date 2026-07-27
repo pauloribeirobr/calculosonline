@@ -34,9 +34,7 @@ function cleanParams(params?: AnalyticsParams): AnalyticsParams | undefined {
 function sanitizeQueryString(rawQueryString?: string): string | undefined {
   if (!rawQueryString) return undefined
 
-  const normalized = rawQueryString.startsWith('?')
-    ? rawQueryString.substring(1)
-    : rawQueryString
+  const normalized = rawQueryString.startsWith('?') ? rawQueryString.substring(1) : rawQueryString
 
   const params = new URLSearchParams(normalized)
   for (const key of Array.from(params.keys())) {
@@ -73,8 +71,19 @@ export const analytics = {
       ...metadata,
     }),
 
-  calculatorCalculated: (calculatorSlug: string, category: string) =>
+  calculatorCalculated: (
+    calculatorSlug: string,
+    category: string,
+    origin: 'manual' | 'shared_link' = 'manual',
+  ) =>
     track('calculator_calculated', {
+      calculator_slug: calculatorSlug,
+      calculator_category: category,
+      origin,
+    }),
+
+  calculatorShared: (calculatorSlug: string, category: string) =>
+    track('calculator_shared', {
       calculator_slug: calculatorSlug,
       calculator_category: category,
     }),
@@ -114,13 +123,7 @@ export const analytics = {
     }
   },
 
-  jsError: (
-    message: string,
-    source?: string,
-    lineno?: number,
-    colno?: number,
-    error?: Error,
-  ) =>
+  jsError: (message: string, source?: string, lineno?: number, colno?: number, error?: Error) =>
     track('exception', {
       description: message,
       fatal: false,
