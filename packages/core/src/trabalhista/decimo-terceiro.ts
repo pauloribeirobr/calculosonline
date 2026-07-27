@@ -41,15 +41,8 @@ export interface DecimoTerceiroResultado {
   parcela: ParcelaDecimoTerceiro
 }
 
-function calcularMesesDireito(
-  mesAdmissao: number | null,
-  mesReferencia: number,
-  parcela: ParcelaDecimoTerceiro,
-  diasTrabalhados: number,
-): number {
-  if (mesAdmissao === null) {
-    return parcela === 'total' ? 12 : Math.min(12, mesReferencia)
-  }
+function calcularMesesDireito(mesAdmissao: number | null, diasTrabalhados: number): number {
+  if (mesAdmissao === null) return 12
   const mesContaInteiro = diasTrabalhados >= 15
   const meses = 12 - mesAdmissao + 1 - (mesContaInteiro ? 0 : 1)
   return Math.max(0, Math.min(12, meses))
@@ -82,7 +75,7 @@ export function calcularDecimoTerceiro(
   const anoRef = params.anoReferencia ?? new Date().getFullYear()
   const diasTrab = params.diasTrabalhados ?? 30
 
-  const mesesDireito = calcularMesesDireito(params.mesAdmissao, mesRef, params.parcela, diasTrab)
+  const mesesDireito = calcularMesesDireito(params.mesAdmissao, diasTrab)
   const valorBruto = arredondar((params.salarioBruto / 12) * mesesDireito)
 
   if (params.parcela === 'primeira') {

@@ -16,6 +16,19 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **`llms.txt` entregue (27/07, F16)** — `apps/web/public/llms.txt`
+  criado no padrão do Recibo Fácil. Item 3 do P0 abaixo já fechado; restam
+  Backlinks (item 2) e Google Ads (item 4), ambos pendentes de
+  decisão/orçamento do Paulo.
+- **Bug real corrigido no 13º salário (27/07, F33):** a 2ª parcela (e a 1ª,
+  em menor grau) calculava o número de meses de direito usando o mês real
+  do calendário do sistema em vez de sempre 12 meses para quem já
+  trabalhava antes do ano corrente — resultado errado e dependente da data
+  em que se calculava. Corrigido em
+  `packages/core/src/trabalhista/decimo-terceiro.ts`; suíte de teste
+  completa criada (24 testes, incluindo regressão explícita de
+  independência de data). Ver diário [2026-07-27 (parte
+  10)](#2026-07-27-parte-10-llmstxt-f16--bug-real-no-13-salário-2ª-parcela-f33).
 - **Correção importante (25/07, parte 4):** a hipótese "site com ~0 visitas
   há 3 meses" **não é o que os dados mostram**. Cruzando o export novo do
   GSC (25/07) com um export de GA4 que apareceu em `gsc/` na mesma sessão:
@@ -107,11 +120,13 @@ autoridade.)
    - Menções orgânicas em fóruns/comunidades BR quando genuinamente
      relevantes, nunca spam.
    - **Falta:** priorizar por esforço/impacto e decidir quem executa.
-3. **`llms.txt` + GEO — promovido de P2 para P0.** O GA4 mostra o canal "AI
-   Assistant" (ChatGPT + Copilot) já trazendo ~17 sessões/mês **sem
-   nenhuma otimização feita** — sinal validado de que vale investir aqui
-   antes até de backlinks amadurecerem (ciclo de meses) ou Ads rodarem.
-   Recibo Fácil já tem `frontend/public/llms.txt` como referência.
+3. ~~`llms.txt` + GEO~~ — ✅ **entregue 27/07** (F16, ver `FEATURES.md`).
+   `apps/web/public/llms.txt` criado no mesmo formato do Recibo Fácil
+   (`frontend/public/llms.txt`): as 20 calculadoras agrupadas por categoria,
+   modelo de negócio, diferenciais (cálculo 100% client-side, memória de
+   cálculo, compartilhamento por link) e FAQ curta. Nenhuma métrica nova
+   ainda pra confirmar impacto no canal "AI Assistant" — acompanhar próximo
+   export do GA4.
 4. **Google Ads — piloto de aquisição paga**, mesmos alvos do item 2:
    - Objetivo: gerar tráfego/dado **atribuível ao Google especificamente**
      (o produto já está validado via outros canais — 333
@@ -301,6 +316,53 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-07-27 (parte 10) — `llms.txt` (F16) + bug real no 13º salário (2ª parcela, F33)
+
+**F16 — `llms.txt`.** Paulo pediu pra seguir o P0 do backlog; escolhida a
+opção mais barata e sem dependência de decisão externa (compra de link,
+orçamento de Ads). `apps/web/public/llms.txt` criado a partir do
+`frontend/public/llms.txt` do Recibo Fácil (mesma estrutura: intro, seções
+por categoria/produto, modelo de negócio, diferenciais, FAQ curta) — as 20
+calculadoras listadas por categoria (trabalhista, impostos, financeiras,
+investimentos, saúde, negócios), com destaque para o que já é real e
+verificado no código: cálculo 100% client-side (nenhum form chama API,
+todos são `'use client'` puro), detalhamento sempre visível, e o
+compartilhamento por link do F32. Sem métrica de validação própria (é um
+arquivo estático); acompanhar se o canal "AI Assistant" do GA4 (~17
+sessões/mês antes desta mudança) se move nos próximos exports.
+
+**F33 — bug real no 13º salário, achado pelo Paulo ("os cálculos das
+parcelas estão com problema especialmente a segunda").** Causa: em
+`calcularMesesDireito` (`packages/core/src/trabalhista/decimo-terceiro.ts`),
+para quem já trabalhava antes do ano corrente (`mesAdmissao: null` — opção
+padrão do formulário), o número de meses de direito das parcelas
+`'primeira'` e `'segunda'` usava `Math.min(12, mesReferencia)`, e
+`mesReferencia` **nunca é enviado pelo `DecimoTerceiroForm`** (não existe
+esse campo na UI) — caía sempre no default `new Date().getMonth() + 1`,
+ou seja, **o mês real do calendário no momento em que a pessoa calcula**.
+Rodar a calculadora em julho (mês 7) fazia a 2ª parcela considerar só
+7/12 do 13º em vez de 12/12 — resultado errado e, pior, **dependente da
+data em que se calcula** (só ficaria certo, por acidente, calculando em
+dezembro). A parcela `'total'` não tinha esse problema (12 meses
+hardcoded), o que tornava o sintoma mais visível: 1ª + 2ª parcela nunca
+batiam com o total. **Fix:** `calcularMesesDireito` agora retorna sempre
+12 meses quando `mesAdmissao` é `null`, para qualquer tipo de parcela —
+removida a dependência do mês real do sistema (`mesReferencia` continua
+aceito/validado na API do core, só não influencia mais o número de meses
+de direito). Quem foi admitido no ano corrente (`mesAdmissao` != null)
+nunca teve esse bug — a lógica de meses ali nunca dependeu de
+`mesReferencia`. Escrita suíte de teste completa
+(`decimo-terceiro.test.ts`, 24 testes): cobre validação, `mesAdmissao`
+null com todas as parcelas e várias faixas salariais (1.518 a 12.000,
+cruzando as faixas de isenção/alíquota de INSS e IRRF), consistência
+1ª+2ª=total, efeito de dependentes no IRRF, admissão no ano corrente
+(dias trabalhados ≥15/<15, mês 1 a 12, inclusive borda em dezembro com
+direito a 0 meses), e **teste de regressão explícito** que roda o mesmo
+cálculo simulando o sistema em janeiro/junho/julho/novembro/dezembro
+(`vi.setSystemTime`) e confirma que o resultado não muda mais com a data.
+Validação: `pnpm --filter @calculosonline/core test` (332/332), `pnpm
+typecheck` + `pnpm lint` + `pnpm build` limpos.
 
 ### 2026-07-26 (parte 9) — `pnpm dev` caindo sozinho (falso alarme de "navbar quebrada")
 
