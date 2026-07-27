@@ -1,0 +1,68 @@
+# Calculos Online
+
+> Calculadoras online gratuitas e atualizadas para 2026 para o mercado brasileiro — trabalhistas, impostos, financeiras, investimentos, saúde e negócios. 100% gratuito, sem cadastro, cálculo feito no navegador do usuário.
+
+## Trabalhistas
+
+- [Rescisão Trabalhista](https://calculosonline.com.br/calculadora/rescisao-trabalhista): Saldo de salário, aviso prévio, férias proporcionais, 13º proporcional, FGTS e multa de 40%.
+- [Férias](https://calculosonline.com.br/calculadora/ferias): Valor das férias + 1/3 constitucional, com descontos de INSS e IRRF.
+- [13º Salário](https://calculosonline.com.br/calculadora/decimo-terceiro): 1ª e 2ª parcelas do décimo terceiro salário, com descontos.
+- [Hora Extra](https://calculosonline.com.br/calculadora/hora-extra): Acréscimo de 50% (dias úteis) ou 100% (domingos/feriados) sobre o valor da hora normal.
+- [FGTS](https://calculosonline.com.br/calculadora/fgts): Depósito mensal (8%), saldo acumulado, multa rescisória e saque-aniversário.
+- [Salário Líquido](https://calculosonline.com.br/calculadora/salario-liquido): Salário bruto menos INSS, IRRF e vale-transporte.
+
+## Impostos
+
+- [INSS](https://calculosonline.com.br/calculadora/inss): Contribuição para CLT, autônomo, contribuinte facultativo e MEI.
+- [IRRF](https://calculosonline.com.br/calculadora/irrf): Imposto de Renda Retido na Fonte sobre o salário mensal.
+- [IRPF](https://calculosonline.com.br/calculadora/irpf): Declaração anual do Imposto de Renda, comparando modelo simplificado × completo.
+- [DAS MEI](https://calculosonline.com.br/calculadora/das-mei): Guia mensal do MEI (INSS + ICMS/ISS fixos conforme a atividade).
+
+## Financeiras
+
+- [Porcentagem](https://calculosonline.com.br/calculadora/porcentagem): 6 modos de cálculo — percentual de um valor, variação percentual, desconto e mais.
+- [Juros Compostos](https://calculosonline.com.br/calculadora/juros-compostos): Evolução do montante com capital inicial, aporte mensal e taxa de juros.
+- [Empréstimo](https://calculosonline.com.br/calculadora/emprestimo): Simulação pelos sistemas Price e SAC, com seguro opcional.
+- [Financiamento](https://calculosonline.com.br/calculadora/financiamento): Tabela Price ou SAC com CET (Custo Efetivo Total) anual.
+
+## Investimentos
+
+- [CDB](https://calculosonline.com.br/calculadora/cdb): Rendimento líquido de CDB prefixado, pós-fixado (% do CDI) ou atrelado ao IPCA+.
+- [Poupança](https://calculosonline.com.br/calculadora/poupanca): Rendimento pela regra antiga ou nova (SELIC + TR).
+- [Tesouro Direto](https://calculosonline.com.br/calculadora/tesouro-direto): Simulação SELIC, Prefixado e IPCA+, descontando taxa de custódia.
+
+## Saúde
+
+- [IMC](https://calculosonline.com.br/calculadora/imc): Índice de Massa Corporal e classificação (abaixo do peso, normal, sobrepeso, obesidade).
+- [Calorias](https://calculosonline.com.br/calculadora/calorias): Taxa Metabólica Basal (TMB), gasto calórico total (TDEE) e meta calórica com macronutrientes.
+
+## Negócios
+
+- [Margem de Lucro](https://calculosonline.com.br/calculadora/margem-lucro): Preço de venda, markup e margem sobre o custo de um produto ou serviço.
+
+## Modelo de negócio
+
+- **100% gratuito, sem cadastro:** todas as 20 calculadoras acima são de uso ilimitado e gratuito, sem necessidade de conta.
+- **Sem anúncios intrusivos:** o site ainda não monetiza por anúncios (AdSense em avaliação).
+
+## Diferenciais
+
+- Cálculo executado no navegador do usuário — os dados informados nos formulários não são enviados a nenhum servidor.
+- Tabelas legislativas (INSS, IRRF, salário mínimo, FGTS) atualizadas para 2026.
+- Detalhamento do cálculo (memória de cálculo) sempre visível, linha a linha, com sinal (+)/(−) e fonte jurídica de cada regra aplicada.
+- Compartilhamento de um cálculo já preenchido por link (ex. WhatsApp) — quem recebe o link vê o resultado já calculado, sem precisar preencher de novo.
+- Funciona no celular e no computador.
+
+## Perguntas frequentes
+
+**Preciso criar conta para usar as calculadoras?**
+Não. Todas as calculadoras são gratuitas e de uso ilimitado, sem cadastro.
+
+**Os cálculos usam as tabelas de 2026?**
+Sim. INSS, IRRF, salário mínimo, FGTS e demais parâmetros legislativos são revisados periodicamente e a data da última atualização aparece em cada calculadora.
+
+**Meus dados ficam salvos em algum servidor?**
+Não. Os formulários rodam no navegador (client-side); os valores informados não são enviados nem armazenados em servidor.
+
+**Como compartilho um cálculo já pronto com outra pessoa?**
+Use o botão de compartilhar em qualquer calculadora — ele gera um link (inclusive para WhatsApp) que reabre a calculadora já preenchida e com o resultado calculado.
