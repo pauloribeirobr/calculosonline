@@ -13,7 +13,7 @@ const schema = z.object({
   emAtraso: z.enum(['nao', 'sim']).default('nao'),
 })
 
-export function FeriasForm({ onResult, onError, isLoading }: FormProps) {
+export function FeriasForm({ onResult, onError, isLoading, sharedData, autoSubmit }: FormProps) {
   function handleSubmit(data: z.infer<typeof schema>) {
     const r = calcularFerias({
       salarioBruto: data.salarioBruto,
@@ -21,7 +21,7 @@ export function FeriasForm({ onResult, onError, isLoading }: FormProps) {
       diasAbono: data.diasAbono,
       emAtraso: data.emAtraso === 'sim',
     })
-    if (r.sucesso) onResult(r.dados)
+    if (r.sucesso) onResult(r.dados, data)
     else onError?.(r.erros)
   }
 
@@ -57,6 +57,8 @@ export function FeriasForm({ onResult, onError, isLoading }: FormProps) {
       onSubmit={handleSubmit}
       submitLabel="Calcular Férias"
       isLoading={!!isLoading}
+      defaultValues={sharedData as Partial<z.infer<typeof schema>> | undefined}
+      autoSubmit={autoSubmit}
     />
   )
 }

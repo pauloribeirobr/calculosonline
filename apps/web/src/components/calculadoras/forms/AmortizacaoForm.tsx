@@ -23,13 +23,15 @@ export function AmortizacaoForm({
   onResult,
   onError,
   isLoading,
+  sharedData,
+  autoSubmit,
   contexto = 'emprestimo',
 }: AmortizacaoFormProps) {
   const isFinanciamento = contexto === 'financiamento'
 
   function handleSubmit(data: z.infer<typeof schema>) {
     const r = calcularAmortizacao(data)
-    if (r.sucesso) onResult(r.dados)
+    if (r.sucesso) onResult(r.dados, data)
     else onError?.(r.erros)
   }
 
@@ -71,6 +73,8 @@ export function AmortizacaoForm({
       onSubmit={handleSubmit}
       submitLabel={isFinanciamento ? 'Simular Financiamento' : 'Simular Empréstimo'}
       isLoading={!!isLoading}
+      defaultValues={sharedData as Partial<z.infer<typeof schema>> | undefined}
+      autoSubmit={autoSubmit}
     />
   )
 }

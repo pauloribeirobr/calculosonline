@@ -28,7 +28,13 @@ const schema = z.object({
   numeroDependentesIRRF: z.number().min(0).default(0),
 })
 
-export function DecimoTerceiroForm({ onResult, onError, isLoading }: FormProps) {
+export function DecimoTerceiroForm({
+  onResult,
+  onError,
+  isLoading,
+  sharedData,
+  autoSubmit,
+}: FormProps) {
   function handleSubmit(data: z.infer<typeof schema>) {
     const r = calcularDecimoTerceiro({
       salarioBruto: data.salarioBruto,
@@ -36,7 +42,7 @@ export function DecimoTerceiroForm({ onResult, onError, isLoading }: FormProps) 
       parcela: data.parcela,
       numeroDependentesIRRF: data.numeroDependentesIRRF,
     })
-    if (r.sucesso) onResult(r.dados)
+    if (r.sucesso) onResult(r.dados, data)
     else onError?.(r.erros)
   }
 
@@ -72,6 +78,8 @@ export function DecimoTerceiroForm({ onResult, onError, isLoading }: FormProps) 
       onSubmit={handleSubmit}
       submitLabel="Calcular 13º"
       isLoading={!!isLoading}
+      defaultValues={sharedData as Partial<z.infer<typeof schema>> | undefined}
+      autoSubmit={autoSubmit}
     />
   )
 }

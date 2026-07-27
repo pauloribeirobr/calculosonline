@@ -13,10 +13,10 @@ const schema = z.object({
   outrasDeducoes: z.number().min(0).default(0),
 })
 
-export function IRRFForm({ onResult, onError, isLoading }: FormProps) {
+export function IRRFForm({ onResult, onError, isLoading, sharedData, autoSubmit }: FormProps) {
   function handleSubmit(data: z.infer<typeof schema>) {
     const r = calcularIRRF(data)
-    if (r.sucesso) onResult(r.dados)
+    if (r.sucesso) onResult(r.dados, data)
     else onError?.(r.erros)
   }
 
@@ -41,6 +41,8 @@ export function IRRFForm({ onResult, onError, isLoading }: FormProps) {
       onSubmit={handleSubmit}
       submitLabel="Calcular IRRF"
       isLoading={!!isLoading}
+      defaultValues={sharedData as Partial<z.infer<typeof schema>> | undefined}
+      autoSubmit={autoSubmit}
     />
   )
 }

@@ -14,7 +14,13 @@ const schema = z.object({
   temValeTransporte: z.enum(['sim', 'nao']).default('nao'),
 })
 
-export function SalarioLiquidoForm({ onResult, onError, isLoading }: FormProps) {
+export function SalarioLiquidoForm({
+  onResult,
+  onError,
+  isLoading,
+  sharedData,
+  autoSubmit,
+}: FormProps) {
   function handleSubmit(data: z.infer<typeof schema>) {
     const r = calcularSalarioLiquido({
       salarioBruto: data.salarioBruto,
@@ -23,7 +29,7 @@ export function SalarioLiquidoForm({ onResult, onError, isLoading }: FormProps) 
       outrosDescontos: data.outrosDescontos,
       temValeTransporte: data.temValeTransporte === 'sim',
     })
-    if (r.sucesso) onResult(r.dados)
+    if (r.sucesso) onResult(r.dados, data)
     else onError?.(r.erros)
   }
 
@@ -64,6 +70,8 @@ export function SalarioLiquidoForm({ onResult, onError, isLoading }: FormProps) 
       onSubmit={handleSubmit}
       submitLabel="Calcular Salário Líquido"
       isLoading={!!isLoading}
+      defaultValues={sharedData as Partial<z.infer<typeof schema>> | undefined}
+      autoSubmit={autoSubmit}
     />
   )
 }

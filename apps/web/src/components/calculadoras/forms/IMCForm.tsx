@@ -10,10 +10,10 @@ const schema = z.object({
   altura: z.number().positive('Altura deve ser positiva').default(0),
 })
 
-export function IMCForm({ onResult, onError, isLoading }: FormProps) {
+export function IMCForm({ onResult, onError, isLoading, sharedData, autoSubmit }: FormProps) {
   function handleSubmit(data: z.infer<typeof schema>) {
     const r = calcularIMC(data)
-    if (r.sucesso) onResult(r.dados)
+    if (r.sucesso) onResult(r.dados, data)
     else onError?.(r.erros)
   }
 
@@ -31,6 +31,8 @@ export function IMCForm({ onResult, onError, isLoading }: FormProps) {
       onSubmit={handleSubmit}
       submitLabel="Calcular IMC"
       isLoading={!!isLoading}
+      defaultValues={sharedData as Partial<z.infer<typeof schema>> | undefined}
+      autoSubmit={autoSubmit}
     />
   )
 }

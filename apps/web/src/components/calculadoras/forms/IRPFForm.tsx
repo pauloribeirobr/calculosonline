@@ -17,10 +17,10 @@ const schema = z.object({
   contribuicaoPrevidenciaPrivada: z.number().min(0).default(0),
 })
 
-export function IRPFForm({ onResult, onError, isLoading }: FormProps) {
+export function IRPFForm({ onResult, onError, isLoading, sharedData, autoSubmit }: FormProps) {
   function handleSubmit(data: z.infer<typeof schema>) {
     const r = calcularIRPF(data)
-    if (r.sucesso) onResult(r.dados)
+    if (r.sucesso) onResult(r.dados, data)
     else onError?.(r.erros)
   }
 
@@ -61,6 +61,8 @@ export function IRPFForm({ onResult, onError, isLoading }: FormProps) {
       onSubmit={handleSubmit}
       submitLabel="Comparar modelos"
       isLoading={!!isLoading}
+      defaultValues={sharedData as Partial<z.infer<typeof schema>> | undefined}
+      autoSubmit={autoSubmit}
     />
   )
 }

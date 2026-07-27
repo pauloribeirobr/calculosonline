@@ -15,10 +15,16 @@ const schema = z.object({
   prazoMeses: z.number().positive('Prazo deve ser positivo').default(0),
 })
 
-export function TesouroDiretoForm({ onResult, onError, isLoading }: FormProps) {
+export function TesouroDiretoForm({
+  onResult,
+  onError,
+  isLoading,
+  sharedData,
+  autoSubmit,
+}: FormProps) {
   function handleSubmit(data: z.infer<typeof schema>) {
     const r = calcularTesouroDireto(data)
-    if (r.sucesso) onResult(r.dados)
+    if (r.sucesso) onResult(r.dados, data)
     else onError?.(r.erros)
   }
 
@@ -52,6 +58,8 @@ export function TesouroDiretoForm({ onResult, onError, isLoading }: FormProps) {
       onSubmit={handleSubmit}
       submitLabel="Calcular Tesouro Direto"
       isLoading={!!isLoading}
+      defaultValues={sharedData as Partial<z.infer<typeof schema>> | undefined}
+      autoSubmit={autoSubmit}
     />
   )
 }

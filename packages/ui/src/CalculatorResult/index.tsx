@@ -16,6 +16,12 @@ export interface CalculatorResultProps {
   /** Formatação do valor headline. `currency` por padrão. */
   formato?: CalculatorResultFormato
   titulo?: string
+  /** Nome da calculadora pra compor a mensagem de compartilhamento (ex. "13º Salário"). */
+  nomeCalculadora?: string | undefined
+  /** Link com os valores do cálculo (base64) — presente só ativa o botão "Compartilhar via WhatsApp". */
+  shareUrl?: string | undefined
+  /** Chamado ao clicar em compartilhar, antes de abrir o WhatsApp (ex. para registrar analytics). */
+  onShareClick?: (() => void) | undefined
 }
 
 function formatarValor(valor: number, formato: CalculatorResultFormato = 'currency'): string {
@@ -46,15 +52,7 @@ function sinalNatureza(tipo: ItemDetalhamento['tipo']): string {
   return { credito: '+ ', debito: '− ', neutro: '' }[tipo]
 }
 
-type FormatoItem =
-  | 'currency'
-  | 'percent'
-  | 'number'
-  | 'kg'
-  | 'meter'
-  | 'kcal'
-  | 'gram'
-  | 'empty'
+type FormatoItem = 'currency' | 'percent' | 'number' | 'kg' | 'meter' | 'kcal' | 'gram' | 'empty'
 
 function normalizarDescricao(descricao: string): string {
   return descricao
@@ -77,11 +75,7 @@ function inferirFormatoItem(item: ItemDetalhamento): FormatoItem {
   if (titulo === 'peso' || titulo.includes('peso ideal')) return 'kg'
   if (titulo === 'altura') return 'meter'
   if (titulo.includes('tmb') || titulo.includes('tdee') || titulo.includes('meta')) return 'kcal'
-  if (
-    titulo.includes('proteina') ||
-    titulo.includes('carboidrato') ||
-    titulo.includes('gordura')
-  ) {
+  if (titulo.includes('proteina') || titulo.includes('carboidrato') || titulo.includes('gordura')) {
     return 'gram'
   }
   return 'currency'
@@ -92,16 +86,39 @@ function formatarItem(item: ItemDetalhamento): string {
   if (formato === 'empty') return ''
   if (formato === 'percent') return `${item.valor.toLocaleString('pt-BR')}%`
   if (formato === 'number') return item.valor.toLocaleString('pt-BR', { maximumFractionDigits: 2 })
-  if (formato === 'kg') return `${item.valor.toLocaleString('pt-BR', { maximumFractionDigits: 2 })} kg`
-  if (formato === 'meter') return `${item.valor.toLocaleString('pt-BR', { maximumFractionDigits: 2 })} m`
-  if (formato === 'kcal') return `${item.valor.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} kcal`
-  if (formato === 'gram') return `${item.valor.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} g`
+  if (formato === 'kg')
+    return `${item.valor.toLocaleString('pt-BR', { maximumFractionDigits: 2 })} kg`
+  if (formato === 'meter')
+    return `${item.valor.toLocaleString('pt-BR', { maximumFractionDigits: 2 })} m`
+  if (formato === 'kcal')
+    return `${item.valor.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} kcal`
+  if (formato === 'gram')
+    return `${item.valor.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} g`
   return item.valor
     .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
     .replace(/\u00a0/g, ' ')
 }
 
-export function CalculatorResult({ resultado, formato, titulo }: CalculatorResultProps) {
+function buildWhatsAppShareHref(
+  shareUrl: string,
+  nomeCalculadora: string | undefined,
+  valorHeadline: number,
+  formato: CalculatorResultFormato | undefined,
+): string {
+  const nome = nomeCalculadora ?? 'este cálculo'
+  const valor = formatarValor(valorHeadline, formato)
+  const mensagem = `Calculei ${nome}: ${valor} — confira ou refaça com seus valores: ${shareUrl}`
+  return `https://wa.me/?text=${encodeURIComponent(mensagem)}`
+}
+
+export function CalculatorResult({
+  resultado,
+  formato,
+  titulo,
+  nomeCalculadora,
+  shareUrl,
+  onShareClick,
+}: CalculatorResultProps) {
   return (
     <div
       className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm"
@@ -110,7 +127,7 @@ export function CalculatorResult({ resultado, formato, titulo }: CalculatorResul
     >
       <div className="bg-brand-600 px-6 py-5 text-white">
         {titulo && <p className="mb-1 text-sm font-medium opacity-80">{titulo}</p>}
-        <p className="text-result-lg font-semibold tracking-normal tabular-nums" aria-live="polite">
+        <p className="text-result-lg font-semibold tabular-nums tracking-normal" aria-live="polite">
           {formatarValor(resultado.resultado, formato)}
         </p>
         <div className="mt-2 flex flex-wrap gap-3 text-xs opacity-75">
@@ -145,18 +162,11 @@ export function CalculatorResult({ resultado, formato, titulo }: CalculatorResul
                 <span className="flex-1 pr-4 text-sm text-gray-600">
                   {item.descricao}
                   {item.formula && (
-                    <span className="ml-1 font-mono text-xs text-gray-400">
-                      ({item.formula})
-                    </span>
+                    <span className="ml-1 font-mono text-xs text-gray-400">({item.formula})</span>
                   )}
                 </span>
                 {valorFormatado && (
-                  <span
-                    className={cn(
-                      'text-sm font-medium tabular-nums',
-                      corNatureza(item.tipo),
-                    )}
-                  >
+                  <span className={cn('text-sm font-medium tabular-nums', corNatureza(item.tipo))}>
                     {sinalNatureza(item.tipo)}
                     {valorFormatado}
                   </span>
@@ -173,6 +183,20 @@ export function CalculatorResult({ resultado, formato, titulo }: CalculatorResul
         </p>
         <p className="mt-0.5 text-xs text-gray-400">{resultado.baseCalculo}</p>
       </div>
+
+      {shareUrl && (
+        <div className="border-t border-gray-100 px-4 py-3">
+          <a
+            href={buildWhatsAppShareHref(shareUrl, nomeCalculadora, resultado.resultado, formato)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={onShareClick}
+            className="inline-flex items-center gap-2 rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm font-medium text-green-700 transition-colors hover:bg-green-100"
+          >
+            <span aria-hidden>📤</span> Compartilhar via WhatsApp
+          </a>
+        </div>
+      )}
     </div>
   )
 }
