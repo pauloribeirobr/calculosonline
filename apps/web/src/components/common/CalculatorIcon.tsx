@@ -113,7 +113,7 @@ function StyledIcon({
       ].join(' ')}
       aria-hidden
     >
-      <Icon className={sizeClass.icon} strokeWidth={1.9} />
+      <Icon className={sizeClass.icon} />
       <span
         className={[
           'absolute right-1 top-1 rounded-full bg-current opacity-25',
