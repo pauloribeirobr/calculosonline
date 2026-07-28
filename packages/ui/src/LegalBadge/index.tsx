@@ -1,3 +1,4 @@
+import { ScaleIcon } from '@heroicons/react/24/outline'
 import { cn } from '../utils/cn'
 
 export interface LegalBadgeProps {
@@ -14,7 +15,7 @@ export function LegalBadge({ fonteJuridica, className }: LegalBadgeProps) {
       )}
       title={`Base legal: ${fonteJuridica}`}
     >
-      <span aria-hidden>⚖️</span>
+      <ScaleIcon className="h-3.5 w-3.5" aria-hidden />
       <span className="hidden sm:inline">Base legal:</span>
       <span className="font-mono">{fonteJuridica.split('|')[0]?.trim()}</span>
     </span>

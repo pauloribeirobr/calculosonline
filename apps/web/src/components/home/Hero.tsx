@@ -5,6 +5,7 @@ import {
   ShieldCheckIcon,
   ScaleIcon,
   CalendarIcon,
+  SparklesIcon,
 } from '@heroicons/react/24/outline'
 
 /**
@@ -112,7 +113,7 @@ export function Hero() {
       <div className="relative mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:items-center lg:px-8">
         <div className="text-white">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider backdrop-blur">
-            <span aria-hidden>✨</span> Atualizado para 2026
+            <SparklesIcon className="h-3.5 w-3.5" aria-hidden /> Atualizado para 2026
           </span>
           <h1 className="mt-5 text-4xl font-bold leading-tight tracking-tight md:text-5xl lg:text-6xl">
             Calculadoras Online Grátis e Atualizadas para 2026

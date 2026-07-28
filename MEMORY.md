@@ -16,6 +16,17 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **F18 respondido (27/07): rich results (FAQPage/HowTo) não é bug — e só
+  afeta o dropdown visual, não o conteúdo.** `HowTo` foi descontinuado
+  pelo Google desde set/2023 (nunca teria chance de aparecer); `FAQPage`
+  foi **removido de todo o Google Search em 07/05/2026** (~2,5 meses antes
+  desta checagem, dentro da janela de 3 meses vazia no GSC). O que morreu
+  foi só o dropdown expansível na SERP — **o texto das perguntas/respostas
+  em si (F10) continua tendo valor normal de SEO** (casa a página com
+  buscas no formato de pergunta, cobertura semântica, fonte de citação pra
+  IA/GEO), e o JSON-LD é inofensivo de manter. Nada a corrigir no código.
+  Rich snippet visual sai de vez da lista de alavancas de CTR; autoridade
+  (backlinks + GEO) continua sendo a aposta certa.
 - **`llms.txt` entregue (27/07, F16)** — `apps/web/public/llms.txt`
   criado no padrão do Recibo Fácil. Item 3 do P0 abaixo já fechado; restam
   Backlinks (item 2) e Google Ads (item 4), ambos pendentes de
@@ -136,10 +147,23 @@ autoridade.)
    - **Falta decidir com o Paulo:** orçamento mensal, duração (referência:
      4-6 semanas), e validar CPC real via Keyword Planner/Semrush antes de
      criar as campanhas.
-5. **Investigar Rich Results.** `Aspecto da pesquisa.csv` do GSC veio vazio
-   nos últimos 3 meses — nenhum rich snippet concedido apesar de `FAQPage`
-   e `HowTo` já implementados. Rodar o Rich Results Test do Google em 2-3
-   páginas antes de assumir que é só falta de autoridade.
+5. ~~Investigar Rich Results~~ — ✅ **respondido 27/07 (F18), não é bug —
+   e só afeta o dropdown visual, não o conteúdo.**
+   `HowTo` foi descontinuado (desktop+mobile) desde set/2023; `FAQPage` já
+   era restrito a domínios gov/saúde desde ago/2023 e foi **removido de
+   todo o Google Search em 07/05/2026** — ~2,5 meses antes desta checagem,
+   dentro da própria janela de 3 meses vazia no GSC. Não há erro de
+   elegibilidade pra corrigir: o schema continua válido, só não gera mais
+   exibição visual em lugar nenhum. **O que não morreu:** o texto das
+   perguntas/respostas do F10 (101 perguntas/20 calculadoras) continua
+   valendo como conteúdo normal de SEO — casa a página com buscas no
+   formato de pergunta, cobertura semântica do cluster, fonte de citação
+   pra IA/GEO (o mesmo raciocínio do Recibo Fácil ao investir em FAQ). É só
+   a "cereja do bolo" (dropdown na SERP) que sumiu. Ver diário 27/07
+   (parte 11) e `FEATURES.md` (F18). **Consequência pro roadmap:** rich
+   snippet visual nunca vai ser alavanca de CTR aqui — a aposta de
+   autoridade continua sendo backlinks (item 2) e GEO (item 3, já
+   entregue), não schema markup.
 6. **Sprint 1.6 — AdSense** — continua depois dos itens acima. Só ativar
    quando houver tráfego real e atribuível ao Google.
 
@@ -316,6 +340,51 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-07-27 (parte 11) — F18 respondido: rich results não é bug, é política do Google
+
+Paulo pediu pra investigar por que `FAQPage`/`HowTo` nunca geraram rich
+snippet no GSC (3 meses vazios em "Aspecto da pesquisa"), mesmo com F10/F12
+implementados corretamente. Pesquisa (WebSearch, cruzando várias fontes
+independentes incluindo Search Engine Journal e a atualização da
+documentação oficial do Google Search Central) confirma que **não é
+problema de elegibilidade nem bug de implementação**:
+
+- **`HowTo` rich result:** descontinuado por completo (desktop **e**
+  mobile) desde **setembro de 2023** — quase 3 anos antes do F12
+  (20/07/2026). Nunca teve chance nenhuma de aparecer, com marcação
+  perfeita ou não.
+- **`FAQPage` rich result:** já vinha restrito desde agosto/2023 a
+  domínios "autoritativos" de governo e saúde (calculosonline nunca se
+  qualificaria) e foi **retirado por completo de todo o Google Search em
+  07/05/2026** — inclusive dos sites gov/saúde que ainda tinham. Isso foi
+  há só ~2,5 meses desta checagem, ou seja, **dentro da própria janela de
+  3 meses** que o GSC mostrava vazia — a causa raiz do "não aparece nada"
+  é exatamente essa retirada, não falta de confiança de domínio novo.
+  Google também vai tirar o suporte a FAQ do Rich Results Test e do
+  relatório do Search Console em junho/2026, e da API em agosto/2026.
+
+Ambos os schemas continuam válidos e não precisam ser removidos (o próprio
+Google documenta que markup não usado não prejudica em nada), só deixaram
+de ter qualquer efeito visual de rich snippet — não vale a pena investir
+mais esforço de engenharia neles com esse objetivo. Nenhuma mudança de
+código feita (não havia nada a corrigir); só atualizada a leitura do
+backlog (`FEATURES.md` F18, `MEMORY.md` §P0 item 5).
+
+**Correção/esclarecimento (mesmo dia):** Paulo notou que o Recibo Fácil
+também investiu em FAQ "por causa de SEO" e questionou se esse achado
+jogava fora aquele trabalho. Resposta: não — são duas coisas distintas.
+O que morreu em 07/05/2026 foi só o **dropdown expansível na SERP**
+(gerado pelo JSON-LD `FAQPage`). O **texto das perguntas/respostas em si**
+(conteúdo visível na página, F10 aqui e o equivalente no Recibo Fácil)
+continua tendo valor de SEO normal, independente do schema: casa a página
+com buscas no formato de pergunta ("como calcular X"), aumenta a
+cobertura semântica do cluster de palavras-chave, e serve de fonte de
+citação pra assistentes de IA (que leem o texto da página, não dependem
+do JSON-LD pra isso) — o mesmo racional de GEO do `llms.txt` (F16).
+Atualizado `FEATURES.md` (F18) e os itens acima pra deixar essa distinção
+explícita, já que a resposta original dava a entender (incorretamente)
+que o investimento inteiro em FAQ tinha perdido o sentido.
 
 ### 2026-07-27 (parte 10) — `llms.txt` (F16) + bug real no 13º salário (2ª parcela, F33)
 

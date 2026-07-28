@@ -66,7 +66,7 @@ export default function CategoriasPage() {
                 <li key={calc.slug}>
                   <Link
                     href={`/calculadora/${calc.slug}`}
-                    className="flex flex-col gap-1 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-brand-300 hover:shadow-sm"
+                    className="flex flex-col gap-1 rounded-lg border border-gray-200 bg-white p-5 transition-all hover:border-brand-300 hover:shadow-sm"
                   >
                     <span className="flex items-center gap-2 font-medium text-gray-900">
                       <CalculatorIcon icon={calc.icone} categoria={calc.categoria} size="sm" />

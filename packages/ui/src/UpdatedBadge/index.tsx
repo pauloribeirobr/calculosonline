@@ -1,3 +1,4 @@
+import { CheckCircleIcon } from '@heroicons/react/24/outline'
 import { cn } from '../utils/cn'
 
 export interface UpdatedBadgeProps {
@@ -20,7 +21,7 @@ export function UpdatedBadge({ dataAtualizacao, className }: UpdatedBadgeProps) 
       )}
       title="Tabelas atualizadas"
     >
-      <span aria-hidden>✅</span> Tabelas {data}
+      <CheckCircleIcon className="h-3.5 w-3.5" aria-hidden /> Tabelas {data}
     </span>
   )
 }
