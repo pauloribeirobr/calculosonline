@@ -1,12 +1,16 @@
 import type { Metadata } from 'next'
+import { buildMetadata } from '@/lib/seo'
 import { Breadcrumbs } from '@/components/common/Breadcrumbs'
+import { PageSeo } from '@/components/seo/PageSeo'
 
-export const metadata: Metadata = {
+const description =
+  'Termos de uso do Calculos Online: condições de utilização das calculadoras, isenção de responsabilidade e propriedade intelectual.'
+
+export const metadata: Metadata = buildMetadata({
   title: 'Termos de Uso',
-  description:
-    'Termos de uso do Calculos Online: condições de utilização das calculadoras, isenção de responsabilidade e propriedade intelectual.',
-  alternates: { canonical: '/termos-de-uso' },
-}
+  description,
+  path: '/termos-de-uso',
+})
 
 export default function TermosDeUsoPage() {
   const dataAtualizacao = new Date('2026-01-01').toLocaleDateString('pt-BR', {
@@ -17,6 +21,15 @@ export default function TermosDeUsoPage() {
 
   return (
     <main className="mx-auto max-w-3xl space-y-6 px-4 py-12">
+      <PageSeo
+        title="Termos de Uso"
+        description={description}
+        path="/termos-de-uso"
+        breadcrumbs={[
+          { name: 'Início', path: '/' },
+          { name: 'Termos de Uso', path: '/termos-de-uso' },
+        ]}
+      />
       <Breadcrumbs
         items={[{ label: 'Início', href: '/' }, { label: 'Termos de Uso' }]}
       />

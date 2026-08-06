@@ -6,14 +6,19 @@ import {
   getCalculatorsByCategory,
   type CategoriaCalc,
 } from '@/lib/calculators'
+import { buildMetadata } from '@/lib/seo'
 import { Breadcrumbs } from '@/components/common/Breadcrumbs'
 import { CalculatorIcon, CategoryIcon } from '@/components/common/CalculatorIcon'
+import { PageSeo } from '@/components/seo/PageSeo'
+import { ItemListJsonLd } from '@/components/seo/JsonLd'
 
-export const metadata: Metadata = {
+const description = `Navegue pelas ${calculatorRegistry.length} calculadoras agrupadas por categoria: trabalhistas, impostos, financeiras, investimentos, saúde e negócios.`
+
+export const metadata: Metadata = buildMetadata({
   title: 'Todas as Categorias de Calculadoras',
-  description: `Navegue pelas ${calculatorRegistry.length} calculadoras agrupadas por categoria: trabalhistas, impostos, financeiras, investimentos, saúde e negócios.`,
-  alternates: { canonical: '/categorias' },
-}
+  description,
+  path: '/categorias',
+})
 
 export const revalidate = false
 
@@ -26,6 +31,22 @@ export default function CategoriasPage() {
 
   return (
     <main className="mx-auto max-w-5xl space-y-8 px-4 py-8">
+      <PageSeo
+        title="Todas as Categorias"
+        description={description}
+        path="/categorias"
+        breadcrumbs={[
+          { name: 'Início', path: '/' },
+          { name: 'Categorias', path: '/categorias' },
+        ]}
+      />
+      <ItemListJsonLd
+        items={categorias.map(([slug, cat]) => ({
+          name: cat.label,
+          path: `/categoria/${slug}`,
+          description: cat.descricao,
+        }))}
+      />
       <Breadcrumbs
         items={[
           { label: 'Início', href: '/' },

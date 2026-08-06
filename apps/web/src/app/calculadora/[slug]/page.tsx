@@ -5,10 +5,16 @@ import {
   findCalculator,
   getRelacionadas,
 } from '@/lib/calculators'
-import { gerarSchemasCalculadora } from '@/lib/schema'
-import { buildCalculatorTitle, siteConfig } from '@/lib/seo'
+import { buildCalculatorSchemaData } from '@/lib/schema'
+import { buildCalculatorTitle, buildMetadata } from '@/lib/seo'
 import { CalculadoraPageClient } from '@/components/calculadoras/CalculadoraPageClient'
 import { ContentLoader } from '@/components/ContentLoader'
+import {
+  CalculatorJsonLd,
+  BreadcrumbJsonLd,
+  HowToJsonLd,
+  FAQJsonLd,
+} from '@/components/seo/JsonLd'
 
 // SSG — gera todas as páginas em build time
 export async function generateStaticParams() {
@@ -27,30 +33,12 @@ export async function generateMetadata({
   const calc = findCalculator(slug)
   if (!calc) return {}
 
-  const title = buildCalculatorTitle(calc)
-  const url = `${siteConfig.url}/calculadora/${calc.slug}`
-
-  return {
-    title,
+  return buildMetadata({
+    title: buildCalculatorTitle(calc),
     description: calc.descricao,
     keywords: calc.palavrasChave,
-    openGraph: {
-      title,
-      description: calc.descricao,
-      url,
-      siteName: siteConfig.name,
-      locale: 'pt_BR',
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description: calc.descricao,
-    },
-    alternates: {
-      canonical: `/calculadora/${calc.slug}`,
-    },
-  }
+    path: `/calculadora/${calc.slug}`,
+  })
 }
 
 export default async function CalculadoraPage({
@@ -63,17 +51,21 @@ export default async function CalculadoraPage({
   if (!calc) notFound()
 
   const relacionadas = getRelacionadas(calc.relacionadas)
-  const schemas = gerarSchemasCalculadora(calc)
+  const path = `/calculadora/${calc.slug}`
+  const { breadcrumbItems, howToSteps, faqItems } = buildCalculatorSchemaData(calc)
 
   return (
     <>
-      {schemas.map((schema, i) => (
-        <script
-          key={i}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-        />
-      ))}
+      <CalculatorJsonLd path={path} name={calc.tituloLongo} description={calc.descricao} />
+      <BreadcrumbJsonLd items={breadcrumbItems} />
+      <HowToJsonLd
+        name={`Como usar a ${calc.tituloLongo}`}
+        description={calc.descricao}
+        path={path}
+        steps={howToSteps}
+        totalTime="PT1M"
+      />
+      <FAQJsonLd items={faqItems} />
       <CalculadoraPageClient config={calc} relacionadas={relacionadas} />
       <ContentLoader slug={slug} />
     </>

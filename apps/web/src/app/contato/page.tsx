@@ -1,16 +1,29 @@
 import type { Metadata } from 'next'
+import { buildMetadata } from '@/lib/seo'
 import { Breadcrumbs } from '@/components/common/Breadcrumbs'
+import { PageSeo } from '@/components/seo/PageSeo'
 
-export const metadata: Metadata = {
+const description =
+  'Fale com a equipe do Calculos Online: sugestões de novas calculadoras, correções de tabelas e parcerias.'
+
+export const metadata: Metadata = buildMetadata({
   title: 'Contato',
-  description:
-    'Fale com a equipe do Calculos Online: sugestões de novas calculadoras, correções de tabelas e parcerias.',
-  alternates: { canonical: '/contato' },
-}
+  description,
+  path: '/contato',
+})
 
 export default function ContatoPage() {
   return (
     <main className="mx-auto max-w-3xl space-y-6 px-4 py-12">
+      <PageSeo
+        title="Contato"
+        description={description}
+        path="/contato"
+        breadcrumbs={[
+          { name: 'Início', path: '/' },
+          { name: 'Contato', path: '/contato' },
+        ]}
+      />
       <Breadcrumbs items={[{ label: 'Início', href: '/' }, { label: 'Contato' }]} />
       <article className="prose prose-gray max-w-none">
         <h1>Contato</h1>
