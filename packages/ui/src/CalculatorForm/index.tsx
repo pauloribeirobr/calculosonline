@@ -248,6 +248,18 @@ function StepperField({
  * "outros descontos" e "adicionais". O usuário adiciona/remove linhas à
  * vontade; chips de sugestão só pré-preenchem a descrição de uma nova linha.
  */
+/**
+ * Limites defensivos pro link de compartilhamento (`?d=` em base64, ver
+ * `lib/shareLink.ts`) não crescer sem controle — sem eles, o campo de
+ * descrição livre aceitaria qualquer tamanho de texto colado. 20 itens ×
+ * 60 chars por lista mantém o link bem abaixo de qualquer limite prático de
+ * URL/CDN mesmo com várias listas cheias ao mesmo tempo. Espelhado no
+ * `.max()` do schema Zod de cada formulário (defesa em profundidade — um
+ * link compartilhado adulterado não contorna o limite só por pular a UI).
+ */
+const ITEM_LIST_MAX_ITEMS = 20
+const ITEM_LIST_DESCRICAO_MAX_LENGTH = 60
+
 function ItemListField({
   control,
   name,
@@ -268,6 +280,7 @@ function ItemListField({
     | Array<{ valor?: number }>
     | undefined
   const total = (itensAtuais ?? []).reduce((soma, item) => soma + (Number(item?.valor) || 0), 0)
+  const atingiuLimite = fields.length >= ITEM_LIST_MAX_ITEMS
 
   return (
     <div className="flex flex-col gap-2">
@@ -286,6 +299,7 @@ function ItemListField({
                     onChange={(e) => field.onChange(e.target.value)}
                     onBlur={field.onBlur}
                     disabled={disabled}
+                    maxLength={ITEM_LIST_DESCRICAO_MAX_LENGTH}
                     aria-label={`Descrição do item ${index + 1}`}
                     className="min-w-0 flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
                     data-clarity-mask="true"
@@ -334,7 +348,7 @@ function ItemListField({
         <button
           type="button"
           onClick={() => append({ descricao: '', valor: 0 } as never)}
-          disabled={disabled}
+          disabled={disabled || atingiuLimite}
           className="inline-flex items-center gap-1 rounded-md border border-gray-300 bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <PlusIcon className="h-3.5 w-3.5" aria-hidden /> Adicionar item
@@ -344,7 +358,7 @@ function ItemListField({
             key={sugestao}
             type="button"
             onClick={() => append({ descricao: sugestao, valor: 0 } as never)}
-            disabled={disabled}
+            disabled={disabled || atingiuLimite}
             className="inline-flex items-center rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
           >
             + {sugestao}
@@ -356,6 +370,9 @@ function ItemListField({
           </span>
         )}
       </div>
+      {atingiuLimite && (
+        <p className="text-xs text-gray-500">Máximo de {ITEM_LIST_MAX_ITEMS} itens por lista.</p>
+      )}
     </div>
   )
 }

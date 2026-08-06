@@ -6,17 +6,22 @@ import { calcularSalarioLiquido } from '@calculosonline/core/trabalhista'
 import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
+// Limites defensivos p/ o link de compartilhamento (query param `?d=` em
+// base64) não crescer sem controle — 20 itens × 60 chars por lista mantém o
+// link bem abaixo de qualquer limite prático de URL/CDN mesmo com as 3
+// listas cheias ao mesmo tempo (~6-7 mil caracteres no pior caso).
 const itemSchema = z.object({
-  descricao: z.string(),
+  descricao: z.string().max(60, 'Máximo de 60 caracteres'),
   valor: z.number().min(0),
 })
+const listaItens = () => z.array(itemSchema).max(20, 'Máximo de 20 itens').default([])
 
 const schema = z.object({
   salarioBruto: z.number().positive('Salário deve ser positivo').default(0),
   numeroDependentesIRRF: z.number().min(0).default(0),
-  outrasDeducoes: z.array(itemSchema).default([]),
-  outrosDescontos: z.array(itemSchema).default([]),
-  adicionais: z.array(itemSchema).default([]),
+  outrasDeducoes: listaItens(),
+  outrosDescontos: listaItens(),
+  adicionais: listaItens(),
   temValeTransporte: z.enum(['sim', 'nao']).default('nao'),
 })
 

@@ -71,6 +71,24 @@ test.describe('calculadora de salário líquido — campos novos', () => {
     await expect(grupo.getByRole('listitem')).toHaveCount(0)
   })
 
+  test('lista de itens tem teto de 20 itens e 60 caracteres por descrição (link de compartilhamento não cresce sem controle)', async ({
+    page,
+  }) => {
+    await page.goto('/calculadora/salario-liquido')
+
+    const grupo = page.getByRole('group', { name: 'Outras deduções' })
+    for (let i = 0; i < 20; i++) {
+      await grupo.getByRole('button', { name: 'Adicionar item' }).click()
+    }
+    await expect(grupo.getByRole('listitem')).toHaveCount(20)
+    await expect(grupo.getByRole('button', { name: 'Adicionar item' })).toBeDisabled()
+    await expect(grupo.getByText('Máximo de 20 itens por lista.')).toBeVisible()
+
+    const primeiraDescricao = grupo.getByLabel('Descrição do item 1', { exact: true })
+    await primeiraDescricao.fill('X'.repeat(100))
+    await expect(primeiraDescricao).toHaveValue('X'.repeat(60))
+  })
+
   test('lista de "Adicionais": item livre via "+ Adicionar item" (sem chip)', async ({ page }) => {
     await page.goto('/calculadora/salario-liquido')
 
