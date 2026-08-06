@@ -7,7 +7,8 @@
  *  - Vale-transporte: Lei 7.418/1985, art. 9º, II (desconto máx. 6%)
  */
 
-import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
+import type { ErroValidacao, ItemDetalhamento, ItemValor, ResultadoOuErro } from '../types'
+import { somarItens } from '../types'
 import {
   calcularINSSProgressivo,
   calcularIRRFMensal,
@@ -18,12 +19,24 @@ import { arredondar, formatarBRL, validarSalario } from '../utils'
 export interface SalarioLiquidoParams {
   salarioBruto: number
   numeroDependentesIRRF: number
-  /** Plano de saúde, previdência privada, etc. — deduzidos antes do IRRF */
-  outrasDeducoes?: number
+  /**
+   * Plano de saúde, previdência privada, etc. — reduzem a base do IRRF E
+   * também o salário líquido (é dinheiro descontado do contracheque, não
+   * só um abatimento fiscal). Lista itemizada: cada item vira uma linha no
+   * detalhamento, com a descrição informada pelo usuário.
+   */
+  outrasDeducoes?: ItemValor[]
   /** Se true, desconta 6% do salário (limite legal) a título de vale-transporte */
   temValeTransporte?: boolean
   /** Outros descontos que NÃO afetam a base do IRRF (ex.: empréstimo consignado) */
-  outrosDescontos?: number
+  outrosDescontos?: ItemValor[]
+  /**
+   * Benefícios que não entram na folha/CLT (vale-refeição, vale-alimentação,
+   * bônus etc.) — não afetam INSS/IRRF nem o salário líquido "legal", mas
+   * aparecem como complemento informativo após ele (linha "Total com
+   * adicionais").
+   */
+  adicionais?: ItemValor[]
 }
 
 export interface SalarioLiquidoResultado {
@@ -31,9 +44,12 @@ export interface SalarioLiquidoResultado {
   descontoINSS: number
   descontoIRRF: number
   descontoVT: number
+  outrasDeducoes: number
   outrosDescontos: number
   totalDescontos: number
   salarioLiquido: number
+  totalAdicionais: number
+  totalComAdicionais: number
   /** Alíquota efetiva real do INSS sobre o salário bruto */
   aliquotaEfetivaINSS: number
   /** Alíquota efetiva real do IRRF sobre o salário bruto */
@@ -52,13 +68,20 @@ export function calcularSalarioLiquido(
       mensagem: 'Número de dependentes não pode ser negativo',
     })
   }
-  if ((params.outrasDeducoes ?? 0) < 0) {
+  if ((params.outrasDeducoes ?? []).some((item) => item.valor < 0)) {
     erros.push({ campo: 'outrasDeducoes', mensagem: 'Outras deduções não podem ser negativas' })
   }
-  if ((params.outrosDescontos ?? 0) < 0) {
+  if ((params.outrosDescontos ?? []).some((item) => item.valor < 0)) {
     erros.push({ campo: 'outrosDescontos', mensagem: 'Outros descontos não podem ser negativos' })
   }
+  if ((params.adicionais ?? []).some((item) => item.valor < 0)) {
+    erros.push({ campo: 'adicionais', mensagem: 'Adicionais não podem ser negativos' })
+  }
   if (erros.length > 0) return { sucesso: false, erros }
+
+  const outrasDeducoes = arredondar(somarItens(params.outrasDeducoes))
+  const outrosDescontos = arredondar(somarItens(params.outrosDescontos))
+  const totalAdicionais = arredondar(somarItens(params.adicionais))
 
   const { valorINSS, detalhamento: detINSS } = calcularINSSProgressivo(params.salarioBruto)
 
@@ -70,13 +93,15 @@ export function calcularSalarioLiquido(
     salarioBruto: params.salarioBruto,
     inss: valorINSS,
     numeroDependentes: params.numeroDependentesIRRF,
-    outrasDeducoes: params.outrasDeducoes ?? 0,
+    outrasDeducoes,
   })
 
   const descontoVT = params.temValeTransporte ? arredondar(params.salarioBruto * 0.06) : 0
-  const outrosDescontos = params.outrosDescontos ?? 0
-  const totalDescontos = arredondar(valorINSS + valorIRRF + descontoVT + outrosDescontos)
+  const totalDescontos = arredondar(
+    valorINSS + valorIRRF + descontoVT + outrasDeducoes + outrosDescontos,
+  )
   const salarioLiquido = arredondar(params.salarioBruto - totalDescontos)
+  const totalComAdicionais = arredondar(salarioLiquido + totalAdicionais)
 
   const detalhamento: ItemDetalhamento[] = [
     { descricao: 'Salário Bruto', valor: params.salarioBruto, tipo: 'credito' },
@@ -105,10 +130,37 @@ export function calcularSalarioLiquido(
           },
         ]
       : []),
-    ...(outrosDescontos > 0
-      ? [{ descricao: 'Outros Descontos', valor: outrosDescontos, tipo: 'debito' as const }]
-      : []),
+    ...(params.outrasDeducoes ?? [])
+      .filter((item) => item.valor > 0)
+      .map<ItemDetalhamento>((item) => ({
+        descricao: item.descricao,
+        valor: item.valor,
+        tipo: 'debito',
+      })),
+    ...(params.outrosDescontos ?? [])
+      .filter((item) => item.valor > 0)
+      .map<ItemDetalhamento>((item) => ({
+        descricao: item.descricao,
+        valor: item.valor,
+        tipo: 'debito',
+      })),
     { descricao: 'Salário Líquido', valor: salarioLiquido, tipo: 'neutro' },
+    ...(params.adicionais ?? [])
+      .filter((item) => item.valor > 0)
+      .map<ItemDetalhamento>((item) => ({
+        descricao: item.descricao,
+        valor: item.valor,
+        tipo: 'credito',
+      })),
+    ...(totalAdicionais > 0
+      ? [
+          {
+            descricao: 'Total com Adicionais',
+            valor: totalComAdicionais,
+            tipo: 'neutro' as const,
+          },
+        ]
+      : []),
   ]
 
   return {
@@ -125,9 +177,12 @@ export function calcularSalarioLiquido(
         descontoINSS: valorINSS,
         descontoIRRF: valorIRRF,
         descontoVT,
+        outrasDeducoes,
         outrosDescontos,
         totalDescontos,
         salarioLiquido,
+        totalAdicionais,
+        totalComAdicionais,
         aliquotaEfetivaINSS: arredondar((valorINSS / params.salarioBruto) * 10000) / 10000,
         aliquotaEfetivaIRRF: arredondar((valorIRRF / params.salarioBruto) * 10000) / 10000,
       },

@@ -10,6 +10,21 @@ export interface ItemDetalhamento {
   formula?: string
 }
 
+/**
+ * Item de uma lista livre (descrição + valor) informada pelo usuário — ex.:
+ * itens de "outras deduções"/"outros descontos"/"adicionais" no formulário.
+ * Compartilhado entre calculadoras para não duplicar o shape.
+ */
+export interface ItemValor {
+  descricao: string
+  valor: number
+}
+
+/** Soma os valores de uma lista de `ItemValor`, tratando lista ausente como vazia. */
+export function somarItens(itens: ItemValor[] | undefined): number {
+  return (itens ?? []).reduce((total, item) => total + item.valor, 0)
+}
+
 export type TipoPassoCalculo = 'entrada' | 'calculo' | 'resultado' | 'aviso'
 
 export interface PassoCalculo {

@@ -3,6 +3,10 @@
 import { useEffect, useRef } from 'react'
 import {
   useForm,
+  useFieldArray,
+  useWatch,
+  Controller,
+  type Control,
   type DefaultValues,
   type FieldValues,
   type Path,
@@ -10,7 +14,9 @@ import {
   type SubmitHandler,
 } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { PlusIcon, MinusIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import type { z, ZodObject, ZodRawShape } from 'zod'
+import { Utils } from '@calculosonline/core'
 import { cn } from '../utils/cn'
 
 /** Um chip de valor rápido — soma `value` ao valor atual do campo ao clicar. */
@@ -32,14 +38,24 @@ export interface FieldMeta {
   prefix?: string
   /** Símbolo à direita do input ("/mês", "anos") */
   suffix?: string
-  type?: 'number' | 'text' | 'select' | 'radio' | 'date'
+  type?: 'number' | 'text' | 'select' | 'radio' | 'date' | 'currency' | 'stepper' | 'itemList'
   options?: Array<{ value: string; label: string }>
   /**
    * Chips de valor rápido abaixo do campo, mesmo padrão visual do Recibo
    * Fácil: "Zerar" zera o campo; cada chip SOMA ao valor atual (não
-   * substitui). Só se aplica a campos numéricos simples (não select/radio).
+   * substitui). Só se aplica a campos `currency`/`number` simples.
    */
   quickAdd?: QuickAddButton[]
+  /** `stepper`: valor mínimo permitido (padrão 0). */
+  min?: number
+  /**
+   * `itemList`: chips de sugestão que adicionam uma linha já com a
+   * descrição preenchida (o usuário só digita o valor). A lista continua
+   * livre — o usuário pode digitar qualquer descrição própria também.
+   */
+  itemSuggestions?: string[]
+  /** `itemList`: placeholder do campo de descrição de cada item. */
+  itemPlaceholder?: string
 }
 
 export interface CalculatorFormProps<T extends ZodRawShape> {
@@ -98,6 +114,252 @@ function isNumericSchemaField<T extends ZodRawShape>(schema: ZodObject<T>, key: 
   return fieldSchema?._def?.typeName === 'ZodNumber'
 }
 
+/** Formata um número (reais) como string mascarada "1.234,56" — dígitos digitados são tratados como centavos. */
+function formatarCentavos(valor: unknown): string {
+  const centavos = Math.round((Number(valor) || 0) * 100)
+  return (centavos / 100).toLocaleString('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
+}
+
+/** Converte o texto digitado num campo de moeda (dígitos = centavos) de volta pra número. */
+function parseCentavosInput(texto: string): number {
+  const digitos = texto.replace(/\D/g, '')
+  return digitos === '' ? 0 : parseInt(digitos, 10) / 100
+}
+
+const currencyInputClassName = cn(
+  'w-full rounded-lg border px-3 py-2.5 text-sm',
+  'focus:ring-brand-500 focus:outline-none focus:ring-2',
+  'border-gray-300 bg-white',
+)
+
+/** Campo de moeda mascarado (dígitos-como-centavos), ex.: "1234" → "R$ 12,34". */
+function CurrencyField({
+  control,
+  name,
+  id,
+  disabled,
+  hasError,
+  ariaDescribedBy,
+  hasPrefix,
+}: {
+  control: Control<FieldValues>
+  name: Path<FieldValues>
+  id: string
+  disabled?: boolean | undefined
+  hasError: boolean
+  ariaDescribedBy?: string | undefined
+  hasPrefix?: boolean | undefined
+}) {
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <input
+          id={id}
+          type="text"
+          inputMode="decimal"
+          value={formatarCentavos(field.value)}
+          onChange={(e) => field.onChange(parseCentavosInput(e.target.value))}
+          onBlur={field.onBlur}
+          disabled={disabled}
+          className={cn(currencyInputClassName, hasPrefix && 'pl-10', hasError && 'border-red-400 bg-red-50')}
+          aria-invalid={hasError}
+          aria-describedby={ariaDescribedBy}
+          data-clarity-mask="true"
+        />
+      )}
+    />
+  )
+}
+
+/** Campo numérico com botões +/− (ex.: nº de dependentes) — sempre ≥ `min`. */
+function StepperField({
+  control,
+  name,
+  id,
+  min = 0,
+  disabled,
+  hasError,
+  ariaDescribedBy,
+}: {
+  control: Control<FieldValues>
+  name: Path<FieldValues>
+  id: string
+  min?: number | undefined
+  disabled?: boolean | undefined
+  hasError: boolean
+  ariaDescribedBy?: string | undefined
+}) {
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={({ field }) => {
+        const valor = Number(field.value) || 0
+        return (
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => field.onChange(Math.max(min, valor - 1))}
+              disabled={disabled || valor <= min}
+              aria-label="Diminuir"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-600 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              <MinusIcon className="h-4 w-4" aria-hidden />
+            </button>
+            <input
+              id={id}
+              type="number"
+              inputMode="numeric"
+              value={valor}
+              onChange={(e) => {
+                const n = e.target.value === '' ? min : Math.trunc(Number(e.target.value))
+                field.onChange(Number.isFinite(n) ? Math.max(min, n) : min)
+              }}
+              onBlur={field.onBlur}
+              disabled={disabled}
+              aria-invalid={hasError}
+              aria-describedby={ariaDescribedBy}
+              className="w-16 rounded-lg border border-gray-300 bg-white px-2 py-2 text-center text-sm tabular-nums focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+              data-clarity-mask="true"
+            />
+            <button
+              type="button"
+              onClick={() => field.onChange(valor + 1)}
+              disabled={disabled}
+              aria-label="Aumentar"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-600 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              <PlusIcon className="h-4 w-4" aria-hidden />
+            </button>
+          </div>
+        )
+      }}
+    />
+  )
+}
+
+/**
+ * Lista livre de itens (descrição + valor) — usada em "outras deduções",
+ * "outros descontos" e "adicionais". O usuário adiciona/remove linhas à
+ * vontade; chips de sugestão só pré-preenchem a descrição de uma nova linha.
+ */
+function ItemListField({
+  control,
+  name,
+  suggestions,
+  itemPlaceholder,
+  valuePrefix,
+  disabled,
+}: {
+  control: Control<FieldValues>
+  name: Path<FieldValues>
+  suggestions?: string[] | undefined
+  itemPlaceholder?: string | undefined
+  valuePrefix?: string | undefined
+  disabled?: boolean | undefined
+}) {
+  const { fields, append, remove } = useFieldArray({ control, name: name as never })
+  const itensAtuais = useWatch({ control, name }) as
+    | Array<{ valor?: number }>
+    | undefined
+  const total = (itensAtuais ?? []).reduce((soma, item) => soma + (Number(item?.valor) || 0), 0)
+
+  return (
+    <div className="flex flex-col gap-2">
+      {fields.length > 0 && (
+        <ul className="flex flex-col gap-2" role="list">
+          {fields.map((row, index) => (
+            <li key={row.id} className="flex items-center gap-2">
+              <Controller
+                control={control}
+                name={`${name}.${index}.descricao` as Path<FieldValues>}
+                render={({ field }) => (
+                  <input
+                    type="text"
+                    placeholder={itemPlaceholder ?? 'Descrição'}
+                    value={(field.value as string) ?? ''}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    onBlur={field.onBlur}
+                    disabled={disabled}
+                    aria-label={`Descrição do item ${index + 1}`}
+                    className="min-w-0 flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    data-clarity-mask="true"
+                  />
+                )}
+              />
+              <div className="relative w-32 shrink-0 sm:w-36">
+                {valuePrefix && (
+                  <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 select-none text-sm text-gray-500">
+                    {valuePrefix}
+                  </span>
+                )}
+                <Controller
+                  control={control}
+                  name={`${name}.${index}.valor` as Path<FieldValues>}
+                  render={({ field }) => (
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      value={formatarCentavos(field.value)}
+                      onChange={(e) => field.onChange(parseCentavosInput(e.target.value))}
+                      onBlur={field.onBlur}
+                      disabled={disabled}
+                      aria-label={`Valor do item ${index + 1}`}
+                      className={cn(currencyInputClassName, valuePrefix && 'pl-9')}
+                      data-clarity-mask="true"
+                    />
+                  )}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => remove(index)}
+                disabled={disabled}
+                aria-label={`Remover item ${index + 1}`}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <XMarkIcon className="h-4 w-4" aria-hidden />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div className="flex flex-wrap items-center gap-1.5">
+        <button
+          type="button"
+          onClick={() => append({ descricao: '', valor: 0 } as never)}
+          disabled={disabled}
+          className="inline-flex items-center gap-1 rounded-md border border-gray-300 bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <PlusIcon className="h-3.5 w-3.5" aria-hidden /> Adicionar item
+        </button>
+        {suggestions?.map((sugestao) => (
+          <button
+            key={sugestao}
+            type="button"
+            onClick={() => append({ descricao: sugestao, valor: 0 } as never)}
+            disabled={disabled}
+            className="inline-flex items-center rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            + {sugestao}
+          </button>
+        ))}
+        {fields.length > 0 && (
+          <span className="ml-auto text-xs font-medium tabular-nums text-gray-500">
+            Total: {Utils.formatarBRL(total)}
+          </span>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export function CalculatorForm<T extends ZodRawShape>({
   schema,
   fields,
@@ -117,6 +379,7 @@ export function CalculatorForm<T extends ZodRawShape>({
 
   const {
     register,
+    control,
     handleSubmit,
     setValue,
     getValues,
@@ -158,6 +421,40 @@ export function CalculatorForm<T extends ZodRawShape>({
         const fieldMeta = meta as FieldMeta
         const error = errors[name as keyof typeof errors]
         const fieldName = name as Path<FormValues>
+        const describedBy =
+          [error ? `${name}-error` : null, fieldMeta.hint ? `${name}-hint` : null]
+            .filter(Boolean)
+            .join(' ') || undefined
+
+        // `itemList` não cabe na moldura de linha única (prefix/input/suffix) —
+        // renderiza um bloco próprio (linhas + botão adicionar) abaixo do label.
+        if (fieldMeta.type === 'itemList') {
+          return (
+            <div
+              key={name}
+              className="flex flex-col gap-1"
+              role="group"
+              aria-labelledby={`${name}-label`}
+            >
+              <label id={`${name}-label`} className="text-sm font-medium text-gray-700">
+                {fieldMeta.label}
+              </label>
+              <ItemListField
+                control={control as unknown as Control<FieldValues>}
+                name={fieldName as unknown as Path<FieldValues>}
+                suggestions={fieldMeta.itemSuggestions}
+                itemPlaceholder={fieldMeta.itemPlaceholder}
+                valuePrefix={fieldMeta.prefix}
+                disabled={!!isLoading}
+              />
+              {fieldMeta.hint && (
+                <p id={`${name}-hint`} className="text-xs text-gray-500">
+                  {fieldMeta.hint}
+                </p>
+              )}
+            </div>
+          )
+        }
 
         return (
           <div key={name} className="flex flex-col gap-1">
@@ -166,13 +463,33 @@ export function CalculatorForm<T extends ZodRawShape>({
             </label>
 
             <div className="relative flex items-center">
-              {fieldMeta.prefix && (
+              {fieldMeta.prefix && fieldMeta.type !== 'stepper' && (
                 <span className="pointer-events-none absolute left-3 select-none text-sm text-gray-500">
                   {fieldMeta.prefix}
                 </span>
               )}
 
-              {fieldMeta.type === 'select' ? (
+              {fieldMeta.type === 'currency' ? (
+                <CurrencyField
+                  control={control as unknown as Control<FieldValues>}
+                  name={fieldName as unknown as Path<FieldValues>}
+                  id={name}
+                  disabled={!!isLoading}
+                  hasError={!!error}
+                  hasPrefix={!!fieldMeta.prefix}
+                  ariaDescribedBy={describedBy}
+                />
+              ) : fieldMeta.type === 'stepper' ? (
+                <StepperField
+                  control={control as unknown as Control<FieldValues>}
+                  name={fieldName as unknown as Path<FieldValues>}
+                  id={name}
+                  min={fieldMeta.min}
+                  disabled={!!isLoading}
+                  hasError={!!error}
+                  ariaDescribedBy={describedBy}
+                />
+              ) : fieldMeta.type === 'select' ? (
                 <select
                   id={name}
                   {...register(
@@ -221,9 +538,9 @@ export function CalculatorForm<T extends ZodRawShape>({
                   placeholder={fieldMeta.placeholder}
                   {...register(fieldName, {
                     // Não usar `valueAsNumber`: ele converte campo vazio em NaN, e o
-                    // `.default(0)` do Zod só resgata `undefined` — NaN faz a validação
-                    // falhar mesmo em campos opcionais deixados em branco. `undefined`
-                    // deixa o default do schema (quando houver) assumir corretamente.
+                    // `.default(0)` do Zod só resgata `undefined`, nunca `NaN` — travando
+                    // a validação mesmo em campos opcionais deixados em branco.
+                    // `undefined` deixa o default do schema (quando houver) assumir corretamente.
                     setValueAs:
                       (fieldMeta.type ?? 'number') === 'number'
                         ? (v: string) => (v === '' ? undefined : Number(v))
@@ -237,16 +554,12 @@ export function CalculatorForm<T extends ZodRawShape>({
                     error ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-white',
                   )}
                   aria-invalid={!!error}
-                  aria-describedby={
-                    [error ? `${name}-error` : null, fieldMeta.hint ? `${name}-hint` : null]
-                      .filter(Boolean)
-                      .join(' ') || undefined
-                  }
+                  aria-describedby={describedBy}
                   data-clarity-mask="true"
                 />
               )}
 
-              {fieldMeta.suffix && (
+              {fieldMeta.suffix && fieldMeta.type !== 'stepper' && (
                 <span className="pointer-events-none absolute right-3 select-none text-sm text-gray-500">
                   {fieldMeta.suffix}
                 </span>
