@@ -23,20 +23,29 @@ describe('calcularSalarioLiquido', () => {
       }
     })
 
-    it('rejeita outras deduções negativas', () => {
+    it('rejeita item de outras deduções com valor negativo', () => {
       const r = calcularSalarioLiquido({
         salarioBruto: 3000,
         numeroDependentesIRRF: 0,
-        outrasDeducoes: -10,
+        outrasDeducoes: [{ descricao: 'Plano de Saúde', valor: -10 }],
       })
       expect(r.sucesso).toBe(false)
     })
 
-    it('rejeita outros descontos negativos', () => {
+    it('rejeita item de outros descontos com valor negativo', () => {
       const r = calcularSalarioLiquido({
         salarioBruto: 3000,
         numeroDependentesIRRF: 0,
-        outrosDescontos: -10,
+        outrosDescontos: [{ descricao: 'Consignado', valor: -10 }],
+      })
+      expect(r.sucesso).toBe(false)
+    })
+
+    it('rejeita item de adicionais com valor negativo', () => {
+      const r = calcularSalarioLiquido({
+        salarioBruto: 3000,
+        numeroDependentesIRRF: 0,
+        adicionais: [{ descricao: 'Vale Refeição', valor: -10 }],
       })
       expect(r.sucesso).toBe(false)
     })
@@ -97,13 +106,13 @@ describe('calcularSalarioLiquido', () => {
     })
   })
 
-  describe('outras deduções e descontos', () => {
-    it('outras deduções reduzem a base do IRRF', () => {
+  describe('outras deduções (itemizadas)', () => {
+    it('reduzem a base do IRRF', () => {
       const sem = calcularSalarioLiquido({ salarioBruto: 5000, numeroDependentesIRRF: 0 })
       const com = calcularSalarioLiquido({
         salarioBruto: 5000,
         numeroDependentesIRRF: 0,
-        outrasDeducoes: 500,
+        outrasDeducoes: [{ descricao: 'Plano de Saúde', valor: 500 }],
       })
       expect(sem.sucesso && com.sucesso).toBe(true)
       if (sem.sucesso && com.sucesso) {
@@ -111,15 +120,98 @@ describe('calcularSalarioLiquido', () => {
       }
     })
 
-    it('outros descontos não afetam base IRRF mas reduzem o líquido', () => {
+    it('também reduzem o salário líquido (é dinheiro descontado do contracheque, não só abatimento fiscal)', () => {
+      const sem = calcularSalarioLiquido({ salarioBruto: 5000, numeroDependentesIRRF: 0 })
+      const com = calcularSalarioLiquido({
+        salarioBruto: 5000,
+        numeroDependentesIRRF: 0,
+        outrasDeducoes: [{ descricao: 'Plano de Saúde', valor: 500 }],
+      })
+      expect(sem.sucesso && com.sucesso).toBe(true)
+      if (sem.sucesso && com.sucesso) {
+        expect(com.dados.dados.outrasDeducoes).toBe(500)
+        expect(com.dados.dados.salarioLiquido).toBeLessThan(sem.dados.dados.salarioLiquido)
+      }
+    })
+
+    it('soma múltiplos itens', () => {
       const r = calcularSalarioLiquido({
         salarioBruto: 5000,
         numeroDependentesIRRF: 0,
-        outrosDescontos: 200,
+        outrasDeducoes: [
+          { descricao: 'Plano de Saúde', valor: 300 },
+          { descricao: 'Previdência Privada', valor: 200 },
+        ],
+      })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        expect(r.dados.dados.outrasDeducoes).toBe(500)
+        const itens = r.dados.detalhamento.map((d) => d.descricao)
+        expect(itens).toContain('Plano de Saúde')
+        expect(itens).toContain('Previdência Privada')
+      }
+    })
+  })
+
+  describe('outros descontos (itemizados)', () => {
+    it('não afetam base IRRF mas reduzem o líquido', () => {
+      const r = calcularSalarioLiquido({
+        salarioBruto: 5000,
+        numeroDependentesIRRF: 0,
+        outrosDescontos: [{ descricao: 'Consignado', valor: 200 }],
       })
       expect(r.sucesso).toBe(true)
       if (r.sucesso) {
         expect(r.dados.dados.outrosDescontos).toBe(200)
+        expect(r.dados.detalhamento.map((d) => d.descricao)).toContain('Consignado')
+      }
+    })
+  })
+
+  describe('adicionais (vale-refeição, vale-alimentação etc.)', () => {
+    it('não afetam INSS/IRRF/salário líquido, só o total informativo', () => {
+      const sem = calcularSalarioLiquido({ salarioBruto: 5000, numeroDependentesIRRF: 0 })
+      const com = calcularSalarioLiquido({
+        salarioBruto: 5000,
+        numeroDependentesIRRF: 0,
+        adicionais: [
+          { descricao: 'Vale Refeição', valor: 600 },
+          { descricao: 'Vale Alimentação', valor: 400 },
+        ],
+      })
+      expect(sem.sucesso && com.sucesso).toBe(true)
+      if (sem.sucesso && com.sucesso) {
+        expect(com.dados.dados.descontoINSS).toBe(sem.dados.dados.descontoINSS)
+        expect(com.dados.dados.descontoIRRF).toBe(sem.dados.dados.descontoIRRF)
+        expect(com.dados.dados.salarioLiquido).toBe(sem.dados.dados.salarioLiquido)
+        expect(com.dados.dados.totalAdicionais).toBe(1000)
+        expect(com.dados.dados.totalComAdicionais).toBe(
+          arredondar(sem.dados.dados.salarioLiquido + 1000),
+        )
+      }
+    })
+
+    it('sem adicionais, não gera a linha "Total com Adicionais"', () => {
+      const r = calcularSalarioLiquido({ salarioBruto: 5000, numeroDependentesIRRF: 0 })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        expect(r.dados.detalhamento.map((d) => d.descricao)).not.toContain('Total com Adicionais')
+      }
+    })
+
+    it('com adicionais, a linha "Total com Adicionais" aparece depois de "Salário Líquido"', () => {
+      const r = calcularSalarioLiquido({
+        salarioBruto: 5000,
+        numeroDependentesIRRF: 0,
+        adicionais: [{ descricao: 'Vale Refeição', valor: 600 }],
+      })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        const descricoes = r.dados.detalhamento.map((d) => d.descricao)
+        const idxLiquido = descricoes.indexOf('Salário Líquido')
+        const idxTotal = descricoes.indexOf('Total com Adicionais')
+        expect(idxLiquido).toBeGreaterThanOrEqual(0)
+        expect(idxTotal).toBeGreaterThan(idxLiquido)
       }
     })
   })
@@ -139,7 +231,7 @@ describe('calcularSalarioLiquido', () => {
         salarioBruto: 5000,
         numeroDependentesIRRF: 0,
         temValeTransporte: true,
-        outrosDescontos: 100,
+        outrosDescontos: [{ descricao: 'Consignado', valor: 100 }],
       })
       expect(r.sucesso).toBe(true)
       if (r.sucesso) {
@@ -147,7 +239,7 @@ describe('calcularSalarioLiquido', () => {
         expect(itens).toContain('Salário Bruto')
         expect(itens).toContain('Salário Líquido')
         expect(itens.some((i) => i.includes('Vale-Transporte'))).toBe(true)
-        expect(itens).toContain('Outros Descontos')
+        expect(itens).toContain('Consignado')
       }
     })
 

@@ -18,7 +18,24 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'off',
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+      // Specs `*.mobile.spec.ts` rodam só no projeto mobile abaixo (não faz
+      // sentido duplicar em viewport desktop).
+      testIgnore: /\.mobile\.spec\.ts$/,
+    },
+    {
+      name: 'mobile-chromium',
+      use: { ...devices['Pixel 7'] },
+      // Escopo restrito a specs dedicadas (`*.mobile.spec.ts`) — mantém a
+      // suíte desktop (26 testes) rodando uma única vez, sem dobrar o tempo
+      // de CI; só telas/interações que dependem de viewport pequeno (ex.:
+      // stepper por toque) precisam de um projeto mobile de verdade.
+      testMatch: /\.mobile\.spec\.ts$/,
+    },
+  ],
   // Reusa o dev server se já estiver rodando; senão sobe um.
   webServer: {
     command: 'npm run dev',
