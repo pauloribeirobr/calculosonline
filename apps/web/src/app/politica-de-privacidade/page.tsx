@@ -1,12 +1,16 @@
 import type { Metadata } from 'next'
+import { buildMetadata } from '@/lib/seo'
 import { Breadcrumbs } from '@/components/common/Breadcrumbs'
+import { PageSeo } from '@/components/seo/PageSeo'
 
-export const metadata: Metadata = {
+const description =
+  'Saiba como o Calculos Online coleta, usa e protege seus dados. Política de cookies, Google AdSense, Google Analytics, Vercel Analytics e Microsoft Clarity.'
+
+export const metadata: Metadata = buildMetadata({
   title: 'Política de Privacidade',
-  description:
-    'Saiba como o Calculos Online coleta, usa e protege seus dados. Política de cookies, Google AdSense, Google Analytics, Vercel Analytics e Microsoft Clarity.',
-  alternates: { canonical: '/politica-de-privacidade' },
-}
+  description,
+  path: '/politica-de-privacidade',
+})
 
 export default function PoliticaPrivacidadePage() {
   const dataAtualizacao = new Date('2026-01-01').toLocaleDateString('pt-BR', {
@@ -17,6 +21,15 @@ export default function PoliticaPrivacidadePage() {
 
   return (
     <main className="mx-auto max-w-3xl space-y-6 px-4 py-12">
+      <PageSeo
+        title="Política de Privacidade"
+        description={description}
+        path="/politica-de-privacidade"
+        breadcrumbs={[
+          { name: 'Início', path: '/' },
+          { name: 'Política de Privacidade', path: '/politica-de-privacidade' },
+        ]}
+      />
       <Breadcrumbs
         items={[{ label: 'Início', href: '/' }, { label: 'Política de Privacidade' }]}
       />

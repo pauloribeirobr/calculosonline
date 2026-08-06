@@ -1,16 +1,29 @@
 import type { Metadata } from 'next'
+import { buildMetadata } from '@/lib/seo'
 import { Breadcrumbs } from '@/components/common/Breadcrumbs'
+import { PageSeo } from '@/components/seo/PageSeo'
 
-export const metadata: Metadata = {
+const description =
+  'Conheça o Calculos Online: 20 calculadoras gratuitas para trabalhadores, autônomos, MEIs e empresas brasileiras.'
+
+export const metadata: Metadata = buildMetadata({
   title: 'Sobre',
-  description:
-    'Conheça o Calculos Online: 20 calculadoras gratuitas para trabalhadores, autônomos, MEIs e empresas brasileiras.',
-  alternates: { canonical: '/sobre' },
-}
+  description,
+  path: '/sobre',
+})
 
 export default function SobrePage() {
   return (
     <main className="mx-auto max-w-3xl space-y-6 px-4 py-12">
+      <PageSeo
+        title="Sobre o Calculos Online"
+        description={description}
+        path="/sobre"
+        breadcrumbs={[
+          { name: 'Início', path: '/' },
+          { name: 'Sobre', path: '/sobre' },
+        ]}
+      />
       <Breadcrumbs items={[{ label: 'Início', href: '/' }, { label: 'Sobre' }]} />
       <article className="prose prose-gray max-w-none">
         <h1>Sobre o Calculos Online</h1>

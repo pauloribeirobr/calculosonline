@@ -16,6 +16,21 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **1º link do plano do F15 executado (05/08) — `band.com.br` (Grupo
+  Bandeirantes), pago pelo Paulo.** Matéria editorial de 27/07 sobre a
+  isenção de IR até R$5 mil ("Isenção do IR até R$ 5 mil confunde quem lê o
+  próprio holerite") linka dofollow para
+  `calculosonline.com.br/calculadora/salario-liquido`, âncora "cálculo
+  salário líquido", contexto genuíno ("Plataformas gratuitas de cálculo
+  salário líquido publicam o passo a passo com as tabelas vigentes...").
+  Confirmado no HTML bruto (sem `rel="nofollow"`) — exatamente o alvo (a
+  página, não necessariamente a âncora exata) e o tipo de placement que o
+  plano de 25/07 desenhou para o 1º link, e num domínio de autoridade bem
+  acima do que se cogitava (diretórios/guest posts). **Próximo passo: 2º
+  link, décimo terceiro** — ainda sem link e com janela sazonal fechando
+  em setembro. **Falta:** conferir GSC → Links > Links externos pra
+  confirmar `band.com.br` como referring domain e acompanhar se a posição
+  de `salario-liquido` (54.8) melhora nas próximas semanas.
 - **F18 respondido (27/07): rich results (FAQPage/HowTo) não é bug — e só
   afeta o dropdown visual, não o conteúdo.** `HowTo` foi descontinuado
   pelo Google desde set/2023 (nunca teria chance de aparecer); `FAQPage`

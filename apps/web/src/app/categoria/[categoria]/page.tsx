@@ -7,9 +7,11 @@ import {
   getCalculatorsByCategory,
   type CategoriaCalc,
 } from '@/lib/calculators'
-import { siteConfig } from '@/lib/seo'
+import { buildMetadata } from '@/lib/seo'
 import { Breadcrumbs } from '@/components/common/Breadcrumbs'
 import { CalculatorIcon, CategoryIcon } from '@/components/common/CalculatorIcon'
+import { PageSeo } from '@/components/seo/PageSeo'
+import { ItemListJsonLd } from '@/components/seo/JsonLd'
 
 export async function generateStaticParams() {
   return Object.keys(CATEGORIAS).map((categoria) => ({ categoria }))
@@ -29,17 +31,11 @@ export async function generateMetadata({
   const { categoria } = await params
   if (!isCategoria(categoria)) return {}
   const cat = CATEGORIAS[categoria]
-  return {
+  return buildMetadata({
     title: `Calculadoras ${cat.label} Online e Grátis 2026`,
     description: `${cat.descricao}. Todas as calculadoras ${cat.label.toLowerCase()} com tabelas 2026 atualizadas.`,
-    alternates: { canonical: `/categoria/${categoria}` },
-    openGraph: {
-      title: `Calculadoras ${cat.label} Online e Grátis 2026`,
-      description: cat.descricao,
-      url: `${siteConfig.url}/categoria/${categoria}`,
-      type: 'website',
-    },
-  }
+    path: `/categoria/${categoria}`,
+  })
 }
 
 export default async function CategoriaPage({
@@ -54,6 +50,22 @@ export default async function CategoriaPage({
 
   return (
     <main className="mx-auto max-w-4xl space-y-8 px-4 py-8">
+      <PageSeo
+        title={`Calculadoras ${cat.label}`}
+        description={`${cat.descricao} — todas gratuitas e atualizadas para 2026.`}
+        path={`/categoria/${categoria}`}
+        breadcrumbs={[
+          { name: 'Início', path: '/' },
+          { name: cat.label, path: `/categoria/${categoria}` },
+        ]}
+      />
+      <ItemListJsonLd
+        items={calculadoras.map((calc) => ({
+          name: calc.titulo,
+          path: `/calculadora/${calc.slug}`,
+          description: calc.descricaoCurta,
+        }))}
+      />
       <Breadcrumbs
         items={[
           { label: 'Início', href: '/' },
