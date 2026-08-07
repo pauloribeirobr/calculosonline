@@ -42,7 +42,7 @@ export function AmortizacaoForm({
         valorFinanciado: {
           label: isFinanciamento ? 'Valor financiado' : 'Valor do empréstimo',
           prefix: 'R$',
-          type: 'number',
+          type: 'currency',
           quickAdd: QUICK_ADD_VALOR_GRANDE,
         },
         taxaMensalJuros: {
@@ -51,8 +51,9 @@ export function AmortizacaoForm({
           hint: '0.015 = 1,5% ao mês',
         },
         prazoMeses: {
-          label: 'Prazo',
-          suffix: 'meses',
+          label: 'Prazo (meses)',
+          type: 'stepper',
+          min: 1,
         },
         sistema: {
           label: 'Sistema de amortização',

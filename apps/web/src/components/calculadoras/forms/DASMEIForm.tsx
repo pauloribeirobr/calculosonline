@@ -41,6 +41,7 @@ export function DASMEIForm({ onResult, onError, isLoading, sharedData, autoSubmi
         faturamentoAnual: {
           label: 'Faturamento anual (opcional)',
           prefix: 'R$',
+          type: 'currency',
           hint: 'Para verificar se está dentro do teto MEI (R$ 81.000)',
           quickAdd: QUICK_ADD_VALOR_GRANDE,
         },

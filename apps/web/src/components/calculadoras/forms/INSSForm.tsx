@@ -25,7 +25,7 @@ export function INSSForm({ onResult, onError, isLoading, sharedData, autoSubmit 
         salarioBruto: {
           label: 'Salário Bruto',
           prefix: 'R$',
-          type: 'number',
+          type: 'currency',
           hint: 'Ignorado para MEI (usa o salário mínimo)',
           quickAdd: QUICK_ADD_SALARIO,
         },

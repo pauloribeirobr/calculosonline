@@ -34,7 +34,7 @@ export function JurosCompostosForm({
         principal: {
           label: 'Capital inicial',
           prefix: 'R$',
-          type: 'number',
+          type: 'currency',
           quickAdd: QUICK_ADD_INVESTIMENTO,
         },
         taxaJuros: {
@@ -52,12 +52,14 @@ export function JurosCompostosForm({
           ],
         },
         prazoMeses: {
-          label: 'Prazo',
-          suffix: 'meses',
+          label: 'Prazo (meses)',
+          type: 'stepper',
+          min: 1,
         },
         aporteMensal: {
           label: 'Aporte mensal',
           prefix: 'R$',
+          type: 'currency',
           hint: 'Contribuição mensal adicional (opcional)',
         },
       }}

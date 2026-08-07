@@ -37,7 +37,7 @@ export function RescisaoForm({ onResult, onError, isLoading, sharedData, autoSub
         salarioBruto: {
           label: 'Salário Bruto',
           prefix: 'R$',
-          type: 'number',
+          type: 'currency',
           quickAdd: QUICK_ADD_SALARIO,
         },
         dataAdmissao: { label: 'Data de Admissão', type: 'date' },
@@ -60,16 +60,19 @@ export function RescisaoForm({ onResult, onError, isLoading, sharedData, autoSub
         saldoFGTS: {
           label: 'Saldo do FGTS',
           prefix: 'R$',
+          type: 'currency',
           hint: 'Consulte no app FGTS ou extrato Caixa',
         },
         feriasVencidas: {
           label: 'Períodos de férias vencidas',
-          suffix: 'períodos',
+          type: 'stepper',
+          min: 0,
+          max: 2,
           hint: '0, 1 ou 2 períodos completos não gozados',
         },
         numeroDependentesIRRF: {
           label: 'Dependentes (IRRF)',
-          suffix: 'pessoas',
+          type: 'stepper',
         },
       }}
       onSubmit={handleSubmit}

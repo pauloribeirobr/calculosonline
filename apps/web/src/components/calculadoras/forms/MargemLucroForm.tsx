@@ -38,7 +38,7 @@ export function MargemLucroForm({
         custoTotal: {
           label: 'Custo total',
           prefix: 'R$',
-          type: 'number',
+          type: 'currency',
           quickAdd: QUICK_ADD_SALARIO,
         },
         modo: {
@@ -52,6 +52,7 @@ export function MargemLucroForm({
         precoVenda: {
           label: 'Preço de venda',
           prefix: 'R$',
+          type: 'currency',
           hint: 'Use quando modo = Preço de venda',
         },
         markupPercent: {

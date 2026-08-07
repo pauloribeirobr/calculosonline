@@ -4,31 +4,17 @@ import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularSalarioLiquido } from '@calculosonline/core/trabalhista'
 import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
+import { itemListSchema, limparItensVazios } from '@/lib/itemListField'
 import type { FormProps } from './types'
-
-// Limites defensivos p/ o link de compartilhamento (query param `?d=` em
-// base64) não crescer sem controle — 20 itens × 60 chars por lista mantém o
-// link bem abaixo de qualquer limite prático de URL/CDN mesmo com as 3
-// listas cheias ao mesmo tempo (~6-7 mil caracteres no pior caso).
-const itemSchema = z.object({
-  descricao: z.string().max(60, 'Máximo de 60 caracteres'),
-  valor: z.number().min(0),
-})
-const listaItens = () => z.array(itemSchema).max(20, 'Máximo de 20 itens').default([])
 
 const schema = z.object({
   salarioBruto: z.number().positive('Salário deve ser positivo').default(0),
   numeroDependentesIRRF: z.number().min(0).default(0),
-  outrasDeducoes: listaItens(),
-  outrosDescontos: listaItens(),
-  adicionais: listaItens(),
+  outrasDeducoes: itemListSchema(),
+  outrosDescontos: itemListSchema(),
+  adicionais: itemListSchema(),
   temValeTransporte: z.enum(['sim', 'nao']).default('nao'),
 })
-
-/** Descarta linhas em branco (sem descrição ou com valor zerado) antes de calcular. */
-function limparItens(itens: { descricao: string; valor: number }[]) {
-  return itens.filter((item) => item.descricao.trim() !== '' && item.valor > 0)
-}
 
 export function SalarioLiquidoForm({
   onResult,
@@ -41,9 +27,9 @@ export function SalarioLiquidoForm({
     const r = calcularSalarioLiquido({
       salarioBruto: data.salarioBruto,
       numeroDependentesIRRF: data.numeroDependentesIRRF,
-      outrasDeducoes: limparItens(data.outrasDeducoes),
-      outrosDescontos: limparItens(data.outrosDescontos),
-      adicionais: limparItens(data.adicionais),
+      outrasDeducoes: limparItensVazios(data.outrasDeducoes),
+      outrosDescontos: limparItensVazios(data.outrosDescontos),
+      adicionais: limparItensVazios(data.adicionais),
       temValeTransporte: data.temValeTransporte === 'sim',
     })
     if (r.sucesso) onResult(r.dados, data)

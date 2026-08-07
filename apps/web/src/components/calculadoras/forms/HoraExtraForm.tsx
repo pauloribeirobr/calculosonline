@@ -27,7 +27,7 @@ export function HoraExtraForm({ onResult, onError, isLoading, sharedData, autoSu
         salarioBruto: {
           label: 'Salário Bruto',
           prefix: 'R$',
-          type: 'number',
+          type: 'currency',
           quickAdd: QUICK_ADD_SALARIO,
         },
         jornadaMensalHoras: {

@@ -32,17 +32,18 @@ export function FeriasForm({ onResult, onError, isLoading, sharedData, autoSubmi
         salarioBruto: {
           label: 'Salário Bruto',
           prefix: 'R$',
-          type: 'number',
+          type: 'currency',
           quickAdd: QUICK_ADD_SALARIO,
         },
         diasFaltas: {
           label: 'Dias de faltas injustificadas',
-          suffix: 'dias',
+          type: 'stepper',
           hint: '>32 faltas perde o direito ao período',
         },
         diasAbono: {
           label: 'Dias vendidos (abono)',
-          suffix: 'dias',
+          type: 'stepper',
+          max: 10,
           hint: 'Máximo 1/3 dos dias de direito',
         },
         emAtraso: {

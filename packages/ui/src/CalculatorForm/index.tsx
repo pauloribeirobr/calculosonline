@@ -48,6 +48,8 @@ export interface FieldMeta {
   quickAdd?: QuickAddButton[]
   /** `stepper`: valor mínimo permitido (padrão 0). */
   min?: number
+  /** `stepper`: valor máximo permitido (sem limite se omitido). */
+  max?: number
   /**
    * `itemList`: chips de sugestão que adicionam uma linha já com a
    * descrição preenchida (o usuário só digita o valor). A lista continua
@@ -182,6 +184,7 @@ function StepperField({
   name,
   id,
   min = 0,
+  max,
   disabled,
   hasError,
   ariaDescribedBy,
@@ -190,10 +193,12 @@ function StepperField({
   name: Path<FieldValues>
   id: string
   min?: number | undefined
+  max?: number | undefined
   disabled?: boolean | undefined
   hasError: boolean
   ariaDescribedBy?: string | undefined
 }) {
+  const clamp = (n: number) => Math.min(max ?? Infinity, Math.max(min, n))
   return (
     <Controller
       control={control}
@@ -204,7 +209,7 @@ function StepperField({
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => field.onChange(Math.max(min, valor - 1))}
+              onClick={() => field.onChange(clamp(valor - 1))}
               disabled={disabled || valor <= min}
               aria-label="Diminuir"
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-600 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
@@ -218,7 +223,7 @@ function StepperField({
               value={valor}
               onChange={(e) => {
                 const n = e.target.value === '' ? min : Math.trunc(Number(e.target.value))
-                field.onChange(Number.isFinite(n) ? Math.max(min, n) : min)
+                field.onChange(Number.isFinite(n) ? clamp(n) : min)
               }}
               onBlur={field.onBlur}
               disabled={disabled}
@@ -229,8 +234,8 @@ function StepperField({
             />
             <button
               type="button"
-              onClick={() => field.onChange(valor + 1)}
-              disabled={disabled}
+              onClick={() => field.onChange(clamp(valor + 1))}
+              disabled={disabled || (max !== undefined && valor >= max)}
               aria-label="Aumentar"
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-600 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
             >
@@ -502,6 +507,7 @@ export function CalculatorForm<T extends ZodRawShape>({
                   name={fieldName as unknown as Path<FieldValues>}
                   id={name}
                   min={fieldMeta.min}
+                  max={fieldMeta.max}
                   disabled={!!isLoading}
                   hasError={!!error}
                   ariaDescribedBy={describedBy}

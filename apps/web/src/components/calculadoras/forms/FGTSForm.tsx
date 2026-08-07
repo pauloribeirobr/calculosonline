@@ -29,17 +29,18 @@ export function FGTSForm({ onResult, onError, isLoading, sharedData, autoSubmit 
         salarioBruto: {
           label: 'Salário Bruto',
           prefix: 'R$',
-          type: 'number',
+          type: 'currency',
           quickAdd: QUICK_ADD_SALARIO,
         },
         mesesTrabalhados: {
           label: 'Meses trabalhados',
-          suffix: 'meses',
+          type: 'stepper',
           hint: 'Período projetado de contribuição',
         },
         saldoAtual: {
           label: 'Saldo atual do FGTS',
           prefix: 'R$',
+          type: 'currency',
           hint: 'Consulte no app FGTS ou extrato Caixa',
         },
         modalidade: {

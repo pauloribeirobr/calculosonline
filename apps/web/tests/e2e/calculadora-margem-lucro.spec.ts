@@ -11,8 +11,10 @@ test.describe('calculadora de margem de lucro', () => {
   }) => {
     await page.goto('/calculadora/margem-lucro')
 
-    await page.getByLabel('Custo total').fill('100')
-    await page.getByLabel('Preço de venda').fill('150')
+    // Custo total e Preço de venda são campos de moeda mascarados (dígitos
+    // digitados = centavos): '10000' → R$ 100,00, '15000' → R$ 150,00.
+    await page.getByLabel('Custo total').fill('10000')
+    await page.getByLabel('Preço de venda').fill('15000')
     await page.getByRole('button', { name: 'Calcular Margem' }).click()
 
     const resultado = page.getByRole('region', { name: 'Resultado do cálculo' })
