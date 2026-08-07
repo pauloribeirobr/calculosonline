@@ -16,19 +16,19 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
-- **Padrão de UX de formulário entregue no salário líquido (05/08, F34) —
-  candidato a replicar nas outras 19 calculadoras (F35, backlog).** 3 tipos
-  de campo novos e reutilizáveis no `CalculatorForm` compartilhado
+- **Padrão de UX de formulário entregue no salário líquido (05/08, F34) e
+  replicado nas outras 18 calculadoras no dia seguinte (06/08, F35 —
+  `v0.9.0`).** 3 tipos de campo do `CalculatorForm` compartilhado
   (`packages/ui`): `currency` (moeda com centavos, máscara dígitos-como-
-  centavos), `stepper` (botões +/-, usado em nº de dependentes) e
-  `itemList` (lista livre de itens `descrição + valor`, com chips de
-  sugestão — decisão do Paulo: lista livre, não checklist fixo). No
-  caminho, corrigido um bug real: "outras deduções" (plano de saúde/PGBL)
-  só abatia a base do IRRF, não descontava do salário líquido de fato.
-  Também o 1º projeto mobile do Playwright (`mobile-chromium`, toque real).
-  **F35 no `FEATURES.md`** é o item de backlog pra escolher quando aplicar
-  o mesmo padrão nas demais calculadoras — candidatas óbvias:
-  `rescisao-trabalhista`, `ferias`, `decimo-terceiro`, `hora-extra`.
+  centavos) em todo campo monetário; `stepper` (botões +/-, ganhou `max`
+  opcional no F35) em toda contagem inteira pequena (dependentes, dias,
+  prazo em meses, idade); `itemList` (lista livre `descrição + valor`) só
+  no IRRF ("outras deduções") — os outros 17 formulários não tinham um
+  campo equivalente de "bucket" genérico (IRPF tem categorias de dedução
+  legalmente distintas, não viram lista). Decisão consciente de não mexer
+  em campos decimais (horas extras, taxas, markup) nem em
+  `PorcentagemForm`/`IMCForm`. Ver `FEATURES.md` F34/F35 e `CHANGELOG.md`
+  0.8.0/0.9.0 para o detalhe técnico completo.
 - **1º link do plano do F15 executado (05/08) — `band.com.br` (Grupo
   Bandeirantes), pago pelo Paulo.** Matéria editorial de 27/07 sobre a
   isenção de IR até R$5 mil ("Isenção do IR até R$ 5 mil confunde quem lê o

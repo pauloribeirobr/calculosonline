@@ -6,44 +6,49 @@ import { test, expect } from '@playwright/test'
 // no campo "Salário Bruto" da rescisão (QUICK_ADD_SALARIO) e no "Custo
 // total" da margem de lucro, que já tem cobertura de fluxo completo em
 // calculadora-margem-lucro.spec.ts.
+//
+// "Salário Bruto"/"Saldo do FGTS" (rescisão) e "Valor inicial" (CDB) são
+// campos de moeda mascarados (dígitos digitados = centavos, ver F35/UX do
+// F34) — os valores preenchidos usam a máscara e as asserções conferem o
+// texto formatado "1.234,56", não o número cru.
 
 test.describe('chips de valor rápido', () => {
   test('chips somam ao valor atual do campo (não substituem)', async ({ page }) => {
     await page.goto('/calculadora/rescisao-trabalhista')
 
     const salario = page.getByLabel('Salário Bruto')
-    await salario.fill('1000')
+    await salario.fill('100000') // R$ 1.000,00
 
     await page.getByRole('button', { name: '+500', exact: true }).click()
-    await expect(salario).toHaveValue('1500')
+    await expect(salario).toHaveValue('1.500,00')
 
     await page.getByRole('button', { name: '+1.000', exact: true }).click()
-    await expect(salario).toHaveValue('2500')
+    await expect(salario).toHaveValue('2.500,00')
 
     await page.getByRole('button', { name: '+100', exact: true }).click()
-    await expect(salario).toHaveValue('2600')
+    await expect(salario).toHaveValue('2.600,00')
   })
 
   test('"Zerar" zera o campo independente do valor acumulado', async ({ page }) => {
     await page.goto('/calculadora/rescisao-trabalhista')
 
     const salario = page.getByLabel('Salário Bruto')
-    await salario.fill('3000')
+    await salario.fill('300000') // R$ 3.000,00
     await page.getByRole('button', { name: '+5.000', exact: true }).click()
-    await expect(salario).toHaveValue('8000')
+    await expect(salario).toHaveValue('8.000,00')
 
     await page.getByRole('button', { name: 'Zerar' }).click()
-    await expect(salario).toHaveValue('0')
+    await expect(salario).toHaveValue('0,00')
   })
 
   test('chips funcionam a partir do valor padrão 0 (soma sobre 0)', async ({ page }) => {
     await page.goto('/calculadora/rescisao-trabalhista')
 
     const salario = page.getByLabel('Salário Bruto')
-    await expect(salario).toHaveValue('0')
+    await expect(salario).toHaveValue('0,00')
 
     await page.getByRole('button', { name: '+100', exact: true }).click()
-    await expect(salario).toHaveValue('100')
+    await expect(salario).toHaveValue('100,00')
   })
 
   test('chips de valor rápido não aparecem em campo sem quickAdd configurado', async ({
@@ -63,8 +68,8 @@ test.describe('chips de valor rápido', () => {
     await page.goto('/calculadora/cdb')
 
     const valorInicial = page.getByLabel('Valor inicial')
-    await valorInicial.fill('0')
+    await expect(valorInicial).toHaveValue('0,00')
     await page.getByRole('button', { name: '+10.000', exact: true }).click()
-    await expect(valorInicial).toHaveValue('10000')
+    await expect(valorInicial).toHaveValue('10.000,00')
   })
 })

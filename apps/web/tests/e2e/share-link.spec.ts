@@ -20,8 +20,9 @@ test.describe('compartilhamento de cálculo por link', () => {
   }) => {
     await page.goto('/calculadora/margem-lucro')
 
-    await page.getByLabel('Custo total').fill('100')
-    await page.getByLabel('Preço de venda').fill('150')
+    // Campos de moeda mascarados (dígitos digitados = centavos).
+    await page.getByLabel('Custo total').fill('10000')
+    await page.getByLabel('Preço de venda').fill('15000')
     await page.getByRole('button', { name: 'Calcular Margem' }).click()
 
     const shareLink = page.getByRole('link', { name: 'Compartilhar via WhatsApp' })
@@ -40,8 +41,9 @@ test.describe('compartilhamento de cálculo por link', () => {
   }) => {
     await page.goto('/calculadora/margem-lucro')
 
-    await page.getByLabel('Custo total').fill('200')
-    await page.getByLabel('Preço de venda').fill('250')
+    // '20000' → R$ 200,00, '25000' → R$ 250,00 (campo de moeda mascarado).
+    await page.getByLabel('Custo total').fill('20000')
+    await page.getByLabel('Preço de venda').fill('25000')
     await page.getByRole('button', { name: 'Calcular Margem' }).click()
 
     const shareLink = page.getByRole('link', { name: 'Compartilhar via WhatsApp' })
@@ -65,8 +67,8 @@ test.describe('compartilhamento de cálculo por link', () => {
     await expect(resultado).toBeVisible()
     await expect(resultado).toContainText('R$ 250,00')
 
-    await expect(page.getByLabel('Custo total')).toHaveValue('200')
-    await expect(page.getByLabel('Preço de venda')).toHaveValue('250')
+    await expect(page.getByLabel('Custo total')).toHaveValue('200,00')
+    await expect(page.getByLabel('Preço de venda')).toHaveValue('250,00')
   })
 
   test('sem query param, calculadora abre normalmente sem o banner de compartilhado', async ({

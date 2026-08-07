@@ -31,30 +31,39 @@ export function IRPFForm({ onResult, onError, isLoading, sharedData, autoSubmit 
         rendimentosTributaveis: {
           label: 'Rendimentos tributáveis (anual)',
           prefix: 'R$',
+          type: 'currency',
           hint: 'Total bruto recebido no ano',
           quickAdd: QUICK_ADD_VALOR_GRANDE,
         },
         irrfRetidoFonte: {
           label: 'IRRF retido na fonte (anual)',
           prefix: 'R$',
+          type: 'currency',
           hint: 'Total já descontado nos contracheques',
         },
-        numeroDependentes: { label: 'Dependentes', suffix: 'pessoas' },
+        numeroDependentes: { label: 'Dependentes', type: 'stepper' },
         despesasMedicas: {
           label: 'Despesas médicas',
           prefix: 'R$',
+          type: 'currency',
           hint: 'Dedutíveis integralmente (modelo completo)',
         },
         despesasEducacao: {
           label: 'Despesas com educação',
           prefix: 'R$',
+          type: 'currency',
           hint: 'Limite anual de R$ 3.561,50 por pessoa',
         },
-        contribuicaoINSS: { label: 'INSS pago no ano', prefix: 'R$' },
-        pensaoAlimenticia: { label: 'Pensão alimentícia (anual)', prefix: 'R$' },
+        contribuicaoINSS: { label: 'INSS pago no ano', prefix: 'R$', type: 'currency' },
+        pensaoAlimenticia: {
+          label: 'Pensão alimentícia (anual)',
+          prefix: 'R$',
+          type: 'currency',
+        },
         contribuicaoPrevidenciaPrivada: {
           label: 'Previdência privada PGBL',
           prefix: 'R$',
+          type: 'currency',
           hint: 'Dedutível até 12% dos rendimentos',
         },
       }}

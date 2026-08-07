@@ -27,13 +27,14 @@ export function PoupancaForm({ onResult, onError, isLoading, sharedData, autoSub
         valorInicial: {
           label: 'Valor inicial',
           prefix: 'R$',
-          type: 'number',
+          type: 'currency',
           quickAdd: QUICK_ADD_INVESTIMENTO,
         },
-        prazoMeses: { label: 'Prazo', suffix: 'meses' },
+        prazoMeses: { label: 'Prazo (meses)', type: 'stepper', min: 1 },
         aporteMensal: {
           label: 'Aporte mensal',
           prefix: 'R$',
+          type: 'currency',
           hint: 'Contribuição mensal adicional (opcional)',
         },
         selicAnual: {

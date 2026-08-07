@@ -27,7 +27,7 @@ export function CDBForm({ onResult, onError, isLoading, sharedData, autoSubmit }
         valorInicial: {
           label: 'Valor inicial',
           prefix: 'R$',
-          type: 'number',
+          type: 'currency',
           quickAdd: QUICK_ADD_INVESTIMENTO,
         },
         tipo: {
@@ -43,7 +43,7 @@ export function CDBForm({ onResult, onError, isLoading, sharedData, autoSubmit }
           label: 'Taxa',
           hint: 'CDI: 1.10 = 110% do CDI | Prefixado: 0.12 = 12% a.a. | IPCA+: 0.06 = 6% real',
         },
-        prazoMeses: { label: 'Prazo', suffix: 'meses' },
+        prazoMeses: { label: 'Prazo (meses)', type: 'stepper', min: 1 },
       }}
       onSubmit={handleSubmit}
       submitLabel="Calcular CDB"

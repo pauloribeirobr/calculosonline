@@ -53,7 +53,7 @@ export function DecimoTerceiroForm({
         salarioBruto: {
           label: 'Salário Bruto',
           prefix: 'R$',
-          type: 'number',
+          type: 'currency',
           quickAdd: QUICK_ADD_SALARIO,
         },
         mesAdmissao: {
@@ -73,7 +73,7 @@ export function DecimoTerceiroForm({
             { value: 'segunda', label: '2ª parcela (até 20/dez)' },
           ],
         },
-        numeroDependentesIRRF: { label: 'Dependentes (IRRF)', suffix: 'pessoas' },
+        numeroDependentesIRRF: { label: 'Dependentes (IRRF)', type: 'stepper' },
       }}
       onSubmit={handleSubmit}
       submitLabel="Calcular 13º"

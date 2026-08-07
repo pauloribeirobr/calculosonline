@@ -33,7 +33,7 @@ export function CaloriasForm({ onResult, onError, isLoading, sharedData, autoSub
           suffix: 'cm',
           hint: 'Em centímetros (ex.: 175)',
         },
-        idade: { label: 'Idade', suffix: 'anos' },
+        idade: { label: 'Idade', type: 'stepper', min: 1 },
         sexo: {
           label: 'Sexo biológico',
           type: 'radio',
