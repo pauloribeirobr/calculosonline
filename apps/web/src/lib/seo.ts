@@ -95,8 +95,13 @@ export function buildMetadata({
  * "Grátis, sem Cadastro" é o USP real do produto (ver Plano de Negócios,
  * seção 1.2) e diferencia o snippet do padrão genérico "Online e Gratuita"
  * repetido em todas as páginas.
+ *
+ * Calculadoras marcadas como `atemporal` saem sem o ano — o resultado não
+ * muda de um ano para o outro e o "2026" só ocupa espaço no snippet.
  */
 export function buildCalculatorTitle(calc: CalculadoraRegistro): string {
   const base = calc.tituloLongo.replace(/\s*2026$/, '')
-  return `${base} 2026 — Grátis, sem Cadastro`
+  return calc.atemporal
+    ? `${base} — Grátis, sem Cadastro`
+    : `${base} 2026 — Grátis, sem Cadastro`
 }

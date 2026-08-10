@@ -52,6 +52,14 @@ export interface CalculadoraRegistro {
   relacionadas: string[]
   /** Aparece no bloco "Mais buscadas" da home */
   featured?: boolean
+  /**
+   * Cálculo que não depende de tabela/legislação anual (matemática pura:
+   * porcentagem, margem de lucro). O ano sai do title — "2026" só faz
+   * sentido onde o resultado muda de um ano para o outro, e nas SERPs
+   * dessas queries nenhum concorrente relevante usa ano.
+   * Ver diário 2026-08-09 no `MEMORY.md`.
+   */
+  atemporal?: boolean
   /** Formato do valor principal exibido no resultado */
   formatoResultado?: ResultadoFormato
   /** Slot AdSense específico — fallback para variáveis de ambiente */
@@ -279,7 +287,9 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     tituloLongo: 'Calculadora de Porcentagem',
     descricaoCurta: '6 modos: percentual, variação, desconto.',
     descricao:
-      'Calcule percentuais: valor de X%, variação percentual, acréscimo, desconto, percentual de e mais.',
+      'Calcule porcentagem online e grátis, sem cadastro: quanto é X% de um valor, ' +
+      'quanto X representa de Y, variação percentual, acréscimo e desconto.',
+    atemporal: true,
     categoria: 'financeiro',
     icone: 'porcentagem',
     fonteJuridica: 'Matemática básica',
@@ -416,12 +426,22 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     tituloLongo: 'Calculadora de Margem de Lucro',
     descricaoCurta: 'Preço, markup e margem sobre custo.',
     descricao:
-      'Calcule margem de lucro, markup e preço de venda a partir do custo. Essencial para precificação.',
+      'Calcule margem de lucro, markup e preço de venda grátis, sem cadastro: ' +
+      'descubra o preço ideal a partir do custo e da margem desejada.',
+    atemporal: true,
     categoria: 'negocios',
     icone: 'margemLucro',
     fonteJuridica: 'Contabilidade de custos',
     dataAtualizacao: '2026-01-01',
-    palavrasChave: ['margem de lucro', 'calcular markup', 'preço de venda', 'precificação'],
+    palavrasChave: [
+      'margem de lucro',
+      'calcular markup',
+      'preço de venda',
+      'precificação',
+      // Query de maior impressão do cluster no GSC (12m até 09/08/2026),
+      // atendida pelo modo "margem desejada → preço".
+      'calcular valor baseado na margem de lucro',
+    ],
     relacionadas: ['das-mei', 'porcentagem', 'juros-compostos'],
   },
 ]

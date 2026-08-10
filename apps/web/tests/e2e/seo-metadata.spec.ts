@@ -26,6 +26,29 @@ test.describe('metadata das páginas de calculadora', () => {
     }
   })
 
+  // Calculadoras `atemporal` (matemática pura) não levam ano no title — o
+  // resultado não muda de um ano para o outro. Ver diário 2026-08-09.
+  test('calculadora atemporal não leva ano no title', async ({ page }) => {
+    const atemporais = calculatorRegistry.filter((c) => c.atemporal)
+    expect(atemporais.length).toBeGreaterThan(0)
+
+    for (const calc of atemporais) {
+      await page.goto(`/calculadora/${calc.slug}`)
+      const title = await page.title()
+      expect(title).not.toMatch(/20\d{2}/)
+      expect(title).toContain('sem Cadastro')
+    }
+  })
+
+  // O H1 é do shell da página; o MDX editorial entra a partir de <h2>.
+  // Antes desta correção toda calculadora servia dois H1 concorrentes.
+  test('cada calculadora tem exatamente um H1', async ({ page }) => {
+    for (const calc of calculatorRegistry.slice(0, 5)) {
+      await page.goto(`/calculadora/${calc.slug}`)
+      await expect(page.locator('h1')).toHaveCount(1)
+    }
+  })
+
   test('FAQPage do JSON-LD tem perguntas específicas da calculadora, não as genéricas antigas', async ({
     page,
   }) => {
