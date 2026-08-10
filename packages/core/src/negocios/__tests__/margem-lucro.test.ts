@@ -8,8 +8,18 @@ describe('calcularMargemLucro', () => {
       expect(r.sucesso).toBe(false)
     })
 
-    it('exige preço OU markup', () => {
+    it('exige preço OU markup OU margem desejada', () => {
       const r = calcularMargemLucro({ custoTotal: 100 })
+      expect(r.sucesso).toBe(false)
+    })
+
+    it('rejeita margem desejada de 100% (preço seria infinito)', () => {
+      const r = calcularMargemLucro({ custoTotal: 100, margemDesejadaPercent: 100 })
+      expect(r.sucesso).toBe(false)
+    })
+
+    it('rejeita margem desejada negativa', () => {
+      const r = calcularMargemLucro({ custoTotal: 100, margemDesejadaPercent: -10 })
       expect(r.sucesso).toBe(false)
     })
 
@@ -78,6 +88,62 @@ describe('calcularMargemLucro', () => {
       if (r.sucesso) {
         // Quando preço é informado, prevalece
         expect(r.dados.dados.precoVenda).toBe(200)
+      }
+    })
+  })
+
+  describe('a partir da margem desejada', () => {
+    it('custo 100, margem 30% → preço 142,86 (não 130)', () => {
+      const r = calcularMargemLucro({ custoTotal: 100, margemDesejadaPercent: 30 })
+      if (r.sucesso) {
+        expect(r.dados.dados.precoVenda).toBeCloseTo(142.86, 2)
+        expect(r.dados.dados.lucro).toBeCloseTo(42.86, 2)
+        expect(r.dados.dados.margemLucro).toBe(30)
+        expect(r.dados.dados.markup).toBeCloseTo(42.86, 2)
+      }
+    })
+
+    it('margem zero → preço igual ao custo', () => {
+      const r = calcularMargemLucro({ custoTotal: 80, margemDesejadaPercent: 0 })
+      if (r.sucesso) {
+        expect(r.dados.dados.precoVenda).toBe(80)
+        expect(r.dados.dados.lucro).toBe(0)
+        expect(r.dados.dados.markup).toBe(0)
+      }
+    })
+
+    it('margem 50% dobra o preço (markup 100%)', () => {
+      const r = calcularMargemLucro({ custoTotal: 100, margemDesejadaPercent: 50 })
+      if (r.sucesso) {
+        expect(r.dados.dados.precoVenda).toBe(200)
+        expect(r.dados.dados.markup).toBe(100)
+      }
+    })
+
+    it('preço e markup têm precedência sobre a margem desejada', () => {
+      const comPreco = calcularMargemLucro({
+        custoTotal: 100,
+        precoVenda: 200,
+        margemDesejadaPercent: 30,
+      })
+      if (comPreco.sucesso) expect(comPreco.dados.dados.precoVenda).toBe(200)
+
+      const comMarkup = calcularMargemLucro({
+        custoTotal: 100,
+        markupPercent: 50,
+        margemDesejadaPercent: 30,
+      })
+      if (comMarkup.sucesso) expect(comMarkup.dados.dados.precoVenda).toBe(150)
+    })
+
+    it('é o inverso do modo preço: margem informada volta igual', () => {
+      const ida = calcularMargemLucro({ custoTotal: 250, margemDesejadaPercent: 40 })
+      if (ida.sucesso) {
+        const volta = calcularMargemLucro({
+          custoTotal: 250,
+          precoVenda: ida.dados.dados.precoVenda,
+        })
+        if (volta.sucesso) expect(volta.dados.dados.margemLucro).toBeCloseTo(40, 1)
       }
     })
   })

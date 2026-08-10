@@ -5,7 +5,7 @@
  *  - Margem de lucro = Lucro ÷ Preço de Venda × 100
  *  - Markup          = Lucro ÷ Custo × 100
  *
- * Recebe um dos dois (preço ou markup) e calcula o restante.
+ * Recebe um dos três (preço, markup ou margem desejada) e calcula o restante.
  */
 
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
@@ -17,6 +17,12 @@ export interface MargemLucroParams {
   precoVenda?: number
   /** Se informado e precoVenda não, calcula o preço a partir do markup */
   markupPercent?: number
+  /**
+   * Se informado e os dois acima não, calcula o preço a partir da margem
+   * desejada sobre o preço de venda: Preço = Custo ÷ (1 − Margem ÷ 100).
+   * Precisa ser menor que 100% — margem de 100% exigiria preço infinito.
+   */
+  margemDesejadaPercent?: number
 }
 
 export interface MargemLucroResultado {
@@ -39,10 +45,22 @@ export function calcularMargemLucro(
     params.precoVenda > 0
   const temMarkup =
     params.markupPercent !== undefined && Number.isFinite(params.markupPercent)
-  if (!temPreco && !temMarkup) {
+  const temMargemDesejada =
+    params.margemDesejadaPercent !== undefined &&
+    Number.isFinite(params.margemDesejadaPercent)
+  if (!temPreco && !temMarkup && !temMargemDesejada) {
     erros.push({
       campo: 'precoVenda',
-      mensagem: 'Informe o preço de venda ou o markup desejado',
+      mensagem: 'Informe o preço de venda, o markup ou a margem desejada',
+    })
+  }
+  if (
+    temMargemDesejada &&
+    (params.margemDesejadaPercent! < 0 || params.margemDesejadaPercent! >= 100)
+  ) {
+    erros.push({
+      campo: 'margemDesejadaPercent',
+      mensagem: 'Margem desejada deve ser maior ou igual a 0 e menor que 100%',
     })
   }
   if (erros.length > 0) return { sucesso: false, erros }
@@ -57,11 +75,16 @@ export function calcularMargemLucro(
     lucro = arredondar(precoVenda - params.custoTotal)
     margemLucro = arredondar((lucro / precoVenda) * 100)
     markup = arredondar((lucro / params.custoTotal) * 100)
-  } else {
+  } else if (temMarkup) {
     markup = params.markupPercent!
     precoVenda = arredondar(params.custoTotal * (1 + markup / 100))
     lucro = arredondar(precoVenda - params.custoTotal)
     margemLucro = precoVenda === 0 ? 0 : arredondar((lucro / precoVenda) * 100)
+  } else {
+    margemLucro = params.margemDesejadaPercent!
+    precoVenda = arredondar(params.custoTotal / (1 - margemLucro / 100))
+    lucro = arredondar(precoVenda - params.custoTotal)
+    markup = arredondar((lucro / params.custoTotal) * 100)
   }
 
   const detalhamento: ItemDetalhamento[] = [
@@ -87,7 +110,8 @@ export function calcularMargemLucro(
     dados: {
       resultado: precoVenda,
       detalhamento,
-      baseCalculo: 'Margem = Lucro ÷ Preço | Markup = Lucro ÷ Custo',
+      baseCalculo:
+        'Margem = Lucro ÷ Preço | Markup = Lucro ÷ Custo | Preço = Custo ÷ (1 − Margem)',
       fonteJuridica: 'Conceitos de contabilidade de custos',
       dataReferencia: new Date().toISOString().slice(0, 10),
       dados: { precoVenda, lucro, margemLucro, markup },

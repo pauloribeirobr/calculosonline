@@ -8,9 +8,10 @@ import type { FormProps } from './types'
 
 const schema = z.object({
   custoTotal: z.number().positive('Custo deve ser positivo').default(0),
-  modo: z.enum(['preco', 'markup']).default('preco'),
+  modo: z.enum(['preco', 'markup', 'margem']).default('preco'),
   precoVenda: z.number().min(0).default(0),
   markupPercent: z.number().min(0).default(0),
+  margemDesejadaPercent: z.number().min(0).max(99.99).default(0),
 })
 
 export function MargemLucroForm({
@@ -26,6 +27,7 @@ export function MargemLucroForm({
     }
     if (data.modo === 'preco') params.precoVenda = data.precoVenda
     if (data.modo === 'markup') params.markupPercent = data.markupPercent
+    if (data.modo === 'margem') params.margemDesejadaPercent = data.margemDesejadaPercent
     const r = calcularMargemLucro(params)
     if (r.sucesso) onResult(r.dados, data)
     else onError?.(r.erros)
@@ -46,6 +48,7 @@ export function MargemLucroForm({
           type: 'select',
           options: [
             { value: 'preco', label: 'Preço de venda (calcular margem)' },
+            { value: 'margem', label: 'Margem desejada (calcular preço)' },
             { value: 'markup', label: 'Markup desejado (calcular preço)' },
           ],
         },
@@ -54,6 +57,11 @@ export function MargemLucroForm({
           prefix: 'R$',
           type: 'currency',
           hint: 'Use quando modo = Preço de venda',
+        },
+        margemDesejadaPercent: {
+          label: 'Margem desejada',
+          suffix: '%',
+          hint: 'Use quando modo = Margem desejada. Margem incide sobre o preço de venda',
         },
         markupPercent: {
           label: 'Markup desejado',

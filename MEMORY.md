@@ -16,6 +16,27 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **Export do GSC de 09/08 + Semrush (ver [diário
+  2026-08-09](#2026-08-09--export-novo-do-gsc--investigação-de-ctr--semrush)).**
+  O Google segue em **2 cliques em 12 meses**, e os 2 são de maio/junho —
+  **~70 dias sem clique nenhum**, já contando o pós-Band. Impressões
+  estagnadas em ~38/dia desde julho, mas **posição média melhorando há 3
+  semanas** (76,9 → 65,3 → 58,2) e o cluster de salário líquido em
+  **posição 18-20** — é o efeito esperado do link da Band, e o indicador
+  a checar no próximo export. Semrush: **Authority Score 2**, tráfego
+  orgânico 0. O `porcentagem` saiu da lista de alvos (SERP com 3 EMDs +
+  4Devs + Serasa, cauda numérica que o Google responde sozinho) e o
+  **`margem-lucro` entrou** (1.520 buscas/mês, KD 20-26, benchmark
+  vencível). **Pendências:** conferir domínios referentes no GSC (Semrush
+  diz 122, GSC diz 1), revisar os 7 alvos do P0 com dados de 12 meses, e
+  investigar por que o **IRRF** — página nº1 em uso real, 334 views no
+  GA4 — está invisível no Google.
+- **F36 entregue (09/08):** 3º modo em margem-lucro (custo + margem
+  desejada → preço de venda, a intenção de maior volume do cluster que a
+  calculadora não atendia), description quebrada da porcentagem
+  corrigida, flag `atemporal` tirando "2026" do title de porcentagem e
+  margem-lucro, e **H1 duplicado eliminado nas 20 calculadoras** (o MDX
+  abria com `#` e brigava com o H1 do shell).
 - **Padrão de UX de formulário entregue no salário líquido (05/08, F34) e
   replicado nas outras 18 calculadoras no dia seguinte (06/08, F35 —
   `v0.9.0`).** 3 tipos de campo do `CalculatorForm` compartilhado
@@ -143,6 +164,19 @@ autoridade suficiente pra rankear bem:
 pos. 12.3, `calorias` pos. 13.6 — essas já estão perto da página 1 e
 dependem mais de CTR pontual/backlink leve do que de uma campanha de
 autoridade.)
+
+> **Revisar esta tabela (nota de 09/08).** Os números acima são do export
+> de 3 meses de 25/07, que não existe mais. No export de 12 meses de
+> 09/08, `hora-extra` (109→213) e `financiamento` (68→161) dobraram de
+> impressão, enquanto `poupanca` (191→195) e `rescisao` (134→136)
+> pararam. Além disso: **`porcentagem` saiu de alvo** (SERP dominada por
+> 3 EMDs + 4Devs AS 54 + Serasa; cauda numérica que o Google responde
+> sozinho) e **`margem-lucro` entrou** (1.520 buscas/mês no Semrush, KD
+> 20-26, e o `balancinho.com.br` prova com AS 12 que dá pra rankear).
+> **`irrf` também é candidato** — é a página nº1 em uso real (334 views
+> no GA4) e está em 26 impressões/pos. 80,7 no Google, mas nunca entrou
+> na lista porque a lista saiu de impressão do GSC. Ver [diário
+> 2026-08-09](#2026-08-09--export-novo-do-gsc--investigação-de-ctr--semrush).
 
 1. ~~Confirmar o diagnóstico de tráfego~~ — ✅ resolvido nesta sessão (ver
    "Ao voltar" e diário parte 4).
@@ -368,6 +402,155 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-08-09 — Export novo do GSC + investigação de CTR + Semrush
+
+Paulo pediu pra avaliar a pasta `gsc/` (export de 09/08: GSC 12 meses,
+GA4 01/01→09/08, 3 CSVs do Clarity) e depois pra investigar a fundo o
+"CTR 0 em posição de página 1" de `margem-lucro` e `porcentagem`.
+
+**Aviso de método:** o export anterior (`...2026-07-25/`) foi
+sobrescrito — a pasta está no `.gitignore` (linha 47) e não guarda
+histórico. Os números de 25/07 abaixo vêm deste `MEMORY.md`, não de
+arquivo. **Guardar exports datados daqui pra frente**, senão cada
+comparação futura depende do que sobrou escrito aqui.
+
+**1. O quadro do Google não melhorou — piorou de leve.**
+1.810 impressões e **2 cliques em 12 meses**. Dados reais só de 10/05 a
+07/08 (89 dias — é toda a vida indexada do site). Os "2 cliques" são os
+mesmos de sempre: aconteceram em **maio e junho**. Estão **~70 dias sem
+um único clique do Google**, incluindo todo o pós-F21/F34/F35 e o
+pós-backlink da Band.
+
+| Mês | Impressões | Cliques | Posição média |
+|---|---|---|---|
+| mai (a partir do dia 10) | 44 | 1 | 9,7 |
+| jun | 528 | 1 | 33,2 |
+| jul | 1.065 | 0 | 75,5 |
+| ago (7 dias) | 173 | 0 | 61,4 |
+
+Impressões **estagnaram em ~38/dia desde a W27** (início de julho) e não
+crescem mais. A queda aparente na última semana (17/dia) é lag de
+reporte do GSC nos últimos 2-3 dias, **não** colapso. O lado bom: a
+posição média melhora de forma consistente há 3 semanas (W30 76,9 → W31
+65,3 → W32 58,2), e o cluster de salário líquido aparece em **posição
+18-20** contra 56,9 de média da página — janela exata do link da Band
+(rastreado 03/08). **É o indicador a acompanhar no próximo export.**
+
+**2. Backlinks — GSC e Semrush discordam, e isso importa.**
+O `Latest links` do GSC tem **uma linha só** (band.com.br, 03/08) —
+respondendo o pendente que estava em "Ao voltar". Mas o Semrush (09/08)
+diz **220 backlinks / 122 domínios referentes** para
+`calculosonline.com.br`, com **Authority Score 2**. As duas coisas
+podem ser verdade ao mesmo tempo se os 122 domínios forem lixo
+(scrapers/agregadores) que o Google não conta — e AS 2 com 122 domínios
+é exatamente o perfil disso. **Falta confirmar em GSC → Links > Domínios
+referentes** (relatório completo, não o export "Latest links") antes de
+concluir. Não repetir "o site tem 1 backlink" como fato até essa
+checagem.
+
+**3. A tese do "CTR 0" que eu levantei estava errada.**
+Achei que 318 impressões em posição 9-11 com 0 clique fosse anomalia de
+CTR a corrigir com title/description. Fazendo a conta, não é: a posição
+9-11 é rodapé da página 1 / topo da página 2, CTR esperado 0,8-1,5%, ou
+seja **~3,5 cliques esperados no total**. P(0 cliques) = 15% em
+`porcentagem` e 21% em `margem-lucro`. Não havia CTR a recuperar.
+
+**4. O achado real: essas duas páginas quase não têm query
+identificada.** Das 1.810 impressões, 512 (28%) são de queries
+anonimizadas pelo GSC. E elas se concentram brutalmente:
+
+- `porcentagem`: 124 impressões e **zero** queries com "porcentagem" no
+  `Consultas.csv`. Todas anonimizadas.
+- `margem-lucro`: 194 impressões, só 4 queries identificadas somando 11.
+
+Ou seja, ~307 das 512 impressões anonimizadas do site (60%) são dessas
+duas páginas. A leitura: elas rankeiam em ~9-11 para uma cauda infinita
+de queries numéricas únicas ("quanto é 15% de 300"), que é justamente o
+tipo de query que **o Google responde sozinho no topo com a calculadora
+dele**. Se o CTR real for 0,2-0,3%, P(0 cliques em 318 impressões) sobe
+pra 38-53% — normal. Confirmação pelo outro lado: para o head term
+`calculadora de porcentagem` a página **não aparece nenhuma vez em 12
+meses**. Não é "ranqueia mal", é "não ranqueia".
+
+**5. Semrush fechou o diagnóstico de autoridade.**
+
+| Domínio | AS | Tráfego org. | KW org. | Backlinks | Dom. ref. |
+|---|---|---|---|---|---|
+| 4devs.com.br | 54 | 688,9K | 36,1K | 9,5K | 2,5K |
+| cora.com.br | 45 | 174,1K | 41,4K | 101,9K | 3,6K |
+| **balancinho.com.br** | **12** | **3,5K** | 1,5K | 471 | **113** |
+| calculosonline.com.br | **2** | **0** | 220 | 220 | 122 |
+
+O `balancinho.com.br` é o **benchmark realista, não a Cora nem a
+4Devs**: com AS 12 e 113 domínios referentes ele tira 3,5K de tráfego
+orgânico. O calculosonline tem **número parecido de domínios (122) e AS
+2 com tráfego 0** — o que reforça a hipótese do item 2 (os 122 não
+valem nada) e mostra que **a barreira de entrada dessa SERP é bem mais
+baixa do que o topo sugere**.
+
+**6. Volume validado do cluster margem de lucro (Semrush BR):**
+
+| Keyword | Volume/mês | KD | CPC (BRL) |
+|---|---|---|---|
+| calculadora de margem de lucro | 720 | 25 | 1,02 |
+| calcular preço de venda | 480 | 20 | 1,47 |
+| calcular markup | 320 | 26 | 0,46 |
+
+~1.520 buscas/mês com KD 20-26 (fácil/possível). E a query de maior
+impressão identificada do cluster no GSC — `calcular valor baseado na
+margem de lucro`, posição 66,6 — pedia exatamente o modo que a
+calculadora **não tinha**. A query cujo modo existia rankeava 21,5.
+Gap de produto, não de SEO.
+
+**Entregue nesta sessão (ver `FEATURES.md` F36 e `CHANGELOG.md`):**
+3º modo em margem-lucro (custo + margem desejada → preço), description
+quebrada da porcentagem corrigida, flag `atemporal` tirando o ano do
+title das duas, H1 duplicado eliminado nos 20 MDX.
+
+**Decisões tomadas, a executar depois:**
+
+- **`porcentagem` deixa de ser alvo de SEO.** SERP com 3 domínios de
+  correspondência exata dedicados (`calculo-porcentagem.com.br`,
+  `porcentagemcalculadora.com`, `calculadora-porcentagem.com`) + 4Devs
+  (AS 54) + Serasa, e o tráfego que existe é cauda numérica que o
+  Google responde sozinho. Teto baixo, custo alto. A página fica no
+  catálogo pelo valor de produto e link interno, não como aposta de
+  aquisição.
+- **P0 continua nos alvos trabalhistas.** A investigação reforça: o
+  gargalo lá é autoridade (AS 2), não on-page. Nada no export de 09/08
+  muda a priorização de backlinks — só a reforça.
+- **Rever a lista de 7 alvos do P0 com os números de 12 meses.**
+  `hora-extra` (109→213 impressões) e `financiamento` (68→161) dobraram;
+  `poupanca` (191→195) e `rescisao` (134→136) pararam. Os alvos foram
+  escolhidos com dados de 3 meses que não existem mais.
+- **`margem-lucro` virou alvo legítimo** (não era): 1.520 buscas/mês,
+  KD 20-26, benchmark vencível (balancinho AS 12) e o produto agora
+  atende as 3 intenções. Falta backlink e acompanhar posição.
+- **IRRF precisa de investigação própria.** É a página nº1 em uso real
+  (334 views no GA4, disparado à frente) e está invisível no Google (26
+  impressões, posição 80,7) — e **não está entre os 7 alvos do P0**,
+  porque os alvos saíram de impressão do GSC, que só enxerga o Google.
+  Pedir Keyword Gap no Semrush.
+- **Guardar exports do GSC datados** em vez de sobrescrever.
+
+**GA4 (01/01→09/08) reconfirma o diagnóstico de 25/07:** 538 usuários,
+**503 desktop / 36 mobile**, Edge 323 vs Chrome 174, Windows 466. Para
+calculadora trabalhista no Brasil isso é o inverso do normal — o
+"Organic Search 391" do GA4 é **Bing**, não Google. Canal AI Assistant:
+35 usuários (vivo, mas o `llms.txt` de 27/07 é recente demais pra
+avaliar). Nenhum lead qualificado em nenhuma semana — não há evento de
+conversão configurado.
+
+**Clarity desta pasta é descartável:** os 3 CSVs são de 07-09/08, ou
+seja, logo depois do deploy do F35 (06/08), com 7 pageviews em férias, 7
+em IRRF e 4 na home — e 104 cliques em 7 pageviews de férias (15 por
+visita, 49 deles nos botões +/− do stepper). Isso é padrão de QA, quase
+certamente o próprio Paulo testando o F35. **Não tirar conclusão de UX
+daqui.** Se quiser sinal real sobre o stepper, esperar 3-4 semanas de
+tráfego orgânico — e vale lembrar que o `StepperField` já aceita
+digitação direta (`packages/ui/src/CalculatorForm/index.tsx`), então o
+risco de "usuário preso clicando +" é menor do que o CSV sugere.
 
 ### 2026-07-27 (parte 11) — F18 respondido: rich results não é bug, é política do Google
 
