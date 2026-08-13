@@ -60,11 +60,15 @@ que não cabe em nenhum dos outros três.
   Confirmado no HTML bruto (sem `rel="nofollow"`) — exatamente o alvo (a
   página, não necessariamente a âncora exata) e o tipo de placement que o
   plano de 25/07 desenhou para o 1º link, e num domínio de autoridade bem
-  acima do que se cogitava (diretórios/guest posts). **Próximo passo: 2º
-  link, décimo terceiro** — ainda sem link e com janela sazonal fechando
-  em setembro. **Falta:** conferir GSC → Links > Links externos pra
-  confirmar `band.com.br` como referring domain e acompanhar se a posição
-  de `salario-liquido` (54.8) melhora nas próximas semanas.
+  acima do que se cogitava (diretórios/guest posts).
+- **2º link executado (12/08): `acritica.com` → `decimo-terceiro`**,
+  âncora "calcular décimo terceiro", `rel="noreferrer"` (não é
+  `nofollow`, conta normal pra SEO) — ver detalhe completo na seção
+  "Plano de backlink e página". **Os 2 links do plano original (F15)
+  estão fechados.** **Falta:** conferir GSC → Links > Links externos pra
+  confirmar os dois domínios como referring domain, e acompanhar se a
+  posição de `salario-liquido` (54,8) e `decimo-terceiro` (76,57) melhora
+  nos próximos exports.
 - **F18 respondido (27/07): rich results (FAQPage/HowTo) não é bug — e só
   afeta o dropdown visual, não o conteúdo.** `HowTo` foi descontinuado
   pelo Google desde set/2023 (nunca teria chance de aparecer); `FAQPage`
@@ -145,38 +149,44 @@ cliques. AdSense sem tráfego do Google não serve pra nada; backlinks e GEO
 não só on-page (title/FAQ já foram corrigidos em F10/F12 e não resolveram
 sozinhos).
 
-**Alvos priorizados (não são as 4 calculadoras já perto da página 1):** as 7
+**Alvos priorizados (não são as 4 calculadoras já perto da página 1):** as
 calculadoras com **mais impressão e pior posição** no GSC — ou seja, o
 Google já entende que são relevantes para a busca (aparecem), só não confia
-autoridade suficiente pra rankear bem:
+autoridade suficiente pra rankear bem. **Atualizado em 13/08** com o export
+de 12 meses (09/08), substituindo a tabela de 3 meses (25/07) que não existe
+mais:
 
-| Calculadora | Impressões (3m) | Posição média |
-|---|---|---|
-| `poupanca` | 191 | 65.9 |
-| `ferias` | 173 | 87.3 |
-| `fgts` | 166 | 90.7 |
-| `rescisao-trabalhista` | 134 | 91.9 |
-| `hora-extra` | 109 | 86.2 |
-| `decimo-terceiro` | 83 | 75.9 |
-| `financiamento` | 68 | 87.1 |
+| Calculadora | Impressões (12m, até 09/08) | Posição média | Status |
+|---|---|---|---|
+| `hora-extra` | 213 | 84.5 | pendente |
+| `fgts` | 205 | 90.1 | pendente |
+| `ferias` | 202 | 87.5 | pendente |
+| `poupanca` | 195 | 65.5 | pendente — melhor posição do grupo |
+| `financiamento` | 161 | 84.8 | pendente |
+| `rescisao-trabalhista` | 136 | 90.7 | pendente |
+| `decimo-terceiro` | 87 | 76.6 | ✅ link executado 12/08 (`acritica.com`) |
 
-(Para contraste: `margem-lucro` pos. 10.2, `porcentagem` pos. 9.3, `das-mei`
-pos. 12.3, `calorias` pos. 13.6 — essas já estão perto da página 1 e
-dependem mais de CTR pontual/backlink leve do que de uma campanha de
-autoridade.)
+Mudança de composição frente à tabela antiga: `hora-extra` (109→213) e
+`financiamento` (68→161) dobraram de impressão; `poupanca` (191→195) e
+`rescisao` (134→136) praticamente estagnaram. **`porcentagem` saiu da
+lista de alvos** (SERP dominada por 3 EMDs + 4Devs AS 54 + Serasa; cauda
+numérica que o Google já responde sozinho, sem chance real de ranquear —
+ver F36). Para contraste, calculadoras já perto da página 1 (não precisam
+de campanha de autoridade, só CTR/backlink leve): `margem-lucro` pos.
+11.1, `porcentagem` pos. 9.4, `das-mei` pos. 12.3, `calorias` pos. 10.6.
 
-> **Revisar esta tabela (nota de 09/08).** Os números acima são do export
-> de 3 meses de 25/07, que não existe mais. No export de 12 meses de
-> 09/08, `hora-extra` (109→213) e `financiamento` (68→161) dobraram de
-> impressão, enquanto `poupanca` (191→195) e `rescisao` (134→136)
-> pararam. Além disso: **`porcentagem` saiu de alvo** (SERP dominada por
-> 3 EMDs + 4Devs AS 54 + Serasa; cauda numérica que o Google responde
-> sozinho) e **`margem-lucro` entrou** (1.520 buscas/mês no Semrush, KD
-> 20-26, e o `balancinho.com.br` prova com AS 12 que dá pra rankear).
-> **`irrf` também é candidato** — é a página nº1 em uso real (334 views
-> no GA4) e está em 26 impressões/pos. 80,7 no Google, mas nunca entrou
-> na lista porque a lista saiu de impressão do GSC. Ver [diário
-> 2026-08-09](#2026-08-09--export-novo-do-gsc--investigação-de-ctr--semrush).
+**Fora dessa tabela, dois casos à parte:**
+- **`salario-liquido`** não entrou aqui (só tinha 31 impressões em 25/07,
+  critério era impressão) mas foi o **1º link executado** (05/08,
+  `band.com.br`) — melhor posição de todas as páginas do site (56.9) e
+  única com clique real, decisão registrada em "Plano de backlink e
+  página" abaixo.
+- **`irrf`** também fora da tabela pelo mesmo motivo (só 26 impressões),
+  mas é a página nº1 em uso real (334 views no GA4) e investigada à parte
+  em 11/08: SERP saturada com 10+ concorrentes dedicados, mesmo
+  diagnóstico de autoridade — candidata a entrar na fila se o Paulo topar,
+  falta rodar Keyword Gap no Semrush pra número exato (ver diário
+  2026-08-11 e 2026-08-09).
 
 1. ~~Confirmar o diagnóstico de tráfego~~ — ✅ resolvido nesta sessão (ver
    "Ao voltar" e diário parte 4).
@@ -277,57 +287,73 @@ aplicável), `RelatedCalculators` no rodapé — **sem arquitetura nova**.
 
 **Bloqueios antes de priorizar a ordem final:**
 1. Fase 2 pausada (P3 acima) — revisitar só depois do CTR melhorar.
-2. Validação de volume de busca e KD no Semrush **ainda não foi feita** para
-   nenhum termo abaixo — é tarefa separada, a rodar antes de decidir ordem de
-   implementação (mesmo processo que o Recibo Fácil usa antes de priorizar
-   documentos novos do Hub).
+2. ~~Validação de volume de busca e KD no Semrush~~ — ✅ **feita em 13/08**
+   (Bulk Keyword Analysis, database Brasil, 22 termos). Números nas tabelas
+   abaixo. 5 termos não calcularam no Semrush (pediam refresh individual):
+   `dias-ate-fim-de-semana`, `custo-funcionario-clt`, `meta-economia-diaria`,
+   `divisor-conta-gorjeta`, `aposentadoria-simples` — **tratados como
+   volume 0 por decisão do Paulo (13/08)**, sem rodar o refresh. Se algum
+   desses virar candidato sério no futuro, vale reconferir antes de
+   descartar de vez (pode ser só cauda mais longa que o Semrush não
+   estimou, não necessariamente demanda zero de verdade).
 3. Confirmado nesta sessão: `calorias.mdx` já cobre TMB/TDEE/macros — as
    novas calculadoras de Saúde abaixo não duplicam esse conteúdo.
 
+**Destaques do Semrush (13/08):** `idade-gestacional` tem de longe o maior
+volume do Grupo 3 inteiro (8.100/mês) mas KD 50 (laranja, mais disputado) e
+CPC 0,66 — concorrência de clínicas/apps de gravidez. `markup-precificacao`
+é o melhor custo-benefício (KD 18, verde, o mais fácil do grupo com volume
+real — mesmo patamar do `margem-lucro` já validado como vencível — e faz
+par natural com a calculadora de Negócios existente). `prazo-processual`
+tem o CPC mais alto de todos (R$1,73, público jurídico/B2B) com volume
+pequeno (1.000). O resto do Grupo 3 é cauda pequena (10-170/mês), maioria
+sem KD calculável — nicho demais pra priorizar sozinho, mas barato de
+implementar se entrar como pacote de categoria.
+
 ### Categoria nova: Tempo (`/categoria/tempo`)
 
-| Ordem | Calculadora | Slug proposto |
-|---|---|---|
-| 1 | Diferença entre datas | `diferenca-entre-datas` |
-| 2 | Calculadora de idade (anos/meses/dias/horas) — maior potencial de tráfego orgânico/viral | `idade` |
-| 3 | Dia da semana de uma data | `dia-da-semana` |
-| 4 | Conversor de fuso horário | `fuso-horario` |
-| 5 | Dias até o fim de semana | `dias-ate-fim-de-semana` |
-| 6 | Semana do ano (ISO) | `semana-do-ano` |
-| 7 | Prazo processual/dias úteis | `prazo-processual` |
+| Ordem | Calculadora | Slug proposto | Volume | KD | CPC (BRL) |
+|---|---|---|---|---|---|
+| 1 | Diferença entre datas | `diferenca-entre-datas` | 110 | 30 | 0,00 |
+| 2 | Calculadora de idade (anos/meses/dias/horas) — maior potencial de tráfego orgânico/viral | `idade` | 40 | n/a | 0,00 |
+| 3 | Dia da semana de uma data | `dia-da-semana` | 170 | 30 | 0,00 |
+| 4 | Conversor de fuso horário | `fuso-horario` | 140 | 25 (fácil) | 0,00 |
+| 5 | Dias até o fim de semana | `dias-ate-fim-de-semana` | 0 (assumido, sem refresh) | n/a | 0,00 |
+| 6 | Semana do ano (ISO) | `semana-do-ano` | 20 | n/a | 0,00 |
+| 7 | Prazo processual/dias úteis | `prazo-processual` | 1.000 | 47 | 1,73 |
 
 Item 7 reaproveita a mesma base legal (`LegalBadge`) já usada nas
 calculadoras de Trabalhistas.
 
 ### Categoria Saúde (hoje: IMC, Calorias)
 
-| Calculadora | Slug proposto |
-|---|---|
-| Água recomendada por peso | `agua-diaria` |
-| Ritmo de corrida (pace) | `ritmo-corrida` |
-| 1RM (musculação) | `1rm` |
-| Dias férteis | `dias-ferteis` |
-| Idade gestacional | `idade-gestacional` |
-| Frequência cardíaca máxima | `frequencia-cardiaca-maxima` |
-| Percentual de gordura corporal | `percentual-gordura-corporal` |
+| Calculadora | Slug proposto | Volume | KD | CPC (BRL) |
+|---|---|---|---|---|
+| Água recomendada por peso | `agua-diaria` | 480 | 30 | 0,00 |
+| Ritmo de corrida (pace) | `ritmo-corrida` | 110 | 22 (fácil) | 0,91 |
+| 1RM (musculação) | `1rm` | 170 | 12 (mais fácil do grupo todo) | 0,05 |
+| Dias férteis | `dias-ferteis` | 20 | n/a | 0,46 |
+| Idade gestacional | `idade-gestacional` | **8.100 (maior do Grupo 3)** | 50 | 0,66 |
+| Frequência cardíaca máxima | `frequencia-cardiaca-maxima` | 0 | n/a | 0,00 |
+| Percentual de gordura corporal | `percentual-gordura-corporal` | 70 | n/a | 0,61 |
 
 ### Categoria Negócios (hoje: Margem de Lucro)
 
-| Calculadora | Slug proposto |
-|---|---|
-| Ponto de equilíbrio | `ponto-equilibrio` |
-| Markup e precificação | `markup-precificacao` |
-| Custo por funcionário (CLT) | `custo-funcionario-clt` |
+| Calculadora | Slug proposto | Volume | KD | CPC (BRL) |
+|---|---|---|---|---|
+| Ponto de equilíbrio | `ponto-equilibrio` | 10 | n/a | 0,00 |
+| Markup e precificação | `markup-precificacao` | 320 | **18 (melhor custo-benefício do grupo)** | 0,76 |
+| Custo por funcionário (CLT) | `custo-funcionario-clt` | 0 (assumido, sem refresh) | n/a | 0,00 |
 
 ### Categoria Financeiras (dia a dia — hoje: 4 já existentes)
 
-| Calculadora | Slug proposto |
-|---|---|
-| Quanto economizar por dia para uma meta | `meta-economia-diaria` |
-| Calculadora de troco (notas/moedas) | `troco` |
-| Divisor de conta/gorjeta entre amigos | `divisor-conta-gorjeta` |
-| Quanto vale seu tempo por hora (baseado em salário) | `valor-hora-trabalho` |
-| Simulador de aposentadoria simples | `aposentadoria-simples` |
+| Calculadora | Slug proposto | Volume | KD | CPC (BRL) |
+|---|---|---|---|---|
+| Quanto economizar por dia para uma meta | `meta-economia-diaria` | 0 (assumido, sem refresh) | n/a | 0,00 |
+| Calculadora de troco (notas/moedas) | `troco` | 70 | n/a | 0,00 |
+| Divisor de conta/gorjeta entre amigos | `divisor-conta-gorjeta` | 0 (assumido, sem refresh) | n/a | 0,00 |
+| Quanto vale seu tempo por hora (baseado em salário) | `valor-hora-trabalho` | 20 | n/a | 0,00 |
+| Simulador de aposentadoria simples | `aposentadoria-simples` | 0 (assumido, sem refresh) | n/a | 0,00 |
 
 ---
 
@@ -374,15 +400,44 @@ que a demanda é de 246k/mês. Isso a torna uma concorrente séria ao décimo
 terceiro para o link primário — potencialmente mais rápida de mover (menos
 distância + já converte um pouco) mesmo tendo menos volume total. CPC
 baixíssimo (US$0,05-0,06) nos termos com dado confirma perfil informacional
-ideal pra AdSense. **Ainda faltam:** números de férias com CPC, e revisitar
-se `salario-liquido` deve entrar na lista de alvos do P0 no lugar de um dos
-7 originais (provavelmente `financiamento`, que é o mais competitivo e
-mais fraco em intenção pura do grupo).
+ideal pra AdSense.
 
-**Grupo 2 — as outras 5 páginas-alvo do P0** (decide se entram na fila de
-backlink/Ads depois da primeira): calculadora de fgts · calculadora de
-rescisão trabalhista · calculadora de hora extra · calculadora de poupança
-· simulador de financiamento.
+**Grupo 1 e 2 fechados (13/08, Semrush oficial — Bulk Keyword Analysis,
+database Brasil).** Paulo rodou os 8 termos pendentes de uma vez:
+
+| Termo | Volume | KD | CPC (BRL) |
+|---|---|---|---|
+| calculadora de férias | 18.100 | 35 | 0,05 |
+| calcular férias online | 1.300 | 32 | 0,05 |
+| calculadora de férias clt | 90 | 28 | 0,05 |
+| simulador de financiamento | 74.000 | 56 (difícil) | 2,49 |
+| calculadora de rescisão trabalhista | 12.100 | 21 (fácil) | 0,10 |
+| calculadora de hora extra | 6.600 | 27 (fácil) | 0,10 |
+| calculadora de fgts | 2.900 | 30 | 0,10 |
+| calculadora de poupança | 1.300 | 36 | 0,41 |
+
+> **Atenção — divergência grande de metodologia.** Os números de 25/07
+> vieram do Keyword Surfer (extensão de navegador, estimativa própria);
+> estes de 13/08 vêm do Semrush oficial. `calculadora de férias` no
+> Keyword Surfer: **201.000**; no Semrush oficial: **18.100** — 11x menor.
+> Isso levanta dúvida sobre os números de décimo terceiro/salário líquido
+> registrados acima (550k/246k), que também são do Keyword Surfer e nunca
+> foram reconferidos no Semrush oficial — mas como os 2 links desses
+> clusters já foram executados (F15), não é ação corretiva, só um
+> lembrete: **usar sempre o Semrush oficial daqui pra frente**, o Keyword
+> Surfer superestima.
+
+**Leitura pra prioridade do Grupo 2 (cruzando com posição no GSC de
+12 meses, ver tabela do P0 acima):** `rescisao-trabalhista` tem o menor KD
+do grupo (21, "fácil" — mesmo patamar que fez `margem-lucro` virar alvo
+válido) com volume relevante (12.100) e já 136 impressões/pos. 90,7 no
+GSC — Google já considera relevante, só falta autoridade. `financiamento`
+tem o maior volume (74.000) mas KD quase 3x mais alto (56) e CPC 25-50x
+mais caro que o resto do grupo — sinal de intenção mais comercial/
+concorrida (bancos disputando), pior custo-benefício apesar do volume.
+`ferias` seria a 2ª melhor opção por volume (18.100) com KD médio (35),
+evergreen. Sem decisão tomada — Paulo optou por não decidir a 3ª
+calculadora-alvo ainda (13/08).
 
 **Grupo 3 — candidatos de expansão de catálogo** (Fase 2 pausada, ver
 §Candidatos de expansão de catálogo acima — validação já pendente desde a
@@ -402,6 +457,123 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-08-13 — F37: histórico local de cálculos (IndexedDB)
+
+Paulo perguntou se fazia sentido salvar cálculos em IndexedDB pra acesso
+posterior, inspirado no módulo `history`/`LocalStorageRepository` do Recibo
+Fácil (que persiste documentos gerados, com página de histórico própria).
+Avaliação: faz sentido e é **mais barato de implementar aqui** do que foi
+lá — o Recibo Fácil precisou de `Blob` de PDF + migração de/para
+`localStorage` porque o gargalo era quota; aqui cada registro é só JSON
+pequeno (sem Blob). Achado-chave que baixou o custo de implementação: o
+**F32 (compartilhamento por link) já resolve a serialização** — o
+`inputData` salvo é o mesmo payload de `encodeShareData`/`buildShareUrl`,
+então reabrir um cálculo salvo é só navegar pra `/calculadora/[slug]?d=...`,
+zero lógica nova de reidratação de formulário.
+
+**Decisão de escopo do Paulo:** ao contrário da minha sugestão inicial
+(começar só por salário líquido/13º/férias, calculadoras com uso
+recorrente), ele pediu **todas as 20 calculadoras de saída, sem seleção
+prévia — o usuário decide** por cálculo se quer salvar. Implementado assim.
+
+**Entregue (ver `FEATURES.md` F37 e `CHANGELOG.md` 0.11.0):**
+`apps/web/src/lib/calculationHistory.ts` (repositório IndexedDB),
+`CalculatorResult` (`packages/ui`) ganhou botão "Salvar cálculo", nova
+página `/meus-calculos` (listar/abrir/remover), link novo no Header
+(`ClockIcon`, único acréscimo à navegação desde a simplificação da F28 —
+justificado por ser funcionalidade nova). Evento de analytics
+`calculator_saved`. e2e novo (`calculation-history.spec.ts`, 4 testes).
+Validação: typecheck limpo em `ui`/`web`, build limpo (40 páginas), 345/345
+testes do core, 42/42 e2e (suíte completa).
+
+**Não fiz:** não adicionei limite de itens/retenção automática (o Recibo
+Fácil também não tinha isso na v1) — se o uso real mostrar histórico
+crescendo demais, é o próximo ajuste natural, não antecipado agora.
+
+**Ajuste de UX + bug real, achados no teste manual do Paulo (mesma
+sessão):** ele testou localmente e reportou que abrir um cálculo salvo
+mantinha "Salvar cálculo" ativo, sem indicar que aquele resultado já
+estava salvo, e sem opção de excluir ali mesmo. Fix: `CalculatorResult`
+ganhou `salvo`/`onExcluirCalculo` — resultado já salvo mostra "Cálculo
+salvo" + "Excluir" em vez do botão de salvar; editar e recalcular volta ao
+normal. Rastreado via `calc=<id>` na URL do "Abrir". **Bug pego pelo
+próprio teste e2e que escrevi pra validar isso:** a 1ª tentativa lia o id
+de uma `ref` dentro de um callback inline (`onCalcId={(id) => { ref.current
+= id }}`) passado pro `SharedDataReader` — como a função inline muda de
+referência a cada render, o `useEffect` (que tem essa prop na dependency
+array) reexecutava a cada re-render do componente pai e "ressuscitava" o
+id ainda presente na URL, mesmo depois de já consumido no primeiro
+resultado. Sintoma: editar e recalcular um cálculo salvo continuava
+marcado como salvo. Corrigido trocando a `ref` por `state`
+(`setPendingCalcId`, setter estável) — mesmo padrão que `onData`/
+`setSharedData` já usava sem esse problema, e é exatamente por isso que só
+o `calc` teve o bug, não o `d`. Lição: **callback inline como prop de
+efeito é um jeito fácil de reintroduzir esse tipo de bug** — preferir
+sempre passar o setter direto quando possível.
+
+**Polimento visual dos botões (mesma sessão, print do Paulo):** as 3
+opções nasceram como "pills" coloridas do mesmo peso (verde/azul/vermelho
+lado a lado, parecendo 3 botões igualmente clicáveis). Redesenhado por
+hierarquia: "Compartilhar via WhatsApp" continua botão pleno (ação
+principal); "Cálculo salvo" virou texto simples + check verde (não é
+ação, não devia parecer botão); "Excluir" virou botão "fantasma" (só
+ganha fundo no hover) — ação secundária/destrutiva, menos peso visual.
+
+**Registrado em `AGENTS.md` (Preferências de colaboração):** confirmado
+explicitamente pelo Paulo que **commit/push é sempre ele quem faz** —
+qualquer sessão futura (Claude Code ou outro assistente) deixa o working
+tree pronto (código + docs + testes verdes) e para aí, sem rodar `git
+commit`/`git push` por conta própria mesmo quando o pedido foi
+"implementar"/"vamos fazer".
+
+### 2026-08-11 — Investigação do IRRF invisível no Google (não é bug)
+
+Enquanto o Paulo negocia o 2º backlink (decimo-terceiro, F15), adiantei a
+pendência registrada em 09/08: por que `irrf` é a página nº1 em uso real
+(334 views GA4) mas quase invisível no Google (26 impressões, pos. 80,7).
+
+**Auditoria técnica on-page — tudo limpo, não é bug:**
+- Title/meta description/H1 corretos e sem duplicação.
+- `<link rel="canonical">` self-referencing correto.
+- Sem `noindex` (nenhum meta robots presente = index,follow padrão).
+- `robots.txt` permite `/` geral, sem bloqueio a `/calculadora/`.
+- Presente no `sitemap.xml` com `lastmod` igual a todas as outras páginas
+  (2026-07-19 — não é o motivo, todas as calculadoras têm a mesma data).
+- 3 links internos apontando pra ela via `relacionadas` (salario-liquido,
+  inss, irpf) — cobertura de link interno normal, não isolada.
+- Conteúdo do MDX com 819 palavras — comparável a margem-lucro (943) e
+  porcentagem (860), não é conteúdo raso.
+
+**A causa real, confirmada por WebSearch ao vivo:** a SERP de
+"calculadora IRRF" / "tabela IRRF 2026" é muito mais disputada do que os
+outros clusters do site — pelo menos **10 concorrentes dedicados**
+aparecem nas primeiras posições (meutudo.com.br, acalculadoras.com.br,
+investnews.com.br, calculabrasilonline.com.br, idinheiro.com.br,
+ecalculos.com.br, pontoicarus.com.br, calculadora.app, calcularclt.com.br,
+contcontec.com.br, transp.net, além do dieese.org.br institucional) —
+`calculosonline.com.br` **não aparece em nenhuma das duas buscas**, batendo
+com a posição 80,7 do GSC. Vários são domínios de correspondência quase-
+exata (`calcularclt`, `calculabrasilonline`, `ecalculos`) — sinal de
+relevância forte pro Google, igual ao padrão já visto em `porcentagem`
+(F36/09-08). Com Authority Score 2 (Semrush), o site simplesmente não
+compete nesse volume de concorrência dedicada.
+
+**Conclusão — mesmo diagnóstico do resto do P0, não um caso à parte.**
+Não é falta de on-page (já está tudo certo) nem bug de indexação — é
+autoridade de domínio numa SERP mais concorrida que a média do site. Não
+muda a priorização: continua sendo os backlinks (P0) que resolvem isso,
+não uma correção pontual no IRRF. **Ainda pendente, se o Paulo quiser
+número exato:** rodar Keyword Gap no Semrush pra ter volume/KD real do
+cluster IRRF antes de decidir se vira 3º candidato a backlink (hoje é só
+evidência qualitativa de SERP, não validado como os outros clusters).
+
+**Também confirmado nesta sessão (sem mudança, só reforço):** o CSV
+`Latest links` da pasta `gsc/` de 09/08 mostra `band.com.br` (03/08) como
+único link externo reconhecido pelo GSC — mesmo achado já registrado no
+diário de 09/08 (item 2), a discrepância com os 122 domínios do Semrush
+segue precisando da checagem completa em GSC → Links > Domínios
+referentes (não resolvida ainda, só re-confirmada).
 
 ### 2026-08-09 — Export novo do GSC + investigação de CTR + Semrush
 
@@ -814,11 +986,35 @@ nesta sessão, sem necessidade de fix).
   limpo que décimo terceiro), sem risco de calendário, pronta pro link hoje
   sem precisar de fix de conteúdo antes.
 - **Página do segundo link: `/calculadora/decimo-terceiro`** (já retargetada,
-  F27/v0.3.2). Âncora: "décimo terceiro salário"/"calculadora de décimo
-  terceiro salário". Maior cluster de todos (~860k/mês) — comprar **até
+  F27/v0.3.2). Maior cluster de todos (~860k/mês) — comprar **até
   setembro no mais tardar**, pra manter margem de segurança antes do pico
   de nov/dez (a lógica de timing sazonal continua válida, só não é mais o
   primeiro/único link).
+  - **Âncora decidida (11/08): "calcular décimo terceiro"** — não o
+    termo-cabeça "décimo terceiro salário" (550k/mês, já era a opção A
+    cogitada). Escolhida em vez dele porque (a) confirma o dado do Semrush
+    de 25/07 já registrado abaixo (135.000 buscas/mês, CPC US$0,06) e (b)
+    evita repetir a mesma âncora exata do termo-cabeça, que já é alvo
+    natural de outras páginas/links do site — variação de âncora é sinal
+    mais saudável pro Google do que âncora exata repetida.
+  - ✅ **Link executado (12/08).** Paulo fechou o placement em
+    `acritica.com` (A Crítica, jornal do Amazonas) — matéria "Cinco pontos
+    que reduzem o 13º sem o trabalhador perceber", publicada 12/08.
+    Verificado no HTML bruto:
+    `<a href="https://calculosonline.com.br/calculadora/decimo-terceiro" target="_blank" rel="noreferrer">calcular décimo terceiro</a>`
+    — âncora exata como decidido, embutida numa frase natural ("Simuladores
+    gratuitos de folha permitem calcular décimo terceiro com as tabelas em
+    vigor..."), `rel="noreferrer"` (só remove o header Referer, **não** é
+    `nofollow` — o link conta normalmente pra SEO), página indexável (sem
+    `noindex`, canonical self-referencing), e é o **único link editorial em
+    texto** da página (outros 12 links externos são boilerplate de
+    template: redes sociais, fontes, CDN, parceiro de e-edição). Mesmo
+    patamar de autoridade do 1º link (jornal regional consolidado, como o
+    `band.com.br`) e dentro do prazo (antes de setembro). **Ambos os 2
+    links do plano original agora estão executados** — ver `FEATURES.md`
+    F15. **Falta:** acompanhar posição de `decimo-terceiro` no próximo
+    export do GSC (baseline 09/08: pos. 76,57, 87 impressões) e confirmar
+    depois em GSC → Links → Links externos.
 - **Tipo de site ideal para os posts pagos:** blog de finanças pessoais,
   RH, contabilidade ou carreira — mesmo perfil de quem já rankeia bem pros
   dois termos (meutudo.com.br, calcule.net, genyo.com.br, mobills.com.br,

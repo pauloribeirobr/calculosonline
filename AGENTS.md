@@ -54,6 +54,11 @@ calculosonline/
 ## Preferências de colaboração
 - **Idioma:** comunicação em **português (pt-BR)**.
 - **Commits e PRs:** mensagens em pt-BR; seguir convenção `feat:`, `fix:`, `chore:` etc.
+- **Quem commita/dá push é o Paulo.** Assistente deixa o working tree pronto
+  (código + `FEATURES.md`/`CHANGELOG.md`/`MEMORY.md` atualizados, testes
+  passando) e para aí — não roda `git commit`/`git push` por conta própria,
+  mesmo quando o pedido foi "implementar"/"vamos fazer". Confirmado
+  explicitamente em 2026-08-13.
 - **Código:** identificadores e comentários em inglês quando técnicos; comentários de domínio (regras CLT, INSS, IRRF) podem ficar em pt-BR.
 
 ---

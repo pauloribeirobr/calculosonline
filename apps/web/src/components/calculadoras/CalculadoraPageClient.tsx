@@ -7,6 +7,7 @@ import type { ErroValidacao, ResultadoCalculo } from '@calculosonline/core'
 import { CATEGORIAS, type CalculadoraRegistro } from '@/lib/calculators'
 import { analytics } from '@/lib/analytics'
 import { buildShareUrl, readShareParam } from '@/lib/shareLink'
+import { salvarCalculo, removerCalculo } from '@/lib/calculationHistory'
 import { siteConfig } from '@/lib/seo'
 import { Breadcrumbs } from '@/components/common/Breadcrumbs'
 import { getCalculadoraForm } from './forms'
@@ -20,12 +21,21 @@ interface Props {
  * Isolado num componente próprio + Suspense porque `useSearchParams()` exige
  * isso pra não forçar a página inteira (hoje SSG/ISR) a virar dinâmica —
  * só esse leaf invisível opta por CSR, o resto da página continua estático.
+ * Lê tanto `d` (F32, valores compartilhados) quanto `calc` (F37, id do
+ * cálculo salvo — presente só quando veio do "Abrir" em `/meus-calculos`).
  */
-function SharedDataReader({ onData }: { onData: (data: Record<string, unknown> | null) => void }) {
+function SharedDataReader({
+  onData,
+  onCalcId,
+}: {
+  onData: (data: Record<string, unknown> | null) => void
+  onCalcId: (id: string | null) => void
+}) {
   const searchParams = useSearchParams()
   useEffect(() => {
     onData(readShareParam(searchParams))
-  }, [searchParams, onData])
+    onCalcId(searchParams.get('calc'))
+  }, [searchParams, onData, onCalcId])
   return null
 }
 
@@ -34,6 +44,15 @@ export function CalculadoraPageClient({ config, relacionadas }: Props) {
   const [erros, setErros] = useState<ErroValidacao[]>([])
   const [inputData, setInputData] = useState<Record<string, unknown> | null>(null)
   const [sharedData, setSharedData] = useState<Record<string, unknown> | null>(null)
+  const [savedCalcId, setSavedCalcId] = useState<string | null>(null)
+  // Id pendente lido da URL (`calc`), aplicado só no 1º resultado calculado
+  // (o auto-submit do cálculo compartilhado) — consumido (setado pra null)
+  // depois, pra um reenvio manual do formulário não herdar o id de um
+  // cálculo antigo. Precisa ser state (setter estável), não uma ref lida
+  // dentro de um callback inline: `SharedDataReader` reexecuta o efeito
+  // sempre que a prop `onCalcId` muda de referência, e uma função inline
+  // recriada a cada render "ressuscitaria" o id da URL depois de consumido.
+  const [pendingCalcId, setPendingCalcId] = useState<string | null>(null)
 
   const FormComponent = getCalculadoraForm(config.slug)
   const resultProps = config.formatoResultado ? { formato: config.formatoResultado } : {}
@@ -45,7 +64,7 @@ export function CalculadoraPageClient({ config, relacionadas }: Props) {
   return (
     <>
       <Suspense fallback={null}>
-        <SharedDataReader onData={setSharedData} />
+        <SharedDataReader onData={setSharedData} onCalcId={setPendingCalcId} />
       </Suspense>
       <CalculatorLayout
         titulo={`${config.tituloLongo} Online e Gratuita`}
@@ -79,6 +98,15 @@ export function CalculadoraPageClient({ config, relacionadas }: Props) {
                   setErros([])
                   setResultado(r)
                   setInputData(data ?? null)
+                  // Só o cálculo que consome o `calc` pendente da URL nasce
+                  // "salvo"; qualquer recálculo manual depois disso é um
+                  // cálculo novo/editado, não o registro salvo original.
+                  if (pendingCalcId) {
+                    setSavedCalcId(pendingCalcId)
+                    setPendingCalcId(null)
+                  } else {
+                    setSavedCalcId(null)
+                  }
                   analytics.calculatorCalculated(
                     config.slug,
                     config.categoria,
@@ -124,6 +152,33 @@ export function CalculadoraPageClient({ config, relacionadas }: Props) {
               nomeCalculadora={config.titulo}
               shareUrl={shareUrl}
               onShareClick={() => analytics.calculatorShared(config.slug, config.categoria)}
+              onSalvarCalculo={
+                inputData
+                  ? async () => {
+                      const registro = await salvarCalculo({
+                        slug: config.slug,
+                        titulo: config.titulo,
+                        categoria: config.categoria,
+                        inputData,
+                        resultadoValor: resultado.resultado,
+                        ...(config.formatoResultado !== undefined
+                          ? { resultadoFormato: config.formatoResultado }
+                          : {}),
+                      })
+                      setSavedCalcId(registro.id)
+                      analytics.calculatorSaved(config.slug, config.categoria)
+                    }
+                  : undefined
+              }
+              salvo={savedCalcId !== null}
+              onExcluirCalculo={
+                savedCalcId
+                  ? async () => {
+                      await removerCalculo(savedCalcId)
+                      setSavedCalcId(null)
+                    }
+                  : undefined
+              }
               {...resultProps}
             />
           ) : null
