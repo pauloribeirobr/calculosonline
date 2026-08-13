@@ -2,7 +2,13 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Bars3Icon, XMarkIcon, CalculatorIcon, Squares2X2Icon } from '@heroicons/react/24/outline'
+import {
+  Bars3Icon,
+  XMarkIcon,
+  CalculatorIcon,
+  ClockIcon,
+  Squares2X2Icon,
+} from '@heroicons/react/24/outline'
 import { Transition } from '@headlessui/react'
 import { Logo } from './Logo'
 import { Navigation } from './Navigation'
@@ -18,6 +24,13 @@ export function Header() {
 
           <div className="hidden lg:flex lg:items-center lg:space-x-6">
             <Navigation />
+            <Link
+              href="/meus-calculos"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-900 hover:text-brand-600"
+            >
+              <ClockIcon className="h-4 w-4" />
+              Meus Cálculos
+            </Link>
             <Link
               href="/categorias"
               className="inline-flex items-center gap-1.5 rounded-md border border-brand-200 bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-700 shadow-sm transition-colors hover:bg-brand-100"
@@ -73,6 +86,14 @@ export function Header() {
         >
           <div className="lg:hidden" id="mobile-menu">
             <div className="space-y-1 border-t border-gray-200 pb-3 pt-2">
+              <Link
+                href="/meus-calculos"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 px-3 py-2 text-base text-gray-600 hover:bg-gray-50"
+              >
+                <ClockIcon className="h-5 w-5" />
+                Meus Cálculos
+              </Link>
               <Navigation mobile onItemClick={() => setMobileMenuOpen(false)} />
             </div>
           </div>

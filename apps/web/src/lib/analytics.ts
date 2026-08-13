@@ -88,6 +88,12 @@ export const analytics = {
       calculator_category: category,
     }),
 
+  calculatorSaved: (calculatorSlug: string, category: string) =>
+    track('calculator_saved', {
+      calculator_slug: calculatorSlug,
+      calculator_category: category,
+    }),
+
   calculatorValidationError: (
     calculatorSlug: string,
     category: string,

@@ -1,6 +1,13 @@
 'use client'
 
-import { ArrowUpTrayIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
+import { useEffect, useState } from 'react'
+import {
+  ArrowUpTrayIcon,
+  BookmarkIcon,
+  ExclamationTriangleIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline'
+import { CheckCircleIcon } from '@heroicons/react/20/solid'
 import type { ItemDetalhamento, ResultadoCalculo } from '@calculosonline/core'
 import { cn } from '../utils/cn'
 
@@ -23,6 +30,21 @@ export interface CalculatorResultProps {
   shareUrl?: string | undefined
   /** Chamado ao clicar em compartilhar, antes de abrir o WhatsApp (ex. para registrar analytics). */
   onShareClick?: (() => void) | undefined
+  /**
+   * Persiste o cálculo (IndexedDB, F37) — presente só ativa o botão "Salvar
+   * cálculo". O componente só cuida do estado visual (salvando/salvo/erro);
+   * quem chama decide onde/como guardar.
+   */
+  onSalvarCalculo?: (() => Promise<void>) | undefined
+  /**
+   * `true` quando o `resultado` atual já corresponde a um cálculo salvo
+   * (ex.: aberto via "Abrir" em `/meus-calculos`) — troca o botão "Salvar
+   * cálculo" por um indicador "Cálculo salvo" + botão "Excluir". Editar o
+   * formulário e recalcular volta ao estado normal (é outro cálculo).
+   */
+  salvo?: boolean | undefined
+  /** Remove o cálculo salvo (IndexedDB, F37) — presente só ativa "Excluir". */
+  onExcluirCalculo?: (() => Promise<void>) | undefined
 }
 
 function formatarValor(valor: number, formato: CalculatorResultFormato = 'currency'): string {
@@ -112,6 +134,8 @@ function buildWhatsAppShareHref(
   return `https://wa.me/?text=${encodeURIComponent(mensagem)}`
 }
 
+type EstadoSalvar = 'idle' | 'salvando' | 'salvo' | 'erro'
+
 export function CalculatorResult({
   resultado,
   formato,
@@ -119,7 +143,42 @@ export function CalculatorResult({
   nomeCalculadora,
   shareUrl,
   onShareClick,
+  onSalvarCalculo,
+  salvo = false,
+  onExcluirCalculo,
 }: CalculatorResultProps) {
+  const [estadoSalvar, setEstadoSalvar] = useState<EstadoSalvar>(salvo ? 'salvo' : 'idle')
+  const [excluindo, setExcluindo] = useState(false)
+
+  // Novo cálculo (resultado trocou de referência) reseta o botão de salvar —
+  // exceto quando `salvo` já vem `true` junto (aberto via cálculo salvo).
+  useEffect(() => {
+    setEstadoSalvar(salvo ? 'salvo' : 'idle')
+  }, [resultado, salvo])
+
+  async function handleSalvar() {
+    if (!onSalvarCalculo) return
+    setEstadoSalvar('salvando')
+    try {
+      await onSalvarCalculo()
+      setEstadoSalvar('salvo')
+    } catch {
+      setEstadoSalvar('erro')
+    }
+  }
+
+  async function handleExcluir() {
+    if (!onExcluirCalculo) return
+    setExcluindo(true)
+    try {
+      await onExcluirCalculo()
+    } catch {
+      // IndexedDB raramente falha aqui — deixa o usuário tentar de novo.
+    } finally {
+      setExcluindo(false)
+    }
+  }
+
   return (
     <div
       className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm"
@@ -185,17 +244,56 @@ export function CalculatorResult({
         <p className="mt-0.5 text-xs text-gray-400">{resultado.baseCalculo}</p>
       </div>
 
-      {shareUrl && (
-        <div className="border-t border-gray-100 px-4 py-3">
-          <a
-            href={buildWhatsAppShareHref(shareUrl, nomeCalculadora, resultado.resultado, formato)}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={onShareClick}
-            className="inline-flex items-center gap-2 rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm font-medium text-green-700 transition-colors hover:bg-green-100"
-          >
-            <ArrowUpTrayIcon className="h-4 w-4" aria-hidden /> Compartilhar via WhatsApp
-          </a>
+      {(shareUrl || onSalvarCalculo || onExcluirCalculo) && (
+        <div className="flex flex-wrap items-center gap-2 border-t border-gray-100 px-4 py-3">
+          {shareUrl && (
+            <a
+              href={buildWhatsAppShareHref(shareUrl, nomeCalculadora, resultado.resultado, formato)}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={onShareClick}
+              className="inline-flex items-center gap-2 rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm font-medium text-green-700 transition-colors hover:bg-green-100"
+            >
+              <ArrowUpTrayIcon className="h-4 w-4" aria-hidden /> Compartilhar via WhatsApp
+            </a>
+          )}
+
+          {estadoSalvar === 'salvo' ? (
+            <>
+              {/* Status, não ação — sem borda/fundo de botão, pra não parecer
+                  clicável ao lado de "Compartilhar"/"Excluir" de verdade. */}
+              <span className="inline-flex items-center gap-1.5 py-2 text-sm font-medium text-gray-500">
+                <CheckCircleIcon className="h-4 w-4 text-brand-600" aria-hidden /> Cálculo salvo
+              </span>
+              {onExcluirCalculo && (
+                <button
+                  type="button"
+                  onClick={handleExcluir}
+                  disabled={excluindo}
+                  className="inline-flex items-center gap-1.5 rounded-md px-2 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-default disabled:opacity-70"
+                >
+                  <TrashIcon className="h-4 w-4" aria-hidden />
+                  {excluindo ? 'Excluindo…' : 'Excluir'}
+                </button>
+              )}
+            </>
+          ) : (
+            onSalvarCalculo && (
+              <button
+                type="button"
+                onClick={handleSalvar}
+                disabled={estadoSalvar === 'salvando'}
+                className="inline-flex items-center gap-2 rounded-md border border-brand-200 bg-brand-50 px-3 py-2 text-sm font-medium text-brand-700 transition-colors hover:bg-brand-100 disabled:cursor-default disabled:opacity-90"
+              >
+                <BookmarkIcon className="h-4 w-4" aria-hidden />
+                {estadoSalvar === 'salvando'
+                  ? 'Salvando…'
+                  : estadoSalvar === 'erro'
+                    ? 'Erro ao salvar — tentar de novo'
+                    : 'Salvar cálculo'}
+              </button>
+            )
+          )}
         </div>
       )}
     </div>
