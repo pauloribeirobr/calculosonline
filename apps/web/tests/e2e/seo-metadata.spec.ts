@@ -16,13 +16,37 @@ test.describe('metadata das páginas de calculadora', () => {
     expect(title).toContain('Grátis')
   })
 
-  test('title de cada calculadora contém o nome da calculadora e o USP "sem Cadastro"', async ({
+  // O USP "sem Cadastro" entra sempre que couber no orçamento de 78
+  // caracteres do title. Nas páginas de nome longo ele sai para o nome da
+  // calculadora e o sinônimo caberem — ver `buildCalculatorTitle` e o
+  // diário 2026-08-20 no `MEMORY.md`.
+  test('title de cada calculadora cabe no orçamento e mantém o USP quando dá', async ({
     page,
   }) => {
-    for (const calc of calculatorRegistry.slice(0, 3)) {
+    for (const calc of calculatorRegistry) {
       await page.goto(`/calculadora/${calc.slug}`)
       const title = await page.title()
-      expect(title).toContain('sem Cadastro')
+
+      expect(title).toContain('Grátis')
+      expect(title.length).toBeLessThanOrEqual(78)
+
+      const curto = `${title.replace(' — Grátis', ' — Grátis, sem Cadastro')}`
+      if (curto.length <= 78) expect(title).toContain('sem Cadastro')
+    }
+  })
+
+  // N1 (2026-08-20): o cluster "simulador/simulação" somava 180 impressões
+  // em 97 queries sem que a palavra existisse em um único title do site.
+  test('calculadoras com sinônimo carregam o vocabulário no title e no H1', async ({ page }) => {
+    const comSinonimoNoTitulo = calculatorRegistry.filter((c) =>
+      c.tituloLongo.includes('Simulador'),
+    )
+    expect(comSinonimoNoTitulo.length).toBeGreaterThanOrEqual(5)
+
+    for (const calc of comSinonimoNoTitulo) {
+      await page.goto(`/calculadora/${calc.slug}`)
+      expect(await page.title()).toContain('Simulador')
+      await expect(page.locator('h1')).toContainText('Simulador')
     }
   })
 
@@ -36,7 +60,7 @@ test.describe('metadata das páginas de calculadora', () => {
       await page.goto(`/calculadora/${calc.slug}`)
       const title = await page.title()
       expect(title).not.toMatch(/20\d{2}/)
-      expect(title).toContain('sem Cadastro')
+      expect(title).toContain('Grátis')
     }
   })
 

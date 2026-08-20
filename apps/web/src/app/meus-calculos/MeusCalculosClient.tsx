@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { TrashIcon } from '@heroicons/react/24/outline'
-import { CATEGORIAS_LABEL } from '@/lib/calculators'
+import { CATEGORIAS_LABEL, findCalculator } from '@/lib/calculators'
+import { CalculatorIcon } from '@/components/common/CalculatorIcon'
 import {
   historicoDisponivel,
   listarCalculos,
@@ -88,7 +89,11 @@ export function MeusCalculosClient() {
     >
       {calculos.map((calculo) => (
         <li key={calculo.id} className="flex items-center justify-between gap-4 px-4 py-3">
-          <div className="min-w-0">
+          <div className="flex min-w-0 items-center gap-3">
+            {/* O registro salvo guarda o slug, não o ícone — buscar no registry
+                evita migrar os cálculos que o usuário já tem no IndexedDB (F37). */}
+            <CalculatorIconDoSlug slug={calculo.slug} />
+            <div className="min-w-0">
             <p className="truncate text-sm font-medium text-gray-900">{calculo.titulo}</p>
             <p className="text-xs text-gray-500">
               {CATEGORIAS_LABEL[calculo.categoria]} · {formatarData(calculo.criadoEm)}
@@ -96,6 +101,7 @@ export function MeusCalculosClient() {
             <p className="mt-1 text-sm font-semibold tabular-nums text-brand-700">
               {formatarValor(calculo.resultadoValor, calculo.resultadoFormato)}
             </p>
+            </div>
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <Link
@@ -117,4 +123,15 @@ export function MeusCalculosClient() {
       ))}
     </ul>
   )
+}
+
+/**
+ * Ícone de um cálculo salvo, resolvido pelo slug no registry. Devolve `null`
+ * se a calculadora não existir mais — a lista continua funcionando para
+ * registros antigos apontando para um slug removido.
+ */
+function CalculatorIconDoSlug({ slug }: { slug: string }) {
+  const calc = findCalculator(slug)
+  if (!calc) return null
+  return <CalculatorIcon icon={calc.icone} categoria={calc.categoria} size="md" />
 }

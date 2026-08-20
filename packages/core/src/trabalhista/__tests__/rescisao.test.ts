@@ -142,6 +142,79 @@ describe('calcularRescisao', () => {
         expect(r.dados.dados.percentualMultaFGTS).toBe(0.2)
       }
     })
+
+    // F40: "metade do aviso prévio" (art. 484-A, I) comporta duas leituras —
+    // metade do mínimo de 30 dias (15 fixos) ou metade do proporcional da Lei
+    // 12.506/2011. A calculadora resolve pela primeira e expõe a segunda.
+    describe('segunda leitura do aviso prévio', () => {
+      it('expõe a leitura proporcional sem mudar o resultado principal', () => {
+        // 2023-01-01 → 2026-03-15 = 3 anos completos → proporcional 39 dias
+        const r = calcularRescisao({ ...BASE, motivoRescisao: 'acordo_mutuo' })
+        expect(r.sucesso).toBe(true)
+        if (!r.sucesso) return
+
+        const { diasAvisoPrevio, avisoPrevioLeituraProporcional } = r.dados.dados
+        expect(diasAvisoPrevio).toBe(15)
+
+        expect(avisoPrevioLeituraProporcional).not.toBeNull()
+        expect(avisoPrevioLeituraProporcional?.diasAvisoPrevio).toBe(19.5)
+        expect(avisoPrevioLeituraProporcional?.diferencaLiquido).toBeGreaterThan(0)
+        expect(avisoPrevioLeituraProporcional?.totalLiquido).toBeGreaterThan(
+          r.dados.dados.totalLiquido,
+        )
+      })
+
+      it('não expõe segunda leitura quando as duas coincidem (até 1 ano de casa)', () => {
+        const r = calcularRescisao({
+          ...BASE,
+          dataAdmissao: '2026-01-01',
+          dataRescisao: '2026-06-15',
+          motivoRescisao: 'acordo_mutuo',
+        })
+        expect(r.sucesso).toBe(true)
+        if (!r.sucesso) return
+
+        // 0 ano completo → proporcional 30 dias → metade = 15 = leitura praticada
+        expect(r.dados.dados.diasAvisoPrevio).toBe(15)
+        expect(r.dados.dados.avisoPrevioLeituraProporcional).toBeNull()
+      })
+
+      it('não expõe segunda leitura em motivos que não sejam acordo mútuo', () => {
+        for (const motivo of ['sem_justa_causa', 'pedido_demissao', 'justa_causa'] as const) {
+          const r = calcularRescisao({ ...BASE, motivoRescisao: motivo })
+          expect(r.sucesso).toBe(true)
+          if (r.sucesso) expect(r.dados.dados.avisoPrevioLeituraProporcional).toBeNull()
+        }
+      })
+
+      it('as duas leituras aparecem no detalhamento, a segunda como neutra', () => {
+        const r = calcularRescisao({ ...BASE, motivoRescisao: 'acordo_mutuo' })
+        expect(r.sucesso).toBe(true)
+        if (!r.sucesso) return
+
+        const neutras = r.dados.detalhamento.filter((i) => i.tipo === 'neutro')
+        expect(neutras).toHaveLength(2)
+        expect(neutras[0].descricao).toContain('484-A')
+        expect(neutras[1].descricao).toContain('Total Líquido')
+
+        // A linha informativa não pode entrar na soma do total praticado.
+        const creditos = r.dados.detalhamento.filter((i) => i.tipo === 'credito')
+        const totalLiquidoLinha = creditos.find((i) => i.descricao === 'Total Líquido')
+        expect(totalLiquidoLinha?.valor).toBe(r.dados.dados.totalLiquido)
+      })
+
+      it('aviso trabalhado zera o valor nas duas leituras', () => {
+        const r = calcularRescisao({
+          ...BASE,
+          motivoRescisao: 'acordo_mutuo',
+          avisoPrevisTrabalhado: true,
+        })
+        expect(r.sucesso).toBe(true)
+        if (!r.sucesso) return
+        expect(r.dados.dados.avisoPrevio).toBe(0)
+        expect(r.dados.dados.avisoPrevioLeituraProporcional?.avisoPrevio).toBe(0)
+      })
+    })
   })
 
   describe('aposentadoria', () => {

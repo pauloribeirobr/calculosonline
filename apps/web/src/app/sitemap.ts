@@ -11,7 +11,9 @@ import { siteConfig } from '@/lib/seo'
 // único + FAQPage real, ver AGENTS.md Sprint 1.4.2); o lastmod de cada
 // calculadora usa a mais recente entre as duas. Páginas institucionais/
 // categoria usam `staticLastModified`; bump manual ao editar o conteúdo delas.
-const seoRefreshDate = new Date('2026-07-19')
+// 2026-08-20: F38/F39 (title, H1, description e MDX de 6 calculadoras) e
+// F41/F42 (ícone no header das 20, og-image própria por calculadora).
+const seoRefreshDate = new Date('2026-08-20')
 const staticLastModified = new Date('2026-05-11')
 
 export default function sitemap(): MetadataRoute.Sitemap {

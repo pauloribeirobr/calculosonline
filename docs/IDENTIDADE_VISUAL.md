@@ -57,6 +57,19 @@ Reaproveitar significa:
 
 ### 3.1 Cores
 
+> **Desde o F41 (2026-08-20) a fonte de verdade das cores de categoria é
+> [`apps/web/src/lib/identidadeVisual.ts`](../apps/web/src/lib/identidadeVisual.ts),
+> não este documento.** Antes as 6 categorias eram descritas em quatro tabelas
+> paralelas que já haviam divergido entre si. Para mudar a cor de uma
+> categoria, edite lá — propaga para home, `/categorias`, página de
+> calculadora, relacionadas e `/meus-calculos`. Os tokens abaixo (marca,
+> resultado, legal) continuam valendo e vivem no `tailwind.config.ts`.
+>
+> Regra de acessibilidade que o F41 fixou: **`icone` e `texto` são tokens
+> distintos**. O glifo é objeto gráfico decorativo (`aria-hidden`), piso de
+> contraste 3:1, e fica em `-600`; texto legível exige 4,5:1 e fica em `-700`
+> — o `-600` reprova para texto em âmbar, esmeralda e ciano.
+
 ```ts
 // herdado do Recibo Fácil — manter
 brand: {

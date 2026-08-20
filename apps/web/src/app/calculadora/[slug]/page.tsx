@@ -36,7 +36,9 @@ export async function generateMetadata({
   return buildMetadata({
     title: buildCalculatorTitle(calc),
     description: calc.descricao,
-    keywords: calc.palavrasChave,
+    keywords: [...calc.palavrasChave, ...(calc.sinonimos ?? [])],
+    // Cada calculadora tem a própria imagem em `opengraph-image.tsx` (F42).
+    imagemPropriaDaRota: true,
     path: `/calculadora/${calc.slug}`,
   })
 }

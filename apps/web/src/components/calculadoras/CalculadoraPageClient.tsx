@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import { CalculatorLayout, CalculatorResult, RelatedCalculators } from '@calculosonline/ui'
 import type { ErroValidacao, ResultadoCalculo } from '@calculosonline/core'
 import { CATEGORIAS, type CalculadoraRegistro } from '@/lib/calculators'
+import { CalculatorIcon } from '@/components/common/CalculatorIcon'
 import { analytics } from '@/lib/analytics'
 import { buildShareUrl, readShareParam } from '@/lib/shareLink'
 import { salvarCalculo, removerCalculo } from '@/lib/calculationHistory'
@@ -69,6 +70,7 @@ export function CalculadoraPageClient({ config, relacionadas }: Props) {
       <CalculatorLayout
         titulo={`${config.tituloLongo} Online e Gratuita`}
         descricao={config.descricao}
+        icone={<CalculatorIcon icon={config.icone} categoria={config.categoria} size="xl" />}
         fonteJuridica={config.fonteJuridica}
         dataAtualizacao={config.dataAtualizacao}
         breadcrumb={
@@ -203,6 +205,7 @@ export function CalculadoraPageClient({ config, relacionadas }: Props) {
               titulo: r.titulo,
               categoria: CATEGORIAS[r.categoria].label,
               descricaoCurta: r.descricaoCurta,
+              icone: <CalculatorIcon icon={r.icone} categoria={r.categoria} size="md" />,
             }))}
           />
         }

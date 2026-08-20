@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { cn } from '../utils/cn'
 
 export interface RelatedItem {
@@ -5,6 +6,8 @@ export interface RelatedItem {
   titulo: string
   categoria: string
   descricaoCurta: string
+  /** Ícone da calculadora — ver nota em `CalculatorLayoutProps.icone` (F41). */
+  icone?: ReactNode
 }
 
 export interface RelatedCalculatorsProps {
@@ -24,16 +27,19 @@ export function RelatedCalculators({ items, className }: RelatedCalculatorsProps
             <a
               href={`/calculadora/${item.slug}`}
               className={cn(
-                'flex flex-col gap-1 rounded-lg border border-gray-200 bg-white p-4',
+                'flex gap-3 rounded-lg border border-gray-200 bg-white p-4',
                 'transition-all duration-150 hover:border-brand-400 hover:shadow-sm',
                 'focus:outline-none focus:ring-2 focus:ring-brand-500',
               )}
             >
-              <span className="text-xs font-medium uppercase tracking-wide text-brand-600">
-                {item.categoria}
+              {item.icone}
+              <span className="flex min-w-0 flex-col gap-1">
+                <span className="text-xs font-medium uppercase tracking-wide text-brand-600">
+                  {item.categoria}
+                </span>
+                <span className="font-medium text-gray-900">{item.titulo}</span>
+                <span className="line-clamp-2 text-xs text-gray-500">{item.descricaoCurta}</span>
               </span>
-              <span className="font-medium text-gray-900">{item.titulo}</span>
-              <span className="line-clamp-2 text-xs text-gray-500">{item.descricaoCurta}</span>
             </a>
           </li>
         ))}
