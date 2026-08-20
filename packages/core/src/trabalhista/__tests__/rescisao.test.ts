@@ -194,8 +194,8 @@ describe('calcularRescisao', () => {
 
         const neutras = r.dados.detalhamento.filter((i) => i.tipo === 'neutro')
         expect(neutras).toHaveLength(2)
-        expect(neutras[0].descricao).toContain('484-A')
-        expect(neutras[1].descricao).toContain('Total Líquido')
+        expect(neutras[0]?.descricao).toContain('484-A')
+        expect(neutras[1]?.descricao).toContain('Total Líquido')
 
         // A linha informativa não pode entrar na soma do total praticado.
         const creditos = r.dados.detalhamento.filter((i) => i.tipo === 'credito')
