@@ -1,32 +1,7 @@
 import Link from 'next/link'
-import {
-  CATEGORIAS_LABEL,
-  calculatorRegistry,
-  calculatorsFeatured,
-  type CategoriaCalc,
-} from '@/lib/calculators'
+import { calculatorRegistry, calculatorsFeatured } from '@/lib/calculators'
+import { IDENTIDADE_CATEGORIA } from '@/lib/identidadeVisual'
 import { CalculatorIcon } from '@/components/common/CalculatorIcon'
-
-const categoriaCor: Record<CategoriaCalc, { bg: string; border: string; text: string }> = {
-  trabalhista: {
-    bg: 'bg-blue-50',
-    border: 'border-blue-100',
-    text: 'text-blue-700',
-  },
-  impostos: { bg: 'bg-amber-50', border: 'border-amber-100', text: 'text-amber-700' },
-  financeiro: {
-    bg: 'bg-emerald-50',
-    border: 'border-emerald-100',
-    text: 'text-emerald-700',
-  },
-  investimentos: {
-    bg: 'bg-purple-50',
-    border: 'border-purple-100',
-    text: 'text-purple-700',
-  },
-  saude: { bg: 'bg-pink-50', border: 'border-pink-100', text: 'text-pink-700' },
-  negocios: { bg: 'bg-cyan-50', border: 'border-cyan-100', text: 'text-cyan-700' },
-}
 
 export function CalculatorTypes() {
   return (
@@ -52,18 +27,18 @@ export function CalculatorTypes() {
           </h3>
           <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
             {calculatorsFeatured.map((calc) => {
-              const cor = categoriaCor[calc.categoria]
+              const cor = IDENTIDADE_CATEGORIA[calc.categoria]
               return (
                 <Link
                   key={calc.slug}
                   href={`/calculadora/${calc.slug}`}
-                  className={`group rounded-xl border-2 ${cor.border} ${cor.bg} p-6 transition-all hover:-translate-y-1 hover:shadow-lg`}
+                  className={`group rounded-xl border-2 ${cor.borda} ${cor.fundo} p-6 transition-all hover:-translate-y-1 hover:shadow-lg`}
                 >
                   <CalculatorIcon icon={calc.icone} categoria={calc.categoria} size="lg" />
                   <h4 className="mt-3 text-lg font-bold text-gray-900">{calc.titulo}</h4>
                   <p className="mt-1 text-sm text-gray-600">{calc.descricaoCurta}</p>
                   <span
-                    className={`mt-3 inline-flex items-center gap-1 text-sm font-semibold ${cor.text}`}
+                    className={`mt-3 inline-flex items-center gap-1 text-sm font-semibold ${cor.texto}`}
                   >
                     Abrir calculadora →
                   </span>
@@ -80,7 +55,7 @@ export function CalculatorTypes() {
           </h3>
           <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
             {calculatorRegistry.map((calc) => {
-              const cor = categoriaCor[calc.categoria]
+              const cor = IDENTIDADE_CATEGORIA[calc.categoria]
               return (
                 <Link
                   key={calc.slug}
@@ -90,9 +65,9 @@ export function CalculatorTypes() {
                   <div className="flex items-center justify-between">
                     <CalculatorIcon icon={calc.icone} categoria={calc.categoria} size="md" />
                     <span
-                      className={`rounded-full ${cor.bg} px-2 py-0.5 text-[10px] font-semibold uppercase ${cor.text}`}
+                      className={`rounded-full ${cor.fundo} px-2 py-0.5 text-[10px] font-semibold uppercase ${cor.texto}`}
                     >
-                      {CATEGORIAS_LABEL[calc.categoria]}
+                      {cor.label}
                     </span>
                   </div>
                   <h4 className="mt-1 text-sm font-semibold text-gray-900 group-hover:text-brand-700">

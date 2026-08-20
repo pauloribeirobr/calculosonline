@@ -6,6 +6,13 @@ import { UpdatedBadge } from '../UpdatedBadge'
 export interface CalculatorLayoutProps {
   titulo: string
   descricao: string
+  /**
+   * Ícone da calculadora, ao lado do H1. Entra como `ReactNode` (e não como
+   * nome de ícone) porque o mapa de ícones e as cores de categoria vivem em
+   * `apps/web`, que este pacote não pode importar — mesmo padrão de
+   * `form`/`result`/`content`. Ver F41.
+   */
+  icone?: ReactNode
   fonteJuridica: string
   dataAtualizacao: string
   /** ID do slot AdSense acima do formulário */
@@ -31,6 +38,7 @@ export interface CalculatorLayoutProps {
 export function CalculatorLayout({
   titulo,
   descricao,
+  icone,
   fonteJuridica,
   dataAtualizacao,
   adSlotTop,
@@ -47,10 +55,15 @@ export function CalculatorLayout({
       {breadcrumb}
 
       <header>
-        <h1 className="text-2xl font-bold leading-tight text-gray-900 md:text-3xl">
-          {titulo}
-        </h1>
-        <p className="mt-2 text-sm text-gray-600 md:text-base">{descricao}</p>
+        <div className="flex items-start gap-3 md:gap-4">
+          {icone}
+          <div className="min-w-0">
+            <h1 className="text-2xl font-bold leading-tight text-gray-900 md:text-3xl">
+              {titulo}
+            </h1>
+            <p className="mt-2 text-sm text-gray-600 md:text-base">{descricao}</p>
+          </div>
+        </div>
         <div className="mt-3 flex flex-wrap gap-2">
           <LegalBadge fonteJuridica={fonteJuridica} />
           <UpdatedBadge dataAtualizacao={dataAtualizacao} />

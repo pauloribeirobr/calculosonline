@@ -3,37 +3,16 @@
  * Drive de Navigation, Footer, CalculatorTypes, RelatedCalculators, sitemap e schemas JSON-LD.
  */
 
-export type CategoriaCalc =
-  | 'trabalhista'
-  | 'impostos'
-  | 'financeiro'
-  | 'investimentos'
-  | 'saude'
-  | 'negocios'
+import { IDENTIDADE_CATEGORIA } from './identidadeVisual'
+import type { CategoriaCalc, IconeCalculadora } from './identidadeVisual'
+
+// `CategoriaCalc` e `IconeCalculadora` moraram aqui até o F41; hoje são
+// definidos em `identidadeVisual.ts` (junto das cores e labels de cada
+// categoria) e re-exportados daqui para não quebrar os imports existentes.
+export type { CategoriaCalc, IconeCalculadora }
 
 export type ResultadoFormato = 'currency' | 'percent' | 'number' | 'integer' | 'kcal'
 
-export type IconeCalculadora =
-  | 'rescisao'
-  | 'ferias'
-  | 'decimoTerceiro'
-  | 'horaExtra'
-  | 'fgts'
-  | 'salarioLiquido'
-  | 'inss'
-  | 'irrf'
-  | 'irpf'
-  | 'dasMei'
-  | 'porcentagem'
-  | 'jurosCompostos'
-  | 'emprestimo'
-  | 'financiamento'
-  | 'cdb'
-  | 'poupanca'
-  | 'tesouroDireto'
-  | 'imc'
-  | 'calorias'
-  | 'margemLucro'
 
 export interface CalculadoraRegistro {
   slug: string
@@ -49,6 +28,21 @@ export interface CalculadoraRegistro {
   /** Data ISO de última atualização das tabelas legislativas */
   dataAtualizacao: string
   palavrasChave: string[]
+  /**
+   * Vocabulário alternativo com que o usuário busca a mesma calculadora
+   * ("simulador"/"simulação" nas financeiras, "acerto trabalhista"/"pedido
+   * de demissão" na rescisão). Entra no `keywords` da página e serve de
+   * referência editorial: o mesmo vocabulário precisa aparecer no MDX e na
+   * FAQ, que é onde o Google efetivamente lê (o `keywords` sozinho não
+   * ranqueia nada desde 2009).
+   *
+   * Origem: export do GSC de 2026-08-20 cruzado com o Semrush. O cluster
+   * "simulador/simulação" somava 180 impressões em 97 queries com posição
+   * média 83, e `simulação tesouro direto` tem 2.9K buscas/mês — sem que a
+   * palavra aparecesse em um único title, H1, MDX ou FAQ do site.
+   * Ver diário 2026-08-20 no `MEMORY.md`.
+   */
+  sinonimos?: string[]
   relacionadas: string[]
   /** Aparece no bloco "Mais buscadas" da home */
   featured?: boolean
@@ -68,45 +62,26 @@ export interface CalculadoraRegistro {
   adSlotBottom?: string
 }
 
-export const CATEGORIAS: Record<
-  CategoriaCalc,
-  { label: string; descricao: string }
-> = {
-  trabalhista: {
-    label: 'Trabalhistas',
-    descricao: 'CLT, rescisão, férias, 13º e mais',
-  },
-  impostos: {
-    label: 'Impostos',
-    descricao: 'INSS, IRRF, IRPF, MEI e mais',
-  },
-  financeiro: {
-    label: 'Financeiras',
-    descricao: 'Juros, empréstimos, porcentagem',
-  },
-  investimentos: {
-    label: 'Investimentos',
-    descricao: 'CDB, poupança, Tesouro Direto',
-  },
-  saude: {
-    label: 'Saúde',
-    descricao: 'IMC, calorias, peso ideal',
-  },
-  negocios: {
-    label: 'Negócios',
-    descricao: 'Margem, markup, precificação',
-  },
-}
+/**
+ * Label + descrição de cada categoria. Derivado de `IDENTIDADE_CATEGORIA`
+ * (F41) — antes era uma tabela literal aqui, mantida em paralelo com as cores
+ * em outros dois arquivos.
+ */
+export const CATEGORIAS: Record<CategoriaCalc, { label: string; descricao: string }> =
+  Object.fromEntries(
+    Object.entries(IDENTIDADE_CATEGORIA).map(([categoria, { label, descricao }]) => [
+      categoria,
+      { label, descricao },
+    ]),
+  ) as Record<CategoriaCalc, { label: string; descricao: string }>
 
-/** Labels mais curtos usados em chips/badges. */
-export const CATEGORIAS_LABEL: Record<CategoriaCalc, string> = {
-  trabalhista: 'Trabalhistas',
-  impostos: 'Impostos',
-  financeiro: 'Financeiras',
-  investimentos: 'Investimentos',
-  saude: 'Saúde',
-  negocios: 'Negócios',
-}
+/**
+ * Labels curtos usados em chips/badges. Eram uma segunda tabela literal,
+ * idêntica aos `label` de `CATEGORIAS` nas 6 categorias — agora é um alias.
+ */
+export const CATEGORIAS_LABEL: Record<CategoriaCalc, string> = Object.fromEntries(
+  Object.entries(IDENTIDADE_CATEGORIA).map(([categoria, { label }]) => [categoria, label]),
+) as Record<CategoriaCalc, string>
 
 export const calculatorRegistry: CalculadoraRegistro[] = [
   // Trabalhistas
@@ -114,9 +89,9 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     slug: 'rescisao-trabalhista',
     titulo: 'Rescisão Trabalhista',
     tituloLongo: 'Calculadora de Rescisão Trabalhista',
-    descricaoCurta: 'Saldo, aviso, férias, 13º, FGTS e multa.',
+    descricaoCurta: 'Acerto de demissão: saldo, aviso e FGTS.',
     descricao:
-      'Calcule as verbas rescisórias com precisão: saldo de salário, aviso prévio, férias, 13º e multa FGTS. Atualizado com a CLT 2026.',
+      'Calcule o acerto trabalhista de qualquer demissão: sem justa causa, pedido de demissão, acordo mútuo, rescisão indireta ou justa causa. Verbas rescisórias completas pela CLT 2026.',
     categoria: 'trabalhista',
     icone: 'rescisao',
     fonteJuridica: 'CLT arts. 477–487 | Lei 12.506/2011 | Lei 8.036/1990',
@@ -126,6 +101,14 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'calcular rescisão',
       'verbas rescisórias',
       'aviso prévio',
+    ],
+    sinonimos: [
+      'calcular demissão',
+      'acerto trabalhista',
+      'cálculo de pedido de demissão',
+      'rescisão por comum acordo',
+      'cálculo de desligamento',
+      'direitos trabalhistas na saída da empresa',
     ],
     relacionadas: ['ferias', 'fgts', 'salario-liquido', 'hora-extra'],
     featured: true,
@@ -316,29 +299,41 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
   {
     slug: 'emprestimo',
     titulo: 'Empréstimo',
-    tituloLongo: 'Calculadora de Empréstimo',
-    descricaoCurta: 'Sistemas Price e SAC com seguro.',
+    tituloLongo: 'Calculadora e Simulador de Empréstimo',
+    descricaoCurta: 'Simulador Price e SAC com seguro.',
     descricao:
-      'Simule empréstimos pela Tabela Price ou SAC. Veja parcelas, total de juros e CET (Custo Efetivo Total).',
+      'Simulador de empréstimo grátis: faça a simulação pela Tabela Price ou SAC e veja parcelas, total de juros e o CET (Custo Efetivo Total).',
     categoria: 'financeiro',
     icone: 'emprestimo',
     fonteJuridica: 'Res. CMN 3.517/2007 (CET)',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['calcular empréstimo', 'simulador empréstimo', 'tabela price SAC'],
+    sinonimos: [
+      'simulador de empréstimo',
+      'simulação de empréstimo',
+      'simular empréstimo',
+      'simulador de parcelas',
+    ],
     relacionadas: ['financiamento', 'juros-compostos', 'cdb', 'porcentagem'],
   },
   {
     slug: 'financiamento',
     titulo: 'Financiamento',
-    tituloLongo: 'Calculadora de Financiamento',
-    descricaoCurta: 'Tabela Price/SAC e CET anual.',
+    tituloLongo: 'Calculadora e Simulador de Financiamento',
+    descricaoCurta: 'Simulador Price/SAC com CET anual.',
     descricao:
-      'Simule financiamentos imobiliários e de veículos pela Tabela Price ou SAC. Evolução completa do saldo devedor.',
+      'Simulador de financiamento imobiliário e de veículos: simule pela Tabela Price ou SAC e veja parcela, CET e a evolução completa do saldo devedor.',
     categoria: 'financeiro',
     icone: 'financiamento',
     fonteJuridica: 'Res. CMN 3.517/2007 | Circular BCB 2.905/1999',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['calcular financiamento', 'simulador financiamento imóvel', 'CET'],
+    sinonimos: [
+      'simulador de financiamento',
+      'simulação de financiamento',
+      'simular financiamento',
+      'simulador de crédito imobiliário',
+    ],
     relacionadas: ['emprestimo', 'juros-compostos', 'porcentagem', 'cdb'],
   },
 
@@ -346,43 +341,61 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
   {
     slug: 'cdb',
     titulo: 'CDB',
-    tituloLongo: 'Calculadora de CDB',
-    descricaoCurta: '% do CDI, prefixado ou IPCA+ líquido.',
+    tituloLongo: 'Calculadora e Simulador de CDB',
+    descricaoCurta: 'Simulador de % do CDI, pré ou IPCA+.',
     descricao:
-      'Calcule o rendimento líquido do CDB: prefixado, % CDI ou IPCA+. IR regressivo já abatido.',
+      'Simulador de CDB grátis: faça a simulação do rendimento líquido de CDB prefixado, % do CDI ou IPCA+, com IR regressivo já abatido.',
     categoria: 'investimentos',
     icone: 'cdb',
     fonteJuridica: 'Lei 11.033/2004 | Decreto 6.306/2007',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['calcular CDB', 'rendimento CDB', 'CDB CDI', 'CDB prefixado'],
+    sinonimos: [
+      'simulador de CDB',
+      'simulação de CDB',
+      'simulador CDB prefixado',
+      'simular CDB',
+    ],
     relacionadas: ['poupanca', 'tesouro-direto', 'juros-compostos', 'irpf'],
   },
   {
     slug: 'poupanca',
     titulo: 'Poupança',
-    tituloLongo: 'Calculadora de Poupança',
-    descricaoCurta: 'Regra antiga ou nova (SELIC + TR).',
+    tituloLongo: 'Calculadora e Simulador de Poupança',
+    descricaoCurta: 'Simulador de rendimento (SELIC + TR).',
     descricao:
-      'Simule o rendimento da poupança com a regra atual (Selic > 8,5%). Compare com CDB e Tesouro Direto.',
+      'Simulador de poupança grátis: faça a simulação do rendimento pela regra atual (Selic acima de 8,5% + TR) e compare com CDB e Tesouro Direto.',
     categoria: 'investimentos',
     icone: 'poupanca',
     fonteJuridica: 'Lei 8.177/1991 | Lei 12.703/2012',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['calcular poupança', 'rendimento poupança 2026', 'quanto rende poupança'],
+    sinonimos: [
+      'simulador de poupança',
+      'simulação de poupança',
+      'rendimento poupança simulador',
+      'simulador poupança Caixa',
+    ],
     relacionadas: ['cdb', 'tesouro-direto', 'juros-compostos', 'irpf'],
   },
   {
     slug: 'tesouro-direto',
     titulo: 'Tesouro Direto',
-    tituloLongo: 'Calculadora de Tesouro Direto',
-    descricaoCurta: 'SELIC, Prefixado e IPCA+ com custódia.',
+    tituloLongo: 'Calculadora e Simulador de Tesouro Direto',
+    descricaoCurta: 'Simulador de SELIC, Prefixado e IPCA+.',
     descricao:
-      'Simule Tesouro Selic, Prefixado e IPCA+. Rentabilidade líquida com IR regressivo e taxa B3.',
+      'Simulador de Tesouro Direto grátis: faça a simulação de Tesouro Selic, Prefixado e IPCA+ e veja a rentabilidade líquida com IR regressivo e taxa de custódia da B3.',
     categoria: 'investimentos',
     icone: 'tesouroDireto',
     fonteJuridica: 'Lei 11.033/2004 | Resolução B3 — taxa de custódia',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['tesouro direto', 'tesouro selic', 'tesouro prefixado', 'tesouro IPCA'],
+    sinonimos: [
+      'simulador de tesouro direto',
+      'simulação tesouro direto',
+      'tesouro direto simulador',
+      'simular tesouro direto',
+    ],
     relacionadas: ['cdb', 'poupanca', 'juros-compostos', 'irpf'],
   },
 

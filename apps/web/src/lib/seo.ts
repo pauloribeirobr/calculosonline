@@ -9,10 +9,16 @@ import type { CalculadoraRegistro } from './calculators'
 export const siteConfig = {
   name: 'Calculos Online',
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://calculosonline.com.br').replace(/\/$/, ''),
-  defaultOgImage: '/images/og-image.png',
   description:
     'Calculadoras online grátis e atualizadas para 2026 — trabalhistas, impostos, financeiras, investimentos, saúde e negócios.',
   twitter: '@calculosonline',
+  /**
+   * Imagem social padrão, servida pela convenção `app/opengraph-image.tsx`
+   * (F42). Usada só onde é preciso uma URL explícita — hoje, o `image` do
+   * JSON-LD de `Article`. As metatags OpenGraph/Twitter não passam por aqui:
+   * quem as preenche é a própria convenção. Ver `buildMetadata`.
+   */
+  defaultOgImage: '/opengraph-image',
 } as const
 
 function toAbsoluteUrl(path: string): string {
@@ -31,7 +37,22 @@ interface BuildMetadataInput {
    * páginas do mesmo cluster de busca.
    */
   canonical?: string
+  /** Imagem social específica desta página. Por padrão, a do site. */
   ogImage?: string
+  /**
+   * `true` nas rotas que têm o próprio `opengraph-image.tsx` — hoje, as 20
+   * calculadoras. Nesse caso o campo sai do objeto e quem preenche é a
+   * convenção do App Router (que cobre `twitter:image` junto).
+   *
+   * As duas metades importam, e as duas machucaram o site:
+   * - definir `openGraph.images` **sobrescreve** a convenção — foi assim que
+   *   todas as páginas apontaram por meses para um `/images/og-image.png`
+   *   que nunca existiu;
+   * - declarar `openGraph` **sem** `images` *suprime* a herança da imagem do
+   *   segmento pai — por isso `/sobre`, `/categorias` e `/contato` ficaram
+   *   sem imagem nenhuma, enquanto a home (que não exporta `metadata`) tinha.
+   */
+  imagemPropriaDaRota?: boolean
   socialTitle?: string
   socialDescription?: string
 }
@@ -50,6 +71,7 @@ export function buildMetadata({
   keywords,
   canonical,
   ogImage,
+  imagemPropriaDaRota,
   socialTitle,
   socialDescription,
 }: BuildMetadataInput): Metadata {
@@ -59,9 +81,18 @@ export function buildMetadata({
       ? canonical
       : toAbsoluteUrl(canonical)
     : url
-  const ogImageUrl = toAbsoluteUrl(ogImage ?? siteConfig.defaultOgImage)
   const ogTitle = socialTitle ?? title
   const ogDescription = socialDescription ?? description
+  const images = imagemPropriaDaRota
+    ? undefined
+    : [
+        {
+          url: toAbsoluteUrl(ogImage ?? siteConfig.defaultOgImage),
+          width: 1200,
+          height: 630,
+          alt: ogTitle,
+        },
+      ]
 
   return {
     title,
@@ -77,13 +108,13 @@ export function buildMetadata({
       siteName: siteConfig.name,
       title: ogTitle,
       description: ogDescription,
-      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: ogTitle }],
+      ...(images ? { images } : {}),
     },
     twitter: {
       card: 'summary_large_image',
       title: ogTitle,
       description: ogDescription,
-      images: [ogImageUrl],
+      ...(images ? { images: images.map((i) => i.url) } : {}),
     },
   }
 }
@@ -99,9 +130,24 @@ export function buildMetadata({
  * Calculadoras marcadas como `atemporal` saem sem o ano — o resultado não
  * muda de um ano para o outro e o "2026" só ocupa espaço no snippet.
  */
+/**
+ * Teto de caracteres do title **já contando** o template do root layout
+ * (" | Calculos Online", 18 caracteres). Acima disso o Google trunca o
+ * snippet — e, pior, tende a reescrever o title sozinho.
+ */
+const TITLE_MAX = 78
+const TITLE_TEMPLATE_LEN = ' | Calculos Online'.length
+
 export function buildCalculatorTitle(calc: CalculadoraRegistro): string {
   const base = calc.tituloLongo.replace(/\s*2026$/, '')
-  return calc.atemporal
-    ? `${base} — Grátis, sem Cadastro`
-    : `${base} 2026 — Grátis, sem Cadastro`
+  const nome = calc.atemporal ? base : `${base} 2026`
+
+  // "sem Cadastro" é o USP do produto (Plano de Negócios, 1.2) e fica sempre
+  // que couber. Quando não cabe, sai — custa 14 caracteres e rendeu 4
+  // impressões em 3 meses (GSC 2026-08-20), enquanto o que disputa o mesmo
+  // espaço nas páginas longas é o nome da calculadora e o sinônimo pelo qual
+  // ela é de fato buscada (`simulação tesouro direto`, 2.9K buscas/mês).
+  // Ver diário 2026-08-20 no `MEMORY.md`.
+  const completo = `${nome} — Grátis, sem Cadastro`
+  return completo.length + TITLE_TEMPLATE_LEN <= TITLE_MAX ? completo : `${nome} — Grátis`
 }
