@@ -6,19 +6,32 @@
  * o único canal que o avisa em minutos em vez de semanas — por isso este
  * script vale mais, neste projeto, que qualquer ação no Search Console.
  *
- * Uso:
- *   INTERNAL_API_KEY=<segredo> node apps/web/scripts/indexnow.mjs            # tudo
- *   INTERNAL_API_KEY=<segredo> node apps/web/scripts/indexnow.mjs ferias inss
+ * O segredo sai de `apps/web/.env.local` (carregado pelo `--env-file-if-exists`
+ * no script do package.json, e fora do git) ou da variável de ambiente.
  *
- * Passar slugs limita às calculadoras indicadas. Sem argumentos, envia a home,
- * as institucionais e as 20 calculadoras.
+ * Uso:
+ *   pnpm --filter web indexnow              # todas as URLs do sitemap
+ *   pnpm --filter web indexnow ferias inss  # só essas calculadoras
+ *
+ * Sem argumentos, envia a home, as institucionais e as 20 calculadoras.
  */
 
 const SITE = process.env.SITE_URL ?? 'https://calculosonline.com.br'
 const SEGREDO = process.env.INTERNAL_API_KEY
 
 if (!SEGREDO) {
-  console.error('Defina INTERNAL_API_KEY (o mesmo valor configurado na Vercel).')
+  console.error(
+    [
+      'INTERNAL_API_KEY não encontrada.',
+      '',
+      'Pegue o valor em Vercel > Settings > Environment Variables (Production)',
+      'e guarde em apps/web/.env.local (fora do git) para não repetir:',
+      '',
+      '  echo "INTERNAL_API_KEY=<valor>" >> apps/web/.env.local',
+      '',
+      'Ou passe direto:  INTERNAL_API_KEY=<valor> pnpm --filter web indexnow',
+    ].join('\n'),
+  )
   process.exit(1)
 }
 
