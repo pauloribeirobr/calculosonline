@@ -98,10 +98,19 @@ export function calcularFerias(params: FeriasParams): ResultadoOuErro<FeriasResu
   const diasAbono = Math.min(params.diasAbono ?? 0, maxAbono)
   const diasGozados = diasDireito - diasAbono
 
+  // `valorDiario` é arredondado só para APARECER na fórmula do detalhamento.
+  // O cálculo usa a divisão exata e arredonda uma única vez, no fim.
+  //
+  // Até 2026-08-27 o valor diário arredondado entrava na multiplicação, e o
+  // erro de centavos era multiplicado pelos dias: um salário de R$ 2.000 dava
+  // R$ 2.000,10 de férias (66,67 × 30), e R$ 2.500 dava R$ 2.499,90. Some em
+  // qualquer salário não divisível por 30. `decimo-terceiro.ts` e `rescisao.ts`
+  // sempre fizeram certo (`arredondar((salario / 12) * meses)`) — férias era a
+  // única do módulo trabalhista fora do padrão.
   const valorDiario = dividir(params.salarioBruto, 30)
-  const salarioFerias = arredondar(valorDiario * diasGozados)
+  const salarioFerias = arredondar((params.salarioBruto / 30) * diasGozados)
   const adicionalTerco = arredondar(salarioFerias / 3)
-  const valorAbono = arredondar(valorDiario * diasAbono * (1 + 1 / 3))
+  const valorAbono = arredondar((params.salarioBruto / 30) * diasAbono * (1 + 1 / 3))
 
   const subTotal = arredondar(salarioFerias + adicionalTerco + valorAbono)
   const totalBruto = params.emAtraso ? arredondar(subTotal * 2) : subTotal

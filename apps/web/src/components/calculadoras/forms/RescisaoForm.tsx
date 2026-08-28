@@ -40,8 +40,28 @@ export function RescisaoForm({ onResult, onError, isLoading, sharedData, autoSub
           type: 'currency',
           quickAdd: QUICK_ADD_SALARIO,
         },
-        dataAdmissao: { label: 'Data de Admissão', type: 'date' },
-        dataRescisao: { label: 'Data de Rescisão', type: 'date' },
+        // Campo mascarado DD/MM/AAAA em vez do picker nativo, e atalhos ao
+        // lado (F51): 11 dos 24 cliques desta página no heatmap do Clarity
+        // foram nestes dois campos — o maior atrito medido do site.
+        dataAdmissao: {
+          label: 'Data de Admissão',
+          type: 'date',
+          hint: 'Digite direto: 01011990 vira 01/01/1990.',
+          dateShortcuts: [
+            { label: 'Há 1 ano', kind: 'anosAtras', anos: 1 },
+            { label: 'Há 2 anos', kind: 'anosAtras', anos: 2 },
+            { label: 'Há 5 anos', kind: 'anosAtras', anos: 5 },
+            { label: 'Há 10 anos', kind: 'anosAtras', anos: 10 },
+          ],
+        },
+        dataRescisao: {
+          label: 'Data de Rescisão',
+          type: 'date',
+          dateShortcuts: [
+            { label: 'Hoje', kind: 'hoje' },
+            { label: 'Fim do mês', kind: 'fimDoMes' },
+          ],
+        },
         motivoRescisao: {
           label: 'Motivo da Rescisão',
           type: 'select',

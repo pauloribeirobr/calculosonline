@@ -3,7 +3,7 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularJurosCompostos } from '@calculosonline/core/financeiro'
-import { QUICK_ADD_INVESTIMENTO } from '@/lib/quickAddPresets'
+import { QUICK_ADD_INVESTIMENTO, QUICK_ADD_MESES } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -55,6 +55,8 @@ export function JurosCompostosForm({
           label: 'Prazo (meses)',
           type: 'stepper',
           min: 1,
+          suffix: 'meses',
+          quickAdd: QUICK_ADD_MESES,
         },
         aporteMensal: {
           label: 'Aporte mensal',

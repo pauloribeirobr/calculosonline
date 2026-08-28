@@ -42,8 +42,13 @@ export interface FieldMeta {
   options?: Array<{ value: string; label: string }>
   /**
    * Chips de valor rápido abaixo do campo, mesmo padrão visual do Recibo
-   * Fácil: "Zerar" zera o campo; cada chip SOMA ao valor atual (não
-   * substitui). Só se aplica a campos `currency`/`number` simples.
+   * Fácil: "Zerar" volta ao mínimo do campo; cada chip SOMA ao valor atual
+   * (não substitui).
+   *
+   * Vale também em `stepper` desde o F50 — o heatmap do Clarity mostrou 64 de
+   * 133 cliques da página de CDB num único stepper (`prazoMeses`), porque sair
+   * de 12 para 24 meses custa 12 cliques. Em stepper o resultado é limitado a
+   * `min`/`max`.
    */
   quickAdd?: QuickAddButton[]
   /** `stepper`: valor mínimo permitido (padrão 0). */
@@ -58,7 +63,28 @@ export interface FieldMeta {
   itemSuggestions?: string[]
   /** `itemList`: placeholder do campo de descrição de cada item. */
   itemPlaceholder?: string
+  /**
+   * `date`: atalhos que preenchem a data com um clique, ao lado do campo.
+   * Mesmo motivo dos `quickAdd`: o caro não é escolher a data, é digitá-la.
+   */
+  dateShortcuts?: DateShortcut[]
+  /**
+   * Esconde o campo até que a condição seja satisfeita, recebendo os valores
+   * atuais do formulário. Serve para parâmetros que só existem dentro de um
+   * modo — o percentual de CCT que só aparece em "Outro (acordo coletivo)",
+   * os dias do mês que só aparecem quando o reflexo do DSR é pedido.
+   *
+   * Campo escondido continua no schema e no estado: o valor default do Zod
+   * segue valendo, então esconder nunca invalida o formulário.
+   */
+  showWhen?: (values: Record<string, unknown>) => boolean
 }
+
+/** Atalho de data. `label` é o texto do chip. */
+export type DateShortcut =
+  | { label: string; kind: 'hoje' }
+  | { label: string; kind: 'fimDoMes' }
+  | { label: string; kind: 'anosAtras'; anos: number }
 
 export interface CalculatorFormProps<T extends ZodRawShape> {
   schema: ZodObject<T>
@@ -179,6 +205,134 @@ function CurrencyField({
 }
 
 /** Campo numérico com botões +/− (ex.: nº de dependentes) — sempre ≥ `min`. */
+/* --------------------------------------------------------------------------
+ * Campo de data mascarado (F51)
+ *
+ * `input[type=date]` nativo é o maior ponto de atrito medido do site: o
+ * heatmap do Clarity registrou 11 dos 24 cliques da página de rescisão nos
+ * dois campos de data, e 61% do público usa Edge no Windows, onde o picker
+ * nativo é ruim (abre calendário, não aceita digitação corrida, o formato
+ * depende do locale do SO).
+ *
+ * O valor guardado no formulário continua sendo `YYYY-MM-DD` — o mesmo que o
+ * `type=date` produzia — para não mexer no core nem no link de compartilhamento
+ * do F32. O que muda é só a superfície: o usuário digita `01011990` e lê
+ * `01/01/1990`.
+ * ----------------------------------------------------------------------- */
+
+/** "1990-01-31" → "31/01/1990". Vazio ou incompleto volta como veio. */
+function isoParaBr(iso: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso)
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : ''
+}
+
+/** "31/01/1990" → "1990-01-31". Data incompleta ou inexistente vira "". */
+function brParaIso(br: string): string {
+  const digitos = br.replace(/\D/g, '')
+  if (digitos.length !== 8) return ''
+  const dia = digitos.slice(0, 2)
+  const mes = digitos.slice(2, 4)
+  const ano = digitos.slice(4, 8)
+  // Rejeita data que não existe no calendário (31/02, 00/00...). Sem isso,
+  // `new Date('1990-02-31')` viraria 03/03 silenciosamente lá na frente.
+  const data = new Date(`${ano}-${mes}-${dia}T00:00:00`)
+  if (
+    Number.isNaN(data.getTime()) ||
+    data.getUTCDate() !== Number(dia) ||
+    data.getUTCMonth() + 1 !== Number(mes)
+  ) {
+    return ''
+  }
+  return `${ano}-${mes}-${dia}`
+}
+
+/** Aplica a máscara DD/MM/AAAA conforme se digita, sem exigir as barras. */
+function mascararData(texto: string): string {
+  const d = texto.replace(/\D/g, '').slice(0, 8)
+  if (d.length <= 2) return d
+  if (d.length <= 4) return `${d.slice(0, 2)}/${d.slice(2)}`
+  return `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}`
+}
+
+function paraIsoLocal(data: Date): string {
+  // `toISOString()` converte para UTC e no Brasil (UTC-3) devolve o dia
+  // anterior para qualquer horário antes das 21h. Monta na mão.
+  const mes = String(data.getMonth() + 1).padStart(2, '0')
+  const dia = String(data.getDate()).padStart(2, '0')
+  return `${data.getFullYear()}-${mes}-${dia}`
+}
+
+/** Resolve um atalho declarado em `dateShortcuts` para uma data ISO. */
+export function resolverAtalhoData(atalho: DateShortcut): string {
+  const hoje = new Date()
+  switch (atalho.kind) {
+    case 'hoje':
+      return paraIsoLocal(hoje)
+    case 'fimDoMes':
+      return paraIsoLocal(new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0))
+    case 'anosAtras':
+      return paraIsoLocal(
+        new Date(hoje.getFullYear() - atalho.anos, hoje.getMonth(), hoje.getDate()),
+      )
+  }
+}
+
+function DateField({
+  control,
+  name,
+  id,
+  disabled,
+  hasError,
+  ariaDescribedBy,
+}: {
+  control: Control<FieldValues>
+  name: Path<FieldValues>
+  id: string
+  disabled?: boolean | undefined
+  hasError: boolean
+  ariaDescribedBy?: string | undefined
+}) {
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={({ field }) => {
+        const iso = typeof field.value === 'string' ? field.value : ''
+        // Enquanto a data está incompleta ela não vira ISO, então o texto
+        // digitado precisa de estado próprio — senão cada tecla some.
+        const textoVisivel = field.value && iso.includes('-') ? isoParaBr(iso) : (iso ?? '')
+        return (
+          <input
+            id={id}
+            type="text"
+            inputMode="numeric"
+            autoComplete="off"
+            placeholder="DD/MM/AAAA"
+            maxLength={10}
+            value={mascararData(textoVisivel || String(field.value ?? ''))}
+            onChange={(e) => {
+              const mascarado = mascararData(e.target.value)
+              // Só promove a ISO quando a data está completa E existe; até lá
+              // guarda o texto cru, que o Zod reprova por `min(10)`.
+              field.onChange(brParaIso(mascarado) || mascarado)
+            }}
+            onBlur={field.onBlur}
+            disabled={disabled}
+            className={cn(
+              'w-full rounded-lg border px-3 py-2.5 text-sm tabular-nums',
+              'focus:ring-brand-500 focus:outline-none focus:ring-2',
+              hasError ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-white',
+            )}
+            aria-invalid={hasError}
+            aria-describedby={ariaDescribedBy}
+            data-clarity-mask="true"
+          />
+        )
+      }}
+    />
+  )
+}
+
 function StepperField({
   control,
   name,
@@ -412,6 +566,15 @@ export function CalculatorForm<T extends ZodRawShape>({
     defaultValues: resolvedDefaultValues,
   })
 
+  // `showWhen` precisa reagir a digitação, então observa o formulário inteiro.
+  // Só é assinado quando algum campo declara a condição — formulário sem
+  // campo condicional não paga re-render por tecla.
+  const temCampoCondicional = Object.values(fields).some(
+    (meta) => typeof (meta as FieldMeta).showWhen === 'function',
+  )
+  const watchedValues = useWatch({ control }) as Record<string, unknown>
+  const valoresAtuais = temCampoCondicional ? { ...getValues(), ...watchedValues } : {}
+
   const autoSubmitDone = useRef(false)
   useEffect(() => {
     if (autoSubmit && defaultValues && !autoSubmitDone.current) {
@@ -421,14 +584,20 @@ export function CalculatorForm<T extends ZodRawShape>({
     }
   }, [autoSubmit, defaultValues, handleSubmit, onSubmit, reset, resolvedDefaultValues])
 
-  function handleQuickAdd(fieldName: Path<FormValues>, addValue: number) {
+  function handleQuickAdd(fieldName: Path<FormValues>, addValue: number, meta: FieldMeta) {
     const atual = Number(getValues(fieldName)) || 0
-    const proximo = Math.round((atual + addValue) * 100) / 100
+    const bruto = Math.round((atual + addValue) * 100) / 100
+    // Um chip nunca pode empurrar o campo para fora da faixa que o próprio
+    // stepper respeita — senão "+12" passaria do `max` e reprovaria no Zod.
+    const comMinimo = meta.min !== undefined ? Math.max(meta.min, bruto) : bruto
+    const proximo = meta.max !== undefined ? Math.min(meta.max, comMinimo) : comMinimo
     setValue(fieldName, proximo as never, { shouldValidate: true, shouldDirty: true })
   }
 
-  function handleClearField(fieldName: Path<FormValues>) {
-    setValue(fieldName, 0 as never, { shouldValidate: true, shouldDirty: true })
+  function handleClearField(fieldName: Path<FormValues>, meta: FieldMeta) {
+    // "Zerar" volta ao mínimo, não a zero: em campo com `min: 1` (dias úteis,
+    // prazo em meses) zerar deixaria o formulário inválido de propósito.
+    setValue(fieldName, (meta.min ?? 0) as never, { shouldValidate: true, shouldDirty: true })
   }
 
   return (
@@ -441,6 +610,7 @@ export function CalculatorForm<T extends ZodRawShape>({
     >
       {Object.entries(fields).map(([name, meta]) => {
         const fieldMeta = meta as FieldMeta
+        if (fieldMeta.showWhen && !fieldMeta.showWhen(valoresAtuais)) return null
         const error = errors[name as keyof typeof errors]
         const fieldName = name as Path<FormValues>
         const describedBy =
@@ -512,6 +682,15 @@ export function CalculatorForm<T extends ZodRawShape>({
                   hasError={!!error}
                   ariaDescribedBy={describedBy}
                 />
+              ) : fieldMeta.type === 'date' ? (
+                <DateField
+                  control={control as unknown as Control<FieldValues>}
+                  name={fieldName as unknown as Path<FieldValues>}
+                  id={name}
+                  disabled={!!isLoading}
+                  hasError={!!error}
+                  ariaDescribedBy={describedBy}
+                />
               ) : fieldMeta.type === 'select' ? (
                 <select
                   id={name}
@@ -555,9 +734,8 @@ export function CalculatorForm<T extends ZodRawShape>({
                 <input
                   id={name}
                   type={fieldMeta.type ?? 'number'}
-                  inputMode={
-                    fieldMeta.type === 'text' || fieldMeta.type === 'date' ? 'text' : 'decimal'
-                  }
+                  // `date` deixou de cair aqui no F51 — tem o DateField próprio.
+                  inputMode={fieldMeta.type === 'text' ? 'text' : 'decimal'}
                   placeholder={fieldMeta.placeholder}
                   {...register(fieldName, {
                     // Não usar `valueAsNumber`: ele converte campo vazio em NaN, e o
@@ -589,11 +767,32 @@ export function CalculatorForm<T extends ZodRawShape>({
               )}
             </div>
 
+            {fieldMeta.dateShortcuts && fieldMeta.dateShortcuts.length > 0 && (
+              <div className="mt-1.5 flex flex-wrap gap-1.5">
+                {fieldMeta.dateShortcuts.map((atalho) => (
+                  <button
+                    key={atalho.label}
+                    type="button"
+                    onClick={() =>
+                      setValue(fieldName, resolverAtalhoData(atalho) as never, {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                      })
+                    }
+                    disabled={isLoading}
+                    className="inline-flex items-center rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {atalho.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
             {fieldMeta.quickAdd && fieldMeta.quickAdd.length > 0 && (
               <div className="mt-1.5 flex flex-wrap gap-1.5">
                 <button
                   type="button"
-                  onClick={() => handleClearField(fieldName)}
+                  onClick={() => handleClearField(fieldName, fieldMeta)}
                   disabled={isLoading}
                   title="Zerar valor"
                   className="inline-flex items-center gap-1 rounded-md border border-gray-300 bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
@@ -604,9 +803,9 @@ export function CalculatorForm<T extends ZodRawShape>({
                   <button
                     key={btn.label}
                     type="button"
-                    onClick={() => handleQuickAdd(fieldName, btn.value)}
+                    onClick={() => handleQuickAdd(fieldName, btn.value, fieldMeta)}
                     disabled={isLoading}
-                    title={`Adicionar ${fieldMeta.prefix ?? ''} ${btn.value.toLocaleString('pt-BR')}`.trim()}
+                    title={`Adicionar ${fieldMeta.prefix ?? ''} ${btn.value.toLocaleString('pt-BR')} ${fieldMeta.type === 'stepper' ? (fieldMeta.suffix ?? '') : ''}`.replace(/\s+/g, ' ').trim()}
                     className="inline-flex items-center rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {btn.label}

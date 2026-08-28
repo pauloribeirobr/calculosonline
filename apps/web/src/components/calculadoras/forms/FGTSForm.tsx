@@ -3,7 +3,7 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularFGTS } from '@calculosonline/core/trabalhista'
-import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
+import { QUICK_ADD_MESES, QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -35,6 +35,8 @@ export function FGTSForm({ onResult, onError, isLoading, sharedData, autoSubmit 
         mesesTrabalhados: {
           label: 'Meses trabalhados',
           type: 'stepper',
+          suffix: 'meses',
+          quickAdd: QUICK_ADD_MESES,
           hint: 'Período projetado de contribuição',
         },
         saldoAtual: {
