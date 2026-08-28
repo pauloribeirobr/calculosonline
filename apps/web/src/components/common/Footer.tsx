@@ -11,49 +11,50 @@ interface FooterSection {
   links: FooterLink[]
 }
 
+/**
+ * Escultura de link interno (F43).
+ *
+ * Até 27/08 o rodapé listava as 20 calculadoras em todas as páginas: o GSC
+ * reportava 31 links internos idênticos para todo o site, ou seja, nenhum
+ * sinal de prioridade. Com Authority Score 2 e um único backlink reconhecido,
+ * o PageRank interno é o único capital de autoridade sob controle total —
+ * então o rodapé passa a destacar só as calculadoras de maior impressão no
+ * GSC (alvos do P0) e manda o resto para `/categorias`, que vira o hub.
+ *
+ * Ordem definida pelas impressões do export de 27/08 (3 meses).
+ */
+const destaques: FooterLink[] = [
+  { name: 'Financiamento', href: '/calculadora/financiamento' },
+  { name: 'Hora Extra', href: '/calculadora/hora-extra' },
+  { name: 'FGTS', href: '/calculadora/fgts' },
+  { name: 'Férias', href: '/calculadora/ferias' },
+  { name: 'Poupança', href: '/calculadora/poupanca' },
+  { name: 'Rescisão Trabalhista', href: '/calculadora/rescisao-trabalhista' },
+  { name: '13º Salário', href: '/calculadora/decimo-terceiro' },
+  { name: 'Salário Líquido', href: '/calculadora/salario-liquido' },
+]
+
 const footerSections: FooterSection[] = [
   {
-    title: 'Trabalhistas',
-    links: [
-      { name: 'Rescisão Trabalhista', href: '/calculadora/rescisao-trabalhista' },
-      { name: 'Férias', href: '/calculadora/ferias' },
-      { name: '13º Salário', href: '/calculadora/decimo-terceiro' },
-      { name: 'Hora Extra', href: '/calculadora/hora-extra' },
-      { name: 'FGTS', href: '/calculadora/fgts' },
-      { name: 'Salário Líquido', href: '/calculadora/salario-liquido' },
-    ],
+    title: 'Mais buscadas',
+    links: destaques,
   },
   {
-    title: 'Impostos',
+    title: 'Categorias',
     links: [
-      { name: 'IRPF (Anual)', href: '/calculadora/irpf' },
-      { name: 'IRRF (Mensal)', href: '/calculadora/irrf' },
-      { name: 'INSS', href: '/calculadora/inss' },
-      { name: 'DAS MEI', href: '/calculadora/das-mei' },
-    ],
-  },
-  {
-    title: 'Financeiras',
-    links: [
-      { name: 'Juros Compostos', href: '/calculadora/juros-compostos' },
-      { name: 'Empréstimo', href: '/calculadora/emprestimo' },
-      { name: 'Financiamento', href: '/calculadora/financiamento' },
-      { name: 'Porcentagem', href: '/calculadora/porcentagem' },
-    ],
-  },
-  {
-    title: 'Investimentos',
-    links: [
-      { name: 'CDB', href: '/calculadora/cdb' },
-      { name: 'Poupança', href: '/calculadora/poupanca' },
-      { name: 'Tesouro Direto', href: '/calculadora/tesouro-direto' },
+      { name: 'Trabalhistas', href: '/categoria/trabalhista' },
+      { name: 'Impostos', href: '/categoria/impostos' },
+      { name: 'Financeiras', href: '/categoria/financeiro' },
+      { name: 'Investimentos', href: '/categoria/investimentos' },
+      { name: 'Saúde', href: '/categoria/saude' },
+      { name: 'Negócios', href: '/categoria/negocios' },
     ],
   },
   {
     title: 'Institucional',
     links: [
+      { name: 'Todas as calculadoras', href: '/categorias' },
       { name: 'Sobre', href: '/sobre' },
-      { name: 'Blog', href: '/blog' },
       { name: 'Contato', href: '/contato' },
       { name: 'Termos de Uso', href: '/termos-de-uso' },
       { name: 'Política de Privacidade', href: '/politica-de-privacidade' },
@@ -98,45 +99,24 @@ export function Footer() {
               </div>
             </div>
           </div>
-          <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              {footerSections.slice(0, 2).map((section) => (
-                <div key={section.title} className="mt-10 md:mt-0">
-                  <h3 className="text-sm font-semibold leading-6 text-white">{section.title}</h3>
-                  <ul className="mt-6 space-y-4">
-                    {section.links.map((link) => (
-                      <li key={link.name}>
-                        <Link
-                          href={link.href}
-                          className="text-sm leading-6 text-gray-300 hover:text-white"
-                        >
-                          {link.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-            <div className="md:grid md:grid-cols-3 md:gap-6">
-              {footerSections.slice(2).map((section) => (
-                <div key={section.title} className="mt-10 md:mt-0">
-                  <h3 className="text-sm font-semibold leading-6 text-white">{section.title}</h3>
-                  <ul className="mt-6 space-y-4">
-                    {section.links.map((link) => (
-                      <li key={link.name}>
-                        <Link
-                          href={link.href}
-                          className="text-sm leading-6 text-gray-300 hover:text-white"
-                        >
-                          {link.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+          <div className="mt-16 grid grid-cols-2 gap-8 md:grid-cols-3 xl:col-span-2 xl:mt-0">
+            {footerSections.map((section) => (
+              <div key={section.title} className="mt-10 md:mt-0">
+                <h3 className="text-sm font-semibold leading-6 text-white">{section.title}</h3>
+                <ul className="mt-6 space-y-4">
+                  {section.links.map((link) => (
+                    <li key={link.name}>
+                      <Link
+                        href={link.href}
+                        className="text-sm leading-6 text-gray-300 hover:text-white"
+                      >
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
         <div className="mt-16 border-t border-white/10 pt-8 sm:mt-20 lg:mt-24">

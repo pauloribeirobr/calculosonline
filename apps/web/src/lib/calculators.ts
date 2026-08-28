@@ -110,7 +110,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'cálculo de desligamento',
       'direitos trabalhistas na saída da empresa',
     ],
-    relacionadas: ['ferias', 'fgts', 'salario-liquido', 'hora-extra'],
+    relacionadas: ['ferias', 'fgts', 'decimo-terceiro', 'hora-extra'],
     featured: true,
   },
   {
@@ -130,7 +130,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'abono pecuniário',
       '1/3 constitucional',
     ],
-    relacionadas: ['rescisao-trabalhista', 'decimo-terceiro', 'salario-liquido', 'hora-extra'],
+    relacionadas: ['decimo-terceiro', 'fgts', 'hora-extra', 'rescisao-trabalhista'],
   },
   {
     slug: 'decimo-terceiro',
@@ -151,7 +151,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'calcular 13 salario',
       'gratificação natalina',
     ],
-    relacionadas: ['salario-liquido', 'rescisao-trabalhista', 'ferias', 'inss'],
+    relacionadas: ['ferias', 'fgts', 'hora-extra', 'rescisao-trabalhista'],
   },
   {
     slug: 'hora-extra',
@@ -165,7 +165,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     fonteJuridica: 'CLT art. 59 | CF/88 art. 7º, XVI',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['hora extra', 'calcular hora extra', 'adicional hora extra'],
-    relacionadas: ['salario-liquido', 'rescisao-trabalhista', 'ferias', 'fgts'],
+    relacionadas: ['salario-liquido', 'fgts', 'ferias', 'rescisao-trabalhista'],
   },
   {
     slug: 'fgts',
@@ -179,7 +179,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     fonteJuridica: 'Lei 8.036/1990 | Lei 13.932/2019',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['FGTS', 'multa FGTS', 'saque aniversário FGTS', 'calcular FGTS'],
-    relacionadas: ['rescisao-trabalhista', 'salario-liquido', 'ferias', 'decimo-terceiro'],
+    relacionadas: ['rescisao-trabalhista', 'hora-extra', 'ferias', 'decimo-terceiro'],
   },
   {
     slug: 'salario-liquido',
@@ -200,7 +200,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'como calcular salário líquido',
       'desconto INSS IRRF',
     ],
-    relacionadas: ['inss', 'irrf', 'rescisao-trabalhista', 'decimo-terceiro'],
+    relacionadas: ['irrf', 'hora-extra', 'fgts', 'rescisao-trabalhista'],
     featured: true,
   },
 
@@ -217,7 +217,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     fonteJuridica: 'Decreto 11.936/2024',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['calcular INSS', 'tabela INSS 2026', 'contribuição INSS'],
-    relacionadas: ['salario-liquido', 'irrf', 'irpf', 'das-mei'],
+    relacionadas: ['salario-liquido', 'irrf', 'fgts', 'das-mei'],
   },
   {
     slug: 'irrf',
@@ -231,7 +231,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     fonteJuridica: 'RIR/2018 (Decreto 9.580/2018) | Lei 11.482/2007',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['IRRF', 'imposto de renda retido', 'tabela IRRF 2026'],
-    relacionadas: ['inss', 'salario-liquido', 'irpf', 'decimo-terceiro'],
+    relacionadas: ['inss', 'salario-liquido', 'ferias', 'decimo-terceiro'],
   },
   {
     slug: 'irpf',
@@ -245,7 +245,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     fonteJuridica: 'Lei 9.250/1995 | IN RFB 2.178/2024',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['IRPF 2026', 'declaração imposto de renda', 'restituição IR'],
-    relacionadas: ['irrf', 'inss', 'cdb', 'tesouro-direto'],
+    relacionadas: ['irrf', 'inss', 'tesouro-direto', 'poupanca'],
     featured: true,
   },
   {
@@ -260,7 +260,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     fonteJuridica: 'LC 123/2006 art. 18-A | Resolução CGSN 140/2018',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['DAS MEI', 'calcular MEI', 'imposto MEI', 'boleto MEI 2026'],
-    relacionadas: ['inss', 'margem-lucro', 'irpf', 'juros-compostos'],
+    relacionadas: ['inss', 'margem-lucro', 'irpf', 'financiamento'],
   },
 
   // Financeiras
@@ -279,7 +279,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     dataAtualizacao: '2026-01-01',
     formatoResultado: 'number',
     palavrasChave: ['calcular porcentagem', 'porcentagem de um valor', 'desconto percentual'],
-    relacionadas: ['juros-compostos', 'margem-lucro', 'imc', 'emprestimo'],
+    relacionadas: ['margem-lucro', 'financiamento', 'emprestimo'],
   },
   {
     slug: 'juros-compostos',
@@ -293,7 +293,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     fonteJuridica: 'Matemática financeira',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['juros compostos', 'calcular juros compostos', 'montante final'],
-    relacionadas: ['cdb', 'poupanca', 'tesouro-direto', 'emprestimo'],
+    relacionadas: ['financiamento', 'emprestimo', 'cdb', 'tesouro-direto'],
     featured: true,
   },
   {
@@ -314,7 +314,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'simular empréstimo',
       'simulador de parcelas',
     ],
-    relacionadas: ['financiamento', 'juros-compostos', 'cdb', 'porcentagem'],
+    relacionadas: ['financiamento', 'juros-compostos', 'porcentagem', 'cdb'],
   },
   {
     slug: 'financiamento',
@@ -334,7 +334,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'simular financiamento',
       'simulador de crédito imobiliário',
     ],
-    relacionadas: ['emprestimo', 'juros-compostos', 'porcentagem', 'cdb'],
+    relacionadas: ['emprestimo', 'juros-compostos', 'poupanca', 'cdb'],
   },
 
   // Investimentos
@@ -356,7 +356,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'simulador CDB prefixado',
       'simular CDB',
     ],
-    relacionadas: ['poupanca', 'tesouro-direto', 'juros-compostos', 'irpf'],
+    relacionadas: ['tesouro-direto', 'poupanca', 'irpf', 'juros-compostos'],
   },
   {
     slug: 'poupanca',
@@ -376,7 +376,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'rendimento poupança simulador',
       'simulador poupança Caixa',
     ],
-    relacionadas: ['cdb', 'tesouro-direto', 'juros-compostos', 'irpf'],
+    relacionadas: ['cdb', 'tesouro-direto', 'financiamento', 'irpf'],
   },
   {
     slug: 'tesouro-direto',
@@ -396,7 +396,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'tesouro direto simulador',
       'simular tesouro direto',
     ],
-    relacionadas: ['cdb', 'poupanca', 'juros-compostos', 'irpf'],
+    relacionadas: ['cdb', 'poupanca', 'irpf', 'juros-compostos'],
   },
 
   // Saúde
@@ -455,7 +455,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       // atendida pelo modo "margem desejada → preço".
       'calcular valor baseado na margem de lucro',
     ],
-    relacionadas: ['das-mei', 'porcentagem', 'juros-compostos'],
+    relacionadas: ['das-mei', 'porcentagem', 'financiamento'],
   },
 ]
 
