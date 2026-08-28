@@ -180,6 +180,193 @@ describe('calcularHoraExtra', () => {
     })
   })
 
+  describe('minutos (F48)', () => {
+    it('1h30 vale o mesmo que 1,5 hora decimal', () => {
+      const comMinutos = calcularHoraExtra({
+        salarioBruto: 3000,
+        jornadaMensalHoras: '44h',
+        quantidadeHoras: 1,
+        quantidadeMinutos: 30,
+        tipoHora: 'util',
+      })
+      const decimal = calcularHoraExtra({
+        salarioBruto: 3000,
+        jornadaMensalHoras: '44h',
+        quantidadeHoras: 1.5,
+        tipoHora: 'util',
+      })
+      expect(comMinutos.sucesso && decimal.sucesso).toBe(true)
+      if (comMinutos.sucesso && decimal.sucesso) {
+        expect(comMinutos.dados.dados.valorTotal).toBe(decimal.dados.dados.valorTotal)
+      }
+    })
+
+    it('aceita 0 hora quando há minutos — "45 minutos de hora extra"', () => {
+      const r = calcularHoraExtra({
+        salarioBruto: 3000,
+        jornadaMensalHoras: '44h',
+        quantidadeHoras: 0,
+        quantidadeMinutos: 45,
+        tipoHora: 'util',
+      })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) expect(r.dados.dados.horasTotais).toBe(0.75)
+    })
+
+    it('continua rejeitando zero hora e zero minuto', () => {
+      const r = calcularHoraExtra({
+        salarioBruto: 3000,
+        jornadaMensalHoras: '44h',
+        quantidadeHoras: 0,
+        quantidadeMinutos: 0,
+        tipoHora: 'util',
+      })
+      expect(r.sucesso).toBe(false)
+    })
+
+    it('rejeita minutos fora de 0–59', () => {
+      for (const quantidadeMinutos of [-1, 60, 90]) {
+        const r = calcularHoraExtra({
+          salarioBruto: 3000,
+          jornadaMensalHoras: '44h',
+          quantidadeHoras: 1,
+          quantidadeMinutos,
+          tipoHora: 'util',
+        })
+        expect(r.sucesso, `${quantidadeMinutos} deveria ser rejeitado`).toBe(false)
+      }
+    })
+  })
+
+  describe('adicional noturno (F48 — corrige divergência com o conteúdo)', () => {
+    // Até 2026-08-27 o motor cobrava 1,5× na hora noturna enquanto o MDX da
+    // página afirmava 1,80× (= 1,20 × 1,50). O conteúdo é que estava certo:
+    // o adicional noturno do art. 73 incide sobre a hora normal e a hora extra
+    // incide sobre essa base já adicionada.
+    it('hora extra noturna é 1,80× a hora normal, não 1,50×', () => {
+      const r = calcularHoraExtra({
+        salarioBruto: 3000,
+        jornadaMensalHoras: '44h',
+        quantidadeHoras: 1,
+        tipoHora: 'noturna',
+      })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        expect(r.dados.dados.valorPorHora).toBe(arredondar((3000 / 220) * 1.2 * 1.5))
+        expect(r.dados.dados.adicionalNoturnoAplicado).toBe(0.2)
+      }
+    })
+
+    it('nenhum outro tipo recebe adicional noturno', () => {
+      for (const tipoHora of ['util', 'domingo', 'feriado'] as const) {
+        const r = calcularHoraExtra({
+          salarioBruto: 3000,
+          jornadaMensalHoras: '44h',
+          quantidadeHoras: 1,
+          tipoHora,
+        })
+        expect(r.sucesso).toBe(true)
+        if (r.sucesso) expect(r.dados.dados.adicionalNoturnoAplicado).toBe(0)
+      }
+    })
+
+    it('CCT noturna de 60% compõe com o adicional noturno (1,20 × 1,60)', () => {
+      const r = calcularHoraExtra({
+        salarioBruto: 3000,
+        jornadaMensalHoras: '44h',
+        quantidadeHoras: 1,
+        tipoHora: 'noturna',
+        adicionalNegociado: 0.6,
+      })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        expect(r.dados.dados.valorPorHora).toBe(arredondar((3000 / 220) * 1.2 * 1.6))
+      }
+    })
+  })
+
+  describe('hora noturna reduzida (F48)', () => {
+    it('1h de relógio à noite vale 1,14h de pagamento (60 ÷ 52,5)', () => {
+      const r = calcularHoraExtra({
+        salarioBruto: 3000,
+        jornadaMensalHoras: '44h',
+        quantidadeHoras: 1,
+        tipoHora: 'noturna',
+        horaNoturnaReduzida: true,
+      })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) expect(r.dados.dados.horasTotais).toBe(arredondar(60 / 52.5))
+    })
+
+    it('a redução é ignorada fora do tipo noturna', () => {
+      const r = calcularHoraExtra({
+        salarioBruto: 3000,
+        jornadaMensalHoras: '44h',
+        quantidadeHoras: 2,
+        tipoHora: 'util',
+        horaNoturnaReduzida: true,
+      })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) expect(r.dados.dados.horasTotais).toBe(2)
+    })
+  })
+
+  describe('reflexo no DSR (F48)', () => {
+    it('DSR = total das horas extras ÷ dias úteis × dias de descanso', () => {
+      const r = calcularHoraExtra({
+        salarioBruto: 3000,
+        jornadaMensalHoras: '44h',
+        quantidadeHoras: 10,
+        tipoHora: 'util',
+        dsr: { diasUteis: 25, diasDescanso: 5 },
+      })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        const { valorTotal, valorDsr, valorTotalComDsr } = r.dados.dados
+        expect(valorDsr).toBe(arredondar((valorTotal / 25) * 5))
+        expect(valorTotalComDsr).toBe(arredondar(valorTotal + valorDsr))
+        // O resultado apresentado passa a ser o total COM o reflexo.
+        expect(r.dados.resultado).toBe(valorTotalComDsr)
+      }
+    })
+
+    it('sem DSR pedido, o reflexo é zero e o resultado é o total puro', () => {
+      const r = calcularHoraExtra({
+        salarioBruto: 3000,
+        jornadaMensalHoras: '44h',
+        quantidadeHoras: 10,
+        tipoHora: 'util',
+      })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        expect(r.dados.dados.valorDsr).toBe(0)
+        expect(r.dados.resultado).toBe(r.dados.dados.valorTotal)
+      }
+    })
+
+    it('rejeita dias úteis zero (divisão por zero)', () => {
+      const r = calcularHoraExtra({
+        salarioBruto: 3000,
+        jornadaMensalHoras: '44h',
+        quantidadeHoras: 10,
+        tipoHora: 'util',
+        dsr: { diasUteis: 0, diasDescanso: 5 },
+      })
+      expect(r.sucesso).toBe(false)
+    })
+
+    it('rejeita dias de descanso negativos', () => {
+      const r = calcularHoraExtra({
+        salarioBruto: 3000,
+        jornadaMensalHoras: '44h',
+        quantidadeHoras: 10,
+        tipoHora: 'util',
+        dsr: { diasUteis: 25, diasDescanso: -1 },
+      })
+      expect(r.sucesso).toBe(false)
+    })
+  })
+
   describe('detalhamento', () => {
     it('contém todas as 6 linhas esperadas', () => {
       const r = calcularHoraExtra({
@@ -192,6 +379,51 @@ describe('calcularHoraExtra', () => {
       if (r.sucesso) {
         expect(r.dados.detalhamento).toHaveLength(6)
         expect(r.dados.detalhamento[0]?.descricao).toBe('Salário Bruto')
+      }
+    })
+
+    it('DSR acrescenta duas linhas ao detalhamento', () => {
+      const r = calcularHoraExtra({
+        salarioBruto: 3000,
+        jornadaMensalHoras: '44h',
+        quantidadeHoras: 2,
+        tipoHora: 'util',
+        dsr: { diasUteis: 25, diasDescanso: 5 },
+      })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        expect(r.dados.detalhamento).toHaveLength(8)
+        expect(r.dados.detalhamento.at(-1)?.descricao).toBe('Total com DSR')
+      }
+    })
+
+    it('noturna com hora reduzida acrescenta as duas linhas próprias', () => {
+      const r = calcularHoraExtra({
+        salarioBruto: 3000,
+        jornadaMensalHoras: '44h',
+        quantidadeHoras: 2,
+        tipoHora: 'noturna',
+        horaNoturnaReduzida: true,
+      })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        const descricoes = r.dados.detalhamento.map((d) => d.descricao)
+        expect(descricoes).toContain('Adicional Noturno (CLT art. 73)')
+        expect(descricoes).toContain('Hora Noturna Reduzida (CLT art. 73 §1º)')
+      }
+    })
+
+    it('rótulo do total mostra horas e minutos, não decimal', () => {
+      const r = calcularHoraExtra({
+        salarioBruto: 3000,
+        jornadaMensalHoras: '44h',
+        quantidadeHoras: 1,
+        quantidadeMinutos: 30,
+        tipoHora: 'util',
+      })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        expect(r.dados.detalhamento.at(-1)?.descricao).toBe('Total (1h30)')
       }
     })
   })

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { calcularFerias } from '../ferias'
+import { arredondar } from '../../utils'
 
 describe('calcularFerias', () => {
   describe('validação', () => {
@@ -139,4 +140,87 @@ describe('calcularFerias', () => {
       }
     })
   })
+  describe('precisão do valor diário (F57 — regressão)', () => {
+    // Até 2026-08-27 o valor diário era arredondado ANTES de multiplicar pelos
+    // dias, e o erro de centavos era multiplicado junto: R$ 2.000 de salário
+    // rendia R$ 2.000,10 de férias (66,67 × 30). A suíte não pegou porque
+    // todos os casos existentes usavam salário divisível por 30 — daí estes
+    // testes usarem de propósito salários que NÃO são.
+    it('férias de 30 dias equivalem exatamente ao salário do mês', () => {
+      for (const salarioBruto of [2000, 2500, 3500, 4500, 5500, 6100, 9999]) {
+        const r = calcularFerias({ salarioBruto, diasFaltas: 0 })
+        expect(r.sucesso).toBe(true)
+        if (r.sucesso) {
+          expect(r.dados.dados.salarioFerias, `salário ${salarioBruto}`).toBe(salarioBruto)
+        }
+      }
+    })
+
+    it('o total bruto de 30 dias é exatamente 4/3 do salário', () => {
+      for (const salarioBruto of [2000, 2500, 3500, 7777]) {
+        const r = calcularFerias({ salarioBruto, diasFaltas: 0 })
+        expect(r.sucesso).toBe(true)
+        if (r.sucesso) {
+          expect(r.dados.dados.totalBruto, `salário ${salarioBruto}`).toBe(
+            arredondar(salarioBruto * (4 / 3)),
+          )
+        }
+      }
+    })
+
+    it('vender 10 dias não muda o total além do centavo de arredondamento', () => {
+      // Vender dias não pode fazer o trabalhador ganhar nem perder. Um centavo
+      // de diferença é inevitável e correto: gozados, terço e abono são três
+      // linhas arredondadas à parte, e é a soma das linhas exibidas que tem de
+      // bater com o total exibido (ver o teste seguinte). O que não pode é a
+      // diferença crescer com os dias, que era o defeito antigo.
+      for (const salarioBruto of [2000, 2500, 3500, 4400]) {
+        const inteiro = calcularFerias({ salarioBruto, diasFaltas: 0 })
+        const vendido = calcularFerias({ salarioBruto, diasFaltas: 0, diasAbono: 10 })
+        expect(inteiro.sucesso && vendido.sucesso).toBe(true)
+        if (inteiro.sucesso && vendido.sucesso) {
+          // `arredondar` na diferença porque subtrair dois floats de 2 casas
+          // devolve 0.010000000000218 — a comparação crua reprovaria sozinha.
+          const diferenca = arredondar(
+            Math.abs(vendido.dados.dados.totalBruto - inteiro.dados.dados.totalBruto),
+          )
+          expect(diferenca, `salário ${salarioBruto}`).toBeLessThanOrEqual(0.01)
+        }
+      }
+    })
+
+    it('o detalhamento exibido sempre soma o total exibido', () => {
+      // Invariante que vale mais que a igualdade exata acima: o usuário vê as
+      // linhas e vê o total, e os dois têm de fechar. É por isso que os
+      // componentes continuam arredondados um a um em vez de sair de um único
+      // arredondamento no fim.
+      const casos = [
+        { salarioBruto: 2000, diasFaltas: 0 },
+        { salarioBruto: 2500, diasFaltas: 0, diasAbono: 10 },
+        { salarioBruto: 3500, diasFaltas: 8 },
+        { salarioBruto: 4400, diasFaltas: 0, diasAbono: 10 },
+        { salarioBruto: 7777, diasFaltas: 20 },
+      ]
+      for (const caso of casos) {
+        const r = calcularFerias(caso)
+        expect(r.sucesso).toBe(true)
+        if (r.sucesso) {
+          const linhas = r.dados.detalhamento.filter((l) => l.descricao !== 'Total Bruto')
+          const soma = arredondar(linhas.reduce((acc, l) => acc + l.valor, 0))
+          expect(soma, JSON.stringify(caso)).toBe(r.dados.dados.totalBruto)
+        }
+      }
+    })
+
+    it('dias reduzidos por falta são proporção exata dos 30 dias', () => {
+      // 8 faltas → 24 dias (CLT art. 130), ou seja 80% do salário.
+      const r = calcularFerias({ salarioBruto: 2500, diasFaltas: 8 })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        expect(r.dados.dados.diasGozados).toBe(24)
+        expect(r.dados.dados.salarioFerias).toBe(2000)
+      }
+    })
+  })
+
 })

@@ -17,6 +17,8 @@ import { siteConfig } from '@/lib/seo'
 // 20, rodapé reduzido a 8 destaques + categorias, e 20 links contextuais novos
 // dentro dos MDX) e F44 (redirects de URLs quebradas). Muda a estrutura de
 // links de todas as páginas, que é justamente o que o Google precisa recrawlear.
+// 2026-08-27 (mesma data): F47/F49 acrescentaram 8 tabelas de referência e 14
+// exemplos resolvidos em 5 MDX, e F48 mudou o formulário da hora extra.
 const seoRefreshDate = new Date('2026-08-27')
 const staticLastModified = new Date('2026-05-11')
 

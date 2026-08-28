@@ -17,8 +17,37 @@ que não cabe em nenhum dos outros três.
 ## Ao voltar (resumo rápido)
 
 - **O plano de tráfego de 27/08 está numerado no [`FEATURES.md`](FEATURES.md)
-  como F43-F56** (Blocos A-D), a pedido do Paulo. **O Bloco A foi entregue no
-  mesmo dia (F43-F46, `v0.18.0`)**; B, C e D seguem abertos.
+  como F43-F56** (Blocos A-D), a pedido do Paulo. **Blocos A e B entregues no
+  mesmo dia (F43-F51, `v0.23.0`)**; C e D seguem abertos.
+- **Bloco B entregue (27/08) — e o achado que reordena a leitura de conteúdo:
+  o gargalo não é profundidade, é granularidade.** Os MDX já tinham 800-2.205
+  palavras, 7-13 H2 e artigo de lei citado; isso é competitivo. O que faltava
+  era o que o concorrente publica e a calculadora escondia atrás do formulário:
+  **8 tabelas de referência numéricas** (F47) e **14 exemplos resolvidos com
+  números fechados** (F49) nas 5 páginas de maior impressão. Todos os números
+  saíram de execuções do próprio core, não de conta à mão — se uma regra mudar,
+  o e2e quebra em vez de a tabela divergir da calculadora em silêncio.
+- **Dois bugs reais achados pelo caminho do Bloco B.** (1) **A hora extra
+  noturna cobrava 1,50× enquanto o MDX da própria página afirmava 1,80×** — o
+  adicional noturno de 20% do art. 73 nunca foi aplicado no motor, e o conteúdo
+  é que estava certo. Corrigido no F48 (mesmo padrão do F39/F40: divergência
+  entre conteúdo e motor, e o conteúdo ganhou). (2) **Data inexistente passava
+  silenciosamente** — `31/02` virava 03/03 via `new Date`; o campo mascarado do
+  F51 valida contra o calendário e o Zod reprova.
+- **Fix de precisão das férias (F57, `v0.23.1`) — corrigido no mesmo dia, a
+  pedido do Paulo.** `calcularFerias` arredondava o valor diário antes de
+  multiplicar pelos dias, então **R$ 2.000 de salário rendia R$ 2.000,10 de
+  férias**. Não era padrão da casa: `decimo-terceiro.ts` e `rescisao.ts` sempre
+  arredondaram no fim. **A lição de método vale mais que o bug:** a suíte tinha
+  17 testes de férias e nenhum pegou, porque **todos usavam salário divisível
+  por 30**. Ao escolher número de teste, escolher o que expõe a operação, não o
+  que sai redondo.
+- **Invariante registrada no F57: o detalhamento exibido tem de somar o total
+  exibido.** É por isso que os três componentes das férias (gozados, terço,
+  abono) seguem arredondados um a um, e não saem de um arredondamento único no
+  fim — o usuário vê as linhas e vê o total. A consequência é **um centavo** de
+  diferença entre vender e não vender dias, que é correto e agora está
+  explicitado em teste. Vale para qualquer calculadora nova.
 - **Bloco A entregue (27/08).** A inversão de link interno acabou:
   `financiamento` foi de **1 para 6** links internos recebidos, `fgts` de 2
   para 6, `hora-extra` de 2 para 5, enquanto `juros-compostos` caiu de 8 para
@@ -421,12 +450,18 @@ de campanha de autoridade, só CTR/backlink leve): `margem-lucro` pos.
 ### P1 — próximas 2-3 semanas
 
 **Acrescentado em 20/08 (ver diário):**
-- **Campos de data com máscara + atalhos** na rescisão, férias e 13º. Maior
+- ~~**Campos de data com máscara + atalhos**~~ ✅ **F51, 27/08** — e o escopo
+  real era menor: só a rescisão tem campo de data (férias e 13º trabalham com
+  meses e dias). Diagnóstico original abaixo.
+  **Campos de data com máscara + atalhos** na rescisão, férias e 13º. Maior
   atrito medido do site: **11 dos 24 cliques** da `rescisao-trabalhista` no
   Clarity foram nos dois campos de data. `input[type=date]` nativo é ruim no
   Edge/Windows, que é 65% do público. É o F34 aplicado ao tipo de campo que
   ficou de fora.
-- **Chips de valor rápido nos campos que viraram stepper no F35.** O
+- ~~**Chips de valor rápido nos campos que viraram stepper no F35.**~~ ✅
+  **F50, 27/08** — a terceira janela (`cdb`, 48% dos cliques da página num
+  campo só) encerrou a dúvida de sinal fraco. Diagnóstico original abaixo.
+  **Chips de valor rápido nos campos que viraram stepper no F35.** O
   `quickAdd` do F12 existe, mas 69 de 105 cliques em `ferias` foram nos +/− —
   padrão que se repetiu em duas janelas independentes, agora com tráfego
   orgânico. Sinal fraco (poucos pageviews), custo baixo.
@@ -975,6 +1010,12 @@ dependem de orçamento nem de terceiro.*
 A-D); D2/D3/D4 reaproveitam F22/F15/F19, que já existiam.*
 
 **O que checar no próximo export (marco: 27/08):**
+- **Marco do Bloco B (F47-F51) também é 27/08.** As 5 páginas com tabela de
+  referência partem de: `financiamento` 298 impr / pos. 81,8, `hora-extra` 240
+  / 84,7, `fgts` 207 / 90,0, `ferias` 205 / 88,1, `poupanca` 195 / 65,5. A
+  hipótese do F47/F49 é que tabela e exemplo capturam cauda longa **sem página
+  nova** — se as impressões dessas 5 não subirem em 4-6 semanas, a hipótese cai
+  e o peso volta para o F23 (páginas programáticas).
 - **Filtrar o GSC por data ≥ 26/08** para isolar F38/F39 — números de partida:
   cluster "simulador" **83,6**, cluster rescisão **93,6**, `tesouro-direto`
   **53,7**, `rescisao-trabalhista` **90,8**.

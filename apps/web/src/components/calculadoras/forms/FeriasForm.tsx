@@ -3,7 +3,7 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularFerias } from '@calculosonline/core/trabalhista'
-import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
+import { QUICK_ADD_DIAS, QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -38,6 +38,8 @@ export function FeriasForm({ onResult, onError, isLoading, sharedData, autoSubmi
         diasFaltas: {
           label: 'Dias de faltas injustificadas',
           type: 'stepper',
+          suffix: 'dias',
+          quickAdd: QUICK_ADD_DIAS,
           hint: '>32 faltas perde o direito ao período',
         },
         diasAbono: {
