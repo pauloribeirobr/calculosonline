@@ -235,6 +235,70 @@ export function ItemListJsonLd({
 }
 
 /**
+ * JSON-LD `Dataset` para as tabelas legislativas (F55).
+ *
+ * Motivo, e a ressalva junto: o Clarity mostra que o `irrf` é a página nº1 do
+ * site em citação por IA — 158 de 295 citações em 7 dias — e ao mesmo tempo é
+ * invisível no Google (88 impressões, posição 81). `Dataset` é o vocabulário
+ * que descreve "esta página publica uma tabela de dados com data de vigência
+ * e fonte", que é exatamente o que um modelo precisa saber para citar a versão
+ * certa e não uma tabela de 2024 achada em outro lugar.
+ *
+ * Ressalva honesta: **isto não gera rich result no Google.** O `FAQPage` já
+ * morreu para todo mundo em 07/05/2026 (ver F18), e `Dataset` só aparece no
+ * Google Dataset Search, que não é a SERP normal. O valor aqui é de GEO —
+ * autoridade e frescor legíveis por máquina — e não de CTR.
+ */
+export function DatasetJsonLd({
+  name,
+  description,
+  path,
+  dataAtualizacao,
+  vigenciaInicio,
+  fonteJuridica,
+  variaveis,
+}: {
+  name: string
+  description: string
+  path: string
+  /** Data em que a tabela foi revisada nesta base (ISO). */
+  dataAtualizacao: string
+  /** Início da vigência legal da tabela (ISO). */
+  vigenciaInicio: string
+  fonteJuridica: string
+  /** O que a tabela mede — vira `variableMeasured`. */
+  variaveis: string[]
+}) {
+  const url = toAbsoluteUrl(path)
+  return (
+    <JsonLd
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'Dataset',
+        '@id': `${url}#dataset`,
+        name,
+        description,
+        url,
+        inLanguage: 'pt-BR',
+        // `temporalCoverage` no formato aberto "2026-01-01/.." diz "vigente
+        // desde, sem fim conhecido" — que é a situação de uma tabela em vigor.
+        temporalCoverage: `${vigenciaInicio}/..`,
+        dateModified: dataAtualizacao,
+        datePublished: vigenciaInicio,
+        spatialCoverage: { '@type': 'Country', name: 'Brasil' },
+        creator: { '@id': `${siteConfig.url}#organization` },
+        publisher: { '@id': `${siteConfig.url}#organization` },
+        isAccessibleForFree: true,
+        license: 'https://creativecommons.org/licenses/by/4.0/',
+        citation: fonteJuridica,
+        variableMeasured: variaveis,
+        mainEntityOfPage: { '@id': `${url}#webpage` },
+      }}
+    />
+  )
+}
+
+/**
  * JSON-LD `Article` (F21). Ainda sem consumidor (blog é o F22, backlog),
  * mas entra agora para fechar a paridade com a biblioteca do Recibo Fácil
  * e não bloquear o F22 numa nova rodada de JsonLd.tsx.

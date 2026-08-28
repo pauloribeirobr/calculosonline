@@ -101,6 +101,50 @@ workflow não precisa de `pnpm install` nem de build.
 **3. Google Search Console** — reenviar o sitemap basta. A Inspeção de URL só
 antecipa o recrawl em alguns dias e é opcional. O Google não usa IndexNow.
 
+### Keyword research semanal pelo painel de IA do Clarity
+
+O Microsoft Clarity tem um painel de **Share of Authority (SoA)** que lista as
+queries em que o site foi **citado por IA**, com a contagem por query e por
+página. É a única fonte de keyword research do projeto com ciclo de **7 dias** —
+o Search Console leva 90, porque a posição média que ele reporta é média da
+janela inteira e não move com um deploy de dias atrás.
+
+Ele já pagou o próprio custo uma vez. O F38 (20/08) apostou no vocabulário
+"simulador/simulação" para o Tesouro Direto, escolhido pelo volume de busca do
+Semrush. Uma semana depois as citações da página tinham triplicado (15 → 47) —
+**mas nas variações de "calculadora de investimento em tesouro direto"**, que o
+F38 não tinha mirado. A palavra "simulação" não aparecia na lista. O ganho era
+real e a atribuição era outra; sem esse painel, a conclusão registrada teria
+sido a errada.
+
+**Como ler, a cada rodada de análise:**
+
+1. No Clarity, exportar o painel do projeto (inclui o bloco de SoA) para `gsc/`.
+2. Na tabela de **queries**, procurar vocabulário que o site **não usa**: no
+   export de 27/08 apareceram "calculadora de investimento em tesouro direto"
+   (47 citações somadas), "calcule ir 2026" (21), "cálculo de dependente no IR"
+   (6) e "calculadora irrf 2026 aluguel" (4).
+3. Separar em dois destinos: **vocabulário** (a página já faz aquilo, só não
+   chama assim → tratamento do F38/F53: title, H1, MDX e FAQ) e **lacuna de
+   produto** (a página não faz aquilo → feature, como o IRRF sobre aluguel do
+   F54).
+4. Na tabela de **páginas**, ver quem concentra citação. Em 27/08 o `irrf` tinha
+   158 de 295 — é a página em que investir GEO rende mais.
+5. Registrar os números brutos no [`MEMORY.md`](MEMORY.md): a pasta `gsc/` está
+   no `.gitignore` e é sobrescrita a cada export, então a série temporal só
+   existe se estiver escrita lá.
+
+**Duas armadilhas de leitura:**
+
+- **"SoA 24%" quer dizer "24% no Copilot", não "24% na IA."** O Clarity é da
+  Microsoft e mede o ecossistema Bing. O Semrush, que mede ChatGPT, Gemini e AI
+  Overview, reporta zero para o mesmo site no mesmo período. Os dois estão
+  certos — é a mesma assimetria do tráfego orgânico (462 sessões do Bing contra
+  4 do Google desde janeiro).
+- **Citação não é clique.** O `AI referral traffic` do mesmo painel saiu de 0
+  para 0,83% entre 20/08 e 27/08 — real, mas pequeno. GEO aqui constrói
+  autoridade e presença; converter isso em visita é outra batalha.
+
 ### Marcar a conversão no GA4 (passo manual, feito no painel)
 
 O evento **`calculator_calculated`** já é disparado corretamente pelo site —

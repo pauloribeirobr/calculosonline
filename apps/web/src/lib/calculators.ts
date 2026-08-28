@@ -43,6 +43,20 @@ export interface CalculadoraRegistro {
    * Ver diário 2026-08-20 no `MEMORY.md`.
    */
   sinonimos?: string[]
+  /**
+   * Declara que a página publica uma tabela legislativa, e alimenta o JSON-LD
+   * `Dataset` (F55). Só faz sentido em calculadora cujo conteúdo editorial
+   * traz a tabela em si (faixas do IRRF, do INSS, valores do DAS) — não em
+   * calculadora que só aplica uma fórmula.
+   */
+  dataset?: {
+    nome: string
+    descricao: string
+    /** Início da vigência legal da tabela (ISO). */
+    vigenciaInicio: string
+    /** O que a tabela mede — vira `variableMeasured`. */
+    variaveis: string[]
+  }
   relacionadas: string[]
   /** Aparece no bloco "Mais buscadas" da home */
   featured?: boolean
@@ -129,6 +143,11 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'férias proporcional',
       'abono pecuniário',
       '1/3 constitucional',
+    ],
+    sinonimos: [
+      'calcular férias 2026',
+      'cálculo de férias 2026',
+      'quanto vou receber de férias',
     ],
     relacionadas: ['decimo-terceiro', 'fgts', 'hora-extra', 'rescisao-trabalhista'],
   },
@@ -217,6 +236,22 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     fonteJuridica: 'Decreto 11.936/2024',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['calcular INSS', 'tabela INSS 2026', 'contribuição INSS'],
+    dataset: {
+      nome: 'Tabela progressiva de contribuição do INSS 2026',
+      descricao:
+        'Faixas de salário de contribuição e alíquotas progressivas do INSS vigentes no Brasil em 2026, com o teto de contribuição do segurado empregado.',
+      vigenciaInicio: '2026-01-01',
+      variaveis: [
+        'Faixa de salário de contribuição (R$)',
+        'Alíquota do INSS (%)',
+        'Teto do salário de contribuição (R$)',
+      ],
+    },
+    sinonimos: [
+      'cálculo do INSS online 2026',
+      'calcular contribuição do INSS',
+      'tabela do INSS 2026',
+    ],
     relacionadas: ['salario-liquido', 'irrf', 'fgts', 'das-mei'],
   },
   {
@@ -225,12 +260,34 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     tituloLongo: 'Calculadora de IRRF',
     descricaoCurta: 'Imposto retido na fonte mensal.',
     descricao:
-      'Calcule o Imposto de Renda Retido na Fonte com tabela progressiva 2026, dependentes e deduções.',
+      'Calcule o IR na folha de pagamento ou sobre aluguel recebido: tabela progressiva do IRRF 2026, dedução por dependente, pensão e despesas dedutíveis, com a base de cálculo aberta passo a passo.',
     categoria: 'impostos',
     icone: 'irrf',
     fonteJuridica: 'RIR/2018 (Decreto 9.580/2018) | Lei 11.482/2007',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['IRRF', 'imposto de renda retido', 'tabela IRRF 2026'],
+    dataset: {
+      nome: 'Tabela progressiva mensal do IRRF 2026',
+      descricao:
+        'Faixas de base de cálculo, alíquotas e parcelas a deduzir do Imposto de Renda Retido na Fonte vigentes no Brasil em 2026, com a dedução por dependente e o limite de isenção mensal.',
+      vigenciaInicio: '2026-01-01',
+      variaveis: [
+        'Faixa de base de cálculo mensal (R$)',
+        'Alíquota do IRRF (%)',
+        'Parcela a deduzir (R$)',
+        'Dedução por dependente (R$)',
+        'Limite de isenção mensal (R$)',
+      ],
+    },
+    sinonimos: [
+      'calcular IR 2026',
+      'calculadora do IRRF 2026',
+      'cálculo de IR na folha de pagamento',
+      'cálculo de dependente no IR',
+      'tabela de desconto do IRRF 2026',
+      'base de cálculo do IRRF',
+      'calculadora de IRRF sobre aluguel',
+    ],
     relacionadas: ['inss', 'salario-liquido', 'ferias', 'decimo-terceiro'],
   },
   {
@@ -245,6 +302,24 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     fonteJuridica: 'Lei 9.250/1995 | IN RFB 2.178/2024',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['IRPF 2026', 'declaração imposto de renda', 'restituição IR'],
+    dataset: {
+      nome: 'Tabela do Imposto de Renda Pessoa Física 2026',
+      descricao:
+        'Faixas anuais, alíquotas e parcelas a deduzir do IRPF vigentes no Brasil em 2026, com os limites do desconto simplificado e das deduções legais.',
+      vigenciaInicio: '2026-01-01',
+      variaveis: [
+        'Faixa de base de cálculo anual (R$)',
+        'Alíquota do IRPF (%)',
+        'Parcela a deduzir (R$)',
+        'Limite do desconto simplificado (R$)',
+      ],
+    },
+    sinonimos: [
+      'calcular IRPF 2026',
+      'calcular IR 2026',
+      'calculadora do imposto de renda anual',
+      'declaração de IR simplificada ou completa',
+    ],
     relacionadas: ['irrf', 'inss', 'tesouro-direto', 'poupanca'],
     featured: true,
   },
@@ -260,6 +335,18 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     fonteJuridica: 'LC 123/2006 art. 18-A | Resolução CGSN 140/2018',
     dataAtualizacao: '2026-01-01',
     palavrasChave: ['DAS MEI', 'calcular MEI', 'imposto MEI', 'boleto MEI 2026'],
+    dataset: {
+      nome: 'Valores do DAS MEI 2026',
+      descricao:
+        'Valores mensais do Documento de Arrecadação do Simples Nacional para o Microempreendedor Individual em 2026, por atividade (comércio, serviços e misto), e o limite de faturamento anual.',
+      vigenciaInicio: '2026-01-01',
+      variaveis: [
+        'Contribuição ao INSS (R$)',
+        'ICMS para comércio e indústria (R$)',
+        'ISS para prestação de serviços (R$)',
+        'Limite anual de faturamento (R$)',
+      ],
+    },
     relacionadas: ['inss', 'margem-lucro', 'irpf', 'financiamento'],
   },
 
@@ -355,6 +442,11 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'simulação de CDB',
       'simulador CDB prefixado',
       'simular CDB',
+      // F53: "benchmark do cdb" apareceu no painel de IA do Clarity com 50%
+      // de share — vocabulário de comparação, que o F38 não cobriu.
+      'benchmark de CDB',
+      'comparar CDB com a poupança',
+      'quanto rende o CDB',
     ],
     relacionadas: ['tesouro-direto', 'poupanca', 'irpf', 'juros-compostos'],
   },
@@ -395,6 +487,11 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'simulação tesouro direto',
       'tesouro direto simulador',
       'simular tesouro direto',
+      // Acrescentados no F53: foi este o vocabulário que gerou as 47 citações
+      // de IA da página em 7 dias no Clarity, não o "simulação" do F38.
+      'calculadora de investimento em tesouro direto',
+      'calculadora de investimentos tesouro direto',
+      'investir no tesouro direto',
     ],
     relacionadas: ['cdb', 'poupanca', 'irpf', 'juros-compostos'],
   },
@@ -429,6 +526,11 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     dataAtualizacao: '2026-01-01',
     formatoResultado: 'kcal',
     palavrasChave: ['calcular calorias', 'TDEE', 'taxa metabólica basal', 'dieta calorias'],
+    sinonimos: [
+      'calorias diárias recomendadas',
+      'quantas calorias devo comer por dia',
+      'gasto calórico diário',
+    ],
     relacionadas: ['imc', 'porcentagem'],
   },
 
