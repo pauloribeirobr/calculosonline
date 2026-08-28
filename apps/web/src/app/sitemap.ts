@@ -13,7 +13,11 @@ import { siteConfig } from '@/lib/seo'
 // categoria usam `staticLastModified`; bump manual ao editar o conteúdo delas.
 // 2026-08-20: F38/F39 (title, H1, description e MDX de 6 calculadoras) e
 // F41/F42 (ícone no header das 20, og-image própria por calculadora).
-const seoRefreshDate = new Date('2026-08-20')
+// 2026-08-27: F43 (escultura de link interno — `relacionadas` reordenadas nas
+// 20, rodapé reduzido a 8 destaques + categorias, e 20 links contextuais novos
+// dentro dos MDX) e F44 (redirects de URLs quebradas). Muda a estrutura de
+// links de todas as páginas, que é justamente o que o Google precisa recrawlear.
+const seoRefreshDate = new Date('2026-08-27')
 const staticLastModified = new Date('2026-05-11')
 
 export default function sitemap(): MetadataRoute.Sitemap {

@@ -1,0 +1,50 @@
+name: IndexNow
+
+# Dispara o IndexNow (Bing, Yandex, Seznam, Naver) DEPOIS que o deploy de
+# produção da Vercel termina com sucesso — que é a ordem que importa: rodar
+# antes faz os buscadores rastrearem o conteúdo antigo.
+#
+# Antes disto (F46) o passo era manual (`pnpm --filter web indexnow`) e nada
+# o disparava — nem hook, nem cron, nem build step. Com o Bing respondendo por
+# ~95% do tráfego real do site (462 sessões contra 4 do Google no GA4), era o
+# passo de maior retorno e o mais fácil de esquecer.
+#
+# Setup de uma vez só: criar o secret `INTERNAL_API_KEY` em
+# Settings > Secrets and variables > Actions, com o mesmo valor que está na
+# Vercel (Production). Sem ele o job não roda (ver o `if` do job).
+
+on:
+  deployment_status:
+  workflow_dispatch:
+    inputs:
+      slugs:
+        description: 'Slugs específicos (separados por espaço). Vazio = sitemap inteiro.'
+        required: false
+        default: ''
+
+jobs:
+  submit:
+    name: Submeter URLs
+    runs-on: ubuntu-latest
+    # deployment_status dispara em todo estado (pending/failure/success) e em
+    # todo ambiente (Preview/Production). Só produção bem-sucedida interessa.
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       github.event.deployment_status.environment == 'Production')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # O script não tem dependências (usa só `fetch` nativo) e lê a lista de
+      # URLs do sitemap.xml de produção — por isso não precisa de pnpm install
+      # nem de build.
+      - name: Submeter ao IndexNow
+        run: node apps/web/scripts/indexnow.mjs ${{ github.event.inputs.slugs }}
+        env:
+          INTERNAL_API_KEY: ${{ secrets.INTERNAL_API_KEY }}

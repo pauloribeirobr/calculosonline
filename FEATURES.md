@@ -56,6 +56,11 @@ Mesmo padrão do projeto irmão [Recibo Fácil](../recibofacil/FEATURES.md).
 | F41 | 2026-08-20 | **Identidade visual unificada por categoria + ícone em todas as superfícies.** O `CalculatorIcon` do F7 já era bom; faltava alcance e faltava uma fonte de verdade. As 6 categorias eram descritas em **4 tabelas paralelas** (2 de label, 2 de cor em formatos incompatíveis, já divergentes) — agora tudo sai de `lib/identidadeVisual.ts`, com tokens atômicos e sem importar React (é lido por `sitemap.ts`/`schema.ts`). Ícone e texto viraram tokens separados por contraste medido: `-600` no glifo (objeto gráfico, piso 3:1) e `-700` no texto (piso 4,5:1, que o `-600` reprova em âmbar/esmeralda/ciano). Suavização: ponto decorativo removido, glifo de `-700`→`-600`, `ring` padronizado. E o ícone chegou onde não existia — **as 20 páginas de calculadora** (onde cai todo o tráfego orgânico), os cards de relacionadas e `/meus-calculos` — via slot `ReactNode`, já que `packages/ui` não importa de `apps/web` — **v0.15.0** |
 | F42 | 2026-08-20 | **Imagem social (og-image) gerada por calculadora, a partir do ícone e da cor da categoria.** Corrige um 404 que estava em produção desde sempre — `seo.ts` apontava toda página para `/images/og-image.png`, que nunca existiu, quebrando o preview de todo link do F32 no WhatsApp. 20 imagens + a do site, geradas no build via `next/og` com a identidade do F41. Três obstáculos que valem memória: o Satori não renderiza `forwardRef` (os Heroicons somem sem erro — resolvido desembrulhando o `.render()` em `glifoHeroicon`), `div` com 2 nós filhos exige `display` explícito, e o App Router tem duas armadilhas opostas — `openGraph.images` sobrescreve a convenção de arquivo, e `openGraph` sem `images` suprime a herança do pai (era por isso que `/sobre` e `/categorias` não tinham imagem alguma) — **v0.16.0** |
 
+| F43 | 2026-08-27 | **Escultura de link interno — `relacionadas`, rodapé e links contextuais nos MDX.** O export do GSC de 27/08 mostrou 31 links internos **idênticos** para todas as páginas (o `Footer.tsx` listava as 20 calculadoras em todo lugar: quando tudo linka tudo, nenhum link significa nada) e o único diferencial real, o bloco `relacionadas` do registry, estava **invertido** — `financiamento`, maior página do site (298 impressões), recebia **1** link; `juros-compostos` (3 impressões, pos. 97,7) recebia **8**. Com Authority Score 2 e um único backlink reconhecido, o PageRank interno é o único capital de autoridade 100% sob controle. Três frentes: (1) as 20 listas de `relacionadas` reescritas — `financiamento` 1→6, `fgts` 2→6, `hora-extra` 2→5, enquanto `juros-compostos` 8→4 e `salario-liquido` 7→3; as duas páginas com backlink externo real (`salario-liquido`/band.com.br e `decimo-terceiro`/acritica.com) passaram a apontar **para** os alvos do P0, porque são fonte de autoridade, não destino; (2) rodapé reduzido de 20 links para 8 destaques + as 6 categorias + "Todas as calculadoras", com `/categorias` virando o hub; (3) **20 links contextuais dentro dos MDX, onde antes havia zero** — todo link interno vinha do rodapé ou do bloco `relacionadas`, ambos fora do corpo do texto, que é justamente onde o anchor text carrega contexto — **v0.17.0** |
+| F44 | 2026-08-27 | **URLs quebradas com tráfego real.** O Clarity (25-27/08, 25 sessões) mostrou `https://calculosonline.com.br/site` respondendo por **4 sessões — 16% do total** — e `/2026/calculadora/cdb` por 1; nenhuma das duas existe em `app/` e o `next.config.ts` não tinha bloco `redirects`. A origem é externa (link errado em diretório/agregador), então só o redirect resolve. **Achado maior, encontrado ao ler o código e não nos dados:** o `Footer.tsx` linkava `/blog` — rota que **nunca existiu** — em **todas as páginas do site**, ou seja, um 404 interno que o Google rastreava em 100% dos crawls, desperdiçando exatamente o PageRank que o F43 redistribui. Bloco `redirects` novo (`/site`, `/site/*` e prefixo de ano espúrio `/:ano(\d{4})/calculadora/:slug`) + link morto removido do rodapé — **v0.18.0** |
+| F45 | 2026-08-27 | **Evento de conversão do GA4 documentado (passo de painel, não de código).** `calculator_calculated` já era disparado corretamente por `analytics.calculatorCalculated()` (385 eventos em 28 dias no export anterior) — o que faltava era marcá-lo como *key event* no painel do GA4, coisa que a API de coleta não faz. Sem isso o GA4 reporta "Leads qualificados 0" em todas as semanas desde janeiro e **o Google Ads não tem o que otimizar**, que é o motivo real de o F17 estar bloqueado. Procedimento completo (caminho no painel, o que marcar, e as duas ressalvas — o GA4 não retroage, e o evento só aparece na lista se foi coletado nas últimas 48h) na seção "Operação" do `README.md` |
+| F46 | 2026-08-27 | **IndexNow automático depois do deploy de produção.** Desde 20/08 o script existia (`pnpm --filter web indexnow`) mas **nada o disparava** — sem hook, cron ou build step — e ele precisa rodar *depois* do deploy, senão os buscadores rastreiam o conteúdo antigo. Com o Bing respondendo por ~95% do tráfego real (462 sessões contra 4 do Google no GA4 de vida inteira), era o passo de maior retorno e o mais fácil de esquecer. Workflow `.github/workflows/indexnow.yml` escutando `deployment_status`, filtrado por `state == 'success'` **e** `environment == 'Production'` (o evento dispara em todo estado e também em Preview), mais `workflow_dispatch` com campo de slugs para submissão manual. Sem `pnpm install` nem build: o script não tem dependências e lê a lista de URLs do `sitemap.xml` de produção. Exige o secret `INTERNAL_API_KEY` no GitHub, mesmo valor da Vercel |
+
 > F25, F27, F28, F29, F30, F31, F32, F33, F34, F35, F36, F37, F38, F39, F40, F41 e F42 saíram de ordem (implementados direto, fora do backlog planejado em F14-F24) e por isso ganharam número novo em sequência em vez de reutilizar um número já reservado — mesmo critério usado no Recibo Fácil para features implementadas fora da fila. F16 manteve o número original porque já estava reservado nesse backlog (P0, GEO/`llms.txt`), só foi implementado fora da ordem relativa a F15. F26 está reservado no backlog (Fase 2, ainda não implementado).
 
 ## 2. Próximas melhorias (backlog)
@@ -64,7 +69,9 @@ Numeração segue direto de onde a Parte 1 parou (pulando F25, já usado pelo
 Clarity) — **a próxima feature nova implementada é a F14.** Fonte:
 [`MEMORY.md`](MEMORY.md) (§Backlog ativo) e `AGENTS.md`/
 `docs/PLANO_IMPLEMENTACAO.md` (fases do roadmap). Prioridade dentro de cada
-grupo segue a ordem do `MEMORY.md`. **Reordenado em 2026-07-25** para trazer
+grupo segue a ordem do `MEMORY.md`. **A próxima feature nova é a F57** — os
+números F43-F56 foram atribuídos em 2026-08-27 aos Blocos A-D do plano de
+tráfego (ver `MEMORY.md`, diário 2026-08-27, §7). **Reordenado em 2026-07-25** para trazer
 aquisição de tráfego (backlinks + GEO/llms.txt + Google Ads) antes do
 AdSense — e **refinado no mesmo dia** depois de cruzar o export novo do GSC
 (25/07) com o GA4: o problema não é "site sem tráfego" (há ~230
@@ -81,6 +88,64 @@ mandando tráfego — ver `MEMORY.md` §P0 e diário de 2026-07-25 (parte 4).
 | F17 | Google Ads — piloto de aquisição paga, mesmos alvos do F15 | Produto já está validado (233 `calculator_calculated` em 28 dias via outros canais) — o piloto não precisa provar que o produto funciona, precisa gerar tráfego/dado **especificamente atribuível ao Google** enquanto backlinks maturam. Orçamento/duração/CPC (Keyword Planner ou Semrush) pendentes de decisão do Paulo |
 | ~~F18~~ | ~~Investigar Rich Results (FAQPage/HowTo sem aparecer no GSC)~~ | ✅ **Respondido 27/07 — não é bug, é o Google inteiro, e só afeta o dropdown visual, não o conteúdo.** `HowTo` rich result foi **descontinuado (desktop e mobile) desde set/2023** — nunca teria chance de aparecer, mesmo com o F12 implementado corretamente. `FAQPage` rich result já estava restrito a domínios "autoritativos" de governo/saúde desde ago/2023 e foi **retirado por completo de todos os sites em 07/05/2026** (~2,5 meses antes desta checagem, dentro da janela de 3 meses analisada no GSC). **Importante: só o dropdown expansível na SERP morreu — o texto das perguntas/respostas (F10, 101 perguntas/20 calculadoras) continua valendo como conteúdo normal de SEO** (casa a página com buscas no formato de pergunta, cobertura semântica do cluster, fonte de citação pra IA/GEO). O JSON-LD `FAQPage`/`HowTo` em si é inofensivo de manter (Google confirma que não precisa remover), só não gera mais exibição visual — ver `MEMORY.md` |
 | F19 | Sprint 1.6 — AdSense | Gate `Fase 1 → Fase 2` do `docs/PLANO_IMPLEMENTACAO.md`. Continua depois de F15-F18 — não faz sentido ativar sem tráfego real do Google |
+
+### ~~Bloco A — aquisição, barato e alta confiança (export de 27/08)~~
+
+✅ **Entregue 2026-08-27** (F43-F46) — ver Parte 1. F45 é passo de painel do
+GA4 e F46 exige o secret `INTERNAL_API_KEY` no GitHub; ambos os procedimentos
+estão na seção "Operação" do [`README.md`](README.md).
+
+### Bloco B — fechar as lacunas que a SERP dos concorrentes expõe (export de 27/08)
+
+Registrado em 2026-08-27 (ver [`MEMORY.md`](MEMORY.md), diário 2026-08-27, §6
+e §7). **Diagnóstico que muda a leitura anterior: o gargalo de conteúdo não é
+profundidade, é granularidade de intenção.** Os MDX do site têm 800-2.205
+palavras, 7-13 H2 cada e artigo de lei citado — isso já é competitivo com quem
+rankeia. O que os concorrentes têm e o site não tem está abaixo.
+
+| # | Feature | Contexto |
+|---|---------|----------|
+| F47 | **Tabelas de referência numéricas** nas páginas de maior impressão | `calcule.net/trabalhista/calculo-hora-extra` publica uma "Tabela de Referência 2026" (salário bruto × valor da hora × hora extra 50% × 100%) e uma tabela de conversão de minutos. Isso captura sozinho a cauda "quanto vale a hora extra de quem ganha R$ 2.000" — que o site só responde **depois** que a pessoa preenche o formulário, e **o Google não preenche formulário**. Alvos: as 5 páginas de maior impressão (`financiamento` 298, `hora-extra` 240, `fgts` 207, `ferias` 205, `poupanca` 195). Tabela em HTML dentro do MDX; nenhuma página nova |
+| F48 | **Completar o `HoraExtraForm`** | O `select` de tipo de hora extra é fixo (útil/domingo/feriado/noturna): não faz **60%/70%/percentual livre** (adicional de acordo coletivo), não aceita **minutos** e não calcula **DSR sobre horas extras**. São 4 intenções de busca reais que o produto não atende, enquanto o concorrente que rankeia tem H2 separado para cada percentual. Página com 240 impressões, pos. 84,7 — e o único clique do site na lista de queries do GSC veio de "calculo hora extra" |
+| F49 | **Exemplos nomeados com números fechados** nos MDX dos alvos do P0 | `calculadorabrasil.com.br` traz 5 casos ("Carlos, vendedor…") com o cálculo inteiro escrito. É o formato que a IA generativa cita e que o Google usa para snippet — e o site tem tração de citação de IA comprovada (295 citações em 7 dias no Clarity), então é o tipo de conteúdo com retorno medível em uma semana |
+| F50 | **Chips de valor rápido nos campos que viraram stepper no F35** | O `quickAdd` do F12 já existe e não foi aplicado aos steppers. **Terceira confirmação independente:** heatmap do `cdb` (25-27/08) tem 4 pageviews e **133 cliques**, sendo **64 (48%) num campo só** (`#prazoMeses`) — quem quer 24 meses saindo de 12 clica 12 vezes. As outras duas janelas foram `ferias` em 09/08 e em 20/08. Deixou de ser sinal fraco |
+| F51 | **Máscara + atalhos nos campos de data** (rescisão, férias, 13º) | Maior atrito medido do site em 20/08: **11 dos 24 cliques** da `rescisao-trabalhista` no Clarity foram nos dois campos de data (`#dataAdmissao` 7, `#dataRescisao` 4). `input[type=date]` nativo é ruim no Edge/Windows, que é **61% do público** (GA4, vida inteira). É o F34 aplicado ao tipo de campo que ficou de fora |
+
+### Bloco C — GEO/IA, o único canal com crescimento provado (export de 27/08)
+
+Registrado em 2026-08-27 (ver [`MEMORY.md`](MEMORY.md), diário 2026-08-27, §2).
+**Racional que ordena este bloco acima do que se esperaria:** o F38 (20/08)
+teve efeito medido em **7 dias** — as citações de IA do `tesouro-direto` no
+Clarity foram de **15 → 47 (3,1×)**, o total do site de 256 → 295, e o **AI
+referral saiu de 0 e virou 0,83%** (primeira vez que citação virou clique).
+No mesmo período o Google entregou **4 sessões desde janeiro** contra 462 do
+Bing. Toda ação aqui é validável em uma semana; toda ação de SEO do Google
+leva um trimestre.
+
+| # | Feature | Contexto |
+|---|---------|----------|
+| F52 | **Painel Share of Authority do Clarity como keyword research semanal** | Foi ele que revelou que o vocabulário que gera citação no tesouro é "**calculadora de investimento (em) tesouro direto**" (47 citações somadas) e **não** "simulação tesouro direto" — que foi o que o F38 mirou e não aparece na lista. Ou seja: o ganho do F38 é real, mas a atribuição era outra. É a única fonte de keyword research com ciclo de 7 dias (o GSC leva 90). Escopo: virar passo fixo do ciclo "avalie a pasta gsc" |
+| F53 | **Aplicar o tratamento do F38 ao vocabulário que o Clarity mostrou** | Queries com citação real que o site não trata como vocabulário próprio: `calculadora de investimento em X` (47), `calcule ir 2026` (21), `calcular irpf 2026` (14), `calcule net irrf 2026` (14), `calculo dependente ir` (6), `como calcular ir folha 2026?` (6). Mesmo método do F38/F39: title, H1, MDX e FAQ — sem página nova |
+| F54 | **IRRF sobre aluguel** | `calculadora irrf 2026 aluguel` / `calculadora irrf aluguel 2026` aparecem com 4 citações cada no painel do Clarity — **demanda comprovada que a calculadora não atende**. Escopo: modo novo dentro do formulário existente (mesmo padrão do 3º modo do `margem-lucro` no F36), não página nova |
+| F55 | **GEO do IRRF** — schema `Table`/`Dataset` na tabela IRRF 2026 | Única página com tração forte de IA (**158 citações em 7 dias, 54% do total do site**) e ao mesmo tempo invisível no Google (88 impressões, pos. 81). Marcar a tabela IRRF 2026 com schema `Table`/`Dataset` + data de atualização explícita. A ressalva registrada em 20/08 ("constrói autoridade no Copilot, não cliques — AI referral = 0") **ficou mais fraca**: o AI referral saiu de 0 para 0,83% |
+
+### Bloco D — dependem de decisão do Paulo (export de 27/08)
+
+Registrado em 2026-08-27 (ver [`MEMORY.md`](MEMORY.md), diário 2026-08-27, §7).
+Três dos quatro itens já têm número atribuído em outras seções — ficam aqui só
+como referência cruzada, com o contexto novo do export.
+
+| # | Feature | Contexto |
+|---|---------|----------|
+| F56 | **Investigar o mobile** (achado novo) | GSC: **765 impressões no celular em posição 54,6**, contra 1.413 no desktop em posição 71 — o Google já rankeia o site **16 posições melhor no celular** — e **0 cliques**. No GA4 o mobile é **50 de 648 usuários (7,7%)**, porque o tráfego real vem do Bing no Windows (Edge 61%). É a única fatia do funil em que o Google já entrega e o site não colhe nada, e nunca foi olhada — todas as medições de Core Web Vitals do Clarity são de sessão desktop. Escopo: Lighthouse/PageSpeed mobile, render real no celular e GSC filtrado por dispositivo |
+| F22 | Blog sazonal — **começar pelo 13º salário** | Já registrado abaixo. **Contexto novo (27/08): a janela é agora.** A busca por 13º pica em nov/dez; publicar em setembro dá 60-90 dias de maturação. Se for para fazer algum dia, é este o mês |
+| F15 | Backlinks — mais placements | Já registrado no P0. **Antes de comprar, conferir se `acritica.com` (link de 12/08) apareceu no GSC → Links** — prazo dado em 20/08 foi meados de setembro; se não aparecer, o link não está sendo contado e isso muda a decisão de orçamento |
+| F19 | Rever o gate do AdSense | Já registrado no P0. Pendente desde 20/08: trocar "esperar tráfego do Google" (que entregou 4 sessões em 8 meses) por "N usuários/mês de qualquer canal", senão a espera é indefinida |
+
+**Ainda sem número, só no `MEMORY.md` (§P1):** hub "Calculadora Trabalhista
+Completa" — fluxo único encadeando rescisão + férias + 13º + FGTS, para as
+queries de intenção agregada que nenhuma das 10 calculadoras trabalhistas
+atende sozinha.
 
 ### Prioridade imediata (produto)
 

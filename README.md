@@ -70,20 +70,61 @@ conteúdo antigo. Confirme antes com um `curl` na página que mudou:
 curl -s https://calculosonline.com.br/calculadora/tesouro-direto | grep -o '<title>[^<]*</title>'
 ```
 
-Depois dispare:
+**Desde o F46 esse passo é automático:** o workflow
+[`.github/workflows/indexnow.yml`](.github/workflows/indexnow.yml) escuta o
+evento `deployment_status` e submete o sitemap inteiro assim que o deploy de
+**produção** da Vercel volta `success` — que é exatamente a ordem correta.
+Não é preciso rodar nada à mão no caminho normal.
+
+Para submeter fora desse fluxo (ou só algumas calculadoras), há dois caminhos:
 
 ```bash
+# local
 INTERNAL_API_KEY=<segredo> pnpm --filter web indexnow
 
-# ou só algumas calculadoras
+# local, só algumas calculadoras
 INTERNAL_API_KEY=<segredo> pnpm --filter web indexnow ferias inss
 ```
 
-O script lê o `sitemap.xml` de produção — não há lista de rotas duplicada.
-Nada dispara sozinho: nenhum deploy, hook ou cron chama o endpoint.
+Ou pelo GitHub: **Actions › IndexNow › Run workflow**, com o campo `slugs`
+vazio (sitemap inteiro) ou com os slugs separados por espaço.
+
+**Setup de uma vez só do workflow:** criar o secret `INTERNAL_API_KEY` em
+*Settings › Secrets and variables › Actions* com o mesmo valor que está na
+Vercel (Production). Sem o secret o job roda e falha no script, que exige a
+variável.
+
+O script lê o `sitemap.xml` de produção — não há lista de rotas duplicada — e
+não tem dependência nenhuma (usa só o `fetch` nativo do Node), por isso o
+workflow não precisa de `pnpm install` nem de build.
 
 **3. Google Search Console** — reenviar o sitemap basta. A Inspeção de URL só
 antecipa o recrawl em alguns dias e é opcional. O Google não usa IndexNow.
+
+### Marcar a conversão no GA4 (passo manual, feito no painel)
+
+O evento **`calculator_calculated`** já é disparado corretamente pelo site —
+`analytics.calculatorCalculated()` em
+[`apps/web/src/lib/analytics.ts`](apps/web/src/lib/analytics.ts), chamado a
+cada cálculo concluído (385 eventos em 28 dias no último export). O que falta
+não é código: é marcá-lo como **key event** no painel do GA4, coisa que a API
+de coleta não faz.
+
+Sem isso o GA4 reporta "Leads qualificados 0" em todas as semanas (é o caso
+desde janeiro) e **o Google Ads não tem o que otimizar** — motivo pelo qual o
+piloto pago (F17) está bloqueado.
+
+Caminho no painel: **Administrador › Exibir dados › Eventos**, localizar
+`calculator_calculated` na lista e ligar a chave **"Marcar como evento
+principal"**. Vale marcar também `calculator_shared` como secundário, se o
+objetivo for medir alcance.
+
+Duas ressalvas:
+
+- O GA4 **não retroage** — a contagem começa na data em que a chave é ligada.
+- O evento aparece na lista só depois de ter sido coletado ao menos uma vez
+  nas últimas 48h; se não estiver lá, é porque não houve cálculo no período,
+  não porque o tracking quebrou.
 
 ### A chave do IndexNow
 

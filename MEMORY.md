@@ -16,6 +16,118 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **O plano de tráfego de 27/08 está numerado no [`FEATURES.md`](FEATURES.md)
+  como F43-F56** (Blocos A-D), a pedido do Paulo. **O Bloco A foi entregue no
+  mesmo dia (F43-F46, `v0.18.0`)**; B, C e D seguem abertos.
+- **Bloco A entregue (27/08).** A inversão de link interno acabou:
+  `financiamento` foi de **1 para 6** links internos recebidos, `fgts` de 2
+  para 6, `hora-extra` de 2 para 5, enquanto `juros-compostos` caiu de 8 para
+  4 e `salario-liquido` de 7 para 3. O rodapé deixou de listar as 20
+  calculadoras em toda página (8 destaques + categorias + hub `/categorias`), e
+  os MDX ganharam **20 links contextuais onde havia exatamente zero**. Os
+  redirects do F44 fecharam `/site` e o prefixo de ano, e o `Footer` parou de
+  linkar **`/blog`** — rota inexistente servida em 100% das páginas, achada ao
+  ler o código, não nos dados. **Duas pendências de painel/fora do repo:** o
+  F45 exige marcar `calculator_calculated` como *key event* no GA4 (o evento já
+  é disparado certo), e o F46 exige criar o secret `INTERNAL_API_KEY` no
+  GitHub para o workflow novo funcionar. Procedimento dos dois na §Operação do
+  `README.md`.
+- **Ao ler o próximo export, lembrar que o marco do F43 é 27/08.** O que deve
+  mover primeiro é a posição de `financiamento` (hoje **298 impressões, pos.
+  81,8**) — é a página que mais ganhou link interno. `fgts` (207, pos. 90,0) e
+  `hora-extra` (240, pos. 84,7) são os outros dois. Se em 4-6 semanas nenhuma
+  das três mexer, a hipótese de que PageRank interno compensa AS 2 está errada
+  e o peso volta todo para backlink (F15).
+- **Export de 27/08 (ver [diário
+  2026-08-27](#2026-08-27--export-novo-gscga4clarity-comparação-com-concorrentes-e-plano-de-tráfego)).**
+  **4º clique do Google em 25/08** — o intervalo entre cliques caiu de 59 dias
+  (11/06→09/08) para **16 dias** (09/08→25/08). A posição segue em **platô de
+  4 semanas em ~59** (W32 59,7 · W33 59,9 · W34 58,4 · W35 58,8), e a W34 real
+  foi **58,4**, não 62,5 — aquele número era de 2 dias parciais. **Mas as
+  impressões caíram**: pico de ~41/dia em W27-W29 (julho) para **~23/dia** em
+  W32-W35. O Google está mostrando menos e melhor.
+- **Primeiro efeito medido do F38 — e veio pelo Copilot, não pelo Google.** As
+  citações de IA do `tesouro-direto` no Clarity saltaram **15 → 47 em 7 dias
+  (3,1×)**, e o total do site foi 256 → **295**. **`AI referral traffic` saiu de
+  0 e virou 0,83%** — a primeira vez que citação virou clique. Ressalva de
+  método: as queries citadas são variações de **"calculadora de investimento
+  (em) tesouro direto"** (47 citações somadas), **não** "simulação tesouro
+  direto" — o vocabulário que o F38 mirou não é o que puxou. O ganho é real,
+  a atribuição é parcial.
+- **O canal com evidência de crescimento é IA/Bing, e o ciclo de medição dele é
+  de 7 dias, não de 3 meses.** O Google segue em **4 sessões desde janeiro**
+  contra **462 do Bing** (115:1, dado de vida inteira do GA4). Toda ação de
+  GEO/IndexNow é validável em uma semana; toda ação de SEO do Google leva um
+  trimestre. Isso deveria pesar na ordem do backlog.
+- **Achado novo: o mobile está sendo servido melhor que o desktop e não
+  converte nada.** GSC: 765 impressões no celular em **posição 54,6** contra
+  1.413 no desktop em **posição 71** — e **0 cliques no celular**. No GA4 o
+  mobile é **50 de 648 usuários (7,7%)**, porque o tráfego real vem do Bing no
+  Windows (Edge 61%). É a única fatia do funil em que o Google já rankeia
+  melhor e o site não colhe nada. Nunca foi investigada.
+- **404s em produção com tráfego real.** O Clarity (3 dias, 25 sessões) lista
+  **`/site` com 4 sessões (16%)** e `/2026/calculadora/cdb` com 1 — nenhuma
+  das duas rotas existe no `app/`, e não há `redirects` no `next.config.ts`.
+  Origem externa (link errado de terceiro ou de diretório). **E um terceiro,
+  pior, achado ao ler o código: o `Footer.tsx` linka `/blog` em TODAS as
+  páginas do site, e essa rota nunca existiu** — 404 interno que o Google
+  segue em 100% das páginas. Custo de correção: duas regras de redirect + um
+  link do rodapé.
+- **Regressão de INP.** Clarity: score 92 → **84**, INP 140ms → **248ms**
+  (acima do limiar de 200ms do Google), LCP melhorou (0,98s → **0,408s**), CLS
+  0,003, **0 erros de JS** de novo. Amostra pequena (25 sessões), mas o F41/F42
+  entrou em produção exatamente entre as duas medições — vale conferir antes de
+  assumir ruído.
+- **Escultura de link interno continua NÃO implementada** e a inversão está
+  medida de novo, agora pior: `financiamento` é a maior página do site
+  (**298 impressões**) e tem **1** link interno; `juros-compostos` (3
+  impressões) tem **8**; `hora-extra` (240) e `fgts` (207) têm **2**. Segue
+  sendo o item de maior confiança e menor custo do backlog.
+- **Concorrência (verificada na SERP em 27/08): o gargalo de conteúdo não é
+  profundidade, é granularidade de intenção.** Os MDX do site têm 800-2.200
+  palavras e cobertura legal boa. Quem rankeia tem o que o site não tem:
+  **tabela numérica de referência** ("quanto vale sua hora extra por faixa de
+  salário"), **exemplos nomeados com números fechados**, **variações de
+  parâmetro que viram query** (hora extra 60%/70%/personalizado, DSR, minutos)
+  e **intenção no slug** (`/simulador-tesouro-direto`, `/financiamento-
+  imobiliario`) — o site tem "simulador" no title desde o F38, mas não na URL.
+- **Export de 20/08 + Semrush (ver [diário
+  2026-08-20](#2026-08-20--export-novo-gscga4claritysemrush-f38-f42-e-indexnow-no-ar)).**
+  O **3º clique do Google saiu em 09/08**, quebrando a seca de 59 dias — mas a
+  melhora de posição **parou**: W32 59,7 → W33 59,9 → W34 62,5, platô em ~60
+  há três semanas. O degrau foi todo entre W30 e W32, janela do link da Band.
+  Semrush: **AS continua 2**, e os domínios referentes subiram 122→140 em 10
+  dias sem Paulo fazer nada — confirma que são scrapers. **GSC → Links mostra
+  1 domínio só (band.com.br), com a âncora registrada**; a pendência de 09/08
+  está encerrada. **`acritica.com` (link de 12/08) ainda não aparece — se não
+  aparecer até meados de setembro, não está sendo contado.**
+- **Achado grande: o site é forte no ecossistema Microsoft e invisível no do
+  Google/OpenAI, em tudo ao mesmo tempo.** Clarity (que é da Microsoft) mostra
+  **SoA 24%, 256 citações em 7 dias, com o `irrf` em 177 (69%)**; o Semrush,
+  que mede ChatGPT/Gemini/AI Overview, mostra 0. Igual ao tráfego (Bing 158
+  sessões, Google 1). Ao ler "SoA 24%", ler "24% no Copilot". E **AI referral =
+  0**: citação não vira clique.
+- **F38-F42 entregues (20/08).** Vocabulário "simulador" nas 5 financeiras
+  (`simulação tesouro direto` = **2.9K buscas/mês**, a maior keyword do site,
+  e a palavra não existia em nenhum title/H1/MDX); vocabulário de
+  demissão/acerto na rescisão (pior posição do site, 93,7); as duas leituras
+  do aviso prévio no acordo mútuo; identidade visual unificada; og-image por
+  calculadora — que **fechou um 404 em produção desde o início**, quebrando o
+  preview de todo link do F32 no WhatsApp.
+- **IndexNow no ar (pendência desde 25/07).** 1 variável na Vercel
+  (`INTERNAL_API_KEY`), chave pública virou constante no código. Primeira
+  submissão em 20/08: **32 URLs, resposta 202**. Comando: `pnpm --filter web
+  indexnow` — **manual, e sempre DEPOIS do deploy**. Ver §Operação do
+  `README.md` (que estava vazio).
+- **Próximo trabalho de código já decidido: escultura de link interno.** O GSC
+  mostra 31 links internos idênticos para todas as páginas (o Footer lista as
+  20 em todo lugar), e o `relacionadas` está invertido — `financiamento` (264
+  impressões, a maior) tem **1** link, `juros-compostos` (3 impressões) tem
+  **8**. Com AS 2, o PageRank interno é o único capital que o Paulo controla
+  100%. Ver P0 abaixo.
+- **Pendências de dado (Paulo ficou de mandar):** GA4 → `exception` por
+  `description` (**334 eventos** contra 433 pageviews, hipótese de ruído do
+  `ErrorLogger`), e GSC → performance por página antes/depois de 03/08 e 12/08.
 - **Export do GSC de 09/08 + Semrush (ver [diário
   2026-08-09](#2026-08-09--export-novo-do-gsc--investigação-de-ctr--semrush)).**
   O Google segue em **2 cliques em 12 meses**, e os 2 são de maio/junho —
@@ -139,6 +251,60 @@ que não cabe em nenhum dos outros três.
 
 ### P0 — Aquisição de tráfego no Google (antes do AdSense)
 
+**Acrescentado em 27/08 (ver diário) — Bloco A entregue no mesmo dia:**
+
+- ~~**Redirects dos 404 com tráfego real.**~~ ✅ **F44, 27/08.** `/site` teve **4 das 25 sessões
+  (16%)** do Clarity em 3 dias e `/2026/calculadora/cdb` teve 1 — nenhuma
+  existe no `app/`, e o `next.config.ts` não tem bloco `redirects`. Origem é
+  link externo errado. Custo: duas regras. **Item mais barato do backlog.**
+- **Investigar o mobile.** GSC: **765 impressões no celular em posição 54,6**
+  (contra 1.413 no desktop em 71) e **0 cliques**; GA4 mostra mobile em 7,7%
+  dos usuários. É a única parte do funil em que o Google já rankeia melhor e o
+  site não colhe nada. Rodar Lighthouse mobile + GSC filtrado por dispositivo.
+- **Lacunas de produto que a SERP dos concorrentes expõe** (ver diário, §6):
+  `HoraExtraForm` sem adicional personalizado (60%/70%/livre), sem minutos e
+  sem **DSR sobre horas extras**; nenhuma calculadora publica **tabela
+  numérica de referência** (faixa de entrada × resultado), que é como os
+  concorrentes capturam a cauda longa sem página nova.
+- **Painel de SoA do Clarity como keyword research semanal.** Foi ele que
+  mostrou que o vocabulário que gera citação de IA no tesouro é
+  "**investimento**", não "simulador" (o que o F38 mirou) — e que existe
+  demanda por **IRRF sobre aluguel**, que a calculadora não faz. Ciclo de
+  medição de 7 dias, contra 90 dias do GSC.
+- **Regressão de INP** (140ms → **248ms**, acima do limiar de 200ms) medida
+  entre 20/08 e 27/08, exatamente a janela do deploy F41/F42. Amostra pequena
+  (25 sessões) — confirmar antes de tratar como bug.
+
+**Acrescentado em 20/08 (ver diário):**
+
+0. ~~**Escultura de link interno — próximo trabalho de código.**~~ ✅ **F43,
+   entregue 27/08** (`financiamento` 1→6 links, `fgts` 2→6, `hora-extra` 2→5;
+   rodapé reduzido a 8 destaques; 20 links contextuais novos nos MDX). Texto
+   original mantido abaixo como registro do diagnóstico.
+   **Escultura de link interno.** O GSC mostra
+   **31 links internos idênticos** para todas as páginas, porque o `Footer.tsx`
+   lista as 20 calculadoras em todo lugar: quando tudo linka tudo, nenhum link
+   interno significa nada. E o único diferencial real (`relacionadas` do
+   registry) está invertido — `financiamento` (264 impressões, a maior página)
+   tem **1** link; `juros-compostos` (3 impressões, pos. 97,7) tem **8**;
+   `porcentagem`, descartada como alvo em 09/08, tem 5; `fgts` e `hora-extra`,
+   alvos do P0, têm 2. **Com AS 2 e 1 backlink reconhecido, o PageRank interno
+   é o único capital de autoridade sob controle total.** Escopo: reordenar
+   `relacionadas` para os alvos do P0 + `financiamento` + `tesouro-direto`,
+   quebrar a planura do rodapé (destacar 6-8 e mandar o resto para
+   `/categorias`) e acrescentar links contextuais dentro dos MDX.
+1. **Configurar evento de conversão no GA4** (`calculator_calculated` como key
+   event) — **F45: procedimento documentado em 27/08 na §Operação do
+   `README.md`, mas o clique no painel do GA4 é do Paulo e ainda não foi
+   dado.** O evento já é disparado corretamente pelo código. **Bloqueia o F17** — Google Ads sem conversão configurada é dinheiro
+   jogado fora — e é o motivo de "Leads qualificados 0" desde janeiro.
+2. **Investigar os 334 `exception` do GA4** (0,77 por pageview). Hipótese: o
+   `ErrorLogger.tsx` escuta `error` em fase de captura e conta falha de
+   carregamento de recurso como exceção de JS. Depende do breakdown por
+   `description` que o Paulo ficou de mandar.
+
+Racional original (25/07), mantido:
+
 Inserido em 2026-07-25 por pedido do Paulo, **refinado no mesmo dia** depois
 de cruzar o export novo do GSC com um export de GA4 (ver diário, parte 4).
 Racional revisado: o problema não é "site sem tráfego" (230 usuários/mês
@@ -236,10 +402,47 @@ de campanha de autoridade, só CTR/backlink leve): `margem-lucro` pos.
    snippet visual nunca vai ser alavanca de CTR aqui — a aposta de
    autoridade continua sendo backlinks (item 2) e GEO (item 3, já
    entregue), não schema markup.
-6. **Sprint 1.6 — AdSense** — continua depois dos itens acima. Só ativar
-   quando houver tráfego real e atribuível ao Google.
+6. **Sprint 1.6 — AdSense** — **gate a rever (20/08).** Era "esperar tráfego
+   do Google"; passaram 3 meses e o Google entregou **1 sessão em 28 dias**,
+   enquanto há 207 usuários/mês reais e LCP de 0,98s. Trocar o gate para "N
+   usuários/mês de qualquer canal", senão a espera é indefinida.
+7. ~~**IndexNow — disparo manual e fácil de esquecer**~~ — ✅ **automatizado
+   27/08 (F46).** `.github/workflows/indexnow.yml` escuta `deployment_status` e
+   submete o sitemap quando o deploy de **produção** volta `success`. Falta o
+   Paulo criar o secret `INTERNAL_API_KEY` no GitHub (mesmo valor da Vercel),
+   senão o job roda e falha. Histórico do conserto original abaixo.
+7. ~~**IndexNow quebrado em produção**~~ — ✅ **resolvido 20/08.** A chave é
+   pública por design (o protocolo exige `/<chave>.txt` legível), então virou
+   constante no código em vez de env var — restou **uma** variável
+   (`INTERNAL_API_KEY`), configurada na Vercel. 1ª submissão: 32 URLs, 202.
+   `pnpm --filter web indexnow`, manual e sempre **depois** do deploy. Vale
+   mais que qualquer ação no GSC aqui: o Bing é ~95% do tráfego real.
 
 ### P1 — próximas 2-3 semanas
+
+**Acrescentado em 20/08 (ver diário):**
+- **Campos de data com máscara + atalhos** na rescisão, férias e 13º. Maior
+  atrito medido do site: **11 dos 24 cliques** da `rescisao-trabalhista` no
+  Clarity foram nos dois campos de data. `input[type=date]` nativo é ruim no
+  Edge/Windows, que é 65% do público. É o F34 aplicado ao tipo de campo que
+  ficou de fora.
+- **Chips de valor rápido nos campos que viraram stepper no F35.** O
+  `quickAdd` do F12 existe, mas 69 de 105 cliques em `ferias` foram nos +/− —
+  padrão que se repetiu em duas janelas independentes, agora com tráfego
+  orgânico. Sinal fraco (poucos pageviews), custo baixo.
+- **Hub "Calculadora Trabalhista Completa".** Dezenas de queries de intenção
+  agregada (`calculo trabalhista completo`, `como calcular direitos
+  trabalhistas`) que nenhuma das 10 calculadoras trabalhistas atende — cada
+  uma responde um pedaço. A `/categoria/trabalhista` existe e teve **1
+  pageview**. Fluxo único encadeando rescisão + férias + 13º + FGTS.
+- **GEO do IRRF.** Única página com tração real de IA (177 citações em 7 dias,
+  69% do total do site). Marcar a tabela IRRF 2026 com schema `Table`/`Dataset`
+  e data de atualização explícita. Ressalva honesta: **AI referral = 0**, então
+  isso constrói autoridade no Copilot, não cliques — decidir se vale.
+- **Despriorizar formalmente o F20 (PWA/Android).** Retenção de coorte
+  62→3→2→1, e 58→0 na semana de 02-08/08. O F37 já testou a hipótese de
+  usuário recorrente e deu 3 usos em 6 dias contra 385 cálculos.
+
 - **Centralizar SEO como no Recibo Fácil (parcial).** `HowTo` já portado
   (F12, 2026-07-20). Falta: `buildMetadata()` com canonical alternates (evita
   canibalização — relevante quando existirem páginas quase-duplicadas, ver
@@ -457,6 +660,550 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-08-27 — Export novo (GSC+GA4+Clarity), comparação com concorrentes e plano de tráfego
+
+Paulo pediu "avalie a pasta gsc" com quatro perguntas explícitas: avaliar os
+dados, comparar com commits/features pendentes, comparar com concorrentes e
+gerar um plano para aumentar tráfego. **Nada foi implementado nesta sessão** —
+é diagnóstico + plano.
+
+**Método / qualidade do export.** GSC veio em pasta datada
+(`...-Performance-on-Search-2026-08-27/`, 3 meses: 26/05→25/08), como
+combinado. GA4 e Clarity continuam **soltos na raiz de `gsc/`** — a pendência
+de 20/08 de movê-los para pasta datada não foi feita. **Armadilha nova:** o
+export do GA4 desta vez é de **01/01→27/08 (vida inteira)**, não de 28 dias
+como o anterior — os totais **não** são comparáveis com os 207 usuários de
+20/08. O que dá para comparar é a série semanal, que veio junto.
+
+**1. GSC: 4º clique, platô de posição em 4 semanas, impressões caindo.**
+2.191 impressões, **3 cliques na janela** (11/06, 09/08 e **25/08 — novo**),
+CTR 0,14%, posição 65,2. Contando a vida inteira são **4 cliques**, e o
+intervalo entre eles está encurtando: 25/05 → 11/06 (17d) → 09/08 (59d) →
+25/08 (16d).
+
+Série semanal completa, corrigindo a tabela de 20/08 (a W34 lá tinha só 2 dias):
+
+| Semana | Impr | Impr/dia | Posição |
+|---|---|---|---|
+| W27 (29/06) | 286 | 40,9 | 82,3 |
+| W28 (06/07) | 275 | 39,3 | 75,4 |
+| W29 (13/07) | 299 | 42,7 | 80,0 |
+| W30 (20/07) | 157 | 22,4 | 78,5 |
+| W31 (27/07) | 263 | 37,6 | 65,3 |
+| W32 (03/08) | 119 | 17,0 | **59,7** |
+| W33 (10/08) | 168 | 24,0 | 59,9 |
+| W34 (17/08) | 167 | 23,9 | **58,4** |
+| W35 (24/08, 2d) | 37 | 18,5 | 58,8 |
+
+Duas leituras que se sustentam juntas: a posição **estabilizou em ~59 por
+quatro semanas** (o degrau do link da Band ficou de pé, não regrediu), e as
+**impressões caíram 45%** frente ao pico de julho (41/dia → 23/dia). O padrão
+é consistente: quando a posição era 80, o Google testava o site em muito mais
+cauda longa ruim; ao consolidar em ~59, ele mostra menos e mais focado. Não é
+queda de tráfego (não havia tráfego), é o Google refinando o entendimento.
+
+**Páginas (3 meses), com delta contra o export de 20/08 onde havia número:**
+
+| Página | Impr | Δ 7d | Posição |
+|---|---|---|---|
+| `financiamento` | **298** | +34 | 81,8 |
+| `hora-extra` | 240 | +3 | 84,7 |
+| `margem-lucro` | 218 | — | **11,2** |
+| `porcentagem` | 208 | +31 | **9,1** |
+| `fgts` | 207 | +1 | 90,0 |
+| `ferias` | 205 | — | 88,1 |
+| `poupanca` | 195 | — | 65,5 |
+| `rescisao-trabalhista` | 138 | — | 90,8 |
+| `decimo-terceiro` | 130 | — | 81,5 |
+| `irrf` | 88 | −1 | 81,0 |
+| `salario-liquido` | 76 | −2 | 69,0 |
+| `tesouro-direto` | 53 | — | 53,7 |
+| `das-mei` | 36 | — | **12,3** |
+| `/` (home) | **6** | — | 3,5 |
+
+`financiamento` (+34) e `porcentagem` (+31) sozinhas absorveram **~metade de
+todas as impressões novas da semana**. E a **home tem 6 impressões em 3
+meses** — o site é 100% páginas de calculadora; a marca não existe em busca.
+
+**F38/F39 no Google: cedo demais para medir, e o formato do export esconde.**
+O cluster "simulador/simulação" está em pos. **83,6** (era 83,3 em 20/08) e o
+cluster rescisão/demissão em **93,6** (era 93,7). Parece "não moveu", mas o
+número é média de **3 meses** e o deploy tem **5 dias** dentro da janela —
+matematicamente não teria como aparecer. **Para medir F38/F39 no Google é
+preciso filtrar o GSC por data (26/08 em diante) ou esperar o export de
+outubro.** Registrado para não repetir a leitura errada.
+
+**2. O único efeito medido do F38 veio pelo Copilot — em 7 dias.**
+
+| Clarity (Share of Authority, 7d) | 20/08 | 27/08 |
+|---|---|---|
+| SoA | 24,29% | **20,86%** |
+| Citações de página | 256 | **295** (+15%) |
+| `irrf` | 177 (69%) | 158 (54%) |
+| `ferias` | 57 | 56 |
+| `tesouro-direto` | **15** | **47 (3,1×)** |
+| `inss` / `cdb` / `calorias` / `emprestimo` | — | 13 / 11 / 7 / 3 |
+| AI referral traffic | **0** | **0,83%** |
+
+O `tesouro-direto` triplicou de citação na semana seguinte ao F38, e o site
+saiu de 1 página citada para 7. O SoA caiu (20,9%) porque o denominador
+cresceu, não porque o site perdeu — as citações absolutas subiram.
+
+**Ressalva honesta de atribuição:** as queries que geraram as citações do
+tesouro são `calculadora de investimento tesouro direto` (15),
+`calculadora de investimentos tesouro direto` (15), `calculadora de
+investimento em tesouro direto` (10) e `calculadora investimento tesouro
+direto` (7) — **47 citações no vocabulário "investimento", que o F38 não
+mirou**. O F38 mirou "simulador/simulação", que não aparece na lista.
+Hipótese mais provável: o F38 reescreveu title/H1/MDX da página inteira e
+aumentou a recuperabilidade geral dela, não o casamento com a palavra
+específica. **Consequência prática: o vocabulário que converte em citação de
+IA é descobrível no painel do Clarity semana a semana** — é dado de otimização
+com ciclo de 7 dias, contra 90 dias do GSC.
+
+Outras queries do painel que valem como pauta: `calcule ir 2026` (21),
+`calcular irpf 2026` (14), `calcule net irrf 2026` (14), `calculo dependente
+ir` (6), `como calcular ir folha 2026?` (6), `calculadora irrf 2026 aluguel`
+(4 — **IRRF sobre aluguel, que a calculadora não faz**), `benchmark do cdb`
+(4), `calorias diárias recomendadas homem 1,65m` (3).
+
+**3. GA4 (vida inteira, 01/01→27/08): 648 usuários, e o Google é 4 sessões.**
+
+| Origem (sessões) | Total |
+|---|---|
+| bing / organic | **462** |
+| (direct) | 172 |
+| br.search.yahoo.com | 77 |
+| chatgpt.com (3 variantes) | 66 |
+| band.com.br (referral) | 21 |
+| duckduckgo | 10 |
+| acesso.qmix.com.br (fornecedor de link) | 7 |
+| **google / organic** | **4** |
+
+Bing:Google = **115:1**. O link da Band segue mandando gente de verdade (21
+sessões acumuladas). Série semanal de usuários ativos: W29 62 · W30 64 · W31
+64 · **W32 40** · W33 45 · W34 36 em 5 dias (7,2/dia, acima da W33) — houve
+uma queda em 09-15/08 e uma recuperação parcial desde então.
+
+**Achado novo — o site é desktop porque o canal é desktop, e o mobile está
+intocado.** GA4: **599 desktop / 50 mobile (7,7%)**, Windows 555, **Edge 394
+(61%)**. Mas o GSC diz o contrário sobre a oportunidade:
+
+| Dispositivo | Impressões | Posição | Cliques |
+|---|---|---|---|
+| Computador | 1.413 | 71,0 | 3 |
+| **Celular** | **765** | **54,6** | **0** |
+
+O Google **já rankeia o site 16 posições melhor no celular** e o site não tira
+um clique de lá. Num nicho de calculadora no Brasil, a busca é
+majoritariamente mobile. Isso nunca foi olhado — nem o render mobile, nem
+Core Web Vitals mobile (todas as medições do Clarity são de sessão desktop).
+
+Pendências antigas do GA4 seguem abertas: **nenhum evento de conversão
+configurado** ("Leads qualificados" 0 em todas as semanas desde janeiro — e
+isso continua bloqueando o F17), e o breakdown de `exception` por
+`description` que o Paulo ficou de mandar (o Clarity reporta **0 erros de JS**
+pela terceira vez, o que reforça a hipótese de ruído do `ErrorLogger`).
+
+**4. Clarity (25-27/08, 25 sessões): duas coisas para consertar.**
+1,4 páginas/sessão, rolagem 43%, **44% das sessões enviam formulário**, 16%
+com clique inativo, 0 erros de JS. Bing 8 · Copilot 3 · DuckDuckGo 2 · Google
+2 · ChatGPT 1.
+
+- **404s com tráfego real:** `https://calculosonline.com.br/site` com **4
+  sessões (16% do total)** e `/2026/calculadora/cdb` com 1. Nenhuma das duas
+  existe em `apps/web/src/app/`, e o `next.config.ts` **não tem bloco
+  `redirects`**. Nada no repo aponta para elas — é link externo errado
+  (diretório, agregador ou o próprio fornecedor de backlink). Duas regras de
+  redirect resolvem e recuperam 16% das sessões que hoje batem em 404.
+  **Terceiro 404, encontrado ao ler o código e não nos dados — e o pior dos
+  três:** o `Footer.tsx` tem `{ name: 'Blog', href: '/blog' }` na seção
+  Institucional, ou seja, **todas as páginas do site linkam para `/blog`, que
+  nunca existiu**. Ao contrário dos outros dois, este é interno: o Google
+  rastreia esse link em 100% das páginas, e ele desperdiça exatamente o
+  PageRank interno que o F43 quer redistribuir. Some ao F44.
+- **Regressão de INP:** score 92 → **84**, INP 140ms → **248ms** (o limiar
+  "bom" do Google é 200ms). LCP melhorou muito (0,98s → **0,408s**) e o CLS
+  está ótimo (0,003). Amostra pequena, mas o F41/F42 subiu exatamente entre as
+  duas medições — checar antes de descartar.
+- **Terceira confirmação do atrito de stepper.** Heatmap do `cdb`: 4
+  pageviews, **133 cliques**, sendo **64 (48%) só no `#prazoMeses`** e 16 no
+  botão +/− de outro campo. Quem quer 24 meses saindo de 12 clica 12 vezes. Já
+  era item de P1 ("chips de valor rápido nos campos que viraram stepper");
+  agora são três janelas independentes (`ferias` 20/08, `ferias` 09/08, `cdb`
+  hoje). Deixa de ser sinal fraco.
+- Heatmap do `irrf` (10 pageviews, 23 cliques): distribuição saudável —
+  `#salarioBruto` 8, botão calcular 9. A página que a IA cita é também a de
+  uso mais limpo.
+- `meus-calculos` (F37): **1 sessão / 6 pageviews na vida inteira**. Confirma
+  a decisão de 20/08 de despriorizar o F20 (PWA/Android).
+
+**5. Comparação com commits e backlog.**
+Desde 20/08 não houve commit novo (`743f22f feat: indexNow` é o HEAD). Ou
+seja: **todo o backlog de 20/08 continua aberto**, e o export de hoje
+re-mediu dois itens dele com números piores:
+
+| Item de backlog (20/08) | Estado hoje |
+|---|---|
+| P0.0 escultura de link interno | **não feito** — inversão confirmada e ampliada (`financiamento` 298 impr / 1 link; `juros-compostos` 3 impr / 8 links) |
+| P0.1 evento de conversão no GA4 | **não feito** — bloqueia F17 |
+| P0.2 investigar `exception` | **não feito** — falta o dado do Paulo |
+| P1 chips nos steppers | **não feito** — 3ª confirmação (`cdb`, 48% dos cliques) |
+| P1 máscara nos campos de data | **não feito** |
+| P1 hub trabalhista | **não feito** |
+| P1 GEO do IRRF | **não feito** — e o dado de hoje reforça (IA é o único canal medível em 7 dias) |
+| F15 backlinks | **parado** — decisão de orçamento |
+| F22 blog sazonal | **não feito** — e a janela do 13º é agora (busca pica em nov/dez) |
+
+O grafo de `relacionadas` continua exatamente como estava:
+
+| Página | Links internos recebidos | Impressões |
+|---|---|---|
+| `juros-compostos` | **8** | **3** |
+| `salario-liquido` | 7 | 76 |
+| `irpf` / `cdb` | 6 | 88 / — |
+| `porcentagem` | 5 | 208 |
+| `ferias` | 4 | 205 |
+| `fgts` / `hora-extra` | **2** | 207 / 240 |
+| `financiamento` | **1** | **298** |
+
+**6. Concorrentes (SERP verificada em 27/08).**
+O conjunto que rankeia para os clusters do site são sites pequenos e
+especializados, não portais grandes — o mesmo diagnóstico de 09/08 ("o
+benchmark realista é um concorrente pequeno"). Exemplos: `calcule.net`,
+`calculadorabrasil.com.br`, `calculomania.com`, `salariotransparente.com.br`,
+`planilhadefluxo.com.br`, `calculadoradeferias.com`, `horascalc.com`,
+`calculadorahora.com`; em financeiras, `calculadorapricesac.com.br`,
+`calculafin.com.br`, `simuladortesourodireto.com.br`, `calculainvest.com.br`,
+`valorfinal.com.br`, além de Serasa e Mobills.
+
+**O gargalo NÃO é profundidade de conteúdo.** Os MDX do site têm 800-2.205
+palavras, 7-13 H2 cada, cobertura legal com artigo de lei citado. Isso é
+competitivo. O que os concorrentes têm e o site não tem:
+
+1. **Tabela numérica de referência.** `calcule.net/trabalhista/calculo-hora-extra`
+   publica uma "Tabela de Referência 2026" com salário bruto × valor da hora ×
+   hora extra 50% × 100%, e uma tabela de conversão de minutos. Isso captura
+   sozinho a cauda "quanto vale a hora extra de quem ganha R$ 2.000" — que o
+   site só responde depois que a pessoa preenche o formulário, e o Google não
+   preenche formulário.
+2. **Variações de parâmetro que são queries.** O mesmo concorrente tem H2
+   separados para "hora extra 50%", "60%", "70%", "100%" e "noturna", e aceita
+   **adicional personalizado**. O `HoraExtraForm` do site tem um `select` fixo
+   (útil/domingo/feriado/noturna) — não faz 60% (acordo coletivo), não faz
+   percentual livre, não faz **DSR sobre horas extras** e não aceita minutos.
+   São 4 intenções de busca reais que o produto não atende.
+3. **Exemplos nomeados com números fechados.** `calculadorabrasil.com.br`
+   traz 5 casos ("Carlos, vendedor…") com o cálculo inteiro escrito. É o
+   formato que a IA generativa cita e que o Google usa para snippet.
+4. **Intenção no slug.** `/simulador-tesouro-direto`,
+   `/simulador-de-financiamento-imobiliario`, `/calculo-hora-extra`. O F38 pôs
+   "simulador" no title e no H1, mas a URL segue `/calculadora/tesouro-direto`.
+   E **"financiamento imobiliário" é intenção separada de "financiamento"** —
+   o GSC mostra as duas na lista de queries.
+5. **Frescor de dado.** Vários simuladores de Tesouro anunciam "taxas ao vivo
+   da API oficial da B3". O site é 100% client-side com taxa digitada pelo
+   usuário — o que é uma decisão de arquitetura defensável, mas custa o sinal
+   de atualização que o Google e a IA premiam nesse cluster.
+
+Onde o site **ganha** dos concorrentes e não comunica: cálculo 100% no
+navegador (privacidade), memória de cálculo passo a passo, ausência de
+cadastro/anúncio, e conteúdo legal correto (o F39 corrigiu um erro de 80% do
+FGTS que vários concorrentes ainda publicam errado).
+
+**7. Plano proposto (não executado — Paulo escolhe).**
+
+*Ordenado por (confiança × impacto) ÷ esforço. Os quatro primeiros não
+dependem de orçamento nem de terceiro.*
+
+**Bloco A — barato, alta confiança, ciclo curto**
+- **A1 (F43). Escultura de link interno** (já era P0.0). Reordenar `relacionadas`
+  para financiamento/hora-extra/fgts/ferias/rescisão/tesouro, quebrar a planura
+  do `Footer` (6-8 destaques + resto em `/categorias`) e pôr links contextuais
+  dentro dos MDX. Único capital de autoridade 100% sob controle com AS 2.
+- **A2 (F44). Redirects dos 404** (`/site` → `/`, `/:ano(\d{4})/calculadora/:slug` →
+  `/calculadora/:slug`). 16% das sessões do Clarity. ~15 minutos.
+- **A3 (F45). Evento de conversão no GA4** (`calculator_calculated` como key event).
+  Desbloqueia o F17 e encerra "Leads qualificados 0". ~1 hora.
+- **A4 (F46). Rodar `pnpm --filter web indexnow` após cada deploy.** Já existe e é
+  manual; com Bing sendo 95% do tráfego, é o menor custo por clique do site.
+
+**Bloco B — atacar o que a SERP mostra que falta (produto + conteúdo)**
+- **B1 (F47). Tabelas de referência numéricas** nas 5 páginas de maior impressão
+  (`financiamento`, `hora-extra`, `fgts`, `ferias`, `poupanca`): faixa de
+  entrada × resultado, renderizadas em HTML no MDX. É o item que os
+  concorrentes usam para capturar a cauda longa sem página nova.
+- **B2 (F48). Completar o `HoraExtraForm`**: adicional personalizado (60%, 70%,
+  livre), entrada em minutos e **DSR sobre horas extras**. 240 impressões,
+  posição 84,7, e o único clique do site na lista de queries veio de "calculo
+  hora extra".
+- **B3 (F49). Exemplos nomeados com números fechados** nos MDX dos alvos do P0 —
+  formato que a IA cita.
+- **B4 (F50). Chips de valor rápido nos steppers** (P1, 3ª confirmação: 48% dos
+  cliques do `cdb` num campo só).
+- **B5 (F51). Máscara + atalhos nos campos de data** (P1, maior atrito medido em
+  20/08).
+
+**Bloco C — canal com crescimento provado (IA/Bing), ciclo de 7 dias**
+- **C1 (F52). Tratar o painel de SoA do Clarity como ferramenta de keyword
+  research semanal.** Foi ele que revelou que o vocabulário vencedor era
+  "investimento", não "simulador". Rodar a cada export.
+- **C2 (F53). Aplicar o tratamento do F38 ao vocabulário que o Clarity mostrou:**
+  "calculadora de investimento em X", "calcule/calcular IR 2026", "cálculo de
+  dependente no IR", "IR na folha".
+- **C3 (F54). IRRF sobre aluguel** — query citada (4×) que a calculadora não
+  atende. Modo novo no formulário existente, não página nova.
+- **C4 (F55). GEO do IRRF** (P1): schema `Table`/`Dataset` na tabela IRRF 2026 +
+  data de atualização explícita. Com AI referral saindo de 0 para 0,83%, a
+  ressalva de 20/08 ("citação não vira clique") ficou mais fraca.
+
+**Bloco D — depende de decisão do Paulo**
+- **D1 (F56). Investigar o mobile** (765 impressões, pos. 54,6, 0 clique). Rodar
+  PageSpeed/Lighthouse mobile e olhar o render real. Achado novo, sem custo,
+  mas precisa de sessão dedicada.
+- **D2 (F22). Blog sazonal começando pelo 13º salário.** A busca pica em
+  nov/dez; publicar em setembro dá 60-90 dias de maturação. Se for para fazer
+  algum dia, a janela é agora.
+- **D3 (F15). Mais backlinks.** Pipeline existe (`acesso.qmix.com.br`), fila
+  de 6 alvos definida; é decisão de orçamento. **Antes de comprar, conferir se
+  `acritica.com` apareceu no GSC → Links** (prazo dado em 20/08: meados de
+  setembro).
+- **D4 (F19). Rever o gate do AdSense** — pendente desde 20/08.
+
+*Numerados como **F43-F56** no [`FEATURES.md`](FEATURES.md) em 27/08 (Blocos
+A-D); D2/D3/D4 reaproveitam F22/F15/F19, que já existiam.*
+
+**O que checar no próximo export (marco: 27/08):**
+- **Filtrar o GSC por data ≥ 26/08** para isolar F38/F39 — números de partida:
+  cluster "simulador" **83,6**, cluster rescisão **93,6**, `tesouro-direto`
+  **53,7**, `rescisao-trabalhista` **90,8**.
+- Citações de IA do `tesouro-direto` (hoje **47**) e o AI referral (hoje
+  **0,83%**) — o F38 se sustenta ou foi pico?
+- Impressões/dia: o platô de ~23/dia sobe ou continua?
+- INP (hoje **248ms**) — regressão real ou amostra?
+- `acritica.com` no GSC → Links.
+- Se algum item do Bloco A for executado: `financiamento` (298 impr, pos.
+  81,8) é a página com mais a ganhar da escultura de link interno.
+
+**Pendências de dado (repetidas de 20/08, Paulo não mandou):**
+- GA4 → `exception` por `description`.
+- GSC → performance por página antes/depois de 03/08 e 12/08.
+- **Novo:** Semrush — Keyword Gap contra `calcule.net` e
+  `calculadorabrasil.com.br` (os dois concorrentes cuja estrutura foi
+  analisada hoje), e volume de `financiamento imobiliário` vs `financiamento`
+  para decidir se o B1 vira página separada.
+- **Novo:** GSC → Performance filtrado por **dispositivo = celular**, para
+  entender por que posição 54,6 dá 0 clique.
+
+---
+
+### 2026-08-20 — Export novo (GSC+GA4+Clarity+Semrush), F38-F42 e IndexNow no ar
+
+Paulo pediu para avaliar a pasta `gsc/` (export de 20/08: GSC 3 meses, GA4
+23/07→19/08, 6 CSVs do Clarity), comparar com o backlog e sugerir features.
+Depois pediu para implementar as sugestões, e a sessão virou cinco entregas.
+
+**Método:** desta vez o export do GSC veio em pasta datada
+(`calculosonline.com.br-Performance-on-Search-2026-08-20/`), como decidido em
+09/08. Mas os CSVs de GA4 e Clarity continuam soltos na raiz de `gsc/` e serão
+sobrescritos no próximo export — **mover todos para uma pasta datada.**
+Atenção também: o export de 09/08 era de **12 meses** e este é de **3 meses**;
+como o site só vive desde 10/05, as janelas quase coincidem, mas número de
+3 meses é mais recente-pesado e não é comparável linha a linha.
+
+**1. O 3º clique existiu — e a melhora de posição parou.**
+2.084 impressões, **3 cliques**, CTR 0,14%, posição 65,7. O clique novo foi em
+**09/08** — dois dias depois da análise anterior, quebrando a seca de 59 dias
+(os outros dois foram 25/05 e 11/06).
+
+A narrativa de 09/08 ("posição melhorando há 3 semanas") **não se sustentou**:
+
+| Semana | Impr | Impr/dia | Posição |
+|---|---|---|---|
+| W30 (20/07) | 157 | 22,4 | 78,5 |
+| W31 (27/07) | 263 | 37,6 | 65,3 |
+| W32 (03/08) | 119 | 17,0 | **59,7** |
+| W33 (10/08) | 168 | 24,0 | 59,9 |
+| W34 (17/08, 2d) | 88 | 44,0 | 62,5 |
+
+O degrau real foi entre W30 e W32 — exatamente a janela do link da Band
+(rastreado 03/08) — e depois **platô em ~60 por três semanas**. É o
+comportamento normal de um backlink único: dá um degrau e para. Não é fracasso
+da estratégia, é amostra de tamanho 1.
+
+Cuidado ao ler `salario-liquido`: posição piorou (54,8 → 67,6) mas as
+impressões **mais que dobraram** (31 → 78), e as 9 queries head de "salário
+líquido" seguem em **posição 18-20**. É expansão de cobertura diluindo a
+média, não queda. Mesmo padrão no `irrf` (26 → 89 impressões).
+
+**2. Semrush (19/08): AS continua 2, e os domínios referentes explicam-se.**
+
+| Métrica | 09/08 | 19/08 |
+|---|---|---|
+| Authority Score | 2 | **2** |
+| Domínios referentes | 122 | **140** |
+| Backlinks | 220 | **247** |
+| Organic Keywords | 220 | **231 (+12%)** |
+| Organic Traffic | 0 | **0** |
+
+**+18 domínios em 10 dias sem Paulo ter feito nada além de 2 links** confirma
+a hipótese de 09/08: são scrapers/agregadores que o Google não conta. O GSC →
+Links mostra **um único domínio: `band.com.br`**, com a âncora "cálculo
+salário líquido" registrada em "Principais termos com links" — prova de que o
+Google processou e atribuiu o link inteiro, não só rastreou. **Pendência
+encerrada: pode-se dizer "o site tem 1 backlink que conta" como fato.**
+
+**`acritica.com` (link de 12/08) ainda NÃO aparece no GSC.** Provavelmente lag
+do relatório (é notoriamente defasado). **Se não aparecer até meados de
+setembro, o link não está sendo contado** — informação crítica antes de
+comprar mais placements do mesmo fornecedor.
+
+A curva de Organic Keywords sobe forte (de ~0 em junho para 244 em agosto)
+com tráfego 0 — cobertura crescendo, tudo entre posição 50 e 100. Reforça:
+não falta relevância, falta autoridade para converter cobertura em posição.
+
+**3. `simulação tesouro direto` = 2.900 buscas/mês, posição 78.**
+Maior keyword do site por volume em toda a lista do Semrush — e é exatamente
+o vocabulário que não existia em nenhum title, H1, MDX ou FAQ. Virou o F38.
+Para comparar: o cluster inteiro de margem de lucro, que virou alvo legítimo
+em 09/08, soma 1.520 buscas/mês.
+
+**4. O Clarity ganhou painel de IA (Share of Authority) — e ele explica o IRRF.**
+Em 7 dias: **SoA 24,29%, 256 citações de página**, sendo **`irrf` com 177
+(69%)**, `ferias` 57, `tesouro-direto` 15. Ou seja, a página nº1 em uso real e
+invisível no Google é a nº1 do site em citação por IA.
+
+Mas Semrush e Clarity parecem se contradizer, e não se contradizem:
+
+| Fonte | O que mede | Resultado |
+|---|---|---|
+| Semrush | ChatGPT, Gemini, AI Overview, AI Mode | Visibility 0, Mentions 0, **1** cited page |
+| Clarity | Copilot / ecossistema Bing (é da Microsoft) | **SoA 24%, 256 citações** |
+
+É o mesmo padrão do tráfego (Bing 158 sessões, Google 1). **O site é forte no
+ecossistema Microsoft e invisível no do Google/OpenAI** — no orgânico, nas
+citações de IA e no AI Overview (0%), tudo ao mesmo tempo. Deixou de ser
+coincidência e virou característica estrutural do domínio. Ao ler "SoA 24%",
+ler "24% no Copilot", não "24% na IA". E **AI referral traffic = 0**: citação
+não vira clique.
+
+**5. GA4 (28d): usuários caem, uso sobe, e dois achados novos.**
+
+| Métrica | jul (28d) | ago (28d) |
+|---|---|---|
+| Usuários | 230 | **207** |
+| `calculator_calculated` | 333 | **385** |
+| AI Assistant | 17 | **10** |
+| Google orgânico | 0 | **1 sessão** |
+
+Origem nova: **`band.com.br` = 19 sessões**. O link do F15 não é só sinal de
+SEO, manda gente de verdade — benefício que o plano de 25/07 não previa.
+`acesso.qmix.com.br` (6 sessões) é o **fornecedor dos backlinks**, validando
+entrega — descontar da leitura de canais (real fica ~201).
+
+Dois achados que não estavam em nenhum diário:
+- **`exception` = 334 eventos** contra 433 `page_view` (0,77 por pageview).
+  Hipótese: `ErrorLogger.tsx` registra `error` em fase de captura, o que pega
+  **erro de carregamento de recurso** (imagem/script bloqueado por adblock) e
+  dispara `jsError` com mensagem vazia. Reforçada pelo Clarity, que reporta
+  **0 erros de JS**. **Falta o breakdown por `description` no GA4** para
+  confirmar — Paulo ficou de mandar e não mandou.
+- **Nenhum evento de conversão configurado** desde janeiro ("Leads
+  qualificados 0" em todas as semanas). Bloqueia o F17 (Ads sem conversão é
+  dinheiro jogado fora). Já registrado em 09/08, segue aberto.
+
+**6. Clarity (17 sessões): performance ótima, atrito concentrado em datas.**
+Edge 65% / Chrome 35% (100% Bing/Yahoo), **76% das sessões enviam formulário**,
+1,29 páginas/sessão, rolagem média 34%, score 92, LCP 0,98s, INP 140ms,
+CLS 0,003, 0 erros de JS. **41% das sessões com clique inativo.**
+
+No heatmap de `rescisao-trabalhista`, **11 dos 24 cliques foram nos dois
+campos de data** (`#dataAdmissao` 7, `#dataRescisao` 4) — maior ponto de
+atrito medido do site. `input[type=date]` nativo é ruim no Edge/Windows, que
+é 65% do público. Em `ferias`, 69 de 105 cliques foram nos botões +/− do
+stepper: **o mesmo padrão descartado como QA em 09/08 se repetiu com tráfego
+orgânico real**, então não dá mais para descartar de bandeira (ainda são
+poucos pageviews — tratar como sinal fraco, não como fato).
+
+**7. Link interno estava 100% plano — e o pouco que não era, estava invertido.**
+O GSC → Links mostra **31 links internos para todas as páginas, idêntico**,
+porque o `Footer.tsx` lista as 20 calculadoras em todas as páginas. Quando
+tudo linka tudo, nenhum link interno significa nada. O único diferencial real
+(`relacionadas` do registry) apontava para o lado errado:
+
+| Página | `relacionadas` | Impressões |
+|---|---|---|
+| `juros-compostos` | **8** (máximo) | **3** (pos. 97,7) |
+| `porcentagem` | 5 | 177 (alvo descartado em 09/08) |
+| `fgts` | 2 | 206 (alvo P0) |
+| `hora-extra` | 2 | 237 (alvo P0) |
+| `financiamento` | **1** (mínimo) | **264** (maior do site) |
+
+Inversão quase perfeita. **Com AS 2 e 1 backlink, o PageRank interno é o único
+capital de autoridade que o Paulo controla 100%** — e estava sendo distribuído
+de forma plana e invertida. Virou item de backlog (P0), **ainda não
+implementado**.
+
+**Entregue nesta sessão (ver `FEATURES.md` F38-F42 e `CHANGELOG.md`):**
+- **F38** (v0.12.0) — vocabulário "simulador/simulação" nas 5 financeiras.
+- **F39** (v0.13.0) — vocabulário de demissão/acerto trabalhista na rescisão
+  (cluster de pior posição do site: 116 impressões, 84 queries, pos. 93,7).
+  Corrigiu de quebra erro factual: no acordo mútuo o FGTS é liberado até
+  **80%** (art. 484-A, §1º), não integralmente, como o MDX afirmava em 2 pontos.
+- **F40** (v0.14.0) — as duas leituras do aviso prévio no acordo mútuo, lado a
+  lado. Divergência de **R$ 1.500** no líquido aos 10 anos de casa.
+- **F41** (v0.15.0) — identidade visual unificada; 4 tabelas paralelas viraram
+  `lib/identidadeVisual.ts`, e o ícone chegou às 20 páginas de calculadora.
+- **F42** (v0.16.0) — og-image por calculadora. Fechou um **404 que estava em
+  produção desde o início**: `seo.ts` apontava toda página para
+  `/images/og-image.png`, arquivo que nunca existiu — preview quebrado em
+  todo link do F32 compartilhado no WhatsApp.
+
+**IndexNow finalmente no ar (pendência aberta desde 25/07).** A chave do
+IndexNow é **pública por design** (o protocolo exige que ela seja legível em
+`/<chave>.txt`), então guardá-la em env var não protegia nada e criava um modo
+de falha silencioso — virou constante no código. Restou **uma** variável na
+Vercel (`INTERNAL_API_KEY`), que o Paulo configurou. Primeira submissão feita
+em 20/08: **32 URLs, resposta 202**. Script novo em
+`apps/web/scripts/indexnow.mjs` (`pnpm --filter web indexnow`), que lê o
+`sitemap.xml` de produção em vez de duplicar a lista de rotas. **Nada dispara
+sozinho — não há hook nem cron; é comando manual, e deve ser rodado DEPOIS do
+deploy** (senão os buscadores rastreiam o conteúdo antigo). O `README.md`,
+que estava **vazio**, ganhou a seção "Operação" com esse procedimento.
+
+Também: `seoRefreshDate` do `sitemap.ts` bumpado para 2026-08-20 — sem isso o
+sitemap declararia que nada mudou desde 19/07 e todo o resto seria inócuo.
+
+**Decisões tomadas:**
+- **Um commit por feature** é a convenção; o commit agregado F38-F42
+  (`60befbe`) foi exceção pontual autorizada pelo Paulo, não o padrão.
+- **`porcentagem` e `juros-compostos` perdem link interno** para os alvos do
+  P0 (a implementar).
+- **F20 (PWA/Android) deve ser despriorizado formalmente**: retenção de coorte
+  é 62→3→2→1, e a semana de 02-08/08 foi 58→0. O F37 (salvar cálculos) já foi
+  o teste dessa hipótese e deu **3 usos em 6 dias** contra 385 cálculos —
+  público de sessão única não tem por que salvar nem instalar.
+- **O gargalo do F15 é orçamento, não execução.** `acesso.qmix.com.br` é o
+  fornecedor dos dois links, ou seja há pipeline pronto — a fila de 6 alvos é
+  decisão de quanto gastar, não projeto de prospecção.
+- **Reavaliar o gate do F19 (AdSense).** Era "esperar tráfego do Google";
+  passaram 3 meses e o Google entregou 1 sessão em 28 dias, enquanto há 207
+  usuários/mês reais. Trocar o gate para "N usuários/mês de qualquer canal".
+
+**Pendências (Paulo ficou de mandar e não mandou):**
+- **GA4 → `exception` por `description`** — decide se os 334 são ruído ou bug.
+- **GSC → performance por página, antes/depois de 03/08 e 12/08** — única
+  forma de isolar o efeito de cada backlink e embasar o orçamento do F15.
+
+**O que checar no próximo export (marco: 20/08):**
+- Posição do cluster "simulador" (hoje **83,3**) e da `rescisao-trabalhista`
+  (hoje **93,7**, pior do site). São os dois alvos do F38/F39 com número de
+  partida registrado; o resto do deploy é visual e não deve mover ranking.
+- Se `acritica.com` apareceu no GSC → Links.
+- **Efeito no Bing antes do Google.** Como o Bing é ~95% do tráfego real e
+  agora recebe IndexNow, o F38 pode ser validado lá em semanas — medir no
+  GA4/Clarity (sessões do Bing para `/calculadora/tesouro-direto`), não no GSC.
 
 ### 2026-08-13 — F37: histórico local de cálculos (IndexedDB)
 
