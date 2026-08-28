@@ -17,8 +17,24 @@ que não cabe em nenhum dos outros três.
 ## Ao voltar (resumo rápido)
 
 - **O plano de tráfego de 27/08 está numerado no [`FEATURES.md`](FEATURES.md)
-  como F43-F56** (Blocos A-D), a pedido do Paulo. **Blocos A e B entregues no
-  mesmo dia (F43-F51, `v0.23.0`)**; C e D seguem abertos.
+  como F43-F56** (Blocos A-D), a pedido do Paulo. **Blocos A, B e C entregues
+  no mesmo dia (F43-F55 + F57, `v0.26.0`)**; sobra o **Bloco D**, que é decisão
+  do Paulo (F56 mobile, F22 blog, F15 backlinks, F19 AdSense).
+- **Bloco C entregue (27/08) — e ele corrigiu uma conclusão anterior.** O F38
+  (20/08) apostou em "simulador/simulação" pelo volume do Semrush, e as
+  citações de IA do tesouro triplicaram em 7 dias. **Mas nas variações de
+  "calculadora de investimento em tesouro direto"** — "simulação" não aparece
+  uma única vez na lista do Clarity. **O F38 funcionou; a hipótese sobre por
+  que funcionou é que estava errada**, e a explicação mais provável é que ele
+  reescreveu title/H1/MDX inteiros e aumentou a recuperabilidade geral da
+  página, não o casamento com a palavra específica. O F53 aplicou o vocabulário
+  medido em 7 calculadoras.
+- **Método novo registrado no `README.md` (F52): o painel de SoA do Clarity é
+  etapa fixa do ciclo "avalie a pasta gsc".** É a única fonte de keyword
+  research com ciclo de 7 dias. O procedimento separa o achado em dois
+  destinos: **vocabulário** (a página faz, só não chama assim → tratamento do
+  F38/F53) e **lacuna de produto** (a página não faz → feature, como o IRRF
+  sobre aluguel do F54, que saiu de 4 citações medidas).
 - **Bloco B entregue (27/08) — e o achado que reordena a leitura de conteúdo:
   o gargalo não é profundidade, é granularidade.** Os MDX já tinham 800-2.205
   palavras, 7-13 H2 e artigo de lei citado; isso é competitivo. O que faltava
@@ -470,7 +486,12 @@ de campanha de autoridade, só CTR/backlink leve): `margem-lucro` pos.
   trabalhistas`) que nenhuma das 10 calculadoras trabalhistas atende — cada
   uma responde um pedaço. A `/categoria/trabalhista` existe e teve **1
   pageview**. Fluxo único encadeando rescisão + férias + 13º + FGTS.
-- **GEO do IRRF.** Única página com tração real de IA (177 citações em 7 dias,
+- ~~**GEO do IRRF.**~~ ✅ **F55, 27/08** — schema `Dataset` (não `Table`) em
+  `irrf`, `inss`, `irpf` e `das-mei`, com `temporalCoverage` aberto e
+  `dateModified` real. **A ressalva de 20/08 ficou mais fraca, não caiu:** o AI
+  referral saiu de 0 para 0,83%, e `Dataset` não gera rich result no Google
+  (só aparece no Dataset Search). Diagnóstico original abaixo.
+  **GEO do IRRF.** Única página com tração real de IA (177 citações em 7 dias,
   69% do total do site). Marcar a tabela IRRF 2026 com schema `Table`/`Dataset`
   e data de atualização explícita. Ressalva honesta: **AI referral = 0**, então
   isso constrói autoridade no Copilot, não cliques — decidir se vale.
@@ -1010,6 +1031,14 @@ dependem de orçamento nem de terceiro.*
 A-D); D2/D3/D4 reaproveitam F22/F15/F19, que já existiam.*
 
 **O que checar no próximo export (marco: 27/08):**
+- **Marco do Bloco C (F52-F55) é 27/08, e é o de retorno mais rápido.** As
+  citações de IA se medem em **7 dias**, não em trimestre. Números de partida
+  no Clarity: total do site **295** citações, `irrf` **158**, `tesouro-direto`
+  **47**, `inss` 13, `cdb` 11, `calorias` 7, `emprestimo` 3; SoA **20,86%** e
+  AI referral **0,83%**. Se o F53 funcionar, quem deve subir primeiro é `inss`,
+  `ferias`, `calorias` e `irpf` — as que ganharam vocabulário e partiam de
+  pouco. E vale procurar no painel se **"aluguel"** passa a citar o `irrf`
+  depois do F54.
 - **Marco do Bloco B (F47-F51) também é 27/08.** As 5 páginas com tabela de
   referência partem de: `financiamento` 298 impr / pos. 81,8, `hora-extra` 240
   / 84,7, `fgts` 207 / 90,0, `ferias` 205 / 88,1, `poupanca` 195 / 65,5. A

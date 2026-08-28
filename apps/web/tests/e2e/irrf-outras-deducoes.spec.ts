@@ -1,5 +1,9 @@
 import { test, expect } from '@playwright/test'
 
+// O campo de valor passou a se chamar "Valor bruto do mês" no F54, quando a
+// calculadora ganhou o modo de aluguel e o mesmo campo passou a servir salário
+// e aluguel — antes era "Salário Bruto".
+//
 // F35 — "Outras deduções" do IRRF virou `itemList` (mesmo padrão do salário
 // líquido, F34): o usuário lança linhas soltas (plano de saúde, PGBL) em vez
 // de somar tudo de cabeça num único campo. A soma dos itens é o que vira o
@@ -10,7 +14,7 @@ test.describe('calculadora de IRRF — "Outras deduções" como lista de itens',
   test('itens somados reduzem a base de cálculo do IRRF', async ({ page }) => {
     await page.goto('/calculadora/irrf')
 
-    await page.getByLabel('Salário Bruto').fill('500000') // R$ 5.000,00
+    await page.getByLabel('Valor bruto do mês').fill('500000') // R$ 5.000,00
 
     const grupo = page.getByRole('group', { name: 'Outras deduções' })
     await grupo.getByRole('button', { name: '+ Plano de Saúde' }).click()
@@ -29,7 +33,7 @@ test.describe('calculadora de IRRF — "Outras deduções" como lista de itens',
   test('linha em branco não conta na soma nem no cálculo', async ({ page }) => {
     await page.goto('/calculadora/irrf')
 
-    await page.getByLabel('Salário Bruto').fill('500000')
+    await page.getByLabel('Valor bruto do mês').fill('500000')
 
     const grupo = page.getByRole('group', { name: 'Outras deduções' })
     await grupo.getByRole('button', { name: 'Adicionar item' }).click()

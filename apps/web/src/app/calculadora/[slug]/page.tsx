@@ -12,6 +12,7 @@ import { ContentLoader } from '@/components/ContentLoader'
 import {
   CalculatorJsonLd,
   BreadcrumbJsonLd,
+  DatasetJsonLd,
   HowToJsonLd,
   FAQJsonLd,
 } from '@/components/seo/JsonLd'
@@ -68,6 +69,18 @@ export default async function CalculadoraPage({
         totalTime="PT1M"
       />
       <FAQJsonLd items={faqItems} />
+      {/* Só as calculadoras que publicam uma tabela legislativa (F55). */}
+      {calc.dataset && (
+        <DatasetJsonLd
+          name={calc.dataset.nome}
+          description={calc.dataset.descricao}
+          path={path}
+          dataAtualizacao={calc.dataAtualizacao}
+          vigenciaInicio={calc.dataset.vigenciaInicio}
+          fonteJuridica={calc.fonteJuridica}
+          variaveis={calc.dataset.variaveis}
+        />
+      )}
       <CalculadoraPageClient config={calc} relacionadas={relacionadas} />
       <ContentLoader slug={slug} />
     </>
