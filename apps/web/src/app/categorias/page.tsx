@@ -77,7 +77,7 @@ export default function CategoriasPage() {
               </h2>
               <Link
                 href={`/categoria/${slug}`}
-                className="text-sm font-medium text-brand-600 hover:underline"
+                className="inline-flex min-h-[24px] items-center text-sm font-medium text-brand-600 hover:underline"
               >
                 Ver todas ({grouped[slug].length}) →
               </Link>

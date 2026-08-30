@@ -8,6 +8,12 @@ const config: Config = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
     './content/**/*.mdx',
+    // `mdx-components.tsx` mora na raiz de `apps/web` (exigência do App
+    // Router) e por isso ficou de fora de todos os globs acima até o F56 —
+    // nenhuma classe dele era gerada, e o `overflow-x-auto` do wrapper de
+    // tabela sumia: 9 das 20 páginas de calculadora rolavam na horizontal no
+    // celular. Ver MEMORY.md, diário de 2026-08-29.
+    './mdx-components.tsx',
     '../../packages/ui/src/**/*.{ts,tsx}',
   ],
   theme: {

@@ -158,7 +158,7 @@ function parseCentavosInput(texto: string): number {
 }
 
 const currencyInputClassName = cn(
-  'w-full rounded-lg border px-3 py-2.5 text-sm',
+  'w-full rounded-lg border px-3 py-2.5 text-base md:text-sm',
   'focus:ring-brand-500 focus:outline-none focus:ring-2',
   'border-gray-300 bg-white',
 )
@@ -319,7 +319,7 @@ function DateField({
             onBlur={field.onBlur}
             disabled={disabled}
             className={cn(
-              'w-full rounded-lg border px-3 py-2.5 text-sm tabular-nums',
+              'w-full rounded-lg border px-3 py-2.5 text-base tabular-nums md:text-sm',
               'focus:ring-brand-500 focus:outline-none focus:ring-2',
               hasError ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-white',
             )}
@@ -383,7 +383,7 @@ function StepperField({
               disabled={disabled}
               aria-invalid={hasError}
               aria-describedby={ariaDescribedBy}
-              className="w-16 rounded-lg border border-gray-300 bg-white px-2 py-2 text-center text-sm tabular-nums focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="w-16 rounded-lg border border-gray-300 bg-white px-2 py-2 text-center text-base tabular-nums md:text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
               data-clarity-mask="true"
             />
             <button
@@ -460,7 +460,7 @@ function ItemListField({
                     disabled={disabled}
                     maxLength={ITEM_LIST_DESCRICAO_MAX_LENGTH}
                     aria-label={`Descrição do item ${index + 1}`}
-                    className="min-w-0 flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    className="min-w-0 flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-base md:text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
                     data-clarity-mask="true"
                   />
                 )}
@@ -701,7 +701,7 @@ export function CalculatorForm<T extends ZodRawShape>({
                       : undefined,
                   )}
                   className={cn(
-                    'w-full rounded-lg border bg-white px-3 py-2.5 text-sm',
+                    'w-full rounded-lg border bg-white px-3 py-2.5 text-base md:text-sm',
                     'focus:ring-brand-500 focus:outline-none focus:ring-2',
                     error ? 'border-red-400' : 'border-gray-300',
                   )}
@@ -748,7 +748,7 @@ export function CalculatorForm<T extends ZodRawShape>({
                         : (v: string) => v,
                   })}
                   className={cn(
-                    'w-full rounded-lg border px-3 py-2.5 text-sm',
+                    'w-full rounded-lg border px-3 py-2.5 text-base md:text-sm',
                     'focus:ring-brand-500 focus:outline-none focus:ring-2',
                     fieldMeta.prefix && 'pl-10',
                     fieldMeta.suffix && 'pr-14',
