@@ -18,8 +18,25 @@ que não cabe em nenhum dos outros três.
 
 - **O plano de tráfego de 27/08 está numerado no [`FEATURES.md`](FEATURES.md)
   como F43-F56** (Blocos A-D), a pedido do Paulo. **Blocos A, B e C entregues
-  no mesmo dia (F43-F55 + F57, `v0.26.0`)**; sobra o **Bloco D**, que é decisão
-  do Paulo (F56 mobile, F22 blog, F15 backlinks, F19 AdSense).
+  no mesmo dia (F43-F55 + F57, `v0.26.0`)**, e o **F56 (mobile) em 29/08
+  (`v0.27.0`)**. Do Bloco D sobram **F22 (blog do 13º — a janela é setembro),
+  F15 (backlinks) e F19 (gate do AdSense)**, os três decisão do Paulo.
+- **F56 entregue (29/08) — e ele derrubou a própria hipótese.** O item existia
+  porque o Google rankeia o site **16 posições melhor no celular** (765 impr.,
+  pos. 54,6) e mesmo assim dá 0 clique; a suspeita registrada era performance.
+  **Lighthouse mobile deu 94, LCP 2,9 s — não era.** O real: **9 das 20 páginas
+  rolavam na horizontal**, porque `mdx-components.tsx` mora na raiz de
+  `apps/web` e estava **fora dos globs de `content` do Tailwind** — nenhuma
+  classe dele era gerada, e o `overflow-x-auto` das tabelas do F47 era classe
+  morta. **Classe morta do Tailwind falha em silêncio:** sem erro de build, com
+  o `class=` visível no DevTools e a regra inexistente no CSS.
+- **Lição de teste que sai do F56: teste de conteúdo não é teste de layout.** As
+  tabelas do F47 tinham `tabelas-referencia.spec.ts` conferindo os números e
+  passaram meses quebradas no celular. Agora há `viewport-mobile.mobile.spec.ts`
+  travando "cabe na viewport" e "campo ≥ 16px" nas 20 calculadoras.
+- **Regra nova para campo de formulário: 16px no celular, sempre.** O Safari no
+  iOS dá zoom automático abaixo disso, e **iOS é 27 dos 50 usuários mobile**. O
+  padrão da casa passou a ser `text-base md:text-sm`.
 - **Bloco C entregue (27/08) — e ele corrigiu uma conclusão anterior.** O F38
   (20/08) apostou em "simulador/simulação" pelo volume do Semrush, e as
   citações de IA do tesouro triplicaram em 7 dias. **Mas nas variações de
@@ -716,6 +733,83 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-08-29 — F56: o celular, e por que a hipótese estava errada
+
+Paulo mandou executar o F56 (D1 do Bloco D). O item existia porque o GSC de
+27/08 mostrou a assimetria mais estranha do export: **765 impressões no celular
+em posição 54,6** contra 1.413 no desktop em posição 71 — o Google rankeia o
+site **16 posições melhor no celular** — e **zero cliques**. É a única fatia do
+funil em que o Google já entrega e o site não colhe nada, e nunca tinha sido
+olhada: todas as medições de Core Web Vitals do Clarity são de sessão desktop,
+porque o tráfego real vem do Bing no Windows (Edge 61%).
+
+**A hipótese registrada em 27/08 era performance. Ela morreu na primeira
+medição.** Lighthouse mobile em `hora-extra` (build de produção, não dev):
+**94** de performance, 100 de acessibilidade, 100 de SEO, LCP 2,9 s, TBT 140 ms,
+CLS 0,002. Não há problema de velocidade para resolver. Vale registrar como
+método: **a auditoria começou pela hipótese barata de descartar, e descartá-la
+em 3 minutos é o que liberou o resto da sessão para achar o problema real.**
+
+**O problema é render, e a causa raiz é uma linha de configuração.** Auditoria
+de viewport nas 22 rotas em Pixel 7 achou **9 das 20 calculadoras rolando na
+horizontal**: `financiamento` com 606px de conteúdo numa viewport de 412,
+`das-mei` 514, `fgts` 508, `poupanca` 462, `rescisao-trabalhista` 448, `cdb`
+434, `emprestimo` 432, `calorias` e `salario-liquido` 418. A culpada era sempre
+a mesma — a tabela do MDX — e o wrapper `overflow-x-auto` que deveria contê-la
+**estava escrito certo em `mdx-components.tsx` desde sempre**.
+
+**`apps/web/mdx-components.tsx` mora na raiz de `apps/web` (exigência do App
+Router) e estava fora de TODOS os globs de `content` do `tailwind.config.ts`,
+que cobriam `./src/pages`, `./src/components`, `./src/app`, `./content/**.mdx`
+e `packages/ui/src`. Nenhuma classe daquele arquivo era gerada.** Conferido no
+bundle, uma a uma: `overflow-x-auto`, `min-w-full`, `border-collapse`,
+`scroll-mt-20`, `border-l-4`, `border-brand-500` e `italic` — todas ausentes do
+CSS. O `class=` estava no HTML; a regra não existia.
+
+**A lição que vale além deste bug: classe morta do Tailwind falha em silêncio.**
+Não há erro de build, não há aviso, o atributo aparece no DevTools e o elemento
+só não tem o estilo. Foi por isso que sobreviveu meses sem ninguém notar — e
+por isso as tabelas do F47 (27/08) **nasceram desktop-only sem ninguém ver**:
+elas foram escritas, testadas por conteúdo (`tabelas-referencia.spec.ts` checa
+os números) e nunca olhadas num viewport pequeno. **Teste de conteúdo não é
+teste de layout.** Efeito colateral do mesmo bug: o blockquote nunca teve a
+borda de marca, e o `scroll-mt-20` dos H2 nunca compensou o cabeçalho — todo
+link de âncora dos MDX caía com o título colado no topo.
+
+**Segundo achado, independente do primeiro: o zoom do iOS.** Todos os campos de
+formulário eram `text-sm` (14px), e o Safari no iOS dá **zoom automático** ao
+focar um campo com fonte menor que 16px — e sair do zoom depois é manual. **iOS
+é 27 dos 50 usuários mobile do GA4 (54%)**, mesmo sendo 4% do site inteiro.
+Os 6 tipos de campo passaram a `text-base md:text-sm`: 16px no celular, a
+densidade do desktop preservada. Isso vale para qualquer campo novo daqui pra
+frente.
+
+**O que foi entregue** (v0.27.0): a linha no glob do Tailwind, os campos a 16px,
+o wrapper de tabela promovido a `role="region"` com `tabIndex` e rótulo (região
+rolável precisa ser alcançável por teclado, senão quem navega por Tab não chega
+às colunas escondidas), e os 6 links "Ver todas" de `/categorias` de 20px para o
+piso de 24px da WCAG 2.2. A suíte `viewport-mobile.mobile.spec.ts` trava as duas
+invariantes **nas 20 calculadoras**, e não só nas 9 quebradas, porque a causa era
+global — 30 testes no projeto `mobile-chromium` que já existia desde o F34.
+Verificado contra build de produção limpo: as 22 rotas cabem na viewport, nenhum
+campo abaixo de 16px, e a tabela larga do FGTS rola dentro da própria caixa
+(491px de conteúdo em 380px). Suíte desktop segue em 107 testes, core em 380.
+
+**Ressalva honesta sobre o retorno esperado.** Isto remove um defeito real de
+usabilidade que o Google mede, mas **não há prova de que era a causa dos 0
+cliques** — CTR em posição 54 é próximo de zero de qualquer jeito, e as 765
+impressões estão quase todas fora da 1ª página. O ganho provável é indireto
+(sinal de usabilidade, e não perder o clique quando a posição melhorar), não um
+salto de CTR. **O que checar no próximo export:** cliques no celular saindo de
+0, e a posição média do celular contra os 54,6 de partida.
+
+**Achado que NÃO foi corrigido, porque é decisão de design e não é mobile.** Com
+`behavior: 'wrap'` no `rehype-autolink-headings`, todo H2 dos MDX é embrulhado
+num `<a>`, e a regra `.prose a` do `globals.css` (`text-blue-600 underline`)
+pinta **todos os títulos de azul sublinhado**, com cara de link. Vale nos dois
+viewports e é anterior a esta sessão (o `globals.css` não foi tocado aqui).
+Fica registrado para o Paulo decidir se títulos devem parecer links.
 
 ### 2026-08-27 — Export novo (GSC+GA4+Clarity), comparação com concorrentes e plano de tráfego
 

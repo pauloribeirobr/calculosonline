@@ -17,9 +17,20 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         {children}
       </h3>
     ),
+    // O wrapper rolável é o que impede a tabela de empurrar a página inteira
+    // na horizontal no celular (F56). Ele só passou a funcionar quando este
+    // arquivo entrou nos globs do `tailwind.config.ts` — antes disso o
+    // `overflow-x-auto` era classe morta. `tabIndex`/`role`/`aria-label`
+    // tornam a região rolável alcançável por teclado e anunciada por leitor
+    // de tela, exigência de quem só consegue rolar com Tab.
     table: ({ children, ...props }) => (
-      <div className="overflow-x-auto my-6">
-        <table className="min-w-full text-sm border-collapse" {...props}>
+      <div
+        className="my-6 overflow-x-auto"
+        tabIndex={0}
+        role="region"
+        aria-label="Tabela de referência (rolável na horizontal)"
+      >
+        <table className="min-w-full border-collapse text-sm" {...props}>
           {children}
         </table>
       </div>
