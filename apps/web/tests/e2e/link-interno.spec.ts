@@ -34,13 +34,28 @@ test.describe('escultura de link interno (F43)', () => {
     await expect(rodape.locator('a[href="/categorias"]')).toHaveCount(1)
   })
 
-  test('o rodapé não linka mais /blog, rota que nunca existiu', async ({ page }) => {
+  test('nenhum link do rodapé aponta para rota inexistente', async ({ page }) => {
     await page.goto('/')
 
-    // Era um 404 interno servido em 100% das páginas do site, seguido pelo
-    // Google em todo crawl. Enquanto o F22 (blog sazonal) não existir, o link
-    // não pode voltar.
-    await expect(page.getByRole('contentinfo').locator('a[href^="/blog"]')).toHaveCount(0)
+    // Origem: o F44 achou o rodapé linkando `/blog` — rota que nunca existiu —
+    // em 100% das páginas, um 404 interno que o Google seguia em todo crawl e
+    // que desperdiçava justamente o PageRank que o F43 redistribui. O teste
+    // original travava aquele href específico e dizia "enquanto o F22 não
+    // existir"; o F22 existe desde 30/08 e `/blog` é uma rota de verdade.
+    //
+    // Travar a invariante em vez do sintoma: qualquer link do rodapé tem de
+    // responder 200. Pega o próximo link morto, não só aquele.
+    const hrefs = await page
+      .getByRole('contentinfo')
+      .locator('a[href^="/"]')
+      .evaluateAll((links) => [...new Set(links.map((a) => a.getAttribute('href')!))])
+
+    expect(hrefs.length).toBeGreaterThan(0)
+
+    for (const href of hrefs) {
+      const resposta = await page.request.get(href)
+      expect(resposta.status(), `${href} no rodapé responde ${resposta.status()}`).toBe(200)
+    }
   })
 
   test('as páginas de maior impressão recebem mais links internos que as de menor', async () => {

@@ -41,6 +41,32 @@ body {
     @apply no-underline;
   }
 
+  /*
+   * `rehype-autolink-headings` roda com `behavior: 'wrap'` (next.config.ts),
+   * então o texto de TODO título dos MDX vem embrulhado num <a href="#slug">.
+   * Sem estas regras, o `.prose a` acima pinta cada título de azul sublinhado,
+   * com cara de link de corpo de texto — em toda calculadora e, pior, no blog
+   * do F22, onde os H2 são a estrutura inteira da página.
+   *
+   * A âncora continua existindo e continua clicável (é assim que se copia o
+   * link de uma seção); ela só volta a parecer um título. Seletor com
+   * especificidade maior que `.prose a` de propósito, para não depender da
+   * ordem das regras.
+   */
+  .prose h1 a,
+  .prose h2 a,
+  .prose h3 a,
+  .prose h4 a {
+    @apply text-inherit no-underline;
+  }
+
+  .prose h1 a:hover,
+  .prose h2 a:hover,
+  .prose h3 a:hover,
+  .prose h4 a:hover {
+    @apply underline decoration-gray-300;
+  }
+
   .prose .lead {
     @apply text-lg leading-relaxed text-gray-600 md:text-xl;
   }

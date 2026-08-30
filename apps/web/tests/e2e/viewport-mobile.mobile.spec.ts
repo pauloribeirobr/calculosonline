@@ -38,6 +38,25 @@ test.describe('render no celular — sem rolagem horizontal', () => {
     })
   }
 
+  // O blog (F22) usa o mesmo pipeline de MDX das calculadoras, inclusive as
+  // tabelas — nasce coberto pela mesma trava, em vez de esperar a próxima
+  // auditoria descobrir que rolava na horizontal.
+  for (const rota of ['/blog', '/blog/decimo-terceiro-2026-quando-cai-e-quanto-voce-recebe']) {
+    test(`${rota} cabe na viewport`, async ({ page }) => {
+      await page.goto(rota)
+
+      const { scrollW, clientW } = await page.evaluate(() => ({
+        scrollW: document.documentElement.scrollWidth,
+        clientW: document.documentElement.clientWidth,
+      }))
+
+      expect(
+        scrollW,
+        `a página rola ${scrollW - clientW}px na horizontal — algo escapou de um contêiner rolável`,
+      ).toBeLessThanOrEqual(clientW + 1)
+    })
+  }
+
   test('tabela larga do MDX rola dentro do próprio contêiner, não na página', async ({
     page,
   }) => {

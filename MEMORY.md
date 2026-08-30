@@ -19,8 +19,18 @@ que não cabe em nenhum dos outros três.
 - **O plano de tráfego de 27/08 está numerado no [`FEATURES.md`](FEATURES.md)
   como F43-F56** (Blocos A-D), a pedido do Paulo. **Blocos A, B e C entregues
   no mesmo dia (F43-F55 + F57, `v0.26.0`)**, e o **F56 (mobile) em 29/08
-  (`v0.27.0`)**. Do Bloco D sobram **F22 (blog do 13º — a janela é setembro),
-  F15 (backlinks) e F19 (gate do AdSense)**, os três decisão do Paulo.
+  (`v0.27.0`)** e o **F22 (blog) em 30/08 (`v0.28.0`)**. Do Bloco D sobram
+  **F15 (backlinks) e F19 (gate do AdSense)**, os dois decisão do Paulo.
+- **F22 entregue (30/08) — o blog existe, com o guia do 13º publicado dentro da
+  janela sazonal.** Infra completa no padrão das calculadoras, então **o
+  próximo post custa uma entrada em `lib/blog.ts` e um `.mdx`** — rota, SEO,
+  schema, og-image, sitemap e links recíprocos saem de graça. O gancho do
+  artigo é de calendário: **20/12/2026 cai num domingo**, então a 2ª parcela
+  antecipa para 18/12. Números todos gerados pelo core, 9 travados em e2e.
+- **Padrão que sai do F22: quando um teste fica obsoleto porque a premissa
+  mudou, procurar a invariante que ele protegia.** O teste do F44 travava "o
+  rodapé não linka `/blog`" (rota inexistente na época); virou **"nenhum link
+  do rodapé pode responder diferente de 200"**, que pega o próximo link morto.
 - **F56 entregue (29/08) — e ele derrubou a própria hipótese.** O item existia
   porque o Google rankeia o site **16 posições melhor no celular** (765 impr.,
   pos. 54,6) e mesmo assim dá 0 clique; a suspeita registrada era performance.
@@ -91,9 +101,9 @@ que não cabe em nenhum dos outros três.
   linkar **`/blog`** — rota inexistente servida em 100% das páginas, achada ao
   ler o código, não nos dados. **Duas pendências de painel/fora do repo:** o
   F45 exige marcar `calculator_calculated` como *key event* no GA4 (o evento já
-  é disparado certo), e o F46 exige criar o secret `INTERNAL_API_KEY` no
-  GitHub para o workflow novo funcionar. Procedimento dos dois na §Operação do
-  `README.md`.
+  é disparado certo). **O secret `INTERNAL_API_KEY` do F46 foi criado pelo
+  Paulo em 30/08 — essa pendência está fechada e o workflow de IndexNow está
+  armado.** Procedimento dos dois na §Operação do `README.md`.
 - **Ao ler o próximo export, lembrar que o marco do F43 é 27/08.** O que deve
   mover primeiro é a posição de `financiamento` (hoje **298 impressões, pos.
   81,8**) — é a página que mais ganhou link interno. `fgts` (207, pos. 90,0) e
@@ -733,6 +743,77 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-08-30 — F22: o blog existe, e começou pelo 13º
+
+Paulo mandou fazer o F22 depois de eu apontar que era a única coisa do Bloco D
+que é trabalho de construir (F15 e F19 são decisão de orçamento/critério) **e a
+única com prazo**. Eu havia levantado a pergunta de escopo — blog inteiro ou só
+o primeiro artigo no menor arcabouço? — e a resposta foi "faça o F22", então
+entreguei a infra completa.
+
+**Por que o 13º, e por que agora.** A busca pica em nov/dez e o diário de 25/07
+já tinha registrado o risco de calendário deste cluster: se atrasar, a janela
+passa e o retorno só volta em dezembro do ano seguinte — **quase um ano
+perdido**. Foi exatamente por esse risco que o 1º backlink foi para
+`salario-liquido` e não para o 13º. Publicando em 30/08 sobram 60-90 dias de
+maturação antes do pico. É também o maior cluster do site (~860k/mês), com a
+página já retargetada no F27 e um backlink real da `acritica.com` apontando
+para ela.
+
+**O gancho do artigo saiu de olhar o calendário, não a SERP: 20 de dezembro de
+2026 cai num domingo.** A Lei 4.749/1965 fixa esse dia como prazo da 2ª parcela
+e não prevê prorrogação para o dia útil seguinte, então o pagamento antecipa
+para sexta, **18/12**. É um fato específico, verificável e com data de validade
+— o tipo de coisa que responde "quando cai o 13º 2026" melhor que um texto
+genérico, e que nenhum artigo perene tem.
+
+**Disciplina do F47/F49 mantida: nenhum número foi escrito à mão.** As 3
+tabelas, os 4 exemplos nomeados e o degrau da regra dos 15 dias saíram de
+execuções do `calcularDecimoTerceiro`, por script descartável em
+`packages/core/src/__scratch__` (removido depois). O achado mais vendável do
+artigo saiu disso: **um dia de diferença na data de admissão vale R$ 246,81**
+(admitido dia 17 vs dia 18 de março, salário R$ 3.600 — 10 meses contra 9).
+Nove desses valores estão travados em e2e: se uma regra de INSS/IRRF mudar, o
+artigo não pode divergir da calculadora em silêncio.
+
+**O blog não é uma ilha.** O link é recíproco nos dois sentidos (F43): o post
+tem CTA para a calculadora acima do conteúdo — quem já sabe a data e quer o
+número não deveria rolar o artigo inteiro — e cita outras 4; a calculadora
+ganhou o bloco `GuiasRelacionados`. **Ele não renderiza nada nas 19
+calculadoras sem post**, e isso é decisão, não descuido: um bloco vazio em 19
+páginas seria exatamente o link sem sinal que o F43 removeu do rodapé. A
+identidade visual também não é própria — a og-image e os cards herdam ícone e
+cor da calculadora que o post alimenta, então o blog entra dentro do sistema do
+F41 em vez de criar uma paleta paralela.
+
+**Bug de estilo achado ao olhar a página pronta — e ele afetava as 20
+calculadoras.** Com `behavior: 'wrap'` no `rehype-autolink-headings`, todo H2
+dos MDX vem embrulhado num `<a>`, e a regra `.prose a` do `globals.css`
+pintava **todos os títulos de azul sublinhado**, com cara de link de corpo de
+texto. Eu tinha registrado isso no F56 como "decisão de design, não é mobile" e
+deixado para o Paulo. **Estava certo em sinalizar e errado em deixar parado:**
+num artigo os H2 são a estrutura inteira da página, então o que era cosmético
+numa calculadora virou defeito da entrega. A âncora continua clicável (é assim
+que se copia o link de uma seção); ela só voltou a parecer um título.
+
+**Um teste obsoleto foi substituído, não apagado.** O do F44 travava "o rodapé
+não linka `/blog`" — e o próprio comentário dizia "enquanto o F22 não existir,
+o link não pode voltar". O F22 existe. Em vez de deletar, virou a invariante
+durável e mais forte: **nenhum link do rodapé pode responder diferente de
+200**, varrendo todos os hrefs. Pega o próximo link morto, não só aquele.
+Vale como padrão: quando um teste fica obsoleto porque a premissa mudou,
+procurar a invariante que ele estava tentando proteger.
+
+**Custo marginal do próximo post é quase zero:** uma entrada em `lib/blog.ts` e
+um `.mdx` em `content/blog/`. Rota, SEO, schema, og-image, sitemap e links
+recíprocos são automáticos. **O que checar no próximo export:** impressões de
+`/blog/decimo-terceiro-2026-quando-cai-e-quanto-voce-recebe` e se a
+`decimo-terceiro` (130 impr., pos. 81,5 em 27/08) sobe junto — a hipótese é que
+o post capture a busca informacional e passe autoridade para a calculadora.
+**Revisar o artigo todo ano em agosto**, antes da janela: as datas mudam de dia
+da semana e as tabelas de INSS/IRRF mudam de valor (o campo `sazonalidade` do
+registry existe para não deixar essa decisão se perder).
 
 ### 2026-08-29 — F56: o celular, e por que a hipótese estava errada
 

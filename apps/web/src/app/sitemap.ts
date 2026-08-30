@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { CATEGORIAS, calculatorRegistry, type CategoriaCalc } from '@/lib/calculators'
+import { blogRegistry, ultimaAtualizacaoDoBlog } from '@/lib/blog'
 import { siteConfig } from '@/lib/seo'
 
 // <lastmod> é sinal de freshness para o Google recrawlear. `dataAtualizacao` do
@@ -38,7 +39,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.8,
     },
+    {
+      // Hub do blog (F22). `lastModified` sai do post mais recente, não de uma
+      // constante: publicar um post novo tem de mover o lastmod do hub sozinho.
+      url: `${baseUrl}/blog`,
+      lastModified: ultimaAtualizacaoDoBlog(),
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
   ]
+
+  // Posts do blog (F22). Prioridade 0.7: abaixo das calculadoras, que são o
+  // produto, e no mesmo patamar das categorias. `changeFrequency: 'yearly'`
+  // seria mentira para conteúdo sazonal — o post do 13º é revisado todo ano
+  // antes da janela de nov/dez —, então 'monthly'.
+  const blogPages: MetadataRoute.Sitemap = blogRegistry.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.dataAtualizacao),
+    changeFrequency: 'monthly',
+    priority: 0.7,
+  }))
 
   const calculatorPages: MetadataRoute.Sitemap = calculatorRegistry.map((calc) => ({
     url: `${baseUrl}/calculadora/${calc.slug}`,
@@ -84,5 +104,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ]
 
-  return [...mainPages, ...calculatorPages, ...categoryPages, ...institutionalPages]
+  return [...mainPages, ...calculatorPages, ...blogPages, ...categoryPages, ...institutionalPages]
 }
