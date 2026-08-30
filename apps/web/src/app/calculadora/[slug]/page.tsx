@@ -9,6 +9,7 @@ import { buildCalculatorSchemaData } from '@/lib/schema'
 import { buildCalculatorTitle, buildMetadata } from '@/lib/seo'
 import { CalculadoraPageClient } from '@/components/calculadoras/CalculadoraPageClient'
 import { ContentLoader } from '@/components/ContentLoader'
+import { GuiasRelacionados } from '@/components/blog/GuiasRelacionados'
 import {
   CalculatorJsonLd,
   BreadcrumbJsonLd,
@@ -83,6 +84,7 @@ export default async function CalculadoraPage({
       )}
       <CalculadoraPageClient config={calc} relacionadas={relacionadas} />
       <ContentLoader slug={slug} />
+      <GuiasRelacionados slug={slug} />
     </>
   )
 }

@@ -36,6 +36,8 @@ calculosonline/
 ├── apps/desktop/       — Tauri
 ├── apps/sheets-plugin/ — Google Apps Script
 └── content/            — conteúdo editorial MDX
+    ├── calculadoras/   — corpo de cada uma das 20 calculadoras
+    └── blog/           — posts do blog (F22); registry em `src/lib/blog.ts`
 ```
 
 ## Fases do roadmap

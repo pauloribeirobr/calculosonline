@@ -89,7 +89,7 @@ INTERNAL_API_KEY=<segredo> pnpm --filter web indexnow ferias inss
 Ou pelo GitHub: **Actions › IndexNow › Run workflow**, com o campo `slugs`
 vazio (sitemap inteiro) ou com os slugs separados por espaço.
 
-**Setup de uma vez só do workflow:** criar o secret `INTERNAL_API_KEY` em
+**Setup de uma vez só do workflow (feito em 30/08):** criar o secret `INTERNAL_API_KEY` em
 *Settings › Secrets and variables › Actions* com o mesmo valor que está na
 Vercel (Production). Sem o secret o job roda e falha no script, que exige a
 variável.
@@ -100,6 +100,37 @@ workflow não precisa de `pnpm install` nem de build.
 
 **3. Google Search Console** — reenviar o sitemap basta. A Inspeção de URL só
 antecipa o recrawl em alguns dias e é opcional. O Google não usa IndexNow.
+
+### Publicar um post no blog
+
+O F22 montou a infra; **um post novo não exige código**. São dois passos:
+
+1. **Entrada em [`apps/web/src/lib/blog.ts`](apps/web/src/lib/blog.ts)** — slug,
+   títulos (o `titulo` é o H1, o `tituloSeo` é o da SERP), descrição, resumo do
+   card, datas, palavras-chave, a `calculadoraPrincipal` que o post alimenta e
+   as `calculadorasRelacionadas` que ele cita.
+2. **O corpo em `apps/web/content/blog/[slug].mdx`**, mesmo formato dos MDX de
+   calculadora.
+
+Rota, canonical, `Article`/`Breadcrumb` JSON-LD, imagem social, entrada no
+sitemap e os links recíprocos com a calculadora saem automaticamente do
+registry.
+
+**Duas regras que valem a pena não quebrar:**
+
+- **Número no artigo sai do motor, não de conta à mão** (mesma disciplina do
+  F47/F49). Gere com um script descartável em `packages/core/src/__scratch__`,
+  apague depois, e trave os valores principais em `tests/e2e/blog.spec.ts`. Se
+  uma regra legal mudar, o teste quebra antes de o artigo mentir em produção.
+- **Post sazonal precisa de revisão anual.** O campo `sazonalidade` do registry
+  existe para essa decisão não se perder — o guia do 13º, por exemplo, tem de
+  ser revisto todo agosto: as datas mudam de dia da semana (20/12/2026 cai num
+  domingo) e as tabelas de INSS/IRRF mudam de valor.
+
+**Este é um dos deploys que pedem IndexNow** — conteúdo novo de verdade, ao
+contrário de um deploy de CSS. Bumpe o `seoRefreshDate` se o post alterar
+title/description de calculadora existente; senão o `lastModified` do post já
+sai do próprio registry.
 
 ### Keyword research semanal pelo painel de IA do Clarity
 
