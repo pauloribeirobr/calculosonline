@@ -78,6 +78,8 @@ Mesmo padrão do projeto irmão [Recibo Fácil](../recibofacil/FEATURES.md).
 
 | F22 | 2026-08-30 | **Blog sazonal — infra completa + o guia do 13º.** Maior lacuna do plano de negócios (seção 3.2), nunca implementada; até o F44 o rodapé linkava `/blog`, rota que **nunca existiu**, em 100% das páginas. Registry canônico (`lib/blog.ts`) no padrão do `calculators.ts`, MDX em `content/blog/`, hub `/blog` + `/blog/[slug]` em SSG/ISR 24h, `ArticleJsonLd`/`Breadcrumb`/`ItemList`, sitemap com `lastModified` do hub derivado do post mais recente, e **og-image por post** herdando ícone e cor da calculadora que ele alimenta (F42/F41 — o blog não inventa paleta própria). **Escolhido pelo calendário:** a busca por 13º pica em nov/dez e o `MEMORY.md` (25/07) já registrava que perder a janela adia o retorno em um ano, não em semanas — publicar em agosto dá 60-90 dias de maturação. O gancho do artigo é que **20/12/2026 cai num domingo**, antecipando a 2ª parcela para 18/12. **Números todos gerados pelo `calcularDecimoTerceiro`** (disciplina do F47/F49): 3 tabelas, 4 exemplos nomeados e o degrau dos 15 dias, em que um dia de admissão vale R$ 246,81; 9 valores travados em e2e. **Link recíproco (F43)** nos dois sentidos, e o bloco `GuiasRelacionados` **não renderiza** nas 19 calculadoras sem post. **Corrigiu de quebra um bug que afetava as 20 calculadoras:** o `rehype-autolink-headings` com `behavior: 'wrap'` + a regra `.prose a` pintavam **todo H2 dos MDX de azul sublinhado**, com cara de link. E o teste do F44 ("o rodapé não linka /blog") foi substituído pela invariante durável — **nenhum link do rodapé pode dar 404** — **v0.28.0** |
 
+| F58 | 2026-09-01 | **Hub "Calculadora Trabalhista Completa" — o fluxo único que encadeia rescisão + 13º + férias + FGTS.** Último item de P1 que não dependia de decisão do Paulo. O GSC mostra dezenas de queries de intenção agregada (`calculo trabalhista completo`, `como calcular direitos trabalhistas`) que **nenhuma das 10 calculadoras trabalhistas atende sozinha** — cada uma responde um pedaço —, e o único candidato que o site tinha para elas era `/categoria/trabalhista`, um índice de links com **1 pageview em 3 meses**. Rota nova `/calculadora-trabalhista-completa`, com um formulário de 7 campos (os mesmos da rescisão, nada a mais: o hub tem de custar *menos* preenchimento que abrir quatro calculadoras) e quatro blocos de resultado, cada um com detalhamento linha a linha e link para a calculadora dedicada. **O encadeamento é função pura no core** (`calcularPanoramaTrabalhista`, 19 testes Vitest), não lógica de página — reaproveitável por desktop/Sheets/API e testável sem browser. **A armadilha que o módulo existe para não cair: os quatro números não se somam.** A rescisão já embute 13º proporcional, férias proporcionais e a multa do FGTS; a soma ingênua dá **R$ 36.681,33** contra os **R$ 15.558,57** que a pessoa realmente recebe (salário R$ 3.000, 5 anos) — mais que o dobro. Por isso não há "total geral", o consolidado sai **inteiro como `neutro`** (a UI só desenha sinal em crédito/débito) e o aviso aparece **acima** dos números, não em rodapé. Segunda armadilha fechada: o saldo do FGTS que o usuário digita já contém os depósitos do contrato, então a projeção roda com `saldoAtual: 0` — passá-lo somaria os mesmos 8% duas vezes; o bloco compara os dois e sinaliza depósito faltando. **Não entrou no `calculatorRegistry`** de propósito (mudaria a contagem de "20 calculadoras" declarada em home/`/sobre`/FAQ/og-image e o colocaria concorrendo com as que agrega); mora em `lib/hubTrabalhista.ts`. **Link recíproco (F43)** das quatro calculadoras encadeadas + `/categoria/trabalhista` + rodapé — sem isso nasceria órfão. 3 tabelas e 5 valores de FAQ **gerados rodando o próprio motor** (F47/F49), travados em e2e; og-image própria com os quatro ícones — **v0.29.0** |
+
 > F25, F27, F28, F29, F30, F31, F32, F33, F34, F35, F36, F37, F38, F39, F40, F41 e F42 saíram de ordem (implementados direto, fora do backlog planejado em F14-F24) e por isso ganharam número novo em sequência em vez de reutilizar um número já reservado — mesmo critério usado no Recibo Fácil para features implementadas fora da fila. F16 manteve o número original porque já estava reservado nesse backlog (P0, GEO/`llms.txt`), só foi implementado fora da ordem relativa a F15. F26 está reservado no backlog (Fase 2, ainda não implementado).
 
 ## 2. Próximas melhorias (backlog)
@@ -86,12 +88,15 @@ Numeração segue direto de onde a Parte 1 parou (pulando F25, já usado pelo
 Clarity) — **a próxima feature nova implementada é a F14.** Fonte:
 [`MEMORY.md`](MEMORY.md) (§Backlog ativo) e `AGENTS.md`/
 `docs/PLANO_IMPLEMENTACAO.md` (fases do roadmap). Prioridade dentro de cada
-grupo segue a ordem do `MEMORY.md`. **A próxima feature nova é a F58** (F22, F56 e F57 já saíram) — os
+grupo segue a ordem do `MEMORY.md`. **A próxima feature nova é a F59** (F22, F56, F57 e F58 já saíram) — os
 números F43-F56 foram atribuídos em 2026-08-27 aos Blocos A-D do plano de
 tráfego (ver `MEMORY.md`, diário 2026-08-27, §7), e F57 saiu no mesmo dia como
 fix de precisão. **Do Bloco D, F56 saiu em 29/08 e F22 em 30/08; sobram F15
 (backlinks) e F19 (gate do AdSense), os dois decisão de orçamento/critério do
-Paulo.** **Reordenado em 2026-07-25** para trazer
+Paulo.** **O F58 (01/09) fechou o último item de P1 que não dependia de decisão
+do Paulo** — daqui em diante o backlog implementável é o que sair do próximo
+export ("avalie a pasta gsc"), porque F56 e F22 ainda não tiveram tempo de dar
+sinal e o F58 acabou de subir. **Reordenado em 2026-07-25** para trazer
 aquisição de tráfego (backlinks + GEO/llms.txt + Google Ads) antes do
 AdSense — e **refinado no mesmo dia** depois de cruzar o export novo do GSC
 (25/07) com o GA4: o problema não é "site sem tráfego" (há ~230
@@ -137,10 +142,8 @@ como referência cruzada, com o contexto novo do export.
 | F15 | Backlinks — mais placements | Já registrado no P0. **Antes de comprar, conferir se `acritica.com` (link de 12/08) apareceu no GSC → Links** — prazo dado em 20/08 foi meados de setembro; se não aparecer, o link não está sendo contado e isso muda a decisão de orçamento |
 | F19 | Rever o gate do AdSense | Já registrado no P0. Pendente desde 20/08: trocar "esperar tráfego do Google" (que entregou 4 sessões em 8 meses) por "N usuários/mês de qualquer canal", senão a espera é indefinida |
 
-**Ainda sem número, só no `MEMORY.md` (§P1):** hub "Calculadora Trabalhista
-Completa" — fluxo único encadeando rescisão + férias + 13º + FGTS, para as
-queries de intenção agregada que nenhuma das 10 calculadoras trabalhistas
-atende sozinha.
+~~**Ainda sem número, só no `MEMORY.md` (§P1):** hub "Calculadora Trabalhista
+Completa"~~ — ✅ **Entregue 2026-09-01 como F58** (v0.29.0), ver Parte 1.
 
 ### Prioridade imediata (produto)
 

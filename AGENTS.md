@@ -37,7 +37,8 @@ calculosonline/
 ├── apps/sheets-plugin/ — Google Apps Script
 └── content/            — conteúdo editorial MDX
     ├── calculadoras/   — corpo de cada uma das 20 calculadoras
-    └── blog/           — posts do blog (F22); registry em `src/lib/blog.ts`
+    ├── blog/           — posts do blog (F22); registry em `src/lib/blog.ts`
+    └── hub/            — conteúdo do hub trabalhista (F58); registry em `src/lib/hubTrabalhista.ts`
 ```
 
 ## Fases do roadmap
@@ -197,6 +198,15 @@ Componentes globais: `Header`, `Footer`, `PageSeo`, `JsonLd`.
   opcionais; construir objetos condicionalmente antes de chamar funções do core.
 - **MDX em `apps/web/content/`** (não na raiz `content/`) — necessário para o import
   dinâmico do webpack funcionar a partir de `apps/web/src/components/ContentLoader.tsx`.
+  **Um loader por diretório de conteúdo** (`ContentLoader`, `BlogContentLoader`,
+  `HubContentLoader`): o `import()` do webpack agrupa por diretório literal, então um loader
+  genérico com o diretório em variável juntaria os chunks e carregaria os 20 MDX de
+  calculadora em toda página de post ou do hub.
+- **Nem toda página de cálculo entra no `calculatorRegistry`** — o registry casa 1-para-1 com
+  um formulário em `components/calculadoras/forms/` e um MDX em `content/calculadoras/`, e
+  alimenta a contagem de "20 calculadoras" declarada em home, `/sobre`, FAQ e og-image.
+  O hub trabalhista (F58) agrega quatro delas e por isso mora em `lib/hubTrabalhista.ts`,
+  fora do registry.
 - **Sitemap via `app/sitemap.ts` nativo, não `next-sitemap`** — evita o problema de o config
   CommonJS do next-sitemap não conseguir importar `lib/calculators.ts` (TS) diretamente; o
   sitemap nativo roda no mesmo runtime do app e importa o registry sem fricção.

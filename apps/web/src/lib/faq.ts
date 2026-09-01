@@ -8,6 +8,14 @@ export interface FaqItem {
 
 const CONTENT_DIR = path.join(process.cwd(), 'content/calculadoras')
 
+/**
+ * Diretórios de conteúdo que publicam uma seção de FAQ. O hub trabalhista
+ * (F58) não é uma calculadora do registry e por isso não mora em
+ * `content/calculadoras/` — mas o formato da seção é o mesmo, então o parser
+ * é o mesmo. Ver `lib/hubTrabalhista.ts`.
+ */
+const HUB_DIR = path.join(process.cwd(), 'content/hub')
+
 /** Remove marcação MDX (bold, listas, fences) e normaliza para texto corrido. */
 function stripMarkdown(raw: string): string {
   const lines = raw
@@ -58,9 +66,18 @@ function parseFaqSection(section: string): FaqItem[] {
  * das 3 perguntas genéricas repetidas em todas as calculadoras.
  */
 export function getFaqFromContent(slug: string): FaqItem[] {
+  return getFaqFromArquivo(path.join(CONTENT_DIR, `${slug}.mdx`))
+}
+
+/** Mesma extração, para o MDX do hub trabalhista (F58). */
+export function getFaqDoHub(slug: string): FaqItem[] {
+  return getFaqFromArquivo(path.join(HUB_DIR, `${slug}.mdx`))
+}
+
+function getFaqFromArquivo(arquivo: string): FaqItem[] {
   let raw: string
   try {
-    raw = fs.readFileSync(path.join(CONTENT_DIR, `${slug}.mdx`), 'utf-8')
+    raw = fs.readFileSync(arquivo, 'utf-8')
   } catch {
     return []
   }

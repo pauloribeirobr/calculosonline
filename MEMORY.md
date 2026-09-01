@@ -16,6 +16,32 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **F58 entregue (01/09) — o hub trabalhista, e com ele o último item de P1 que
+  não dependia de decisão do Paulo.** `/calculadora-trabalhista-completa`:
+  7 campos, quatro blocos (rescisão, 13º, férias, FGTS), encadeamento em
+  `calcularPanoramaTrabalhista` no core (19 testes Vitest). **O que sobra no
+  backlog implementável agora depende do próximo export** — F56, F22 e F58
+  subiram em quatro dias e nenhum teve tempo de dar sinal.
+- **Padrão que sai do F58, reaproveitável em qualquer agregação: quando uma
+  página junta cálculos que já se contêm, a soma é o bug.** A rescisão já embute
+  13º proporcional, férias proporcionais e multa do FGTS — somar os quatro
+  blocos dá **R$ 36.681,33** contra os **R$ 15.558,57** reais (salário R$ 3.000,
+  5 anos), mais que o dobro. Três defesas: não existe "total geral"; o
+  consolidado sai **inteiro como `neutro`** (a UI só desenha sinal em
+  crédito/débito, então neutro é o que impede a lista de parecer soma); e o
+  aviso fica **acima** dos números, com teste comparando `boundingBox().y`.
+- **Segunda soma indevida do F58, mais sutil: o saldo do FGTS informado já
+  contém os depósitos do contrato.** Passá-lo como `saldoAtual` na projeção
+  somaria os mesmos 8% duas vezes — a projeção roda com `saldoAtual: 0` e usa a
+  outra metade da conta (quanto *deveria* ter sido depositado) para comparar com
+  o extrato. Virou recurso: sinaliza depósito faltando.
+- **Regra de escopo do F58: o hub tem de custar MENOS preenchimento que abrir
+  quatro calculadoras.** Por isso os campos são exatamente os da rescisão e
+  `diasFaltas`/`diasAbono` ficaram de fora, mesmo com o motor aceitando os dois.
+- **Lição de teste do F58: teste de link interno precisa excluir o rodapé.**
+  Assim que o rodapé passou a linkar o hub em 100% das páginas, "a página X
+  linka o hub" virou verdade em toda parte. A correção é recortar o escopo
+  (`getByRole('main')`), não afrouxar a asserção.
 - **O plano de tráfego de 27/08 está numerado no [`FEATURES.md`](FEATURES.md)
   como F43-F56** (Blocos A-D), a pedido do Paulo. **Blocos A, B e C entregues
   no mesmo dia (F43-F55 + F57, `v0.26.0`)**, e o **F56 (mobile) em 29/08
@@ -508,7 +534,10 @@ de campanha de autoridade, só CTR/backlink leve): `margem-lucro` pos.
   `quickAdd` do F12 existe, mas 69 de 105 cliques em `ferias` foram nos +/− —
   padrão que se repetiu em duas janelas independentes, agora com tráfego
   orgânico. Sinal fraco (poucos pageviews), custo baixo.
-- **Hub "Calculadora Trabalhista Completa".** Dezenas de queries de intenção
+- ~~**Hub "Calculadora Trabalhista Completa".**~~ ✅ **F58, 01/09** — rota
+  `/calculadora-trabalhista-completa`, encadeamento no core, e as duas somas
+  indevidas fechadas com teste (ver diário). Diagnóstico original abaixo.
+  **Hub "Calculadora Trabalhista Completa".** Dezenas de queries de intenção
   agregada (`calculo trabalhista completo`, `como calcular direitos
   trabalhistas`) que nenhuma das 10 calculadoras trabalhistas atende — cada
   uma responde um pedaço. A `/categoria/trabalhista` existe e teve **1
@@ -743,6 +772,107 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-09-01 — F58: o hub trabalhista, e as duas somas que não podem acontecer
+
+Paulo mandou implementar o F58 — o hub "Calculadora Trabalhista Completa", que
+era o **último item de P1 sem dependência de decisão dele**. O item existia
+desde 20/08 com o diagnóstico já pronto: dezenas de queries de intenção
+agregada (`calculo trabalhista completo`, `como calcular direitos
+trabalhistas`) que nenhuma das 10 calculadoras trabalhistas atende sozinha,
+porque cada uma responde um pedaço, e o único candidato que o site tinha para
+elas era `/categoria/trabalhista` — um índice de links, com **1 pageview em 3
+meses**. Índice não calcula nada; quem busca "cálculo trabalhista completo" não
+quer escolher uma calculadora.
+
+**O que ficou pronto.** Rota `/calculadora-trabalhista-completa`, formulário de
+7 campos e quatro blocos de resultado (rescisão, 13º, férias, FGTS), cada um com
+detalhamento linha a linha, base legal e link para a calculadora dedicada.
+
+**Decisão 1 — o encadeamento é core, não página.** `calcularPanoramaTrabalhista`
+mora em `packages/core/src/trabalhista/panorama.ts` e não inventa regra nenhuma:
+deriva os parâmetros das quatro funções que já existem. Isso deu 19 testes
+Vitest que rodam sem browser, e mantém o hub reaproveitável pelo Tauri, pelo
+plugin do Sheets e por uma API futura — que é o motivo de o `packages/core`
+existir. A alternativa (montar o encadeamento dentro do componente React) teria
+custado e2e para testar aritmética.
+
+**Decisão 2 — o hub NÃO entrou no `calculatorRegistry`.** Ele mora em
+`lib/hubTrabalhista.ts`. Entrar no registry parecia tentador (ganharia rota,
+og-image, sitemap e schema de graça), mas: (a) mudaria a contagem de "20
+calculadoras" que o site declara em home, `/sobre`, FAQ, `SeoContent`,
+`HowItWorks`, `FinalCta` e na og-image do site; (b) o colocaria na listagem de
+`/categoria/trabalhista` **concorrendo com as quatro que ele agrega**; e (c) o
+registry casa 1-para-1 com um formulário em `forms/` e um MDX em
+`content/calculadoras/`, e o hub não é nem uma coisa nem outra. Registry é para
+ferramenta de uma conta só.
+
+**A armadilha central, e o motivo de o módulo existir: os quatro números não se
+somam.** A rescisão já embute o 13º proporcional, as férias proporcionais e a
+multa de 40% do FGTS. Um agregador ingênuo somaria os quatro blocos e mostraria
+um "total geral" — e o erro não é pequeno: para salário de R$ 3.000 com 5 anos
+de casa, a soma dá **R$ 36.681,33** contra os **R$ 15.558,57** que realmente
+entram na conta. **Mais que o dobro.** Três defesas, e vale registrar as três
+porque são reaproveitáveis em qualquer agregação futura:
+
+1. A página **não oferece** total geral. Nenhum campo do resultado é uma soma.
+2. O consolidado sai **inteiro como `neutro`**. A UI (`CalculatorResult` e o
+   bloco novo) só desenha o sinal (+)/(−) em `credito`/`debito` — marcar tudo
+   como neutro é o que impede a lista de *parecer* uma soma. Há teste travando
+   que nenhuma linha do consolidado é crédito ou débito.
+3. O aviso aparece **acima** dos números, não em rodapé de letra miúda. A
+   leitura errada acontece no primeiro olhar, então é aí que ela é
+   interceptada — e há teste comparando `boundingBox().y` do aviso com o do
+   primeiro bloco.
+
+**A segunda soma indevida, mais sutil, também fechada com teste.** O saldo do
+FGTS que o usuário digita **já contém** os depósitos do contrato. Passá-lo como
+`saldoAtual` para o `calcularFGTS` na hora de projetar somaria os mesmos 8%
+duas vezes. A projeção roda com `saldoAtual: 0` de propósito, e o bloco usa a
+outra metade da conta — *quanto deveria ter sido depositado* — para comparar
+com o extrato. Isso virou um recurso: depósito faltando é problema comum e
+quase ninguém confere. A ressalva honesta está no código, no aviso e no texto:
+a estimativa usa o salário atual em todos os meses e ignora o rendimento do
+fundo, então saldo real **acima** do estimado é normal (aumentos + rendimento);
+o sinal de alerta é o contrário.
+
+**Escopo do formulário — a regra que fechou a discussão.** Os 7 campos são
+exatamente os da rescisão, nada a mais. `diasFaltas` (que reduz os dias de
+férias pelo art. 130) e `diasAbono` ficaram de fora mesmo com o motor
+aceitando os dois: **o hub tem de custar menos preenchimento que abrir quatro
+calculadoras, não mais**. A página avisa que assumiu zero faltas e manda quem
+tem faltas para a calculadora de férias. É a mesma lógica do F34/F50 sobre
+atrito, aplicada a "que campo nem deveria existir aqui".
+
+**Link recíproco (F43) — sem ele o hub nasceria órfão.** Com Authority Score 2
+e um backlink reconhecido, o PageRank interno é o único capital de autoridade
+sob controle. O hub recebe link do CTA no fim das quatro calculadoras
+encadeadas (`HubTrabalhistaCta`, que renderiza `null` nas outras 16 — bloco
+fora do tema é o link sem sinal que o F43 removeu do rodapé), do destaque em
+`/categoria/trabalhista` e de uma entrada no rodapé. **No rodapé ele entrou na
+seção de hubs**, junto de `/categorias` e `/blog`, e não em "Mais buscadas":
+aquela lista é ordenada por impressão medida no GSC e o hub não tem impressão
+nenhuma ainda. Colocá-lo lá seria inventar prioridade.
+
+**Efeito colateral nos testes que vale como padrão.** Assim que o rodapé passou
+a linkar o hub em 100% das páginas, quatro testes novos quebraram: "a página X
+linka o hub" passou a ser verdade em toda parte. A correção não foi afrouxar a
+asserção, foi recortar o escopo — `getByRole('main')` em vez da página inteira.
+**Teste de link interno precisa excluir o rodapé, senão mede o rodapé.**
+
+**Disciplina do F47 mantida:** as 3 tabelas do conteúdo e todos os valores
+citados na FAQ saíram de um script descartável que roda o próprio motor
+(criado em `packages/core/src/__scratch__`, removido depois), não de conta à
+mão. Seis deles estão travados em e2e, incluindo o **R$ 36.681,33** — o
+contraexemplo da soma indevida é justamente o número que dá o tamanho do erro,
+e se ele mudar o texto passa a mentir.
+
+**O que checar no próximo export:** se `/calculadora-trabalhista-completa`
+começa a aparecer em impressão para as queries agregadas, e se
+`/categoria/trabalhista` sobe junto (a hipótese é que o hub dê à categoria um
+destino que ela não tinha). E o de sempre: F56 (29/08), F22 (30/08) e agora o
+F58 subiram em quatro dias — nenhum teve tempo de dar sinal, então o próximo
+ciclo "avalie a pasta gsc" é medição, não implementação.
 
 ### 2026-08-30 — F22: o blog existe, e começou pelo 13º
 
