@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { CalculatorLayout, CalculatorResult, RelatedCalculators } from '@calculosonline/ui'
 import type { ErroValidacao, ResultadoCalculo } from '@calculosonline/core'
@@ -16,6 +16,28 @@ import { getCalculadoraForm } from './forms'
 interface Props {
   config: CalculadoraRegistro
   relacionadas: CalculadoraRegistro[]
+}
+
+/**
+ * Leva scroll **e foco** até um elemento (F59).
+ *
+ * O foco é a metade que costuma faltar: rolar sozinho move a tela e deixa o
+ * cursor de teclado/leitor de tela parado onde estava. Os alvos daqui são
+ * `tabIndex={-1}` — focáveis por código, fora da ordem de Tab —, e o
+ * `preventScroll` evita que o navegador dê um segundo pulo por conta própria
+ * depois do `scrollIntoView`.
+ */
+function irPara(elemento: HTMLElement | null) {
+  if (!elemento) return
+  const reduzirMovimento =
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  elemento.scrollIntoView({
+    behavior: reduzirMovimento ? 'auto' : 'smooth',
+    block: 'start',
+  })
+  elemento.focus({ preventScroll: true })
 }
 
 /**
@@ -55,6 +77,27 @@ export function CalculadoraPageClient({ config, relacionadas }: Props) {
   // recriada a cada render "ressuscitaria" o id da URL depois de consumido.
   const [pendingCalcId, setPendingCalcId] = useState<string | null>(null)
 
+  // F59 — abrir um cálculo salvo (`/meus-calculos` → "Abrir") ou um link
+  // compartilhado (F32) caía no topo da página, com o resultado já calculado
+  // lá embaixo: a pessoa pedia um número e recebia o formulário de novo.
+  //
+  // Só vale para essas duas aberturas. Em visita normal a página tem de abrir
+  // no H1 — o tráfego é praticamente todo orgânico, e pular o conteúdo
+  // editorial seria desfazer o F43/F47 na prática.
+  const resultadoRef = useRef<HTMLDivElement>(null)
+  const formularioRef = useRef<HTMLDivElement>(null)
+  // Dispara uma vez só, no primeiro resultado auto-calculado. Sem isso, um
+  // recálculo manual depois de editar rolaria a página de novo, e a rolagem
+  // brigaria com a restauração de scroll do botão "voltar" do navegador.
+  const jaDirecionou = useRef(false)
+  const veioDeCalculoPronto = sharedData !== null
+
+  useEffect(() => {
+    if (!veioDeCalculoPronto || !resultado || jaDirecionou.current) return
+    jaDirecionou.current = true
+    irPara(resultadoRef.current)
+  }, [veioDeCalculoPronto, resultado])
+
   const FormComponent = getCalculadoraForm(config.slug)
   const resultProps = config.formatoResultado ? { formato: config.formatoResultado } : {}
 
@@ -87,7 +130,12 @@ export function CalculadoraPageClient({ config, relacionadas }: Props) {
         }
         form={
           FormComponent ? (
-            <>
+            <div
+              ref={formularioRef}
+              tabIndex={-1}
+              aria-label={`Formulário da ${config.titulo}`}
+              className="focus:outline-none"
+            >
               {sharedData && (
                 <p className="border-brand-200 bg-brand-50 text-brand-700 mb-4 rounded-md border px-3 py-2 text-sm">
                   Valores de um cálculo compartilhado — edite e recalcule à vontade.
@@ -139,7 +187,7 @@ export function CalculadoraPageClient({ config, relacionadas }: Props) {
                   ))}
                 </ul>
               )}
-            </>
+            </div>
           ) : (
             <p className="text-sm text-gray-600">
               Formulário desta calculadora ainda não foi implementado.
@@ -149,6 +197,7 @@ export function CalculadoraPageClient({ config, relacionadas }: Props) {
         result={
           resultado ? (
             <CalculatorResult
+              ref={resultadoRef}
               resultado={resultado}
               titulo="Resultado"
               nomeCalculadora={config.titulo}
@@ -173,6 +222,17 @@ export function CalculadoraPageClient({ config, relacionadas }: Props) {
                   : undefined
               }
               salvo={savedCalcId !== null}
+              // Só na abertura de cálculo pronto: é ali que o formulário ficou
+              // para trás. Numa visita normal a pessoa acabou de preencher o
+              // formulário logo acima, e o botão seria redundante.
+              onEditarCalculo={
+                veioDeCalculoPronto
+                  ? () => {
+                      irPara(formularioRef.current)
+                      analytics.calculatorEdited(config.slug, config.categoria)
+                    }
+                  : undefined
+              }
               onExcluirCalculo={
                 savedCalcId
                   ? async () => {

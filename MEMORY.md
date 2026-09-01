@@ -16,6 +16,23 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **F59 entregue (01/09) — abrir cálculo salvo/compartilhado cai direto no
+  resultado, com botão "Editar cálculo".** Ideia do Paulo; o que acrescentei foi
+  **foco, não só scroll**. Vale como regra geral: **navegação programática é
+  scroll + foco** — `scrollIntoView` sozinho move a tela e deixa o cursor de
+  teclado/leitor de tela parado no topo. Alvos `tabIndex={-1}` +
+  `focus({ preventScroll: true })`.
+- **Limite que protege o SEO no F59: só com `?d=`/`?calc=` na URL.** Visita
+  normal continua abrindo no H1 — direcionar sempre ao resultado desfaria na
+  prática o conteúdo do F47 e a escultura de link do F43.
+- **Pergunta em aberto do F59, a responder com dado:** o botão "Editar cálculo"
+  deveria aparecer em toda abertura com resultado, ou só na de cálculo pronto?
+  Hoje é só na de cálculo pronto, e o evento `calculator_edited` foi criado
+  para medir. **Depende do F45** (key events no GA4) para aparecer no painel.
+- **Achado colateral do F59, que nada no código avisa:** `calorias` mede altura
+  em **centímetros** (100–250) e `imc` mede em **metros**. Duas calculadoras da
+  mesma categoria com unidades diferentes — quem escrever fixture ou conteúdo
+  para elas precisa saber.
 - **F58 entregue (01/09) — o hub trabalhista, e com ele o último item de P1 que
   não dependia de decisão do Paulo.** `/calculadora-trabalhista-completa`:
   7 campos, quatro blocos (rescisão, 13º, férias, FGTS), encadeamento em
@@ -772,6 +789,59 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-09-01 (parte 2) — F59: abrir cálculo pronto cai no resultado
+
+Paulo notou o atrito e propôs a solução junto: abrir um cálculo salvo em
+`/meus-calculos` ou por link compartilhado (F32/F37) leva a
+`/calculadora/[slug]?d=…&calc=…`, o `autoSubmit` calcula — **e a viewport fica
+no topo**. A pessoa pede um número e recebe o formulário de novo, com o
+resultado abaixo da dobra. Nas calculadoras longas (rescisão, hora extra,
+salário líquido) é meia tela de rolagem até o que ela veio buscar.
+
+**O que acrescentei à ideia dele: foco, não só scroll.** `scrollIntoView`
+sozinho move a tela e deixa o cursor de teclado e de leitor de tela parado onde
+estava — a tela anda, o cursor não. A região do resultado já existia com
+`role="region"` e `aria-label="Resultado do cálculo"`; faltava `tabIndex={-1}`
+(focável por código, fora da ordem de Tab) e o `.focus()`. Mesmo tratamento no
+contêiner do formulário, para o caminho de volta. `focus({ preventScroll: true })`
+porque senão o navegador dá um segundo pulo depois do `scrollIntoView`.
+**Regra geral que vale registrar: navegação programática é scroll + foco; só
+scroll é meia implementação, e é a metade que exclui quem mais precisa dela.**
+
+**Três limites deliberados, cada um com teste próprio:**
+
+1. **Só com `?d=`/`?calc=` na URL.** Em visita normal a página tem de abrir no
+   H1. O tráfego é praticamente todo orgânico — direcionar sempre ao resultado
+   desfaria na prática o conteúdo editorial do F47 e a escultura de link do
+   F43, que são o investimento de SEO dos últimos dois meses.
+2. **Uma vez só**, no primeiro resultado auto-calculado (guarda em `useRef`).
+   Sem isso, recalcular depois de editar rolaria a página de novo, e a rolagem
+   programática brigaria com a restauração de scroll do botão "voltar".
+3. **O botão "Editar cálculo" não aparece em cálculo feito na hora.** Ali o
+   formulário está logo acima, na mesma tela. Foi a dúvida de escopo que
+   levantei antes de implementar e o Paulo mandou seguir o palpite: limitar ao
+   caso que originou a ideia e medir depois. Daí o evento `calculator_edited`
+   novo — a pergunta "deveria aparecer sempre?" tem de ser respondida com uso
+   medido, não com palpite. **Isso depende do F45** (marcar key events no GA4)
+   para valer alguma coisa no painel.
+
+**Decisão de teste, a pedido do Paulo: uma cobertura por página, não uma
+amostra.** À primeira vista é redundante — o comportamento mora num componente
+só (`CalculadoraPageClient`), então uma calculadora provaria a lógica. Mas o
+que varia é a **altura do formulário**: 2 campos no IMC, 11 na hora extra. Numa
+página curta o resultado pode já estar visível sem rolagem nenhuma, e é
+justamente nas longas que a regressão passaria despercebida. Mesmo critério que
+o F56 usou para cobrir as 20 páginas.
+
+**O fixture pagou por si na primeira execução.** Para abrir 20 cálculos prontos
+sem preencher 20 formulários, os links são montados direto com
+`encodeShareData` (o alvo do teste é a abertura; o preenchimento já está no
+`share-link.spec.ts`). Isso exigiu um mapa de entrada válida por calculadora —
+e ele pegou de cara que **`calorias` mede altura em centímetros (100–250) e
+`imc` mede em metros**. Duas calculadoras da mesma categoria, unidades
+diferentes, nada no código avisando. Há trava de cobertura do fixture contra o
+`calculatorRegistry`, para a 21ª calculadora não passar batido.
 
 ### 2026-09-01 — F58: o hub trabalhista, e as duas somas que não podem acontecer
 
