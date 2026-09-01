@@ -88,6 +88,18 @@ export const analytics = {
       calculator_category: category,
     }),
 
+  /**
+   * "Editar cálculo" clicado ao abrir um cálculo salvo/compartilhado (F59).
+   * Existe para responder à pergunta que ficou em aberto no registro da
+   * feature: o botão deveria aparecer em toda abertura com resultado, ou só
+   * nesta? Sem uso medido, a resposta seria palpite.
+   */
+  calculatorEdited: (calculatorSlug: string, category: string) =>
+    track('calculator_edited', {
+      calculator_slug: calculatorSlug,
+      calculator_category: category,
+    }),
+
   calculatorSaved: (calculatorSlug: string, category: string) =>
     track('calculator_saved', {
       calculator_slug: calculatorSlug,

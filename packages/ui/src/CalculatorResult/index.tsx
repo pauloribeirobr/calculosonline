@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type Ref } from 'react'
 import {
   ArrowUpTrayIcon,
   BookmarkIcon,
   ExclamationTriangleIcon,
+  PencilSquareIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline'
 import { CheckCircleIcon } from '@heroicons/react/20/solid'
@@ -45,6 +46,20 @@ export interface CalculatorResultProps {
   salvo?: boolean | undefined
   /** Remove o cálculo salvo (IndexedDB, F37) — presente só ativa "Excluir". */
   onExcluirCalculo?: (() => Promise<void>) | undefined
+  /**
+   * Volta ao formulário para alterar os valores (F59) — presente só ativa o
+   * botão "Editar cálculo". Quem chama decide quando ele faz sentido: hoje,
+   * só na abertura de um cálculo salvo ou compartilhado, em que a página já
+   * chega rolada até aqui e o formulário ficou para trás.
+   */
+  onEditarCalculo?: (() => void) | undefined
+  /**
+   * Ref da região do resultado, para quem abre a página conseguir levar
+   * scroll **e foco** até aqui (F59). A região é `tabIndex={-1}`: focável por
+   * código, fora da ordem de Tab. Rolar sem mover o foco deixaria quem navega
+   * por teclado ou leitor de tela parado no topo — a tela anda, o cursor não.
+   */
+  ref?: Ref<HTMLDivElement> | undefined
 }
 
 function formatarValor(valor: number, formato: CalculatorResultFormato = 'currency'): string {
@@ -146,6 +161,8 @@ export function CalculatorResult({
   onSalvarCalculo,
   salvo = false,
   onExcluirCalculo,
+  onEditarCalculo,
+  ref,
 }: CalculatorResultProps) {
   const [estadoSalvar, setEstadoSalvar] = useState<EstadoSalvar>(salvo ? 'salvo' : 'idle')
   const [excluindo, setExcluindo] = useState(false)
@@ -181,7 +198,9 @@ export function CalculatorResult({
 
   return (
     <div
-      className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm"
+      ref={ref}
+      tabIndex={-1}
+      className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
       role="region"
       aria-label="Resultado do cálculo"
     >
@@ -244,8 +263,21 @@ export function CalculatorResult({
         <p className="mt-0.5 text-xs text-gray-400">{resultado.baseCalculo}</p>
       </div>
 
-      {(shareUrl || onSalvarCalculo || onExcluirCalculo) && (
+      {(shareUrl || onSalvarCalculo || onExcluirCalculo || onEditarCalculo) && (
         <div className="flex flex-wrap items-center gap-2 border-t border-gray-100 px-4 py-3">
+          {/* Primeiro da barra: é a ação de quem acabou de chegar aqui vindo de
+              um cálculo salvo, e a única que não depende de nada ter sido
+              salvo ou compartilhado antes. */}
+          {onEditarCalculo && (
+            <button
+              type="button"
+              onClick={onEditarCalculo}
+              className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+            >
+              <PencilSquareIcon className="h-4 w-4" aria-hidden /> Editar cálculo
+            </button>
+          )}
+
           {shareUrl && (
             <a
               href={buildWhatsAppShareHref(shareUrl, nomeCalculadora, resultado.resultado, formato)}
