@@ -132,6 +132,30 @@ contrário de um deploy de CSS. Bumpe o `seoRefreshDate` se o post alterar
 title/description de calculadora existente; senão o `lastModified` do post já
 sai do próprio registry.
 
+### Manter o hub trabalhista
+
+O F58 criou `/calculadora-trabalhista-completa`, que **não está no
+`calculatorRegistry`** — ele mora em
+[`apps/web/src/lib/hubTrabalhista.ts`](apps/web/src/lib/hubTrabalhista.ts),
+com o conteúdo em `apps/web/content/hub/trabalhista-completa.mdx` e o
+encadeamento em `packages/core/src/trabalhista/panorama.ts`.
+
+**Três coisas que não podem ser quebradas ao mexer nele:**
+
+- **Nunca oferecer um "total geral".** A rescisão já embute o 13º proporcional,
+  as férias proporcionais e a multa do FGTS — somar os quatro blocos dá mais que
+  o dobro do valor real. O consolidado sai inteiro como `neutro` justamente para
+  não parecer uma soma, e há teste travando isso.
+- **A projeção do FGTS roda com `saldoAtual: 0`.** O saldo que o usuário digita
+  já contém os depósitos do contrato; passá-lo somaria os mesmos 8% duas vezes.
+- **Campo novo no formulário precisa de justificativa.** O hub tem de custar
+  *menos* preenchimento que abrir quatro calculadoras — é o motivo de os 7
+  campos serem exatamente os da rescisão.
+
+Se o hub ganhar irmãos (um hub de impostos, por exemplo), o padrão a repetir é
+este: registry próprio fora do `calculatorRegistry`, encadeamento como função
+pura no core, e link recíproco a partir das calculadoras que ele agrega.
+
 ### Keyword research semanal pelo painel de IA do Clarity
 
 O Microsoft Clarity tem um painel de **Share of Authority (SoA)** que lista as

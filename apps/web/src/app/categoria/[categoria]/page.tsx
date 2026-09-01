@@ -7,6 +7,8 @@ import {
   getCalculatorsByCategory,
   type CategoriaCalc,
 } from '@/lib/calculators'
+import { Squares2X2Icon, ArrowRightIcon } from '@heroicons/react/24/outline'
+import { HUB_TRABALHISTA } from '@/lib/hubTrabalhista'
 import { buildMetadata } from '@/lib/seo'
 import { Breadcrumbs } from '@/components/common/Breadcrumbs'
 import { CalculatorIcon, CategoryIcon } from '@/components/common/CalculatorIcon'
@@ -104,6 +106,27 @@ export default async function CategoriaPage({
           </li>
         ))}
       </ul>
+
+      {/*
+        O hub (F58) é a resposta para a intenção agregada que trouxe a pessoa
+        até aqui: `/categoria/trabalhista` é um índice, e um índice não calcula
+        nada — teve 1 pageview em 3 meses. Só na categoria que ele cobre.
+      */}
+      {categoria === HUB_TRABALHISTA.categoria && (
+        <Link
+          href={HUB_TRABALHISTA.path}
+          className="flex items-center gap-4 rounded-xl border border-brand-200 bg-brand-50 p-5 transition-colors hover:bg-brand-100"
+        >
+          <Squares2X2Icon className="h-8 w-8 shrink-0 text-brand-600" aria-hidden />
+          <span className="min-w-0 flex-1">
+            <span className="block font-bold text-gray-900">{HUB_TRABALHISTA.titulo}</span>
+            <span className="mt-1 block text-sm text-gray-600">
+              {HUB_TRABALHISTA.descricaoCurta}
+            </span>
+          </span>
+          <ArrowRightIcon className="h-5 w-5 shrink-0 text-brand-600" aria-hidden />
+        </Link>
+      )}
 
       <p className="text-center text-sm text-gray-500">
         Quer outra categoria?{' '}

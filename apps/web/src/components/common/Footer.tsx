@@ -54,6 +54,10 @@ const footerSections: FooterSection[] = [
     title: 'Institucional',
     links: [
       { name: 'Todas as calculadoras', href: '/categorias' },
+      // Hub do F58 — o rodapé lista hubs, não calculadoras (F43). Ele não
+      // entra em "Mais buscadas" de propósito: aquela lista é ordenada por
+      // impressão medida no GSC, e o hub ainda não tem impressão nenhuma.
+      { name: 'Cálculo trabalhista completo', href: '/calculadora-trabalhista-completa' },
       // O F44 removeu daqui um link para `/blog`, que era uma rota inexistente
       // servida em 100% das páginas — um 404 interno que o Google rastreava a
       // cada crawl. O F22 criou a rota; agora o link é real.

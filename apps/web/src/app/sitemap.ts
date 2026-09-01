@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { CATEGORIAS, calculatorRegistry, type CategoriaCalc } from '@/lib/calculators'
 import { blogRegistry, ultimaAtualizacaoDoBlog } from '@/lib/blog'
+import { HUB_TRABALHISTA } from '@/lib/hubTrabalhista'
 import { siteConfig } from '@/lib/seo'
 
 // <lastmod> é sinal de freshness para o Google recrawlear. `dataAtualizacao` do
@@ -20,11 +21,20 @@ import { siteConfig } from '@/lib/seo'
 // links de todas as páginas, que é justamente o que o Google precisa recrawlear.
 // 2026-08-27 (mesma data): F47/F49 acrescentaram 8 tabelas de referência e 14
 // exemplos resolvidos em 5 MDX, e F48 mudou o formulário da hora extra.
-const seoRefreshDate = new Date('2026-08-27')
+// 2026-08-31: F58 (hub trabalhista) acrescentou um link novo ao rodapé de
+// todas as páginas e um CTA no fim das quatro calculadoras que ele encadeia —
+// muda a estrutura de links do site inteiro, que é o que o Google recrawleia.
+const seoRefreshDate = new Date('2026-08-31')
 const staticLastModified = new Date('2026-05-11')
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.url
+  const hubLastModified = new Date(
+    Math.max(
+      new Date(HUB_TRABALHISTA.dataAtualizacao).getTime(),
+      seoRefreshDate.getTime(),
+    ),
+  )
 
   const mainPages: MetadataRoute.Sitemap = [
     {
@@ -46,6 +56,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: ultimaAtualizacaoDoBlog(),
       changeFrequency: 'weekly',
       priority: 0.7,
+    },
+    {
+      // Hub trabalhista (F58). Prioridade 0.9, o mesmo patamar de uma
+      // calculadora não-featured: ele é ferramenta, não índice — a `/categorias`
+      // e a `/blog` ficam abaixo porque só listam.
+      url: `${baseUrl}${HUB_TRABALHISTA.path}`,
+      lastModified: hubLastModified,
+      changeFrequency: 'monthly',
+      priority: 0.9,
     },
   ]
 

@@ -38,10 +38,15 @@ test.describe('render no celular — sem rolagem horizontal', () => {
     })
   }
 
-  // O blog (F22) usa o mesmo pipeline de MDX das calculadoras, inclusive as
-  // tabelas — nasce coberto pela mesma trava, em vez de esperar a próxima
-  // auditoria descobrir que rolava na horizontal.
-  for (const rota of ['/blog', '/blog/decimo-terceiro-2026-quando-cai-e-quanto-voce-recebe']) {
+  // O blog (F22) e o hub trabalhista (F58) usam o mesmo pipeline de MDX das
+  // calculadoras, inclusive as tabelas — nascem cobertos pela mesma trava, em
+  // vez de esperar a próxima auditoria descobrir que rolavam na horizontal. O
+  // hub tem três tabelas, uma delas de cinco colunas.
+  for (const rota of [
+    '/blog',
+    '/blog/decimo-terceiro-2026-quando-cai-e-quanto-voce-recebe',
+    '/calculadora-trabalhista-completa',
+  ]) {
     test(`${rota} cabe na viewport`, async ({ page }) => {
       await page.goto(rota)
 
@@ -90,9 +95,14 @@ test.describe('campos de formulário não disparam zoom no iOS', () => {
   // e sair do zoom depois é manual. iOS é 27 dos 50 usuários mobile do GA4.
   const COM_CAMPO_VARIADO = ['salario-liquido', 'rescisao-trabalhista', 'hora-extra', 'cdb']
 
-  for (const slug of COM_CAMPO_VARIADO) {
-    test(`/calculadora/${slug} usa ≥16px nos campos`, async ({ page }) => {
-      await page.goto(`/calculadora/${slug}`)
+  for (const rota of [
+    ...COM_CAMPO_VARIADO.map((slug) => `/calculadora/${slug}`),
+    // O hub (F58) tem os sete tipos de campo numa tela só — currency, date,
+    // select e stepper.
+    '/calculadora-trabalhista-completa',
+  ]) {
+    test(`${rota} usa ≥16px nos campos`, async ({ page }) => {
+      await page.goto(rota)
 
       const pequenos = await page.evaluate(() =>
         [...document.querySelectorAll('input, select, textarea')]
