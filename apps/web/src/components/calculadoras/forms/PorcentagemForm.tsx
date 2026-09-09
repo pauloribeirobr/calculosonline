@@ -3,6 +3,9 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularPorcentagem } from '@calculosonline/core/financeiro'
+import {
+  QUICK_ADD_GENERICO,
+} from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -49,8 +52,14 @@ export function PorcentagemForm({
             { value: 'porcentagem_inversa', label: 'Se X é Y% de algo, qual o total?' },
           ],
         },
-        valorA: { label: 'Valor A' },
-        valorB: { label: 'Valor B (ou %)' },
+        valorA: {
+          label: 'Valor A',
+          quickAdd: QUICK_ADD_GENERICO,
+        },
+        valorB: {
+          label: 'Valor B (ou %)',
+          quickAdd: QUICK_ADD_GENERICO,
+        },
       }}
       onSubmit={handleSubmit}
       submitLabel="Calcular"

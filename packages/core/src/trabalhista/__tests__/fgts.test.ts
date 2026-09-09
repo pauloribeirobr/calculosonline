@@ -193,4 +193,84 @@ describe('calcularFGTS', () => {
       }
     })
   })
+
+  // O headline era `depositoMensal` em todas as modalidades: quem preenchia
+  // 24 meses e R$ 15.000 via "R$ 1.200" — o depósito de um mês —, e o campo
+  // `mesesTrabalhados` não mexia no número principal. Era a única das 20
+  // calculadoras cujo headline não respondia à pergunta do formulário.
+  describe('headline por modalidade', () => {
+    const base = { salarioBruto: 15000, mesesTrabalhados: 24 } as const
+
+    it('acúmulo devolve o saldo acumulado, não o depósito de um mês', () => {
+      const r = calcularFGTS({ ...base, modalidade: 'contribuicao_mensal' })
+      expect(r.sucesso).toBe(true)
+      if (!r.sucesso) return
+      expect(r.dados.resultado).toBe(28800)
+      expect(r.dados.resultado).not.toBe(r.dados.dados.depositoMensal)
+      expect(r.dados.rotuloResultado).toContain('24 meses')
+    })
+
+    it('o headline do acúmulo responde ao campo de meses', () => {
+      const doze = calcularFGTS({ ...base, mesesTrabalhados: 12, modalidade: 'contribuicao_mensal' })
+      const vinteQuatro = calcularFGTS({ ...base, modalidade: 'contribuicao_mensal' })
+      if (!doze.sucesso || !vinteQuatro.sucesso) throw new Error('cálculo falhou')
+      expect(vinteQuatro.dados.resultado).toBe(doze.dados.resultado * 2)
+    })
+
+    it('rescisão devolve saldo + multa de 40%, com o rótulo dizendo qual leitura é', () => {
+      const r = calcularFGTS({ ...base, modalidade: 'rescisao' })
+      expect(r.sucesso).toBe(true)
+      if (!r.sucesso) return
+      expect(r.dados.resultado).toBe(28800 + 11520)
+      expect(r.dados.rotuloResultado).toContain('sem justa causa')
+      // A leitura de acordo mútuo continua disponível no detalhamento.
+      expect(r.dados.detalhamento.some((i) => i.descricao.includes('20%'))).toBe(true)
+    })
+
+    it('saque-aniversário devolve o valor do saque', () => {
+      const r = calcularFGTS({ ...base, modalidade: 'saque_aniversario', saldoAtual: 20000 })
+      expect(r.sucesso).toBe(true)
+      if (!r.sucesso) return
+      expect(r.dados.resultado).toBe(r.dados.dados.saqueAniversarioValor)
+      expect(r.dados.rotuloResultado).toContain('Saque-aniversário')
+    })
+
+    it('saque-aniversário sem saldo informado avisa em vez de devolver número sem sentido', () => {
+      const r = calcularFGTS({ ...base, modalidade: 'saque_aniversario' })
+      expect(r.sucesso).toBe(true)
+      if (!r.sucesso) return
+      expect(r.dados.avisos?.some((a) => a.includes('saldo atual'))).toBe(true)
+    })
+  })
+
+  describe('data de referência e rótulos', () => {
+    // Era `new Date().toISOString()`, que é UTC: depois das 21h de Brasília a
+    // página exibia a data de amanhã. A tela de 08/09 às 22h mostrou
+    // "Tabelas: 2026-09-09".
+    it('a data das regras é fixa, não "hoje", e nunca cai no futuro', () => {
+      const r = calcularFGTS({
+        salarioBruto: 3000,
+        mesesTrabalhados: 12,
+        modalidade: 'contribuicao_mensal',
+      })
+      expect(r.sucesso).toBe(true)
+      if (!r.sucesso) return
+      expect(r.dados.dataReferencia).toBe('2020-01-01')
+      expect(r.dados.dataReferencia < new Date().toISOString().slice(0, 10)).toBe(true)
+    })
+
+    it('o saldo não se anuncia como projeção, e avisa que ignora o rendimento', () => {
+      const r = calcularFGTS({
+        salarioBruto: 3000,
+        mesesTrabalhados: 12,
+        modalidade: 'contribuicao_mensal',
+      })
+      expect(r.sucesso).toBe(true)
+      if (!r.sucesso) return
+      const linhas = r.dados.detalhamento.map((i) => i.descricao)
+      expect(linhas).not.toContain('Saldo Projetado')
+      expect(linhas.some((d) => d.includes('sem rendimento'))).toBe(true)
+      expect(r.dados.avisos?.some((a) => a.includes('TR + 3%'))).toBe(true)
+    })
+  })
 })

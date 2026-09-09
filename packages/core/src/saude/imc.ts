@@ -15,7 +15,7 @@
  */
 
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
-import { arredondar } from '../utils'
+import { arredondar, hojeISO } from '../utils'
 
 export type SexoBiologico = 'masculino' | 'feminino'
 
@@ -85,7 +85,7 @@ export function calcularIMC(params: IMCParams): ResultadoOuErro<IMCResultado> {
       detalhamento,
       baseCalculo: 'IMC = peso (kg) ÷ altura² (m)',
       fonteJuridica: 'OMS — World Health Organization (Classificação 1997)',
-      dataReferencia: new Date().toISOString().slice(0, 10),
+      dataReferencia: hojeISO(),
       dados: {
         imc,
         classificacao: classif.label,

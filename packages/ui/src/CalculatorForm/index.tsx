@@ -19,10 +19,22 @@ import type { z, ZodObject, ZodRawShape } from 'zod'
 import { Utils } from '@calculosonline/core'
 import { cn } from '../utils/cn'
 
-/** Um chip de valor rápido — soma `value` ao valor atual do campo ao clicar. */
+/**
+ * Um chip de valor rápido. Por padrão **soma** `value` ao valor atual.
+ *
+ * `modo: 'definir'` troca a soma por atribuição, e existe por causa das taxas:
+ * somar é a operação certa para dinheiro e para contagem ("+1.000", "+12
+ * meses"), e é a operação errada para percentual — clicar duas vezes em "+1%"
+ * daria 2%, que não é o que ninguém quer. Campo de taxa não se constrói somando
+ * pedaços: ele tem valores de referência conhecidos (Selic, CDI, 1% a.m.), e o
+ * chip serve para dizer "é este".
+ */
 export interface QuickAddButton {
   label: string
   value: number
+  modo?: 'somar' | 'definir'
+  /** Texto do `title`, quando o rótulo curto não explica o valor. */
+  titulo?: string
 }
 
 /**
@@ -584,9 +596,12 @@ export function CalculatorForm<T extends ZodRawShape>({
     }
   }, [autoSubmit, defaultValues, handleSubmit, onSubmit, reset, resolvedDefaultValues])
 
-  function handleQuickAdd(fieldName: Path<FormValues>, addValue: number, meta: FieldMeta) {
+  function handleQuickAdd(fieldName: Path<FormValues>, btn: QuickAddButton, meta: FieldMeta) {
     const atual = Number(getValues(fieldName)) || 0
-    const bruto = Math.round((atual + addValue) * 100) / 100
+    // Taxas usam 4 casas porque o valor guardado é decimal (0,0065 = 0,65%);
+    // arredondar a 2 zeraria o campo.
+    const alvo = btn.modo === 'definir' ? btn.value : atual + btn.value
+    const bruto = Math.round(alvo * 10000) / 10000
     // Um chip nunca pode empurrar o campo para fora da faixa que o próprio
     // stepper respeita — senão "+12" passaria do `max` e reprovaria no Zod.
     const comMinimo = meta.min !== undefined ? Math.max(meta.min, bruto) : bruto
@@ -789,7 +804,21 @@ export function CalculatorForm<T extends ZodRawShape>({
             )}
 
             {fieldMeta.quickAdd && fieldMeta.quickAdd.length > 0 && (
-              <div className="mt-1.5 flex flex-wrap gap-1.5">
+              // Com chips em 65 campos, "+1.000" deixou de ser único na
+              // página e o teste precisa de um alvo por campo.
+              //
+              // O identificador é `data-testid`, e **não** um `aria-label` com
+              // o rótulo do campo: `getByLabel` casa por substring, então um
+              // grupo chamado "Valores rápidos: Salário Bruto" passaria a ser
+              // encontrado por `getByLabel('Salário Bruto')` junto com o
+              // próprio input, quebrando toda a suíte. O `role="group"` fica
+              // mesmo assim, por dar ao leitor de tela a fronteira entre os
+              // chips e o resto do formulário.
+              <div
+                role="group"
+                data-testid={`quick-add-${String(fieldName)}`}
+                className="mt-1.5 flex flex-wrap gap-1.5"
+              >
                 <button
                   type="button"
                   onClick={() => handleClearField(fieldName, fieldMeta)}
@@ -803,9 +832,14 @@ export function CalculatorForm<T extends ZodRawShape>({
                   <button
                     key={btn.label}
                     type="button"
-                    onClick={() => handleQuickAdd(fieldName, btn.value, fieldMeta)}
+                    onClick={() => handleQuickAdd(fieldName, btn, fieldMeta)}
                     disabled={isLoading}
-                    title={`Adicionar ${fieldMeta.prefix ?? ''} ${btn.value.toLocaleString('pt-BR')} ${fieldMeta.type === 'stepper' ? (fieldMeta.suffix ?? '') : ''}`.replace(/\s+/g, ' ').trim()}
+                    title={
+                      btn.titulo ??
+                      `${btn.modo === 'definir' ? 'Usar' : 'Adicionar'} ${fieldMeta.prefix ?? ''} ${btn.value.toLocaleString('pt-BR')} ${fieldMeta.type === 'stepper' ? (fieldMeta.suffix ?? '') : ''}`
+                        .replace(/\s+/g, ' ')
+                        .trim()
+                    }
                     className="inline-flex items-center rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {btn.label}

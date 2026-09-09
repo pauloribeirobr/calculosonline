@@ -10,6 +10,20 @@
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
 import { arredondar, formatarBRL, validarSalario } from '../utils'
 
+/**
+ * Vigência das regras aplicadas.
+ *
+ * O FGTS **não tem tabela anual** como INSS e IRRF — os 8% são da Lei
+ * 8.036/1990 e as multas do art. 18 da mesma lei (mais o art. 484-A da CLT,
+ * de 2017). A única tabela de verdade é a do saque-aniversário, e é dela que
+ * sai esta data: a Lei 13.932/2019 passou a vigorar em 01/01/2020.
+ *
+ * Era `new Date()` antes, o que fazia o rótulo "Tabelas:" mudar todo dia e
+ * afirmar que as regras tinham sido atualizadas hoje — quando a última mudança
+ * é de 2020.
+ */
+const VIGENCIA_REGRAS_FGTS = '2020-01-01'
+
 export type ModalidadeFGTS = 'rescisao' | 'saque_aniversario' | 'contribuicao_mensal'
 
 export interface FGTSParams {
@@ -100,7 +114,20 @@ export function calcularFGTS(params: FGTSParams): ResultadoOuErro<FGTSResultado>
       valor: depositosNoPeriodo,
       tipo: 'credito',
     },
-    { descricao: 'Saldo Projetado', valor: saldoProjetado, tipo: 'credito' },
+    {
+      // Era só "Saldo Projetado", e "projetado" prometia uma projeção que não
+      // acontece: o número é `saldo atual + depósitos`, sem o rendimento de
+      // TR + 3% a.a. do art. 13 da Lei 8.036/1990. Com saldo atual zerado ele
+      // ficava idêntico à linha de cima, o que parecia erro de cálculo.
+      descricao: 'Saldo acumulado (sem rendimento)',
+      valor: saldoProjetado,
+      tipo: 'credito',
+      // `exactOptionalPropertyTypes` no tsconfig: a chave tem de sumir, não
+      // receber `undefined`.
+      ...(saldoAtual > 0
+        ? { formula: `${formatarBRL(saldoAtual)} + ${formatarBRL(depositosNoPeriodo)}` }
+        : {}),
+    },
     { descricao: 'Multa Rescisória 40% (sem justa causa)', valor: multaRescisoria40, tipo: 'neutro' },
     { descricao: 'Multa Rescisória 20% (acordo mútuo)', valor: multaRescisoria20, tipo: 'neutro' },
     ...(saqueAniversarioValor !== undefined && saqueAniversarioAliquota !== undefined
@@ -115,14 +142,66 @@ export function calcularFGTS(params: FGTSParams): ResultadoOuErro<FGTSResultado>
       : []),
   ]
 
+  /*
+   * O headline segue a modalidade escolhida.
+   *
+   * Era `depositoMensal` sempre — o único headline do projeto que não
+   * respondia à pergunta do formulário: quem preenchia 24 meses via um número
+   * grande de um mês só, e o campo `mesesTrabalhados` não mexia nele. Nas
+   * outras 19 calculadoras o headline é o resultado do período (montante
+   * final, total líquido, salário líquido).
+   *
+   * A modalidade também deixa de ser decorativa: antes ela só decidia se o
+   * saque-aniversário era calculado.
+   */
+  const { resultado, rotuloResultado } = ((): {
+    resultado: number
+    rotuloResultado: string
+  } => {
+    if (params.modalidade === 'rescisao') {
+      return {
+        // A leitura mais buscada é a da demissão sem justa causa; a de acordo
+        // mútuo fica na linha de 20% do detalhamento, logo abaixo.
+        resultado: arredondar(saldoProjetado + multaRescisoria40),
+        rotuloResultado: 'A receber na rescisão sem justa causa (saldo + multa de 40%)',
+      }
+    }
+    if (params.modalidade === 'saque_aniversario' && saqueAniversarioValor !== undefined) {
+      return {
+        resultado: saqueAniversarioValor,
+        rotuloResultado: 'Saque-aniversário sobre o saldo atual',
+      }
+    }
+    return {
+      resultado: saldoProjetado,
+      rotuloResultado:
+        params.mesesTrabalhados > 0
+          ? `Saldo acumulado em ${params.mesesTrabalhados} ${
+              params.mesesTrabalhados === 1 ? 'mês' : 'meses'
+            }`
+          : 'Saldo acumulado',
+    }
+  })()
+
+  const avisos: string[] = [
+    'A projeção soma apenas os depósitos de 8%. O FGTS ainda rende TR + 3% ao ano (art. 13 da Lei 8.036/1990), além da distribuição de resultados — o saldo real tende a ser maior.',
+  ]
+  if (params.modalidade === 'saque_aniversario' && saldoAtual === 0) {
+    avisos.push(
+      'Informe o saldo atual do FGTS para calcular o saque-aniversário: ele incide sobre o saldo já depositado, não sobre a projeção.',
+    )
+  }
+
   return {
     sucesso: true,
     dados: {
-      resultado: depositoMensal,
+      resultado,
+      rotuloResultado,
+      avisos,
       detalhamento,
       baseCalculo: '8% sobre salário bruto por competência (não incide sobre INSS/IRRF)',
       fonteJuridica: 'Lei 8.036/1990 | Lei 13.932/2019 (Saque-Aniversário)',
-      dataReferencia: new Date().toISOString().slice(0, 10),
+      dataReferencia: VIGENCIA_REGRAS_FGTS,
       dados: {
         depositoMensal,
         depositosNoPeriodo,

@@ -205,7 +205,16 @@ export function CalculatorResult({
       aria-label="Resultado do cálculo"
     >
       <div className="bg-brand-600 px-6 py-5 text-white">
-        {titulo && <p className="mb-1 text-sm font-medium opacity-80">{titulo}</p>}
+        {/*
+          O rótulo do próprio resultado ganha do genérico da página: só o
+          cálculo sabe o que o headline virou quando a modalidade muda o
+          sentido do número (ver `rotuloResultado` em `types.ts`).
+        */}
+        {(resultado.rotuloResultado ?? titulo) && (
+          <p className="mb-1 text-sm font-medium opacity-80">
+            {resultado.rotuloResultado ?? titulo}
+          </p>
+        )}
         <p className="text-result-lg font-semibold tabular-nums tracking-normal" aria-live="polite">
           {formatarValor(resultado.resultado, formato)}
         </p>

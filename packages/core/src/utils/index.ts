@@ -41,6 +41,23 @@ export function diasNoMes(data: Date): number {
   return new Date(data.getFullYear(), data.getMonth() + 1, 0).getDate()
 }
 
+/**
+ * Data de hoje em São Paulo, no formato ISO "AAAA-MM-DD".
+ *
+ * **Existe porque `new Date().toISOString().slice(0, 10)` é UTC.** O site é
+ * inteiramente brasileiro e o servidor roda em UTC: a partir das 21h de
+ * Brasília (meia-noite UTC), a data devolvida é a de *amanhã*. Foi assim que a
+ * calculadora de FGTS exibiu "Tabelas: 2026-09-09" numa tela tirada às 22h do
+ * dia 08/09 — data no futuro, num rótulo que o usuário lê como garantia de
+ * atualização.
+ *
+ * `en-CA` porque é o locale cujo formato de data curta já é `AAAA-MM-DD`, o
+ * que evita remontar a string a partir das partes.
+ */
+export function hojeISO(): string {
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' })
+}
+
 /** Valida se um salário é positivo e finito. Retorna null quando válido. */
 export function validarSalario(salario: number, campo = 'salario'): ErroValidacao | null {
   if (!Number.isFinite(salario) || salario <= 0) {

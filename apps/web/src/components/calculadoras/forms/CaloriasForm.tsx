@@ -3,7 +3,11 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularCalorias } from '@calculosonline/core/saude'
-import { QUICK_ADD_IDADE } from '@/lib/quickAddPresets'
+import {
+  QUICK_ADD_ALTURA_CM,
+  QUICK_ADD_IDADE,
+  QUICK_ADD_PESO,
+} from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -28,11 +32,17 @@ export function CaloriasForm({ onResult, onError, isLoading, sharedData, autoSub
     <CalculatorForm
       schema={schema}
       fields={{
-        peso: { label: 'Peso', suffix: 'kg', type: 'number' },
+        peso: {
+          label: 'Peso',
+          suffix: 'kg',
+          type: 'number',
+          quickAdd: QUICK_ADD_PESO,
+        },
         altura: {
           label: 'Altura',
           suffix: 'cm',
           hint: 'Em centímetros (ex.: 175)',
+          quickAdd: QUICK_ADD_ALTURA_CM,
         },
         idade: {
           label: 'Idade',

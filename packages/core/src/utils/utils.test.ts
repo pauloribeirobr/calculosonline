@@ -6,6 +6,7 @@ import {
   diasNoMes,
   dividir,
   formatarBRL,
+  hojeISO,
   mesesEntre,
   validarSalario,
 } from './index'
@@ -161,5 +162,35 @@ describe('criarMemoriaCalculo', () => {
     )
 
     expect(memoria.passos[0]?.tipo).toBe('aviso')
+  })
+})
+
+describe('hojeISO', () => {
+  it('devolve AAAA-MM-DD', () => {
+    expect(hojeISO()).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+  })
+
+  // O bug que este helper existe para matar: entre 21h e meia-noite de
+  // Brasília, `toISOString()` (UTC) já virou o dia seguinte, e as
+  // calculadoras exibiam "Tabelas:" com data no futuro.
+  it('à noite em Brasília, não avança um dia como o UTC faz', () => {
+    // 08/09/2026, 22h30 em Brasília = 09/09/2026, 01h30 em UTC.
+    const noite = new Date('2026-09-09T01:30:00.000Z')
+    const original = Date
+    // @ts-expect-error — substituição controlada só para este caso
+    globalThis.Date = class extends original {
+      constructor(...args: ConstructorParameters<typeof original>) {
+        super(...(args.length ? args : [noite]))
+      }
+      static override now() {
+        return noite.getTime()
+      }
+    }
+    try {
+      expect(new Date().toISOString().slice(0, 10)).toBe('2026-09-09')
+      expect(hojeISO()).toBe('2026-09-08')
+    } finally {
+      globalThis.Date = original
+    }
   })
 })

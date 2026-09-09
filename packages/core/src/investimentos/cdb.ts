@@ -12,7 +12,7 @@
  */
 
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
-import { arredondar } from '../utils'
+import { arredondar, hojeISO } from '../utils'
 
 export type TipoCDB = 'cdi' | 'prefixado' | 'ipca_mais'
 export type PrazoIR = 'ate180' | '181_360' | '361_720' | 'acima720'
@@ -121,7 +121,7 @@ export function calcularCDB(params: CDBParams): ResultadoOuErro<CDBResultado> {
       detalhamento,
       baseCalculo: `Taxa efetiva anual: ${(taxaAnualEfetiva * 100).toFixed(2)}% a.a.`,
       fonteJuridica: 'Lei 11.033/2004 (IR regressivo) | Decreto 6.306/2007 (IOF)',
-      dataReferencia: new Date().toISOString().slice(0, 10),
+      dataReferencia: hojeISO(),
       dados: {
         montanteBruto,
         rendimentoBruto,

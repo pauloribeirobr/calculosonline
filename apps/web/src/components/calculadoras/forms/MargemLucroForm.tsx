@@ -3,7 +3,11 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularMargemLucro } from '@calculosonline/core/negocios'
-import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
+import {
+  QUICK_ADD_MARGEM,
+  QUICK_ADD_MARKUP,
+  QUICK_ADD_SALARIO,
+} from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -57,16 +61,19 @@ export function MargemLucroForm({
           prefix: 'R$',
           type: 'currency',
           hint: 'Use quando modo = Preço de venda',
+          quickAdd: QUICK_ADD_SALARIO,
         },
         margemDesejadaPercent: {
           label: 'Margem desejada',
           suffix: '%',
           hint: 'Use quando modo = Margem desejada. Margem incide sobre o preço de venda',
+          quickAdd: QUICK_ADD_MARGEM,
         },
         markupPercent: {
           label: 'Markup desejado',
           suffix: '%',
           hint: 'Use quando modo = Markup',
+          quickAdd: QUICK_ADD_MARKUP,
         },
       }}
       onSubmit={handleSubmit}

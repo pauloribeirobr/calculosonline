@@ -16,6 +16,58 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **Export de 08/09 analisado. O diagnóstico central não mudou e ficou mais
+  duro: `google / organic` entregou ZERO sessão em 28 dias**, contra 109 do
+  Bing. 2.562 impressões e 3 cliques no GSC, **95,7% delas em posição pior que
+  60**. Nada de on-page move isso; a alavanca é autoridade (F15).
+- **Furo de método achado em 08/09, e é o item nº 1 da próxima rodada: o ciclo
+  "avalie a pasta gsc" lê o console do buscador que manda zero tráfego.** O
+  **Bing Webmaster Tools não existe em lugar nenhum do repositório** — só o
+  IndexNow, que fala com o Bing mas não escuta. O Bing é ~60% dos usuários, o
+  BWT é grátis e não tem a média de 90 dias que trava a leitura do GSC.
+  Verificar e exportar para `gsc/` é setup de uma tarde.
+- **Achado que inverte uma leitura óbvia: `porcentagem` (pos. 9,0) e
+  `margem-lucro` (pos. 11,0) somam 509 impressões em página 1 e ZERO cliques** —
+  e as queries delas somam 12 impressões no relatório; o resto está no bucket
+  anonimizado. São perguntas aritméticas únicas que o Google responde na própria
+  SERP com a calculadora dele. **As duas melhores posições do site são as duas
+  páginas menos valiosas — não investir mais nelas.**
+- **F56 teve a primeira medição e funcionou: mobile foi de 7,7% para 16,3%** dos
+  usuários. A correção de viewport destravou metade do público que o site tinha
+  e não atendia.
+- **F45 continua pendente e já custou duas rodadas.** "Leads qualificados: 0" com
+  242 `calculator_calculated` coletados. Cinco minutos de painel, e é o que
+  bloqueia o F17 — agora mais caro de adiar, porque a conta do AdSense existe.
+- **286 `exception` para 323 `page_view`** (quase um por pageview, marcados
+  `fatal: true`). Suspeita: `ErrorLogger.tsx` usa `capture: true` e captura erro
+  de **carregamento de recurso** junto. **Paulo ficou de mandar o breakdown por
+  `description` — pendência aberta desde 20/08.**
+- **F19 pela metade (08/09): conta do AdSense verificada, exibição desligada.**
+  **O Publisher ID é constante em `lib/seo.ts`, não env** — mesmo motivo da
+  chave do IndexNow: público por design, e o `ads.txt` é estático, então env
+  criaria duas fontes de verdade com falha silenciosa.
+  `NEXT_PUBLIC_ADSENSE_PUBLISHER_ID` agora só **liga a exibição**. Falta o Paulo
+  clicar em "Verificar" no painel **depois do deploy**, decidir onde o `AdSlot`
+  entra, e reescrever o gate (pendente desde 20/08).
+- **F60 entregue (08/09) — 4 posts do cluster 13º/rescisão.** Saíram do próprio
+  export: `rescisao-trabalhista` +93% e `decimo-terceiro` +84% de impressão, as
+  duas em posição ~86-92. Custaram o que o F22 prometeu: 4 entradas em
+  `lib/blog.ts` + 4 `.mdx`.
+- **Campo `ctaHub` novo no blog:** post de intenção agregada manda o CTA para o
+  hub do F58, não para uma calculadora. `postsDoHub()` é a metade recíproca —
+  sem ela o post nasceria órfão (F43).
+- **Terceira confirmação do padrão do F58: quando uma página junta cálculos que
+  já se contêm, a soma é o bug.** O guia agregado abre com os R$ 36.681,33 da
+  soma ingênua contra os R$ 15.558,57 reais. É a conta errada que o leitor faz
+  sozinho e que nenhum concorrente desfaz — virou diferencial de conteúdo.
+- **Achado no motor que NÃO foi corrigido e precisa de decisão:** na rescisão,
+  `aposentadoria` devolve resultado **idêntico a `sem_justa_causa`** (40% de
+  multa, aviso integral). Certo para rescisão indireta, contestado para
+  aposentadoria. Omiti a modalidade das tabelas dos posts em vez de publicar
+  afirmação que não se sustenta.
+- **Conferir em 3-4 semanas:** o post do 13º proporcional e o guia de 30/08
+  podem estar competindo pela mesma query. Se estiverem, encurtar a seção do
+  antigo e apontar para o novo.
 - **F59 entregue (01/09) — abrir cálculo salvo/compartilhado cai direto no
   resultado, com botão "Editar cálculo".** Ideia do Paulo; o que acrescentei foi
   **foco, não só scroll**. Vale como regra geral: **navegação programática é

@@ -3,7 +3,12 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularPoupanca } from '@calculosonline/core/investimentos'
-import { QUICK_ADD_INVESTIMENTO, QUICK_ADD_MESES } from '@/lib/quickAddPresets'
+import {
+  QUICK_ADD_APORTE,
+  QUICK_ADD_INVESTIMENTO,
+  QUICK_ADD_MESES,
+  QUICK_ADD_TAXA_ANUAL,
+} from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -42,10 +47,12 @@ export function PoupancaForm({ onResult, onError, isLoading, sharedData, autoSub
           prefix: 'R$',
           type: 'currency',
           hint: 'Contribuição mensal adicional (opcional)',
+          quickAdd: QUICK_ADD_APORTE,
         },
         selicAnual: {
           label: 'SELIC anual (decimal)',
           hint: 'Default 0,1325 (13,25% — referência 2026)',
+          quickAdd: QUICK_ADD_TAXA_ANUAL,
         },
       }}
       onSubmit={handleSubmit}

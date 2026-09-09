@@ -3,7 +3,11 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularFGTS } from '@calculosonline/core/trabalhista'
-import { QUICK_ADD_MESES, QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
+import {
+  QUICK_ADD_INVESTIMENTO,
+  QUICK_ADD_MESES,
+  QUICK_ADD_SALARIO,
+} from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -44,6 +48,7 @@ export function FGTSForm({ onResult, onError, isLoading, sharedData, autoSubmit 
           prefix: 'R$',
           type: 'currency',
           hint: 'Consulte no app FGTS ou extrato Caixa',
+          quickAdd: QUICK_ADD_INVESTIMENTO,
         },
         modalidade: {
           label: 'Modalidade',

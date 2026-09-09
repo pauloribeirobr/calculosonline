@@ -3,7 +3,10 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularDecimoTerceiro } from '@calculosonline/core/trabalhista'
-import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
+import {
+  QUICK_ADD_CONTADOR_CURTO,
+  QUICK_ADD_SALARIO,
+} from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const MESES = [
@@ -73,7 +76,11 @@ export function DecimoTerceiroForm({
             { value: 'segunda', label: '2ª parcela (até 20/dez)' },
           ],
         },
-        numeroDependentesIRRF: { label: 'Dependentes (IRRF)', type: 'stepper' },
+        numeroDependentesIRRF: {
+          label: 'Dependentes (IRRF)',
+          type: 'stepper',
+          quickAdd: QUICK_ADD_CONTADOR_CURTO,
+        },
       }}
       onSubmit={handleSubmit}
       submitLabel="Calcular 13º"

@@ -3,7 +3,10 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularFerias } from '@calculosonline/core/trabalhista'
-import { QUICK_ADD_DIAS, QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
+import {
+  QUICK_ADD_DIAS,
+  QUICK_ADD_SALARIO,
+} from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -47,6 +50,7 @@ export function FeriasForm({ onResult, onError, isLoading, sharedData, autoSubmi
           type: 'stepper',
           max: 10,
           hint: 'Máximo 1/3 dos dias de direito',
+          quickAdd: QUICK_ADD_DIAS,
         },
         emAtraso: {
           label: 'Férias pagas em atraso?',

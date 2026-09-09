@@ -3,7 +3,11 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularTesouroDireto } from '@calculosonline/core/investimentos'
-import { QUICK_ADD_INVESTIMENTO, QUICK_ADD_MESES } from '@/lib/quickAddPresets'
+import {
+  QUICK_ADD_INVESTIMENTO,
+  QUICK_ADD_MESES,
+  QUICK_ADD_TAXA_ANUAL,
+} from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -52,6 +56,7 @@ export function TesouroDiretoForm({
         taxaAnual: {
           label: 'Taxa anual (decimal)',
           hint: 'Prefixado: 0.12 = 12% a.a. | IPCA+: 0.06 = 6% real | SELIC: ignore',
+          quickAdd: QUICK_ADD_TAXA_ANUAL,
         },
         prazoMeses: {
           label: 'Prazo (meses)',

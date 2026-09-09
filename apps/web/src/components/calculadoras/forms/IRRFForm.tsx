@@ -3,7 +3,11 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularIRRF } from '@calculosonline/core/impostos'
-import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
+import {
+  QUICK_ADD_CONTADOR_CURTO,
+  QUICK_ADD_SALARIO,
+  QUICK_ADD_VALOR_PEQUENO,
+} from '@/lib/quickAddPresets'
 import { itemListSchema, somarItens } from '@/lib/itemListField'
 import type { FormProps } from './types'
 
@@ -64,14 +68,24 @@ export function IRRFForm({ onResult, onError, isLoading, sharedData, autoSubmit 
           quickAdd: QUICK_ADD_SALARIO,
           hint: 'Salário bruto ou aluguel recebido, conforme a origem escolhida acima.',
         },
-        numeroDependentes: { label: 'Dependentes', type: 'stepper' },
-        pensaoAlimenticia: { label: 'Pensão alimentícia', prefix: 'R$', type: 'currency' },
+        numeroDependentes: {
+          label: 'Dependentes',
+          type: 'stepper',
+          quickAdd: QUICK_ADD_CONTADOR_CURTO,
+        },
+        pensaoAlimenticia: {
+          label: 'Pensão alimentícia',
+          prefix: 'R$',
+          type: 'currency',
+          quickAdd: QUICK_ADD_VALOR_PEQUENO,
+        },
         // Só o locador que arca com a despesa pode abatê-la (RIR/2018 art. 42).
         // Benfeitorias e reformas não entram — são custo do imóvel.
         iptu: {
           label: 'IPTU pago pelo locador',
           prefix: 'R$',
           type: 'currency',
+          quickAdd: QUICK_ADD_VALOR_PEQUENO,
           showWhen: (v) => v.origemRendimento === 'aluguel',
         },
         condominio: {
@@ -79,6 +93,7 @@ export function IRRFForm({ onResult, onError, isLoading, sharedData, autoSubmit 
           prefix: 'R$',
           type: 'currency',
           showWhen: (v) => v.origemRendimento === 'aluguel',
+          quickAdd: QUICK_ADD_VALOR_PEQUENO,
         },
         taxaAdministracao: {
           label: 'Taxa de administração imobiliária',
@@ -86,6 +101,7 @@ export function IRRFForm({ onResult, onError, isLoading, sharedData, autoSubmit 
           type: 'currency',
           hint: 'Comissão da imobiliária pela administração ou cobrança do aluguel.',
           showWhen: (v) => v.origemRendimento === 'aluguel',
+          quickAdd: QUICK_ADD_VALOR_PEQUENO,
         },
         outrasDeducoes: {
           label: 'Outras deduções',

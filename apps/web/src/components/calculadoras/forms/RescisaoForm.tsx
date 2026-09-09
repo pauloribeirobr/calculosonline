@@ -3,7 +3,11 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularRescisao } from '@calculosonline/core/trabalhista'
-import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
+import {
+  QUICK_ADD_CONTADOR_CURTO,
+  QUICK_ADD_INVESTIMENTO,
+  QUICK_ADD_SALARIO,
+} from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -82,6 +86,7 @@ export function RescisaoForm({ onResult, onError, isLoading, sharedData, autoSub
           prefix: 'R$',
           type: 'currency',
           hint: 'Consulte no app FGTS ou extrato Caixa',
+          quickAdd: QUICK_ADD_INVESTIMENTO,
         },
         feriasVencidas: {
           label: 'Períodos de férias vencidas',
@@ -89,10 +94,12 @@ export function RescisaoForm({ onResult, onError, isLoading, sharedData, autoSub
           min: 0,
           max: 2,
           hint: '0, 1 ou 2 períodos completos não gozados',
+          quickAdd: QUICK_ADD_CONTADOR_CURTO,
         },
         numeroDependentesIRRF: {
           label: 'Dependentes (IRRF)',
           type: 'stepper',
+          quickAdd: QUICK_ADD_CONTADOR_CURTO,
         },
       }}
       onSubmit={handleSubmit}
