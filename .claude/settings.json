@@ -13,7 +13,14 @@
       "Bash(timeout 900 pnpm exec playwright test tests/e2e/blog-cluster-trabalhista.spec.ts tests/e2e/blog.spec.ts --project=chromium)",
       "Bash(timeout 300 pnpm exec playwright test tests/e2e/blog-cluster-trabalhista.spec.ts --project=chromium -g \"avisa que a soma\")",
       "Bash(timeout 1800 pnpm exec playwright test --project=chromium)",
-      "Bash(awk 'NR>=14 && NR<=20' CHANGELOG.md)"
+      "Bash(awk 'NR>=14 && NR<=20' CHANGELOG.md)",
+      "Bash(git add *)",
+      "Bash(pnpm --filter @calculosonline/core exec tsc --noEmit)",
+      "Bash(timeout 600 pnpm exec playwright test tests/e2e/quick-add-cobertura.spec.ts --project=chromium)",
+      "Bash(timeout 400 pnpm exec playwright test tests/e2e/quick-add-chips.spec.ts --project=chromium)",
+      "Bash(timeout 400 pnpm exec playwright test tests/e2e/salario-liquido.spec.ts --project=chromium)",
+      "Bash(pnpm test *)",
+      "Bash(timeout 900 pnpm exec playwright test --project=mobile-chromium)"
     ]
   }
 }

@@ -3,7 +3,12 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularHoraExtra } from '@calculosonline/core/trabalhista'
-import { QUICK_ADD_HORAS, QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
+import {
+  QUICK_ADD_ADICIONAL_HE,
+  QUICK_ADD_DIAS,
+  QUICK_ADD_HORAS,
+  QUICK_ADD_SALARIO,
+} from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 /**
@@ -135,6 +140,7 @@ export function HoraExtraForm({ onResult, onError, isLoading, sharedData, autoSu
           suffix: '%',
           hint: 'O mínimo legal continua valendo se o percentual informado for menor.',
           showWhen: (v) => v.adicional === 'outro',
+          quickAdd: QUICK_ADD_ADICIONAL_HE,
         },
         horaNoturnaReduzida: {
           label: 'Aplicar hora noturna reduzida (52min30s = 1h)',
@@ -162,6 +168,7 @@ export function HoraExtraForm({ onResult, onError, isLoading, sharedData, autoSu
           max: 31,
           hint: 'Conte o sábado como útil quando ele não for dia de repouso no seu contrato.',
           showWhen: (v) => v.calcularDsr === 'sim',
+          quickAdd: QUICK_ADD_DIAS,
         },
         diasDescanso: {
           label: 'Domingos e feriados no mês',
@@ -169,6 +176,7 @@ export function HoraExtraForm({ onResult, onError, isLoading, sharedData, autoSu
           min: 0,
           max: 31,
           showWhen: (v) => v.calcularDsr === 'sim',
+          quickAdd: QUICK_ADD_DIAS,
         },
       }}
       onSubmit={handleSubmit}

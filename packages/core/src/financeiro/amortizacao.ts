@@ -14,7 +14,7 @@
  */
 
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
-import { arredondar } from '../utils'
+import { arredondar, hojeISO } from '../utils'
 
 export type SistemaAmortizacao = 'price' | 'sac'
 
@@ -167,7 +167,7 @@ export function calcularAmortizacao(
           ? 'PMT = PV × i × (1+i)^n / ((1+i)^n − 1)'
           : 'Amortização = PV / n | parcela decrescente',
       fonteJuridica: 'Res. CMN 3.517/2007 (CET) | Circular BCB 2.905/1999',
-      dataReferencia: new Date().toISOString().slice(0, 10),
+      dataReferencia: hojeISO(),
       dados: {
         primeiraParcela,
         ultimaParcela,

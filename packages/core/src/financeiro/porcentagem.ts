@@ -11,7 +11,7 @@
  */
 
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
-import { arredondar } from '../utils'
+import { arredondar, hojeISO } from '../utils'
 
 export type TipoPorcentagem =
   | 'percentual_de'
@@ -111,7 +111,7 @@ export function calcularPorcentagem(
       detalhamento,
       baseCalculo: formula,
       fonteJuridica: 'Matemática básica',
-      dataReferencia: new Date().toISOString().slice(0, 10),
+      dataReferencia: hojeISO(),
       dados: { resultado, formula, descricao },
     },
   }

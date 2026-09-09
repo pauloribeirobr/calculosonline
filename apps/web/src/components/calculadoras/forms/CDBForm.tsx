@@ -3,7 +3,11 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularCDB } from '@calculosonline/core/investimentos'
-import { QUICK_ADD_INVESTIMENTO, QUICK_ADD_MESES } from '@/lib/quickAddPresets'
+import {
+  QUICK_ADD_INVESTIMENTO,
+  QUICK_ADD_MESES,
+  QUICK_ADD_TAXA_CDB,
+} from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -42,6 +46,7 @@ export function CDBForm({ onResult, onError, isLoading, sharedData, autoSubmit }
         taxaAnual: {
           label: 'Taxa',
           hint: 'CDI: 1.10 = 110% do CDI | Prefixado: 0.12 = 12% a.a. | IPCA+: 0.06 = 6% real',
+          quickAdd: QUICK_ADD_TAXA_CDB,
         },
         prazoMeses: {
           label: 'Prazo (meses)',

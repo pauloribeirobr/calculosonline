@@ -10,7 +10,7 @@
  */
 
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
-import { arredondar } from '../utils'
+import { arredondar, hojeISO } from '../utils'
 
 export const SELIC_REFERENCIA_2026 = 0.1325
 export const LIMITE_REGRA_NOVA = 0.085
@@ -100,7 +100,7 @@ export function calcularPoupanca(params: PoupancaParams): ResultadoOuErro<Poupan
       detalhamento,
       baseCalculo: `Taxa mensal efetiva: ${(taxaMensal * 100).toFixed(4)}% (isenta de IR)`,
       fonteJuridica: 'Lei 12.703/2012 | Lei 11.033/2004 art. 3º, V (isenção IR PF)',
-      dataReferencia: new Date().toISOString().slice(0, 10),
+      dataReferencia: hojeISO(),
       dados: {
         montanteFinal,
         rendimentoTotal,

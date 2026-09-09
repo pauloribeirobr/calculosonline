@@ -13,7 +13,7 @@
  */
 
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
-import { arredondar } from '../utils'
+import { arredondar, hojeISO } from '../utils'
 import type { SexoBiologico } from './imc'
 
 export type NivelAtividade =
@@ -129,7 +129,7 @@ export function calcularCalorias(
           ? 'TMB = 10×peso + 6,25×altura − 5×idade + 5'
           : 'TMB = 10×peso + 6,25×altura − 5×idade − 161',
       fonteJuridica: 'Mifflin-St Jeor (1990) | OMS Guidelines on Physical Activity',
-      dataReferencia: new Date().toISOString().slice(0, 10),
+      dataReferencia: hojeISO(),
       dados: { tmb, tdee, caloriasMeta, fatorAtividade: fator, macros },
     },
   }

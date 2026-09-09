@@ -9,7 +9,7 @@
  */
 
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
-import { arredondar } from '../utils'
+import { arredondar, hojeISO } from '../utils'
 
 export interface MargemLucroParams {
   custoTotal: number
@@ -113,7 +113,7 @@ export function calcularMargemLucro(
       baseCalculo:
         'Margem = Lucro ÷ Preço | Markup = Lucro ÷ Custo | Preço = Custo ÷ (1 − Margem)',
       fonteJuridica: 'Conceitos de contabilidade de custos',
-      dataReferencia: new Date().toISOString().slice(0, 10),
+      dataReferencia: hojeISO(),
       dados: { precoVenda, lucro, margemLucro, markup },
     },
   }

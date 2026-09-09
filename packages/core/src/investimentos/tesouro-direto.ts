@@ -16,7 +16,7 @@
  */
 
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
-import { arredondar } from '../utils'
+import { arredondar, hojeISO } from '../utils'
 import {
   ALIQUOTAS_IR_REGRESSIVO,
   IPCA_REFERENCIA_2026,
@@ -139,7 +139,7 @@ export function calcularTesouroDireto(
       baseCalculo: `Taxa efetiva anual: ${(taxaAnualEfetiva * 100).toFixed(2)}% a.a.`,
       fonteJuridica:
         'Lei 11.033/2004 (IR regressivo) | Decreto 6.306/2007 (IOF) | Resolução B3 (custódia)',
-      dataReferencia: new Date().toISOString().slice(0, 10),
+      dataReferencia: hojeISO(),
       dados: {
         montanteBruto,
         rendimentoBruto,

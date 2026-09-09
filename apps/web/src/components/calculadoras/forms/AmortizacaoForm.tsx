@@ -3,7 +3,12 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularAmortizacao } from '@calculosonline/core/financeiro'
-import { QUICK_ADD_MESES, QUICK_ADD_VALOR_GRANDE } from '@/lib/quickAddPresets'
+import {
+  QUICK_ADD_MESES,
+  QUICK_ADD_SEGURO_FINANCIAMENTO,
+  QUICK_ADD_TAXA_MENSAL,
+  QUICK_ADD_VALOR_GRANDE,
+} from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 interface AmortizacaoFormProps extends FormProps {
@@ -49,6 +54,7 @@ export function AmortizacaoForm({
           label: 'Taxa mensal de juros',
           suffix: '(decimal)',
           hint: '0.015 = 1,5% ao mês',
+          quickAdd: QUICK_ADD_TAXA_MENSAL,
         },
         prazoMeses: {
           label: 'Prazo (meses)',
@@ -71,6 +77,7 @@ export function AmortizacaoForm({
           hint: isFinanciamento
             ? 'Comum em financiamento imobiliário (ex: 0.0005)'
             : 'Deixe 0 se o contrato não tem seguro',
+          quickAdd: QUICK_ADD_SEGURO_FINANCIAMENTO,
         },
       }}
       onSubmit={handleSubmit}

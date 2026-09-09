@@ -10,7 +10,7 @@
  */
 
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
-import { arredondar, dividir, formatarBRL, validarSalario } from '../utils'
+import { arredondar, dividir, formatarBRL, hojeISO, validarSalario } from '../utils'
 
 export interface FeriasParams {
   salarioBruto: number
@@ -62,7 +62,7 @@ export function calcularFerias(params: FeriasParams): ResultadoOuErro<FeriasResu
   if (erros.length > 0) return { sucesso: false, erros }
 
   const diasDireito = diasFeriasPorFaltas(params.diasFaltas)
-  const dataReferencia = new Date().toISOString().slice(0, 10)
+  const dataReferencia = hojeISO()
 
   if (diasDireito === 0) {
     return {

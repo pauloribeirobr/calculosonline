@@ -3,6 +3,10 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularIMC } from '@calculosonline/core/saude'
+import {
+  QUICK_ADD_ALTURA_M,
+  QUICK_ADD_PESO,
+} from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -21,11 +25,17 @@ export function IMCForm({ onResult, onError, isLoading, sharedData, autoSubmit }
     <CalculatorForm
       schema={schema}
       fields={{
-        peso: { label: 'Peso', suffix: 'kg', type: 'number' },
+        peso: {
+          label: 'Peso',
+          suffix: 'kg',
+          type: 'number',
+          quickAdd: QUICK_ADD_PESO,
+        },
         altura: {
           label: 'Altura',
           suffix: 'm',
           hint: 'Em metros, com ponto decimal (ex.: 1.75)',
+          quickAdd: QUICK_ADD_ALTURA_M,
         },
       }}
       onSubmit={handleSubmit}

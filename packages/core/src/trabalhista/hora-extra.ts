@@ -13,7 +13,7 @@
  */
 
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
-import { arredondar, formatarBRL, validarSalario } from '../utils'
+import { arredondar, formatarBRL, hojeISO, validarSalario } from '../utils'
 
 export type TipoHoraExtra = 'util' | 'domingo' | 'feriado' | 'noturna'
 export type TipoJornada = '44h' | '40h' | '36h' | '30h' | 'personalizada'
@@ -278,7 +278,7 @@ export function calcularHoraExtra(
       baseCalculo:
         '(Salário ÷ Jornada Mensal) × (1 + Adicional Noturno) × (1 + Adicional) × Horas Extras + DSR',
       fonteJuridica: 'CLT arts. 59 e 73 | CF/88 art. 7º, XVI | Súmula 172 do TST',
-      dataReferencia: new Date().toISOString().slice(0, 10),
+      dataReferencia: hojeISO(),
       dados: {
         valorTotal,
         valorPorHora,

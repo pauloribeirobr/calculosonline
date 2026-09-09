@@ -3,7 +3,10 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularSalarioLiquido } from '@calculosonline/core/trabalhista'
-import { QUICK_ADD_SALARIO } from '@/lib/quickAddPresets'
+import {
+  QUICK_ADD_CONTADOR_CURTO,
+  QUICK_ADD_SALARIO,
+} from '@/lib/quickAddPresets'
 import { itemListSchema, limparItensVazios } from '@/lib/itemListField'
 import type { FormProps } from './types'
 
@@ -50,6 +53,7 @@ export function SalarioLiquidoForm({
           label: 'Dependentes (IRRF)',
           type: 'stepper',
           hint: 'Cada dependente reduz a base de cálculo do IRRF',
+          quickAdd: QUICK_ADD_CONTADOR_CURTO,
         },
         outrasDeducoes: {
           label: 'Outras deduções',

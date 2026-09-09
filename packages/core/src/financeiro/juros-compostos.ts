@@ -10,7 +10,7 @@
  */
 
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
-import { arredondar } from '../utils'
+import { arredondar, hojeISO } from '../utils'
 
 export type PeriodoTaxa = 'mensal' | 'anual' | 'diario'
 
@@ -114,7 +114,7 @@ export function calcularJurosCompostos(
       detalhamento,
       baseCalculo: `M = P(1+i)^n + PMT × ((1+i)^n − 1) / i | i ≈ ${(taxaMensal * 100).toFixed(4)}%/mês`,
       fonteJuridica: 'Matemática financeira',
-      dataReferencia: new Date().toISOString().slice(0, 10),
+      dataReferencia: hojeISO(),
       dados: {
         montanteFinal,
         jurosAcumulados,

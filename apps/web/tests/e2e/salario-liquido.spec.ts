@@ -20,15 +20,18 @@ test.describe('calculadora de salário líquido — campos novos', () => {
     await page.goto('/calculadora/salario-liquido')
 
     const salario = page.getByLabel('Salário Bruto')
+    // Escopo no grupo do próprio campo: desde 08/09 os dependentes também têm
+    // chips, e "Zerar" deixou de ser único na página.
+    const chips = page.getByTestId('quick-add-salarioBruto')
     await expect(salario).toHaveValue('0,00')
 
-    await page.getByRole('button', { name: '+1.000', exact: true }).click()
+    await chips.getByRole('button', { name: '+1.000', exact: true }).click()
     await expect(salario).toHaveValue('1.000,00')
 
-    await page.getByRole('button', { name: '+500', exact: true }).click()
+    await chips.getByRole('button', { name: '+500', exact: true }).click()
     await expect(salario).toHaveValue('1.500,00')
 
-    await page.getByRole('button', { name: 'Zerar' }).click()
+    await chips.getByRole('button', { name: 'Zerar' }).click()
     await expect(salario).toHaveValue('0,00')
   })
 

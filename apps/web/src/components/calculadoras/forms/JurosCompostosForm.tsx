@@ -3,7 +3,12 @@
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
 import { calcularJurosCompostos } from '@calculosonline/core/financeiro'
-import { QUICK_ADD_INVESTIMENTO, QUICK_ADD_MESES } from '@/lib/quickAddPresets'
+import {
+  QUICK_ADD_APORTE,
+  QUICK_ADD_INVESTIMENTO,
+  QUICK_ADD_MESES,
+  QUICK_ADD_TAXA_MENSAL,
+} from '@/lib/quickAddPresets'
 import type { FormProps } from './types'
 
 const schema = z.object({
@@ -41,6 +46,7 @@ export function JurosCompostosForm({
           label: 'Taxa de juros',
           suffix: '(decimal)',
           hint: '0.01 = 1%; 0.1265 = 12,65%',
+          quickAdd: QUICK_ADD_TAXA_MENSAL,
         },
         periodoTaxa: {
           label: 'Período da taxa',
@@ -63,6 +69,7 @@ export function JurosCompostosForm({
           prefix: 'R$',
           type: 'currency',
           hint: 'Contribuição mensal adicional (opcional)',
+          quickAdd: QUICK_ADD_APORTE,
         },
       }}
       onSubmit={handleSubmit}

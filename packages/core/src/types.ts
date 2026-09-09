@@ -50,6 +50,19 @@ export interface MemoriaCalculo {
 export interface ResultadoCalculo<T = unknown> {
   /** Valor numérico principal exibido como headline para o usuário */
   resultado: number
+  /**
+   * Rótulo do headline, quando "Resultado" não basta.
+   *
+   * A página passa `titulo="Resultado"` para as 20 calculadoras, o que serve
+   * enquanto o headline é óbvio pelo contexto ("salário líquido" na
+   * calculadora de salário líquido). Não serve quando **a mesma calculadora
+   * responde perguntas diferentes conforme a modalidade escolhida** — no FGTS,
+   * o mesmo formulário devolve saldo acumulado, valor a receber na rescisão ou
+   * saque-aniversário, e um número grande sem nome é ambíguo.
+   *
+   * Opcional e aditivo: quem não define continua com o rótulo da página.
+   */
+  rotuloResultado?: string
   /** Estrutura completa com todos os campos calculados */
   dados: T
   /** Detalhamento linha a linha do cálculo */
