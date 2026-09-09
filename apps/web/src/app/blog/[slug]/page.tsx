@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { CalendarDaysIcon, ClockIcon, ArrowRightIcon } from '@heroicons/react/24/outline'
 import { blogRegistry, findPost, formatarDataPorExtenso } from '@/lib/blog'
 import { findCalculator } from '@/lib/calculators'
+import { HUB_TRABALHISTA } from '@/lib/hubTrabalhista'
 import { buildMetadata } from '@/lib/seo'
 import { CalculatorIcon } from '@/components/common/CalculatorIcon'
 import { Breadcrumbs } from '@/components/common/Breadcrumbs'
@@ -45,6 +46,27 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
   const path = `/blog/${post.slug}`
   const principal = findCalculator(post.calculadoraPrincipal)
+  // Um destino só, resolvido aqui, para o JSX não carregar o `if`. O hub não
+  // está no `calculatorRegistry` (ver `hubTrabalhista.ts`), então os dois
+  // ramos precisam ser normalizados no mesmo formato.
+  const destino =
+    post.ctaHub && principal
+      ? {
+          href: HUB_TRABALHISTA.path,
+          titulo: HUB_TRABALHISTA.titulo,
+          descricaoCurta: HUB_TRABALHISTA.descricaoCurta,
+          icone: principal.icone,
+          categoria: HUB_TRABALHISTA.categoria,
+        }
+      : principal
+        ? {
+            href: `/calculadora/${principal.slug}`,
+            titulo: principal.titulo,
+            descricaoCurta: principal.descricaoCurta,
+            icone: principal.icone,
+            categoria: principal.categoria,
+          }
+        : null
   const relacionadas = post.calculadorasRelacionadas
     .map((s) => findCalculator(s))
     .filter((c): c is NonNullable<typeof c> => Boolean(c))
@@ -95,21 +117,25 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       </header>
 
       {/*
-        CTA para a calculadora, acima do conteúdo. O post captura a busca
+        CTA para a ferramenta, acima do conteúdo. O post captura a busca
         informacional ("quando cai o 13º"); quem já sabe a data e quer o número
         não deveria ter de rolar o artigo inteiro para achar a ferramenta.
+
+        Em post de intenção agregada (`ctaHub`), o destino é o hub do F58: o
+        leitor que pergunta "quais são todos os meus direitos" precisa das
+        quatro contas, e mandá-lo para uma calculadora só o obrigaria a abrir
+        outras três em seguida. O ícone continua vindo da `calculadoraPrincipal`
+        — o hub compartilha a categoria `trabalhista` e a identidade do F41.
       */}
-      {principal && (
+      {destino && (
         <Link
-          href={`/calculadora/${principal.slug}`}
+          href={destino.href}
           className="flex items-center gap-4 rounded-xl border border-brand-200 bg-brand-50 p-4 transition-colors hover:bg-brand-100 md:p-5"
         >
-          <CalculatorIcon icon={principal.icone} categoria={principal.categoria} size="lg" />
+          <CalculatorIcon icon={destino.icone} categoria={destino.categoria} size="lg" />
           <span className="min-w-0 flex-1">
-            <span className="block font-semibold text-gray-900">{principal.titulo}</span>
-            <span className="mt-0.5 block text-sm text-gray-600">
-              {principal.descricaoCurta}
-            </span>
+            <span className="block font-semibold text-gray-900">{destino.titulo}</span>
+            <span className="mt-0.5 block text-sm text-gray-600">{destino.descricaoCurta}</span>
           </span>
           <ArrowRightIcon className="h-5 w-5 shrink-0 text-brand-600" aria-hidden />
         </Link>

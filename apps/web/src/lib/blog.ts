@@ -47,6 +47,17 @@ export interface PostBlog {
   /** Outras calculadoras citadas no corpo — viram o bloco de relacionadas. */
   calculadorasRelacionadas: string[]
   /**
+   * Manda o CTA principal do post para o hub do F58 em vez da calculadora.
+   *
+   * Existe para a intenção **agregada** ("quais são todos os meus direitos"),
+   * que é justamente a que nenhuma calculadora atende sozinha — mandar esse
+   * leitor para a rescisão o obrigaria a abrir outras três em seguida.
+   * `calculadoraPrincipal` continua preenchida mesmo assim: ela é quem define
+   * a identidade visual da imagem social (F41/F42) e o link recíproco, e o
+   * hub não está no `calculatorRegistry` de propósito (ver `hubTrabalhista.ts`).
+   */
+  ctaHub?: boolean
+  /**
    * Janela sazonal da busca, quando houver. Não muda comportamento nenhum:
    * documenta a intenção editorial para que a decisão de "quando republicar /
    * quando atualizar" não se perca, que é justamente o que o `MEMORY.md`
@@ -91,6 +102,107 @@ export const blogRegistry: PostBlog[] = [
     },
     tempoLeituraMin: 7,
   },
+  {
+    slug: 'rescisao-por-acordo-mutuo-quanto-voce-recebe',
+    titulo: 'Rescisão por acordo mútuo: quanto você recebe',
+    tituloSeo: 'Rescisão por Acordo Mútuo 2026 — Quanto Você Recebe',
+    descricao:
+      'O que muda no acerto quando a saída é combinada com a empresa (art. 484-A): aviso pela metade, multa de FGTS de 20%, saque de 80% e sem seguro-desemprego. Com tabela comparativa calculada.',
+    resumo:
+      'Sair por acordo rende mais que pedir demissão e bem menos que ser mandado embora. Veja a comparação lado a lado, quanto some do FGTS e a divergência do aviso prévio que pode valer R$ 1.500.',
+    dataPublicacao: '2026-09-08',
+    dataAtualizacao: '2026-09-08',
+    palavrasChave: [
+      'rescisão por acordo mútuo',
+      'cálculo rescisão comum acordo',
+      'demissão consensual',
+      'acordo 484-A',
+      'rescisão por acordo quanto recebo',
+      'demissão de comum acordo',
+      'multa de 20% do FGTS',
+      'saque de 80% do FGTS',
+    ],
+    calculadoraPrincipal: 'rescisao-trabalhista',
+    calculadorasRelacionadas: ['fgts', 'decimo-terceiro', 'ferias', 'salario-liquido'],
+    tempoLeituraMin: 8,
+  },
+  {
+    slug: 'acerto-trabalhista-o-que-entra-e-quando-recebo',
+    titulo: 'Acerto trabalhista: o que entra e quando você recebe',
+    tituloSeo: 'Acerto Trabalhista 2026 — Verbas e Prazo de Pagamento',
+    descricao:
+      'As verbas que compõem o acerto em cada tipo de saída, o prazo de 10 dias do art. 477 da CLT, a multa quando a empresa atrasa e o que conferir no TRCT antes de assinar.',
+    resumo:
+      'A empresa tem 10 dias corridos para pagar — e uma multa de um salário inteiro se atrasar. Veja o que entra no acerto em cada tipo de saída, com os valores calculados, e o que conferir antes de dar quitação.',
+    dataPublicacao: '2026-09-08',
+    dataAtualizacao: '2026-09-08',
+    palavrasChave: [
+      'acerto trabalhista',
+      'verbas rescisórias',
+      'prazo para pagamento da rescisão',
+      'art. 477 da CLT',
+      'multa do art. 477',
+      'TRCT',
+      'o que entra no acerto',
+      'quanto tempo a empresa tem para pagar a rescisão',
+    ],
+    calculadoraPrincipal: 'rescisao-trabalhista',
+    calculadorasRelacionadas: ['fgts', 'ferias', 'decimo-terceiro', 'salario-liquido'],
+    tempoLeituraMin: 9,
+  },
+  {
+    slug: '13-salario-proporcional-como-calcular',
+    titulo: '13º proporcional: como calcular por meses trabalhados',
+    tituloSeo: '13º Salário Proporcional 2026 — Como Calcular por Meses',
+    descricao:
+      'Quem não trabalhou o ano inteiro recebe 1/12 por mês. Veja a regra dos 15 dias, a tabela por mês de admissão, o que acontece em afastamento e licença, e como fica na demissão.',
+    resumo:
+      'A conta é 1/12 por mês trabalhado — mas o que decide se um mês conta são 15 dias, e um único dia de diferença na admissão chega a valer R$ 227. Tabela por mês, por faixa de salário e as regras de afastamento.',
+    dataPublicacao: '2026-09-08',
+    dataAtualizacao: '2026-09-08',
+    palavrasChave: [
+      '13º salário proporcional',
+      'calcular 13º proporcional online',
+      'décimo terceiro proporcional',
+      '13 proporcional meses trabalhados',
+      'regra dos 15 dias 13º',
+      '13º de quem foi admitido durante o ano',
+      '13º proporcional na demissão',
+    ],
+    calculadoraPrincipal: 'decimo-terceiro',
+    calculadorasRelacionadas: ['rescisao-trabalhista', 'inss', 'irrf', 'salario-liquido'],
+    sazonalidade: {
+      picoMeses: [11, 12],
+      nota:
+        'Mesma janela do guia de datas do 13º, com uma diferença: a busca por "proporcional" também pica junto das demissões (jan e jul). Revisar as tabelas de INSS/IRRF em agosto, antes do pico principal.',
+    },
+    tempoLeituraMin: 8,
+  },
+  {
+    slug: 'direitos-trabalhistas-na-demissao-guia-completo',
+    titulo: 'Direitos trabalhistas na demissão: o guia completo',
+    tituloSeo: 'Direitos Trabalhistas na Demissão 2026 — Guia Completo',
+    descricao:
+      'Todos os direitos de quem sai da empresa em um lugar só: rescisão, 13º, férias e FGTS, o que muda em cada tipo de saída e por que somar os quatro valores dá um número que não existe.',
+    resumo:
+      'Rescisão, 13º, férias e FGTS não são quatro contas independentes — a rescisão já embute três delas. Somar os quatro dá R$ 36.681 onde a pessoa recebe R$ 15.558. Veja o que realmente entra e o que é dupla contagem.',
+    dataPublicacao: '2026-09-08',
+    dataAtualizacao: '2026-09-08',
+    palavrasChave: [
+      'direitos trabalhistas na demissão',
+      'calculadora trabalhista',
+      'cálculo trabalhista completo',
+      'como calcular direitos trabalhistas',
+      'quanto vou receber na demissão',
+      'todos os direitos do trabalhador demitido',
+      'verbas trabalhistas',
+    ],
+    calculadoraPrincipal: 'rescisao-trabalhista',
+    calculadorasRelacionadas: ['decimo-terceiro', 'ferias', 'fgts', 'salario-liquido'],
+    // Intenção agregada: o CTA vai para o hub do F58, não para uma calculadora.
+    ctaHub: true,
+    tempoLeituraMin: 10,
+  },
 ]
 
 export function findPost(slug: string): PostBlog | undefined {
@@ -109,6 +221,16 @@ export function postsDaCalculadora(slug: string): PostBlog[] {
   return postsOrdenados().filter(
     (p) => p.calculadoraPrincipal === slug || p.calculadorasRelacionadas.includes(slug),
   )
+}
+
+/**
+ * Posts de intenção agregada, que apontam para o hub do F58 em vez de uma
+ * calculadora. É a metade recíproca do `ctaHub`: sem isto o post agregado
+ * linkaria o hub e não receberia link de volta, nascendo órfão — exatamente o
+ * que o F43 corrigiu no resto do site.
+ */
+export function postsDoHub(): PostBlog[] {
+  return postsOrdenados().filter((p) => p.ctaHub === true)
 }
 
 /** Data mais recente entre todos os posts — `<lastmod>` da listagem no sitemap. */

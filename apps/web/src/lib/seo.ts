@@ -19,6 +19,20 @@ export const siteConfig = {
    * quem as preenche é a própria convenção. Ver `buildMetadata`.
    */
   defaultOgImage: '/opengraph-image',
+  /**
+   * Publisher ID do AdSense (F19). É **constante no repositório**, não
+   * variável de ambiente, pelo mesmo motivo da chave do IndexNow: é público
+   * por design — sai no `<head>` de toda página, no `ads.txt` e em cada
+   * unidade de anúncio. Como o `ads.txt` é arquivo estático e não interpola
+   * env, tirá-lo daqui criaria duas fontes de verdade para o mesmo valor,
+   * com falha silenciosa se uma delas ficasse para trás.
+   *
+   * Não confundir com `NEXT_PUBLIC_ADSENSE_PUBLISHER_ID`, que continua sendo
+   * env: aquela **liga a exibição** de anúncios no `AdSlot`, e fica vazia
+   * enquanto a conta não estiver aprovada. Esta aqui só declara a posse do
+   * site, que é o que a verificação do AdSense exige antes da aprovação.
+   */
+  adsensePublisherId: 'ca-pub-6380398318603111',
 } as const
 
 function toAbsoluteUrl(path: string): string {

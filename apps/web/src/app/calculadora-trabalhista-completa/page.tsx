@@ -8,6 +8,7 @@ import { buildMetadata } from '@/lib/seo'
 import { Breadcrumbs } from '@/components/common/Breadcrumbs'
 import { CalculatorIcon, CategoryIcon } from '@/components/common/CalculatorIcon'
 import { HubContentLoader } from '@/components/HubContentLoader'
+import { GuiasRelacionados } from '@/components/blog/GuiasRelacionados'
 import { PanoramaTrabalhistaClient } from './PanoramaTrabalhistaClient'
 import {
   BreadcrumbJsonLd,
@@ -130,6 +131,8 @@ export default function HubTrabalhistaPage() {
           ))}
         </ul>
       </section>
+
+      <GuiasRelacionados slug={HUB_TRABALHISTA.slug} hub className="" />
     </div>
   )
 }

@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c ' *)",
+      "Bash(grep -n \"^#\\\\{1,3\\\\} \" FEATURES.md)",
+      "Bash(grep -n \"^#\\\\{1,3\\\\} \\\\|^## \\\\[\" CHANGELOG.md)",
+      "Bash(pnpm --filter web exec tsc --noEmit -p tsconfig.json)",
+      "Bash(grep -c 'google-adsense-account' apps/web/.next/server/app/calculadora/ferias.html apps/web/.next/server/app/calculadora-trabalhista-completa.html 2>/dev/null; echo \"--- ads.txt no build ---\"; cat apps/web/.next/../public/ads.txt)",
+      "Read(//home/paulo/projects/next/calculosonline/apps/web/public/**)",
+      "Bash(timeout 300 pnpm exec playwright test tests/e2e/adsense.spec.ts --project=chromium)",
+      "Bash(pnpm exec *)",
+      "Bash(node -e ' *)",
+      "Bash(timeout 900 pnpm exec playwright test tests/e2e/blog-cluster-trabalhista.spec.ts tests/e2e/blog.spec.ts --project=chromium)",
+      "Bash(timeout 300 pnpm exec playwright test tests/e2e/blog-cluster-trabalhista.spec.ts --project=chromium -g \"avisa que a soma\")",
+      "Bash(timeout 1800 pnpm exec playwright test --project=chromium)",
+      "Bash(awk 'NR>=14 && NR<=20' CHANGELOG.md)"
+    ]
+  }
+}

@@ -115,7 +115,10 @@ test.describe('blog — links recíprocos com a calculadora (F43)', () => {
   test('a calculadora do 13º aponta de volta para o guia', async ({ page }) => {
     await page.goto('/calculadora/decimo-terceiro')
 
-    const bloco = page.getByRole('region', { name: /Guia sobre este tema/ })
+    // `Guias?` porque o título vira plural quando a calculadora ganha um
+    // segundo guia — foi o que aconteceu com o 13º ao entrar o post do
+    // proporcional. A invariante protegida é o link de volta, não o número.
+    const bloco = page.getByRole('region', { name: /Guias? sobre este tema/ })
     await expect(bloco).toBeVisible()
     await expect(bloco.locator(`a[href="/blog/${POST}"]`)).toHaveCount(1)
   })
