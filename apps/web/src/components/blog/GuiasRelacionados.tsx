@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { BookOpenIcon } from '@heroicons/react/24/outline'
-import { postsDaCalculadora, formatarDataPorExtenso } from '@/lib/blog'
+import { postsDaCalculadora, postsDoHub, formatarDataPorExtenso } from '@/lib/blog'
 
 /**
  * Link da calculadora de volta para os guias do blog que a citam (F22).
@@ -14,15 +14,25 @@ import { postsDaCalculadora, formatarDataPorExtenso } from '@/lib/blog'
  * de 19 das 20 — o blog começou com um artigo só, e um bloco vazio em 19
  * páginas seria exatamente o tipo de link sem sinal que o F43 removeu.
  */
-export function GuiasRelacionados({ slug }: { slug: string }) {
-  const posts = postsDaCalculadora(slug)
+export function GuiasRelacionados({
+  slug,
+  hub = false,
+  // A página da calculadora renderiza este bloco como irmão de topo, então ele
+  // traz o próprio container. O hub já está dentro de um, e repetir `px-4`
+  // deixaria só esta seção recuada em relação às vizinhas.
+  className = 'mx-auto max-w-4xl px-4 pb-8',
+}: {
+  slug: string
+  hub?: boolean
+  className?: string
+}) {
+  // No hub do F58 a seleção não é por calculadora — ele não está no
+  // `calculatorRegistry` —, e sim pelos posts de intenção agregada (`ctaHub`).
+  const posts = hub ? postsDoHub() : postsDaCalculadora(slug)
   if (posts.length === 0) return null
 
   return (
-    <section
-      className="mx-auto max-w-4xl px-4 pb-8"
-      aria-labelledby={`guias-${slug}`}
-    >
+    <section className={className} aria-labelledby={`guias-${slug}`}>
       <div className="rounded-xl border border-gray-200 bg-gray-50 p-5 md:p-6">
         <h2
           id={`guias-${slug}`}

@@ -60,6 +60,12 @@ export const metadata: Metadata = {
       'x-default': '/',
     },
   },
+  // Verificação de posse do site no AdSense (F19). Precisa estar no `<head>`
+  // de produção **antes** da aprovação e não pode ser condicionada à flag de
+  // exibição de anúncios — sem a meta, a verificação simplesmente falha.
+  other: {
+    'google-adsense-account': siteConfig.adsensePublisherId,
+  },
 }
 
 export const viewport: Viewport = {

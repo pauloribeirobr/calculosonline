@@ -790,6 +790,193 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
 
 ## Diário
 
+### 2026-09-08 — Export novo (GSC+GA4), AdSense verificado e o F60
+
+Paulo pediu "avalie a pasta gsc", depois mandou o Publisher ID do AdSense e por
+fim mandou executar a pauta de conteúdo que saiu da análise. Três coisas numa
+sessão: diagnóstico, F19 pela metade e F60 inteiro.
+
+**Método / qualidade do export.** GSC veio em pasta datada
+(`...-Performance-on-Search-2026-09-08/`, 07/06→06/09) e o GA4 solto na raiz,
+como sempre — a pendência de mover para pasta datada segue aberta desde 20/08.
+**O Clarity não veio desta vez**, e ele é a etapa 1 do procedimento do F52 (a
+única fonte de keyword research com ciclo de 7 dias). Sem ele, esta rodada não
+teve leitura de GEO/citação de IA.
+
+**1. GSC: 2.562 impressões, 3 cliques, e as impressões voltaram a subir.**
+
+| Semana | Impr | Impr/dia | Pos |
+|---|---|---|---|
+| W33 (10/08) | 168 | 24,0 | 59,9 |
+| W34 (17/08) | 167 | 23,9 | **58,4** |
+| W35 (24/08) | 186 | 26,6 | 68,1 |
+| W36 (31/08) | **265** | **37,9** | 66,2 |
+
+W36 é a semana de maior volume desde 13/07, e a posição piorou de 58,4 para
+66,2. **É reexpansão, não regressão** — o mesmo padrão já registrado em 27/08:
+quando o Google volta a testar o site em cauda longa nova, impressão sobe e
+posição média cai. Bate com o cronograma de deploys (F56 em 29/08, F22 em
+30/08, F58 em 01/09).
+
+**95,7% das impressões estão em posição pior que 60.** Em posição 66 não existe
+CTR — nenhum trabalho de title resolve isso.
+
+Páginas, com delta contra 27/08:
+
+| Página | 27/08 → 08/09 | Pos |
+|---|---|---|
+| `rescisao-trabalhista` | 138 → **266** (+93%) | 91,5 |
+| `decimo-terceiro` | 130 → **239** (+84%) | 85,8 |
+| `porcentagem` | 208 → 279 | 9,0 |
+| `financiamento` | 298 → 342 | 80,1 |
+| `cdb` | — → 52 (**1 clique**) | 56,4 |
+| `das-mei` | 36 → 20 | 15,9 |
+
+**Correção de registro:** a tabela de 27/08 atribuiu "88 impressões, pos. 81" ao
+`irrf`. Este export separa os dois — `irpf` 91 @ 80,2 e `irrf` 24 @ 82,5. Os 88
+eram do `irpf`.
+
+**2. Achado novo: 20% das impressões do site são estruturalmente inclicáveis.**
+`porcentagem` (279 impr. @ pos. **9,0**) e `margem-lucro` (230 @ **11,0**) somam
+**509 impressões em página 1 e zero cliques** — e as queries delas somam só
+**12 impressões** no relatório de consultas. O resto está no bucket
+**anonimizado** (761 impressões, 29% do site), que é onde o GSC joga query feita
+por pouquíssima gente. A assinatura é clara: são perguntas aritméticas únicas
+("quanto é 37% de 4.820") em que o Google responde na própria SERP com a
+calculadora dele.
+
+**Consequência de leitura, que vale mais que o achado:** olhar a tabela de
+páginas sem esse filtro leva à conclusão oposta — "porcentagem é a melhor
+página do site, pos. 9". É a pior em valor. **Não investir mais nessas duas.**
+
+**3. GA4 (28 dias, 11/08→07/09): 177 usuários, e o Google é zero.**
+`bing` 109 sessões · direto 76 · `band.com.br` 15 · Yahoo 10 · ChatGPT 8 ·
+`qmix` 6 · Copilot 5 · DuckDuckGo 2. **`google / organic` não aparece na
+lista.** O ecossistema Bing (Bing+Yahoo+DDG) é ~60% dos usuários.
+
+**Mobile foi de 7,7% para 16,3%** (29 de 178). É a primeira medição do F56, e
+ele funcionou: a correção de viewport destravou metade do público que o site
+tinha e não atendia.
+
+**4. Duas pendências de medição que não andaram.**
+- **F45 continua pendente.** "Leads qualificados: 0" em todos os 28 dias, com
+  242 `calculator_calculated` coletados. Mesmo achado de 27/08, duas semanas
+  depois. Cinco minutos de painel, e é o que bloqueia o F17.
+- **286 eventos `exception` para 323 `page_view`** — quase um por pageview, e
+  `errorOccurred` os marca como `fatal: true`. O export do GA4 não traz a
+  dimensão `description`. Suspeita concreta a checar primeiro:
+  `ErrorLogger.tsx` registra o listener com `capture: true`, o que captura
+  também **erro de carregamento de recurso** e o manda para `jsError` com
+  mensagem vazia. Se for isso, é ruído poluindo o dado; se não for, é quebra em
+  quase toda sessão. **Paulo ficou de mandar o breakdown por `description` — é
+  a mesma pendência aberta em 20/08 (na época eram 334).**
+
+**5. `calculator_edited` não aparece no export, e não é bug.**
+`calculator_saved` = 8 e `calculator_shared` = 4 em 28 dias: o caminho que o F59
+otimiza é percorrido ~12 vezes por mês. **A pergunta em aberto do F59 ("o botão
+deveria aparecer em toda abertura com resultado?") não vai ser respondida por
+dado neste volume** — decidir por julgamento e seguir.
+
+**6. O F58 tem 9 pageviews no GA4 e ZERO impressões no GSC.** Seis dias na
+janela. Vale conferir se o IndexNow do F46 pegou a rota — ela não está no
+`calculatorRegistry`, mora em `lib/hubTrabalhista.ts`, e se o `sitemap.xml` não
+a incluir o script não a submete.
+
+**7. O furo de método: o ciclo lê o console do buscador que manda zero
+tráfego.** O procedimento do `README.md` cobre GSC + GA4 + Clarity. O **Bing
+Webmaster Tools não aparece em lugar nenhum do repositório** — só o IndexNow,
+que fala com o Bing mas não escuta. O Bing é ~100% do tráfego orgânico real, o
+BWT é grátis, e dá query/posição/clique **sem a média de 90 dias que trava a
+leitura do GSC** (a armadilha registrada em 27/08). Verificar o site no BWT e
+exportá-lo para `gsc/` é o maior ganho de qualidade de sinal do ciclo inteiro, e
+é setup de uma tarde. **Item nº 1 da próxima rodada.**
+
+**8. F19 pela metade — conta do AdSense verificada.** Paulo mandou a meta tag
+com o Publisher ID no meio da sessão. Entregue só a verificação de posse: meta
+`google-adsense-account` no `<head>` e `ads.txt` real. **Nenhum `AdSlot` foi
+posicionado** — onde colocar anúncio continua sendo decisão dele.
+
+**A decisão que vale registrar: o Publisher ID é constante em `lib/seo.ts`, não
+env.** Mesmo raciocínio da chave do IndexNow — é público por design (sai no
+`<head>`, no `ads.txt` e em cada unidade) e o `ads.txt` é arquivo estático que
+não interpola env. Tirá-lo do código criaria **duas fontes de verdade para o
+mesmo valor**, e a falha seria silenciosa. `NEXT_PUBLIC_ADSENSE_PUBLISHER_ID`
+mudou de papel: deixou de guardar o ID e passou a ser a chave que **liga a
+exibição**; vazia até a aprovação. `adsense.spec.ts` trava a invariante que
+machuca — **meta e `ads.txt` não podem divergir**, que é a falha clássica em que
+a verificação passa, o `ads.txt` é marcado inválido semanas depois e nada no
+site acusa.
+
+**Sequência que a conta nova cria:** com o AdSense existindo, o **F45 ficou mais
+barato de fazer e mais caro de adiar** — são dois produtos Google que passam a
+conversar, e o GA4 não retroage.
+
+**9. F60 — 4 posts do cluster 13º/rescisão.** Paulo mandou executar a pauta. Os
+quatro custaram exatamente o que o F22 prometeu: uma entrada em `lib/blog.ts` e
+um `.mdx` cada.
+
+- `rescisao-por-acordo-mutuo-quanto-voce-recebe` — publica as **duas leituras do
+  aviso prévio do F40** lado a lado (aos 10 anos, R$ 1.500 de diferença).
+- `acerto-trabalhista-o-que-entra-e-quando-recebo` — derruba o "na justa causa
+  não recebe nada": saldo e férias vencidas nunca se perdem, **R$ 4.489,58** no
+  exemplo.
+- `13-salario-proporcional-como-calcular` — o degrau dos 15 dias em junho, em
+  que **um dia de admissão vale R$ 227,77**.
+- `direitos-trabalhistas-na-demissao-guia-completo` — construído em torno da
+  armadilha do F58.
+
+**Campo `ctaHub` novo no registry do blog.** O post agregado manda o CTA de topo
+para o hub, não para uma calculadora: quem pergunta "quais são todos os meus
+direitos" precisa das quatro contas, e mandá-lo para a rescisão o obrigaria a
+abrir outras três. `calculadoraPrincipal` continua preenchida porque é ela que
+dá a identidade visual da og-image (F41/F42) — o hub não está no
+`calculatorRegistry` de propósito. A metade recíproca é `postsDoHub()`, que faz
+o hub apontar de volta; **sem isso o post nasceria órfão**, que é o erro que o
+F43 existe para não repetir.
+
+**O padrão que se confirma pela terceira vez (F58, e agora o post agregado):
+quando uma página junta cálculos que já se contêm, a soma é o bug.** O guia
+abre com "O erro de somar: R$ 36.681 que não existem" contra os R$ 15.558,57
+reais, e um teste compara `boundingBox().y` para o aviso ficar **acima** da
+tabela. É a conta errada que o leitor faz sozinho, e nenhum concorrente a
+desfaz — vira diferencial de conteúdo, não só correção.
+
+**Números todos do motor** (script descartável em `packages/core/src/__scratch__`,
+removido depois), disciplina do F47/F49/F22: 11 tabelas, 9 exemplos nomeados, 23
+valores travados em `blog-cluster-trabalhista.spec.ts`.
+
+**Dois testes que a premissa nova quebrou, e o que eles ensinam.** O teste do
+F22 exigia "Guia sobre este tema" na calculadora do 13º; ela ganhou um segundo
+guia e o título virou plural. Corrigido para `Guias?` — **a invariante protegida
+é o link de volta, não a quantidade**. E `GuiasRelacionados` ganhou `className`
+opcional: na calculadora ele é irmão de topo e traz o próprio container, no hub
+já está dentro de um, e repetir `px-4` recuava só aquela seção.
+
+**Achado no motor que NÃO foi corrigido, e precisa de decisão.** Na tabela por
+modalidade, `aposentadoria` devolve resultado **idêntico a `sem_justa_causa`** —
+40% de multa de FGTS e aviso prévio integral. Para rescisão indireta está certo;
+para aposentadoria é juridicamente contestado. **Omiti a modalidade das tabelas
+dos posts** em vez de publicar afirmação que não se sustenta. Merece revisão à
+parte de `packages/core/src/trabalhista/rescisao.ts`.
+
+**Risco de canibalização registrado.** O post do 13º proporcional cobre
+território que a seção "13º proporcional" do guia de 30/08 já tocava. Os dois
+foram ligados nos dois sentidos e as intenções são distintas ("quando cai" ×
+"quanto recebo se não trabalhei o ano todo"), mas **conferir no GSC em 3-4
+semanas se estão competindo pela mesma query**; se estiverem, encurtar a seção
+do post antigo e apontar para o novo.
+
+**O que checar no próximo export (marco: 08/09):**
+- **Posição de `rescisao-trabalhista` (91,5) e `decimo-terceiro` (85,8)** e se as
+  impressões do cluster continuaram subindo — os 4 posts do F60 precisam de
+  60-90 dias, então o export de outubro é cedo para posição, mas não para
+  impressão do blog.
+- **Se o F58 saiu de zero impressão** e se os 4 posts novos foram indexados.
+- **`porcentagem` e `margem-lucro`:** confirmar que seguem em pos. ~10 com 0
+  clique. Se confirmado duas rodadas seguidas, fechar a questão.
+- **Breakdown de `exception` por `description`** — pendente desde 20/08.
+- **Bing Webmaster Tools**, se o Paulo verificar o site.
+
 ### 2026-09-01 (parte 2) — F59: abrir cálculo pronto cai no resultado
 
 Paulo notou o atrito e propôs a solução junto: abrir um cálculo salvo em
