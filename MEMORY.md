@@ -16,6 +16,63 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **O primeiro dia de Bing Webmaster Tools (10/09) já vale mais que o export
+  trimestral do GSC: 3 cliques em 1 dia, contra 3 cliques em 3 meses no
+  Google.** E as posições são de outro planeta — 4,0 em `calculo de rescisão
+  trabalhista online gratis`, 6,0 em `calculos de rescisão de trabalho gratis`,
+  9,0 em `calculadora de férias 2026`, com CTR de 50%, 33% e 12,5%. **O site
+  não tem problema de CTR; tem problema de posição no Google.** Toda leitura
+  feita a partir do GSC sobre "CTR ~0%" descrevia o Google, não o produto.
+- **Primeiro alvo acionável saído do BWT: `calculadora irrf 2026` — 12
+  impressões (a maior do dia), posição 6,67 e ZERO clique.** É a única query
+  de topo sem clique, e o `irrf` já é a página nº 1 em citação por IA (F55).
+  Título e descrição na SERP do Bing são o próximo experimento barato.
+- **Ressalva de método sobre esse print: é 1 dia e 9 linhas.** Tem ruído óbvio
+  (`gorditas near me`, `galaxy s22 plus to buy`) e não dá base para nenhuma
+  decisão de investimento. O que ele já autoriza é **parar de tratar o GSC como
+  o termômetro do projeto**.
+- **F63 (10/09) — `aposentadoria` na rescisão era um apelido de "sem justa
+  causa" e afirmava R$ 11.310,64 onde o correto na saída a pedido é
+  R$ 2.692,91.** A premissa (aposentar-se encerra o contrato) foi derrubada
+  pelo STF (ADI 1.721/1.770) e pela **OJ 361 da SDI-1 do TST**. Corrigido, com
+  o cenário de dispensa preservado como linha `neutro` fora da soma.
+- **A confusão que provavelmente gerou o bug, e que vale guardar: aposentadoria
+  libera o SAQUE do FGTS (art. 20, III), não a MULTA de 40%.** Sacar o que já é
+  seu e receber a multa do empregador são coisas diferentes.
+- **As três pendências de painel que travavam o ciclo foram fechadas pelo Paulo
+  em 10/09:** `calculator_calculated` marcado como evento principal no GA4
+  (F45, aberto desde 27/08), **site verificado no Bing Webmaster Tools** (o
+  furo de método de 08/09) e AdSense agora em **"Preparando" com `ads.txt`
+  "Autorizado"** — posse confirmada, site em revisão.
+- **Nenhum dos três dá dado retroativo.** O GA4 só conta evento principal a
+  partir da marcação, o BWT não traz histórico e a revisão do AdSense tem
+  prazo próprio. **O próximo export só vale a partir do fim de setembro** — até
+  lá, ler os três é gastar rodada à toa.
+- **Achado de fora do repositório, no painel do AdSense: `recibofacil.com.br`
+  está "Pronto" com `ads.txt` "Não encontrado".** É exatamente a divergência
+  que o `adsense.spec.ts` daqui trava (F19) — site aprovado sem `ads.txt`
+  válido. Correção de 5 minutos no repo irmão.
+- **F62 (10/09) — a suspeita sobre os 286 `exception` estava certa na captura e
+  errada na atribuição.** O `capture: true` de fato recolhe erro de recurso,
+  mas esse caminho sempre mandou `fatal: false`; **quem marcava fatal era o
+  `unhandledrejection`**. Eram duas misturas independentes. Vale como regra:
+  antes de caçar a causa no painel, conferir quem chama o quê — a atribuição
+  estava a duas linhas de distância no código.
+- **Regra que sai do F62: `fatal` do GA4 quer dizer "a pessoa perdeu a
+  página", não "o erro é grave".** Só error boundary sabe disso. E falha de
+  carregamento de recurso não é exceção — virou evento `resource_error`
+  próprio, porque o suspeito nº 1 é adblock derrubando Clarity e gtag, que não
+  é erro do site.
+- **F61 (08/09) tinha subido sem registro e foi documentado em 10/09** — o
+  commit `b61fec7` misturou a cauda do F60 com feature nova, e por isso **F61
+  divide a versão 0.31.0 com o F60**. Fica como lembrete do porquê da regra de
+  um commit por feature.
+- **Bug do F61 que vale para qualquer projeto brasileiro em Vercel:
+  `new Date().toISOString()` é UTC.** A partir das 21h de Brasília o site
+  exibia a data de **amanhã** no rótulo "Tabelas:" — flagrado às 22h de 08/09
+  no FGTS mostrando `2026-09-09`. `hojeISO()` (`en-CA` + `America/Sao_Paulo`)
+  em 11 módulos do core. Data em rótulo de confiança é justamente onde o erro
+  não aparece como erro.
 - **Export de 08/09 analisado. O diagnóstico central não mudou e ficou mais
   duro: `google / organic` entregou ZERO sessão em 28 dias**, contra 109 do
   Bing. 2.562 impressões e 3 cliques no GSC, **95,7% delas em posição pior que
@@ -841,6 +898,169 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-09-10 — As três pendências de painel fechadas, o F61 registrado com atraso e o F62
+
+Paulo abriu com "o que tem pra hj?". Levantamento do estado do repo antes de
+propor qualquer coisa, e o levantamento em si já rendeu o primeiro item.
+
+**O commit que não estava documentado.** `b61fec7` ("ajuste FGTS + Chips",
+08/09) estava em produção desde o merge do PR #27 e **não tinha entrada em
+`FEATURES.md` nem no `CHANGELOG.md`** — e o bump para `0.31.0` tinha sido
+consumido pelo F60, então a feature ficou sem versão própria. O nome do commit
+subestima o conteúdo: 42 arquivos, headline do FGTS por modalidade,
+`rotuloResultado` novo no contrato do core, `hojeISO()` aplicado a 11 módulos e
+`modo: 'definir'` nos chips com 10 presets novos. Registrado como **F61**,
+assumindo no texto que divide a `0.31.0` com o F60 em vez de inventar uma
+versão que nunca existiu em produção. É a segunda vez que um commit agregado
+custa rastreabilidade — a regra de **um commit por feature** existe por isto.
+E custou mais do que registro: o mesmo commit deixou **o `typecheck` do
+`packages/core` vermelho no HEAD desde 08/09** (TS2556 em `utils.test.ts` — um
+spread de união de tuplas em `super`), coisa que passou porque o Vitest não
+faz checagem de tipo e a validação da entrega parou no teste. Corrigido em
+10/09; vale como lembrete de que `pnpm test` verde não substitui `typecheck`.
+
+**O bug de fuso que o F61 fecha merece registro à parte porque não é específico
+desta calculadora.** `new Date().toISOString().slice(0, 10)` devolve data
+**UTC**, e a Vercel roda em UTC: das 21h de Brasília em diante, o site exibia a
+data de amanhã. Apareceu no rótulo "Tabelas:" do FGTS (`2026-09-09` numa tela
+das 22h do dia 08/09), que é o pior lugar possível — é um selo de confiança,
+ninguém confere, e ele estava afirmando tanto que a página é do futuro quanto,
+por ser `new Date()`, que as regras do FGTS mudam todo dia. A correção tem duas
+metades: `hojeISO()` para quando a data de hoje é mesmo o que se quer, e
+constante de vigência (`VIGENCIA_REGRAS_FGTS = '2020-01-01'`, da Lei
+13.932/2019) para quando não é — FGTS não tem tabela anual como INSS e IRRF.
+
+**As três pendências de painel, fechadas na mesma sessão pelo Paulo.**
+(1) **F45** — `calculator_calculated` marcado como evento principal no GA4,
+aberto desde 27/08 e já custando duas rodadas; é o que destrava o F17 e a
+leitura do `calculator_edited` do F59. (2) **Bing Webmaster Tools** verificado,
+fechando o furo de método achado em 08/09: o ciclo "avalie a pasta gsc" lia o
+console do buscador que manda **zero** tráfego enquanto o Bing responde por
+~60% dos usuários. (3) **AdSense** em "Preparando" com `ads.txt` "Autorizado" —
+a verificação de posse do F19 passou e o `ads.txt` foi lido e aceito; conferido
+também direto em produção (`curl`), meta e `ads.txt` batendo no mesmo
+`pub-6380398318603111`, que é a invariante do `adsense.spec.ts`.
+
+**A consequência de método das três juntas: nenhuma dá dado retroativo.** O GA4
+não conta evento principal para trás, o BWT não traz histórico e a revisão do
+AdSense tem prazo próprio. Isso define o calendário da próxima rodada — **antes
+do fim de setembro, "avalie a pasta gsc" não tem o que dizer de novo.**
+
+**Achado colateral no painel do AdSense, fora deste repositório:**
+`recibofacil.com.br` aparece "Pronto" com `ads.txt` **"Não encontrado"**. É
+exatamente a falha que o `adsense.spec.ts` daqui existe para travar — site
+aprovado servindo anúncio sem `ads.txt` válido, que é dinheiro deixado na mesa
+e nada no site acusa.
+
+**F62 — o relatório de erro do GA4.** Os 286 `exception` para 323 `page_view`
+estavam registrados aqui como suspeita de o `capture: true` do `ErrorLogger`
+recolher erro de carregamento de recurso. **A leitura do código confirmou a
+captura e desmentiu a atribuição:** o caminho do recurso chama
+`analytics.jsError`, que sempre mandou `fatal: false`; os fatais vêm de
+`errorOccurred`, usado pelos error boundaries **e pelo `unhandledrejection`**.
+Duas misturas independentes, e a lição é de método — a resposta estava a duas
+linhas de código de distância, não no painel, e o breakdown por `description`
+que ficou de vir do Paulo desde 20/08 teria confirmado o sintoma sem apontar
+nenhuma das duas causas.
+
+Corrigido na origem, porque é o único lugar onde ainda dá: um `exception` com
+`description` vazia não tem como ser reclassificado depois. Falha de recurso
+virou evento próprio **`resource_error`** (o suspeito nº 1 é adblock derrubando
+Clarity e gtag — não é erro do site e não pode contaminar o relatório de erro
+do site); `unhandledrejection` e recuperação de chunk passaram a `fatal: false`,
+deixando **`fatal` com o significado que o GA4 lhe dá: "a pessoa perdeu a
+página"**, coisa que só error boundary sabe; e `exception` não sai mais sem
+`description` — erro de script cross-origin chega com `message` vazia e sem
+`filename`, e era a linha em branco do painel. Somados, dedupe por assinatura e
+teto de 10 eventos por sessão: **proporção de ~1:1 com pageview nunca é "um
+erro diferente por visita"**, é o mesmo erro repetindo, afogando o relatório e
+gastando cota de evento.
+
+**O que o F62 deliberadamente não faz é adivinhar a causa** — ele faz o próximo
+export dizer sozinho qual é. Se em outubro o `resource_error` dominar, é
+bloqueio de tracker e não há o que corrigir no site; se sobrarem `exception`
+não-fatais com `description` real, aí sim há bug de JavaScript para caçar.
+
+**E a suíte e2e deu o primeiro exemplo real antes mesmo do deploy:** a execução
+completa quebrou o teste novo porque apareceu um `resource_error` a mais —
+`va.vercel-scripts.com/v1/script.debug.js`, o próprio script do Vercel
+Analytics falhando em dev. É exatamente o tipo de evento que antes entrava como
+`exception` e inflava a contagem. O teste é que estava errado ao contar o total
+em vez de filtrar pelo recurso do caso; corrigido, e a falha virou a melhor
+evidência de que a separação faz sentido.
+
+**O primeiro dia de Bing Webmaster Tools, e ele reescreve o diagnóstico do
+projeto.** Paulo mandou o print de 24h ainda durante a sessão: **3 cliques em
+1 dia**, contra os 3 cliques em 3 meses do GSC. As posições não se parecem em
+nada com as do Google — `calculo de rescisão trabalhista online gratis` em
+**4,0** com CTR de 50%, `calculos de rescisão de trabalho gratis` em 6,0 com
+33%, `calculadora de férias 2026` em 9,0 com 12,5% — enquanto o export de 08/09
+mostrava 95,7% das impressões do Google em posição pior que 60. **A conclusão
+de método é dura e vale para trás: tudo o que este arquivo registrou como
+"CTR ~0%" desde 19/07 era uma descrição do Google, não do produto.** Quando o
+site aparece em 1ª página, as pessoas clicam. O problema nunca foi title,
+snippet ou proposta de valor — é posição, e posição no Google é autoridade
+(F15).
+
+Uma ressalva para não repetir o erro na direção oposta: **é 1 dia e 9 linhas**,
+com ruído evidente (`gorditas near me`, `galaxy s22 plus to buy`, `best
+merengon near me` — o Bing conta impressão em contexto amplo). Não dá base para
+decisão de orçamento. O que ele já autoriza é parar de usar o GSC como
+termômetro do projeto. **O alvo acionável que dá para tirar dele agora:**
+`calculadora irrf 2026`, 12 impressões (a maior do dia), posição **6,67** e
+**zero clique** — a única query de topo sem clique nenhum, e logo na página que
+é a nº 1 do site em citação por IA (F55). Título e descrição do IRRF na SERP do
+Bing são o próximo experimento barato, e agora com um painel de 7 dias para
+medir em vez de 90.
+
+### 2026-09-10 — F63: a aposentadoria não encerra o contrato
+
+Pendência registrada em 08/09 como "achado no motor que NÃO foi corrigido e
+precisa de decisão". Paulo mandou atacar.
+
+**O que estava errado.** `percentualMultaFGTS` colocava `aposentadoria` na
+mesma faixa de `sem_justa_causa`, e `calcularDiasAvisoPrevio` lhe dava aviso
+proporcional integral — o resultado saía **idêntico** ao da demissão sem justa
+causa. A premissa embutida é a de que aposentar-se é, por si, um modo de
+terminar o contrato, e ela foi derrubada duas vezes: o STF declarou
+inconstitucionais os §§ 1º e 2º do art. 453 da CLT (**ADI 1.721 e 1.770**) e a
+**OJ 361 da SDI-1 do TST** fixou que a aposentadoria espontânea não extingue o
+contrato se o empregado continua trabalhando, sendo a multa de 40% devida **na
+dispensa imotivada**, sobre a totalidade dos depósitos. Quem encerra o contrato
+é a empresa ou o trabalhador — e é isso que define as verbas.
+
+**O tamanho do erro, com os números do próprio motor:** salário de R$ 3.000,
+R$ 9.000 de saldo de FGTS e 3 anos de casa davam **R$ 11.310,64** contra os
+**R$ 2.692,91** da saída a pedido. R$ 8.617,73 de diferença, num número que a
+pessoa leva para uma conversa de desligamento.
+
+**A decisão de produto, e ela repete um padrão que já é do projeto.** O
+formulário **não pergunta de quem partiu a saída**, que é o fato que decide
+tudo. Em vez de escolher em silêncio, o cálculo assume o sentido usual de "vou
+me aposentar e sair" (saída a pedido), **diz que assumiu** em três `avisos`, e
+mantém o cenário oposto visível como **linha `neutro` fora da soma** — "Multa
+de 40% — só se o desligamento partir da empresa". É o mesmo desenho do F40 (as
+duas leituras do aviso prévio no acordo mútuo) e do F58 (`neutro` é o que
+impede a linha de ser lida como dinheiro a receber).
+
+**A confusão que provavelmente produziu o `0.4` original, e que vale guardar
+porque vai reaparecer:** a aposentadoria **libera o saque** do saldo do FGTS
+(Lei 8.036/1990, art. 20, III) mesmo sem multa nenhuma. Sacar o que já é seu e
+receber os 40% pagos pelo empregador são coisas diferentes — e o conteúdo novo
+diz isso com todas as letras, porque é o erro mais comum sobre o tema.
+
+**Achado colateral de escopo:** a opção "Aposentadoria" era oferecida no
+`select` desde o F3 e **a palavra não aparecia uma única vez no MDX** da
+rescisão — nem na tabela de tipos, nem na seção "Cálculo por motivo de saída"
+do F39. Uma modalidade que o formulário oferece e o conteúdo não explica é
+lacuna de produto e de SEO ao mesmo tempo. Ganhou seção própria com os dois
+cenários e 2 perguntas de FAQ (que entram no `FAQPage` do F10).
+
+O hub do F58 acompanhou sem mudança de lógica — sua linha de multa já derivava
+de `percentualMultaFGTS` —, mas passou a **herdar os `avisos` da rescisão**,
+porque a premissa de quem encerrou o contrato muda os quatro blocos, não só o
+primeiro.
 
 ### 2026-09-08 — Export novo (GSC+GA4), AdSense verificado e o F60
 
