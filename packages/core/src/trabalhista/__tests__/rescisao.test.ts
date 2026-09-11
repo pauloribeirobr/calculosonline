@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { calcularRescisao } from '../rescisao'
+import { arredondar } from '../../utils'
 
 describe('calcularRescisao', () => {
   const BASE = {
@@ -217,11 +218,68 @@ describe('calcularRescisao', () => {
     })
   })
 
+  // A premissa antiga era que aposentar-se é, por si, um modo de terminar o
+  // contrato — e o cálculo saía idêntico ao da demissão sem justa causa. O
+  // STF (ADI 1.721/1.770) e a OJ 361 da SDI-1 do TST dizem o contrário: a
+  // aposentadoria não extingue o contrato, e a multa de 40% é da **dispensa**.
   describe('aposentadoria', () => {
-    it('paga todas as verbas como sem justa causa, multa FGTS 40%', () => {
-      const r = calcularRescisao({ ...BASE, motivoRescisao: 'aposentadoria' })
+    const aposentadoria = { ...BASE, motivoRescisao: 'aposentadoria' as const }
+
+    it('não tem multa de 40%: a saída é a pedido do trabalhador', () => {
+      const r = calcularRescisao(aposentadoria)
       expect(r.sucesso).toBe(true)
-      if (r.sucesso) expect(r.dados.dados.percentualMultaFGTS).toBe(0.4)
+      if (!r.sucesso) return
+      expect(r.dados.dados.percentualMultaFGTS).toBe(0)
+      expect(r.dados.dados.multaFGTS).toBe(0)
+    })
+
+    it('não tem aviso prévio indenizado', () => {
+      const r = calcularRescisao(aposentadoria)
+      expect(r.sucesso).toBe(true)
+      if (!r.sucesso) return
+      expect(r.dados.dados.diasAvisoPrevio).toBe(0)
+      expect(r.dados.dados.avisoPrevio).toBe(0)
+    })
+
+    it('mantém saldo, férias e 13º — o que se perde é só a multa e o aviso', () => {
+      const r = calcularRescisao(aposentadoria)
+      const pedido = calcularRescisao({ ...BASE, motivoRescisao: 'pedido_demissao' })
+      expect(r.sucesso && pedido.sucesso).toBe(true)
+      if (!r.sucesso || !pedido.sucesso) return
+      expect(r.dados.dados.totalLiquido).toBe(pedido.dados.dados.totalLiquido)
+    })
+
+    it('mostra a multa de 40% como linha neutra, fora da soma', () => {
+      const r = calcularRescisao(aposentadoria)
+      expect(r.sucesso).toBe(true)
+      if (!r.sucesso) return
+
+      const linha = r.dados.detalhamento.find((i) => i.descricao.includes('Multa de 40%'))
+      expect(linha?.tipo).toBe('neutro')
+      expect(linha?.valor).toBe(arredondar(BASE.saldoFGTS * 0.4))
+
+      // A invariante que protege o número: `neutro` não entra no total, senão
+      // a linha informativa viraria dinheiro que a pessoa não vai receber.
+      const creditos = r.dados.detalhamento.filter((i) => i.tipo === 'credito')
+      expect(creditos.find((i) => i.descricao === 'Total Líquido')?.valor).toBe(
+        r.dados.dados.totalLiquido,
+      )
+    })
+
+    it('declara a premissa assumida nos avisos', () => {
+      const r = calcularRescisao(aposentadoria)
+      expect(r.sucesso).toBe(true)
+      if (!r.sucesso) return
+      expect(r.dados.avisos?.join(' ')).toContain('não extingue o contrato')
+      expect(r.dados.avisos?.join(' ')).toContain('sem justa causa')
+    })
+
+    it('nenhum outro motivo herda os avisos da aposentadoria', () => {
+      for (const motivo of ['sem_justa_causa', 'pedido_demissao', 'acordo_mutuo'] as const) {
+        const r = calcularRescisao({ ...BASE, motivoRescisao: motivo })
+        expect(r.sucesso).toBe(true)
+        if (r.sucesso) expect(r.dados.avisos ?? []).toHaveLength(0)
+      }
     })
   })
 

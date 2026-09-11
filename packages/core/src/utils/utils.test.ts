@@ -179,8 +179,14 @@ describe('hojeISO', () => {
     const original = Date
     // @ts-expect-error — substituição controlada só para este caso
     globalThis.Date = class extends original {
-      constructor(...args: ConstructorParameters<typeof original>) {
-        super(...(args.length ? args : [noite]))
+      // Espalhar `args.length ? args : [noite]` não passa no `tsc`: o
+      // resultado é união de tuplas e o TS exige tupla única no spread para
+      // `super` (TS2556). Os dois caminhos escritos à parte resolvem, e aqui
+      // só o de zero argumentos é exercitado — é `new Date()` que o
+      // `hojeISO()` chama.
+      constructor(...args: [] | [value: string | number | Date]) {
+        if (args.length === 0) super(noite)
+        else super(args[0])
       }
       static override now() {
         return noite.getTime()

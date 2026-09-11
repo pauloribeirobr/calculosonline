@@ -78,7 +78,10 @@ export function RescisaoForm({ onResult, onError, isLoading, sharedData, autoSub
             { value: 'justa_causa', label: 'Justa causa do empregado' },
             { value: 'pedido_demissao', label: 'Pedido de demissão' },
             { value: 'acordo_mutuo', label: 'Acordo mútuo (art. 484-A)' },
-            { value: 'aposentadoria', label: 'Aposentadoria' },
+            // O rótulo diz de quem partiu a saída porque é isso, e não a
+            // aposentadoria em si, que define as verbas (OJ 361 do TST).
+            // Dispensa pela empresa depois de aposentado é "sem justa causa".
+            { value: 'aposentadoria', label: 'Aposentadoria (saída a pedido do trabalhador)' },
           ],
         },
         saldoFGTS: {

@@ -92,7 +92,12 @@ function avisoPrevioProporcional(anos: number): number {
 }
 
 function calcularDiasAvisoPrevio(anos: number, motivo: MotivoRescisao): number {
-  if (motivo === 'justa_causa' || motivo === 'pedido_demissao') return 0
+  // `aposentadoria` entra aqui junto com o pedido de demissão: quem se
+  // aposenta e sai por decisão própria não recebe aviso prévio indenizado —
+  // é ele quem deve o aviso à empresa. Ver `percentualMultaFGTS`.
+  if (motivo === 'justa_causa' || motivo === 'pedido_demissao' || motivo === 'aposentadoria') {
+    return 0
+  }
   if (motivo === 'acordo_mutuo') return DIAS_AVISO_ACORDO_MINIMO
   return avisoPrevioProporcional(anos)
 }
@@ -117,12 +122,32 @@ function diasAvisoAcordoProporcional(anos: number): number {
   return avisoPrevioProporcional(anos) / 2
 }
 
+/**
+ * Multa rescisória do art. 18 da Lei 8.036/1990.
+ *
+ * **`aposentadoria` saiu da faixa de 40%, e essa é a correção.** Ela estava
+ * ali por uma premissa que o direito não sustenta: a de que aposentar-se é,
+ * em si, um modo de terminar o contrato. Não é — o STF declarou
+ * inconstitucionais os §§ 1º e 2º do art. 453 da CLT (ADI 1.721 e 1.770) e a
+ * **OJ 361 da SDI-1 do TST** fechou a questão: *"a aposentadoria espontânea
+ * não é causa de extinção do contrato de trabalho se o empregado permanece
+ * prestando serviços ao empregador após a jubilação"*, e a multa de 40% é
+ * devida **na dispensa imotivada**, sobre a totalidade dos depósitos do
+ * contrato.
+ *
+ * Ou seja, quem encerra o contrato é a empresa (→ `sem_justa_causa`, com
+ * multa) ou o próprio trabalhador (→ saída a pedido, sem multa). A opção
+ * `aposentadoria` do formulário representa o segundo caso, que é o que a
+ * pessoa quer dizer ao escolher "vou me aposentar e sair"; o primeiro caso
+ * está no aviso do resultado e na linha informativa de 40%.
+ *
+ * **Não confundir com o saque:** a aposentadoria libera o saque do saldo do
+ * FGTS (Lei 8.036/1990, art. 20, III) mesmo sem multa nenhuma. Sacar o saldo
+ * e receber a multa são coisas diferentes, e a confusão entre as duas é
+ * provavelmente a origem do 0.4 que estava aqui.
+ */
 function percentualMultaFGTS(motivo: MotivoRescisao): number {
-  if (
-    motivo === 'sem_justa_causa' ||
-    motivo === 'aposentadoria' ||
-    motivo === 'com_justa_causa_emp'
-  ) {
+  if (motivo === 'sem_justa_causa' || motivo === 'com_justa_causa_emp') {
     return 0.4
   }
   if (motivo === 'acordo_mutuo') return 0.2
@@ -355,12 +380,43 @@ export function calcularRescisao(params: RescisaoParams): ResultadoOuErro<Rescis
           },
         ]
       : []),
+    // Cenário alternativo da aposentadoria, na mesma disciplina do F40 e do
+    // F58: `neutro` porque está **fora da soma** — a UI só desenha sinal em
+    // crédito/débito, e é isso que impede a linha de ser lida como valor a
+    // receber. Ela existe porque o outro cenário é frequente e o usuário não
+    // tem como saber que a escolha do motivo é que o exclui.
+    ...(params.motivoRescisao === 'aposentadoria' && params.saldoFGTS > 0
+      ? [
+          {
+            descricao: 'Multa de 40% — só se o desligamento partir da empresa',
+            valor: arredondar(params.saldoFGTS * 0.4),
+            tipo: 'neutro' as const,
+            formula: `${formatarBRL(params.saldoFGTS)} × 40% (OJ 361 do TST: devida na dispensa imotivada, sobre todo o contrato)`,
+          },
+        ]
+      : []),
   ]
+
+  /**
+   * A aposentadoria é o único motivo em que o resultado depende de um fato que
+   * o formulário não pergunta — de quem partiu o fim do contrato. Em vez de
+   * escolher em silêncio, o cálculo assume a saída a pedido (o sentido usual
+   * de "vou me aposentar") e diz o que assumiu.
+   */
+  const avisos =
+    params.motivoRescisao === 'aposentadoria'
+      ? [
+          'A aposentadoria não extingue o contrato de trabalho (STF, ADI 1.721 e 1.770; OJ 361 da SDI-1 do TST). Este cálculo trata a saída como iniciativa do trabalhador: sem aviso prévio indenizado e sem multa de 40%.',
+          'Se quem encerrou o contrato foi a empresa — antes ou depois da aposentadoria —, o caso é de demissão sem justa causa: escolha esse motivo para incluir o aviso prévio e a multa de 40% sobre todos os depósitos do contrato.',
+          'O saque do FGTS é liberado pela aposentadoria (Lei 8.036/1990, art. 20, III) mesmo sem multa. Sacar o saldo e receber a multa de 40% são coisas diferentes.',
+        ]
+      : []
 
   return {
     sucesso: true,
     dados: {
       resultado: principal.totalLiquido,
+      ...(avisos.length > 0 ? { avisos } : {}),
       detalhamento,
       baseCalculo: `Rescisão por ${params.motivoRescisao} | ${anos} anos completos, ${mesesTrabalhados} meses de serviço`,
       fonteJuridica: 'CLT arts. 477–487 | Lei 12.506/2011 | Lei 8.036/1990 art. 18',

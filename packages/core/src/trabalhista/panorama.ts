@@ -264,6 +264,10 @@ export function calcularPanoramaTrabalhista(
     ...(params.diasFaltas === undefined || params.diasFaltas === 0
       ? ['As férias foram calculadas sem faltas injustificadas no período aquisitivo.']
       : []),
+    // Os avisos da rescisão valem aqui também — o hub roda o mesmo motivo, e
+    // o único que hoje produz aviso é a aposentadoria, cuja premissa (de quem
+    // partiu a saída) muda os quatro blocos, não só o primeiro.
+    ...(rescisao.dados.avisos ?? []),
   ]
 
   return {

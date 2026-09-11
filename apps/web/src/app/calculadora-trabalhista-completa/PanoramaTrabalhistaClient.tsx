@@ -135,7 +135,7 @@ export function PanoramaTrabalhistaClient() {
               { value: 'justa_causa', label: 'Justa causa do empregado' },
               { value: 'pedido_demissao', label: 'Pedido de demissão' },
               { value: 'acordo_mutuo', label: 'Acordo mútuo (art. 484-A)' },
-              { value: 'aposentadoria', label: 'Aposentadoria' },
+              { value: 'aposentadoria', label: 'Aposentadoria (saída a pedido do trabalhador)' },
             ],
           },
           saldoFGTS: {

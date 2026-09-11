@@ -20,7 +20,12 @@
       "Bash(timeout 400 pnpm exec playwright test tests/e2e/quick-add-chips.spec.ts --project=chromium)",
       "Bash(timeout 400 pnpm exec playwright test tests/e2e/salario-liquido.spec.ts --project=chromium)",
       "Bash(pnpm test *)",
-      "Bash(timeout 900 pnpm exec playwright test --project=mobile-chromium)"
+      "Bash(timeout 900 pnpm exec playwright test --project=mobile-chromium)",
+      "Bash(pnpm test:e2e error-logger)",
+      "Bash(git log *)",
+      "Bash(pnpm --filter web lint)",
+      "Bash(pnpm test:e2e rescisao-aposentadoria error-logger)",
+      "Bash(pnpm --filter @calculosonline/core typecheck)"
     ]
   }
 }
