@@ -36,12 +36,15 @@ test.describe('IRRF sobre aluguel (F54)', () => {
     await expect(detalhamento).toContainText('Aluguel Bruto Recebido')
     await expect(detalhamento).toContainText('(-) IPTU')
     await expect(detalhamento).toContainText('(-) Taxa de administração imobiliária')
-    // 5.000 − 1.000 de despesas = base de 4.000
+    // 5.000 − 1.000 de despesas = R$ 4.000 de rendimento tributável, do qual
+    // ainda sai o desconto simplificado de R$ 607,20 → base de R$ 3.392,80.
+    await expect(detalhamento).toContainText('Rendimento tributável')
     await expect(detalhamento).toContainText('R$ 4.000,00')
+    await expect(detalhamento).toContainText('R$ 3.392,80')
     await expect(detalhamento).not.toContainText('(-) INSS')
   })
 
-  test('o mesmo valor rende imposto maior como aluguel que como salário', async ({ page }) => {
+  test('salário e aluguel produzem detalhamentos distintos para o mesmo valor', async ({ page }) => {
     await page.getByLabel('Valor bruto do mês').fill('500000')
     await page.getByRole('button', { name: 'Calcular IRRF' }).click()
     const comoSalario = await page.getByRole('list', { name: 'Detalhamento linha a linha' }).textContent()
@@ -50,7 +53,9 @@ test.describe('IRRF sobre aluguel (F54)', () => {
     await page.getByRole('button', { name: 'Calcular IRRF' }).click()
     const comoAluguel = await page.getByRole('list', { name: 'Detalhamento linha a linha' }).textContent()
 
-    // Sem INSS a base é o bruto inteiro — os dois detalhamentos têm de diferir.
+    // O aluguel não abate INSS. Nesta faixa isso não muda o imposto (nos dois
+    // casos o desconto simplificado de R$ 607,20 vence as deduções legais),
+    // mas a memória de cálculo tem de mostrar origens diferentes.
     expect(comoAluguel).not.toBe(comoSalario)
     expect(comoAluguel).toContain('R$ 5.000,00')
   })

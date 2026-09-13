@@ -5,6 +5,13 @@ O **décimo terceiro salário** — mais conhecido como **13º salário** ou gra
 empregado com vínculo empregatício regido pela CLT tem direito ao benefício, pago em duas
 parcelas ao longo do ano.
 
+**Resposta rápida.** O 13º proporcional é `(salário ÷ 12) × meses trabalhados com 15 dias ou
+mais`. A primeira parcela é metade do bruto, **sem nenhum desconto**, e sai até 30 de novembro.
+Na segunda — que em 2026 cai até **sexta, 18 de dezembro**, porque o dia 20 é domingo — caem o
+INSS e o Imposto de Renda calculados sobre o valor **integral** do 13º. E a novidade de 2026: o
+redutor da **Lei 15.270/2025** zera o IR do 13º de quem recebe até **R$ 5.000** brutos de
+gratificação.
+
 ## O que é o 13º salário?
 
 A gratificação natalina equivale a **1/12 da remuneração devida em dezembro** multiplicada
@@ -44,10 +51,10 @@ nele. Meses com menos de 15 dias de trabalho efetivo não contam.
 
 ## Prazos de pagamento
 
-| Parcela | Prazo | O que inclui |
-|---|---|---|
-| 1ª parcela | Até 30 de novembro (ou em janeiro–novembro em férias) | Metade do valor bruto sem descontos |
-| 2ª parcela | Até 20 de dezembro | Saldo + INSS + IRRF |
+| Parcela | Prazo legal | Em 2026 | O que inclui |
+|---|---|---|---|
+| 1ª parcela | Até 30 de novembro (ou em fevereiro–novembro, nas férias) | Segunda-feira, 30/11 | Metade do valor bruto, sem descontos |
+| 2ª parcela | Até 20 de dezembro | **20/12 cai num domingo → antecipa para sexta, 18/12** | Saldo + INSS + IRRF |
 
 **Primeira parcela:** corresponde a 50% do salário do mês anterior ao pagamento, sem descontos
 de INSS ou IRRF.
@@ -60,27 +67,120 @@ o saldo incidem os descontos previdenciários e fiscais.
 O **INSS do 13º** é calculado separadamente do salário mensal, usando a mesma tabela
 progressiva — mas com base no valor do 13º como remuneração independente.
 
-Tabela INSS progressiva 2026 (empregado):
+Tabela INSS progressiva 2026 (empregado), pela
+[Portaria Interministerial MPS/MF nº 13, de 09/01/2026](https://www.gov.br/inss/pt-br/assuntos/com-reajuste-de-3-9-teto-do-inss-chega-a-r-8-475-55-em-2026):
 
 | Faixa salarial | Alíquota |
 |---|:---:|
-| Até R$ 1.518,00 | 7,5% |
-| De R$ 1.518,01 a R$ 2.793,88 | 9% |
-| De R$ 2.793,89 a R$ 4.190,83 | 12% |
-| De R$ 4.190,84 a R$ 8.157,41 | 14% |
+| Até R$ 1.621,00 | 7,5% |
+| De R$ 1.621,01 a R$ 2.902,84 | 9% |
+| De R$ 2.902,85 a R$ 4.354,27 | 12% |
+| De R$ 4.354,28 a R$ 8.475,55 | 14% |
 
-O desconto é progressivo (cada faixa se aplica apenas ao valor dentro do intervalo).
+O desconto é progressivo (cada faixa se aplica apenas ao valor dentro do intervalo). O teto do
+salário de contribuição em 2026 é R$ 8.475,55, e a contribuição máxima, R$ 988,09.
+
+**Exemplo — 13º bruto de R$ 6.000:**
+
+```
+Faixa 1: 1.621,00 × 7,5%  = R$ 121,58
+Faixa 2: 1.281,84 × 9%    = R$ 115,36  (2.902,84 − 1.621,00)
+Faixa 3: 1.451,43 × 12%   = R$ 174,17  (4.354,27 − 2.902,84)
+Faixa 4: 1.645,73 × 14%   = R$ 230,40  (6.000 − 4.354,27)
+INSS do 13º               = R$ 641,51
+```
 
 ## IRRF sobre o 13º salário
 
-O **IRRF do 13º** também é calculado à parte, usando a tabela mensal de IRRF, mas incidindo
-sobre a base de cálculo do 13º:
+O 13º tem **tributação exclusiva na fonte**: o imposto é calculado isoladamente, sem somar com o
+salário do mês, e não volta no ajuste da declaração anual — entra na ficha de rendimentos
+sujeitos à tributação exclusiva/definitiva. É um fato gerador independente.
+
+A base sai do maior entre as deduções legais e o desconto simplificado:
 
 ```
-Base IRRF 13º = Valor bruto 13º − INSS 13º − deduções por dependentes
+Deduções legais = INSS do 13º + (R$ 189,59 × dependentes) + pensão alimentícia
+Desconto simplificado = R$ 607,20  (25% do limite de isenção)
+
+Base IRRF do 13º = 13º bruto − o MAIOR entre os dois
 ```
 
-O IRRF do 13º **não se acumula** com o salário do mês — é um fato gerador independente.
+## O redutor de 2026: quem recebe até R$ 5.000 de 13º não paga IRRF
+
+Esta é a mudança que a maioria dos cálculos publicados ainda não traz. A
+**Lei 15.270/2025** não criou uma faixa nova de isenção: criou um **redutor** aplicado depois do
+imposto apurado pela tabela progressiva. E a Receita Federal confirmou que ele vale **também
+para o 13º salário**, apesar da tributação exclusiva na fonte.
+
+A entrada da fórmula é o **13º bruto**, não a base já líquida de INSS:
+
+| 13º bruto | Redutor |
+|---|---|
+| Até R$ 5.000,00 | Até R$ 312,89 — na prática, zera o imposto |
+| R$ 5.000,01 a R$ 7.350,00 | R$ 978,62 − (0,133145 × 13º bruto) |
+| Acima de R$ 7.350,00 | Sem redutor |
+
+O redutor é limitado ao imposto apurado: zera o imposto, nunca gera crédito. Em R$ 5.000 a
+fórmula devolve exatamente R$ 312,89, e em R$ 7.350, exatamente zero — a transição é contínua,
+sem degrau.
+
+### Exemplo 1 — 13º de R$ 4.000 (ano inteiro trabalhado, sem dependentes)
+
+| Etapa | Valor |
+|---|---|
+| 13º bruto | R$ 4.000,00 |
+| 1ª parcela (até 30/11) | R$ 2.000,00 |
+| INSS sobre o 13º | R$ 368,60 |
+| Dedução aplicada (desconto simplificado, maior que o INSS) | R$ 607,20 |
+| Base de cálculo do IRRF | R$ 3.392,80 |
+| IRRF pela tabela (15% − R$ 394,16) | R$ 114,76 |
+| Redutor da Lei 15.270/2025 | −R$ 114,76 |
+| **IRRF final** | **R$ 0,00** |
+| **2ª parcela (até 18/12)** | **R$ 1.631,40** |
+| **Total líquido no ano** | **R$ 3.631,40** |
+
+Sem o redutor, esse trabalhador teria R$ 114,76 retidos na segunda parcela. Em 2026, recebe esse
+valor a mais.
+
+### Exemplo 2 — 13º de R$ 6.000 (ano inteiro trabalhado, sem dependentes)
+
+| Etapa | Valor |
+|---|---|
+| 13º bruto | R$ 6.000,00 |
+| 1ª parcela (até 30/11) | R$ 3.000,00 |
+| INSS sobre o 13º (4 faixas) | R$ 641,51 |
+| Base de cálculo do IRRF | R$ 5.358,49 |
+| IRRF pela tabela (27,5% − R$ 908,73) | R$ 564,85 |
+| Redutor: 978,62 − (0,133145 × 6.000) | −R$ 179,75 |
+| **IRRF final** | **R$ 385,10** |
+| **2ª parcela (até 18/12)** | **R$ 1.973,39** |
+| **Total líquido no ano** | **R$ 4.973,39** |
+
+Aqui o INSS de R$ 641,51 é maior que o desconto simplificado, então ele é que entra na base. E
+repare que o redutor sai de R$ 6.000 — o 13º **bruto** —, não dos R$ 5.358,49 de base: usar a
+base por engano daria R$ 265,17 de redutor e um IRRF R$ 85,42 menor do que o devido.
+
+A Receita Federal publicou
+[exemplos oficiais de aplicação da Lei 15.270/2025](https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/exemplos-de-aplicacao-da-lei-15-270-2025)
+com cinco casos resolvidos — os cálculos desta calculadora seguem exatamente essa ordem.
+
+## Quanto cai em cada parcela, por faixa de salário
+
+Quem trabalhou o ano inteiro, sem dependentes, com as tabelas de 2026:
+
+| Salário bruto | 1ª parcela (30/11) | INSS | IRRF | 2ª parcela (18/12) | Total líquido |
+|---|---|---|---|---|---|
+| R$ 1.621,00 | R$ 810,50 | R$ 121,58 | R$ 0,00 | R$ 688,92 | R$ 1.499,42 |
+| R$ 2.500,00 | R$ 1.250,00 | R$ 200,69 | R$ 0,00 | R$ 1.049,31 | R$ 2.299,31 |
+| R$ 3.000,00 | R$ 1.500,00 | R$ 248,60 | R$ 0,00 | R$ 1.251,40 | R$ 2.751,40 |
+| R$ 4.000,00 | R$ 2.000,00 | R$ 368,60 | R$ 0,00 | R$ 1.631,40 | R$ 3.631,40 |
+| R$ 5.000,00 | R$ 2.500,00 | R$ 501,51 | R$ 0,00 | R$ 1.998,49 | R$ 4.498,49 |
+| R$ 6.000,00 | R$ 3.000,00 | R$ 641,51 | R$ 385,10 | R$ 1.973,39 | R$ 4.973,39 |
+| R$ 7.500,00 | R$ 3.750,00 | R$ 851,51 | R$ 919,60 | R$ 1.978,89 | R$ 5.728,89 |
+| R$ 10.000,00 | R$ 5.000,00 | R$ 988,09 | R$ 1.569,55 | R$ 2.442,36 | R$ 7.442,36 |
+
+As cinco primeiras linhas saem com IRRF zero: é o redutor de 2026 em ação. A partir de
+R$ 6.000 de 13º a redução passa a ser parcial, e acima de R$ 7.350 o imposto sai cheio.
 
 ## 13º salário na rescisão
 
@@ -118,6 +218,36 @@ dividido por 12 meses). Além do salário, o empregador também paga
 [FGTS](/calculadora/fgts) de 8% sobre o 13º e parte do INSS patronal.
 
 ## Perguntas frequentes sobre 13º salário
+
+**Quem ganha até R$ 5.000 paga IR sobre o 13º em 2026?**
+
+Não. O redutor da Lei 15.270/2025 zera o imposto quando o 13º bruto fica até R$ 5.000. Entre
+R$ 5.000,01 e R$ 7.350 a redução é parcial e decrescente, e acima de R$ 7.350 o imposto sai
+cheio pela tabela. Atenção a uma confusão comum: o limite de R$ 5.000 se refere ao valor
+**bruto** do 13º, não à base de cálculo já descontada do INSS.
+
+**Por que a segunda parcela vem tão menor que a primeira?**
+
+Porque a primeira sai sem nenhum desconto. Na segunda caem, de uma vez, o INSS e o Imposto de
+Renda calculados sobre o 13º **integral** — não sobre a metade. Quanto maior o salário, maior a
+diferença, porque o IRRF é progressivo e só morde na segunda.
+
+**O 13º entra na declaração do Imposto de Renda?**
+
+Entra apenas para cruzamento de dados, na ficha de rendimentos sujeitos à tributação
+exclusiva/definitiva. Não aumenta nem diminui a restituição, porque o imposto do 13º é
+definitivo na fonte.
+
+**Descontam vale-transporte e plano de saúde do 13º?**
+
+Não. Do 13º saem apenas INSS, Imposto de Renda e pensão alimentícia, quando houver. É por isso
+que a diferença entre o 13º líquido e o salário líquido do mês costuma ser maior do que as
+pessoas esperam.
+
+**Quem está afastado pelo INSS recebe 13º?**
+
+Os primeiros 15 dias de afastamento são de responsabilidade do empregador e contam normalmente.
+A partir daí, o período é pago pelo INSS como abono anual, em pagamento próprio.
 
 **Décimo terceiro salário e 13º salário são a mesma coisa?**
 
@@ -160,3 +290,27 @@ em novembro e janeiro do ano seguinte), conforme o art. 15 da Lei 8.036/1990.
 O empregado pode acionar a Fiscalização do Trabalho ou ingressar com reclamação trabalhista.
 O empregador fica sujeito a multa administrativa e ao pagamento do valor corrigido monetariamente
 com juros de mora.
+
+## Base legal
+
+- **CLT, arts. 457 e 458** — composição da remuneração que entra na base do 13º
+- **Lei 4.090/1962** — institui a gratificação natalina
+- **Lei 4.749/1965** — pagamento em duas parcelas e os prazos de 30/11 e 20/12
+- **Lei 8.036/1990, art. 15** — incidência de FGTS sobre o 13º
+- **Decreto 9.580/2018 (RIR)** — tributação exclusiva na fonte do 13º
+- **Lei 9.250/1995, art. 4º, IX** (incluído pela Lei 14.848/2024) — desconto simplificado mensal
+- **Lei 15.270/2025** — redutor do IRPF, com
+  [exemplos oficiais de cálculo publicados pela Receita Federal](https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/exemplos-de-aplicacao-da-lei-15-270-2025)
+- **Portaria Interministerial MPS/MF nº 13, de 09/01/2026** —
+  [tabela e teto do INSS em 2026](https://www.gov.br/inss/pt-br/assuntos/com-reajuste-de-3-9-teto-do-inss-chega-a-r-8-475-55-em-2026)
+
+## Continue o cálculo
+
+- [Calculadora de salário líquido](/calculadora/salario-liquido) — o mesmo redutor de 2026
+  aplicado ao salário do mês
+- [Calculadora de INSS](/calculadora/inss) — a tabela progressiva de 2026 em detalhe
+- [Calculadora de IRRF](/calculadora/irrf) — o desconto simplificado e o redutor passo a passo
+- [Calculadora de férias](/calculadora/ferias) — a 1ª parcela do 13º pode ser antecipada nelas
+- [Calculadora de rescisão](/calculadora/rescisao-trabalhista) — 13º proporcional na saída
+- [Calculadora de FGTS](/calculadora/fgts) — os 8% que incidem sobre o 13º
+- [Calculadora de hora extra](/calculadora/hora-extra) — a média do ano entra na base do 13º

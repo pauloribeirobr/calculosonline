@@ -16,6 +16,34 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **F64 (13/09) — o motor estava calculando 2025: tabela do INSS de 2025
+  rotulada como 2026, e nem o redutor da Lei 15.270/2025 nem o desconto
+  simplificado de R$ 607,20 existiam no código.** Consequência publicada: 13º de
+  R$ 5.000 saía com R$ 334,85 de IRRF, onde a lei de 2026 cobra **zero** — na
+  página que carrega o único backlink do cluster do 13º, a seis semanas do pico.
+  9 calculadoras mudaram de resultado; 11 MDX e 5 posts regerados pelo motor.
+- **A regra, em uma linha:** deduções legais **ou** R$ 607,20 (o que for maior)
+  → tabela progressiva → redutor sobre o **rendimento bruto**, limitado ao
+  imposto apurado. O redutor máximo (R$ 312,89) foi calibrado sobre o
+  simplificado: implementar um sem o outro deixa R$ 23,78 de imposto num 13º de
+  R$ 5.000 e desmente a manchete da própria página.
+- **Como conferir a fórmula do redutor sem depender de fonte secundária:** em
+  R$ 5.000 ela devolve exatamente o redutor máximo e em R$ 7.350 exatamente
+  zero. Os dois extremos só fecham se a entrada for o bruto — foi assim que a
+  dúvida "bruto ou base após INSS?" ficou respondida, e é o que os testes travam.
+- **Os 5 exemplos oficiais da Receita ("Exemplos de Aplicação da Lei
+  15.270/2025") são teste no repo.** Ressalva ao ler aquela página: ela usa a
+  tabela do **INSS de 2025** (foi publicada em dez/2025), então o INSS dos
+  exemplos não bate com o de 2026 — o que o teste trava é a ordem do cálculo.
+- **Expectativa alinhada com o Paulo, que perguntou se isso traz acesso:** o
+  F64 é **defesa, não aquisição**. Onde há tese de tráfego é **GEO** — em set/2026
+  quase todo conteúdo de 13º publicado ainda está na regra de 2025, e o site já
+  recebe ~17 usuários/mês de IA. Ter a única página com o número certo e a norma
+  nomeada é o que vira fonte citada.
+- **Link para norma oficial só entra verificado.** As duas URLs do `gov.br`
+  responderam 200 e entraram nas páginas; as leis do Planalto ficaram nomeadas
+  **sem hyperlink** (o domínio não respondeu do ambiente de trabalho). Numa
+  página de cálculo, link quebrado para a lei é pior que lei sem link.
 - **O primeiro dia de Bing Webmaster Tools (10/09) já vale mais que o export
   trimestral do GSC: 3 cliques em 1 dia, contra 3 cliques em 3 meses no
   Google.** E as posições são de outro planeta — 4,0 em `calculo de rescisão
@@ -898,6 +926,115 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-09-13 — O F64: a copy do 13º estava melhor que o motor, e o motor estava em 2025
+
+Paulo colou a copy completa da página `/calculadora/decimo-terceiro` e pediu
+"Avalie". A copy vinha com dois pontos marcados para conferir antes de publicar
+(a constante do redutor e qual base entra na fórmula) — e foi puxando esse fio
+que apareceu o problema real, que não era a copy.
+
+**Os dois pontos, respondidos.** A constante certa é `978,62 − (0,133145 ×
+base)`; a outra versão que circulava (`908,73 − 0,133 × base`) é confusão com a
+**parcela a deduzir da última faixa do IRRF**, que é exatamente R$ 908,73 e já
+estava na tabela do projeto. E a base da fórmula é o **rendimento tributável
+bruto**, não a base líquida de INSS — o que a copy tinha errado. Isso não
+depende de interpretação: `978,62 − 0,133145 × 5.000` dá exatamente os R$ 312,89
+do redutor máximo, e `× 7.350` dá exatamente zero. Os dois extremos da faixa só
+fecham com o bruto. **Guardar esse raciocínio:** quando uma fórmula legal tem os
+limites publicados junto, os limites servem de teste da própria fórmula.
+
+**O que a avaliação achou de fato.** O motor não tinha nada disso. A tabela do
+INSS era a de 2025 rotulada como 2026, o redutor da Lei 15.270/2025 não existia
+no código oito meses depois da vigência, e o desconto simplificado de R$ 607,20
+— que é de 2023 — também não. Somados, os três cobravam IRRF onde a lei não
+cobra mais: R$ 334,85 num 13º de R$ 5.000 que hoje é isento. **Na página que
+carrega o único backlink do cluster do 13º**, a seis semanas do pico de nov/dez.
+
+**A inversão de prioridade que isso forçou, e que vale como método.** O pedido
+era avaliar uma copy; o certo era dizer que publicar aquela copy sobre aquele
+motor colocaria no ar uma página afirmando "IR zero até R$ 5.000" logo acima de
+um formulário cobrando IR de quem ganha R$ 3.000. Primeiro o motor, depois os
+números publicados, depois a copy — foi o que o Paulo mandou fazer ("Faça os 3").
+
+**O desconto simplificado é o que faz a isenção existir.** R$ 312,89 é
+precisamente `(5.000 − 607,20) × 22,5% − 675,49`. Sem ele, um 13º de R$ 5.000
+sobra com **R$ 23,78** de imposto e a isenção anunciada pela lei não fecha. Ou
+seja: o redutor foi calibrado sobre o simplificado, e implementar um sem o outro
+produz um erro pequeno o suficiente para passar desapercebido e grande o
+suficiente para desmentir a manchete da própria página.
+
+**Validação contra a fonte primária, não contra a imprensa.** A Receita publicou
+"Exemplos de Aplicação da Lei 15.270/2025" com cinco casos resolvidos; os cinco
+viraram teste parametrizado e batem casa por casa. Um detalhe útil sobre essa
+página: os exemplos usam a tabela do **INSS de 2025**, porque foram publicados
+em dez/2025 — o INSS deles não bate com o de 2026, e é isso que explica a única
+diferença em relação aos nossos números. Por isso o teste passa o INSS
+explícito, em vez de deixar a tabela vigente entrar: o que ele trava é a
+**ordem** do cálculo, que não depende do ano da tabela previdenciária.
+
+**Dois bugs de centavo, ambos já publicados.** `arredondar()` devolvia
+R$ 121,57 para `1.621 × 7,5%` (a tabela oficial publica R$ 121,58) porque
+`121.575 * 100` dá `121.57499...` em ponto flutuante; e o INSS era arredondado
+faixa por faixa, somando quatro erros e fechando o teto em R$ 988,10 contra os
+R$ 988,09 da portaria. O segundo é irmão do F57: a diferença é que lá o erro
+vinha de arredondar antes de multiplicar, e aqui de arredondar cada parcela em
+vez do acumulado. **A invariante do F57 foi preservada de propósito** — as
+linhas exibidas continuam somando exatamente o total exibido, por isso cada
+linha recebe a diferença entre dois acumulados já arredondados, e não o seu
+próprio valor arredondado.
+
+**A pergunta do Paulo no meio da execução: "isso aumenta o acesso? não é um
+nicho mega específico?"** Resposta registrada porque a expectativa importa: os
+passos 1 e 2 **não trazem tráfego**, são defesa — evitam perder quem já chegou
+e proteger a página do backlink. O nicho, porém, é o oposto de específico: o
+redutor passa por 5 das calculadoras de maior volume do site. E a tese de
+aquisição real aqui é **GEO**, não Google: assistentes citam quem tem o número
+certo com a norma nomeada, o site já recebe ~17 usuários/mês de IA, e em
+setembro de 2026 quase todo conteúdo de 13º publicado ainda está na regra de
+2025. Ter a única página com o redutor certo é o que vira fonte citada.
+
+**Segunda pergunta dele, também no meio: linkar as páginas oficiais não ajuda o
+E-E-A-T?** Ajuda, e foi feito — mas só com link verificado. As duas URLs do
+`gov.br` (exemplos da Receita e teto do INSS) responderam 200 e entraram; as
+leis do Planalto **ficaram nomeadas sem hyperlink** porque o domínio não
+respondeu deste ambiente, nem por `curl` nem por fetch. **Regra que fica:** numa
+página de cálculo, link quebrado para a norma é pior que norma sem link — o
+leitor que clica para conferir é exatamente o que a página quer convencer.
+
+**O conteúdo publicado estava mentindo junto.** 11 MDX e 5 posts regerados pelo
+motor (F47/F49). Dois achados de conteúdo que valem por si: a tabela de
+dependentes do post do 13º usava salário de R$ 4.000, faixa em que **declarar
+dependente não muda mais nada** (o redutor zera com ou sem, e o simplificado já
+substituía a dedução) — foi para R$ 8.000; e o hub ainda afirmava aviso prévio e
+multa de 40% na linha de **Aposentadoria**, premissa que o F63 derrubou no motor
+em 10/09. O texto tinha ficado três dias atrás do cálculo, o que é o próprio
+argumento para os números do conteúdo saírem sempre do motor.
+
+**O e2e cobrou uma decisão de SEO que eu não sabia que estava tomando.** Ao
+fechar o interlink do cluster do 13º com as seis calculadoras que a copy pedia,
+`hora-extra` saiu da lista — e `link-interno.spec.ts` (F43) quebrou, porque a
+escultura por impressão exige que `hora-extra` receba mais links internos que
+`juros-compostos`. **O teste do F43 sabia de uma restrição que nenhum documento
+registrava.** `hora-extra` voltou, agora com comentário no registry dizendo por
+quê.
+
+**Ressalvas registradas, para não virarem surpresa depois:**
+
+1. **A rescisão soma saldo de salário e 13º proporcional numa base de IRRF
+   única.** O 13º é tributado exclusivamente na fonte e deveria ser apurado
+   separado; com o redutor isso passou a custar dinheiro visível, porque a base
+   somada pode estourar os R$ 5.000 que, separados, seriam isentos. É
+   preexistente e ficou fora deste escopo.
+2. **O IRPF anual (`irpf`) não recebeu a Lei 15.270.** A lei também criou
+   tributação mínima para altas rendas, que não está implementada.
+3. **Pisos regionais de SP, RS e DF** seguem com o valor da última lei estadual
+   conhecida; os três estão acima do mínimo federal novo, então o fallback não
+   fica ilegal, mas o número exato pede conferência antes de virar conteúdo.
+4. **A calculadora do 13º não tem os campos que a copy previa** (média de horas
+   extras/comissões, adicionais fixos, pensão alimentícia). O MDX foi escrito
+   sem prometê-los. Seria a continuação natural: são os campos que separam o
+   "13º do salário base" do 13º real de quem tem verba variável.
 
 ### 2026-09-10 — As três pendências de painel fechadas, o F61 registrado com atraso e o F62
 

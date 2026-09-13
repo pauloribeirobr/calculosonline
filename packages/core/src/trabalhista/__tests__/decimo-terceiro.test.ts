@@ -64,9 +64,12 @@ describe('calcularDecimoTerceiro', () => {
       if (r.sucesso) {
         expect(r.dados.dados.valorBruto).toBe(3000)
         expect(r.dados.dados.mesesDireito).toBe(12)
-        expect(r.dados.dados.descontoINSS).toBe(253.41)
-        expect(r.dados.dados.descontoIRRF).toBe(23.83)
-        expect(r.dados.dados.valorLiquido).toBe(2722.76)
+        expect(r.dados.dados.descontoINSS).toBe(248.6)
+        // Sem IRRF: base de 3.000 − 607,20 (desconto simplificado) = 2.392,80,
+        // abaixo do limite de isenção. Antes da Lei 15.270/2025 e do
+        // simplificado, este caso retinha R$ 23,83.
+        expect(r.dados.dados.descontoIRRF).toBe(0)
+        expect(r.dados.dados.valorLiquido).toBe(2751.4)
       }
     })
 
@@ -97,14 +100,14 @@ describe('calcularDecimoTerceiro', () => {
       if (r.sucesso) {
         expect(r.dados.dados.mesesDireito).toBe(12)
         expect(r.dados.dados.valorBruto).toBe(3000)
-        expect(r.dados.dados.descontoINSS).toBe(253.41)
-        expect(r.dados.dados.descontoIRRF).toBe(23.83)
-        expect(r.dados.dados.valorLiquido).toBe(1222.76)
+        expect(r.dados.dados.descontoINSS).toBe(248.6)
+        expect(r.dados.dados.descontoIRRF).toBe(0)
+        expect(r.dados.dados.valorLiquido).toBe(1251.4)
       }
     })
 
     it('1ª parcela + 2ª parcela = total, para várias faixas salariais (regressão do bug de mês de referência)', () => {
-      for (const salarioBruto of [1518, 2000, 3000, 5000, 8000, 12000]) {
+      for (const salarioBruto of [1621, 2000, 3000, 5000, 8000, 12000]) {
         const total = calcularDecimoTerceiro({
           salarioBruto,
           mesAdmissao: null,
@@ -151,14 +154,16 @@ describe('calcularDecimoTerceiro', () => {
     })
 
     it('mais dependentes reduz o IRRF (e aumenta o líquido) da 2ª parcela e do total', () => {
+      // Salário acima da faixa do redutor de propósito: até R$ 5.000 de 13º o
+      // imposto já é zero com ou sem dependentes, e o teste não mediria nada.
       const semDependentes = calcularDecimoTerceiro({
-        salarioBruto: 5000,
+        salarioBruto: 8000,
         mesAdmissao: null,
         numeroDependentesIRRF: 0,
         parcela: 'segunda',
       })
       const comDependentes = calcularDecimoTerceiro({
-        salarioBruto: 5000,
+        salarioBruto: 8000,
         mesAdmissao: null,
         numeroDependentesIRRF: 2,
         parcela: 'segunda',
@@ -171,6 +176,81 @@ describe('calcularDecimoTerceiro', () => {
         expect(comDependentes.dados.dados.valorLiquido).toBeGreaterThan(
           semDependentes.dados.dados.valorLiquido,
         )
+      }
+    })
+
+    it('13º de até R$5.000 sai sem IRRF (isenção da Lei 15.270/2025)', () => {
+      // A Receita confirmou que o redutor vale também para o 13º, que é
+      // tributado exclusivamente na fonte. O imposto apurado de R$ 312,89 é
+      // exatamente o redutor máximo — fecha em zero, sem sobra de centavo.
+      const r = calcularDecimoTerceiro({
+        salarioBruto: 5000,
+        mesAdmissao: null,
+        numeroDependentesIRRF: 0,
+        parcela: 'total',
+      })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        expect(r.dados.dados.irrfSemRedutor).toBe(312.89)
+        expect(r.dados.dados.redutorIRRF).toBe(312.89)
+        expect(r.dados.dados.descontoIRRF).toBe(0)
+        expect(r.dados.dados.valorLiquido).toBe(4498.49)
+      }
+    })
+
+    it('13º de R$6.000 tem redução parcial: IRRF R$385,10 e 2ª parcela R$1.973,39', () => {
+      // Redutor = 978,62 − 0,133145 × 6.000 = 179,75, sobre o 13º BRUTO.
+      // Com a base após INSS o redutor daria R$ 265,17 e o IRRF sairia
+      // R$ 85,42 baixo — o erro que a copy da página trazia.
+      const total = calcularDecimoTerceiro({
+        salarioBruto: 6000,
+        mesAdmissao: null,
+        numeroDependentesIRRF: 0,
+        parcela: 'total',
+      })
+      const segunda = calcularDecimoTerceiro({
+        salarioBruto: 6000,
+        mesAdmissao: null,
+        numeroDependentesIRRF: 0,
+        parcela: 'segunda',
+      })
+      expect(total.sucesso && segunda.sucesso).toBe(true)
+      if (total.sucesso && segunda.sucesso) {
+        expect(total.dados.dados.descontoINSS).toBe(641.51)
+        expect(total.dados.dados.irrfSemRedutor).toBe(564.85)
+        expect(total.dados.dados.redutorIRRF).toBe(179.75)
+        expect(total.dados.dados.descontoIRRF).toBe(385.1)
+        expect(segunda.dados.dados.valorLiquido).toBe(1973.39)
+        expect(total.dados.dados.valorLiquido).toBe(4973.39)
+      }
+    })
+
+    it('acima de R$7.350 de 13º não há redutor', () => {
+      const r = calcularDecimoTerceiro({
+        salarioBruto: 7500,
+        mesAdmissao: null,
+        numeroDependentesIRRF: 0,
+        parcela: 'total',
+      })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        expect(r.dados.dados.redutorIRRF).toBe(0)
+        expect(r.dados.dados.descontoIRRF).toBe(r.dados.dados.irrfSemRedutor)
+      }
+    })
+
+    it('1ª parcela não sofre desconto nem redutor (sai limpa)', () => {
+      const r = calcularDecimoTerceiro({
+        salarioBruto: 6000,
+        mesAdmissao: null,
+        numeroDependentesIRRF: 0,
+        parcela: 'primeira',
+      })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        expect(r.dados.dados.valorLiquido).toBe(3000)
+        expect(r.dados.dados.redutorIRRF).toBe(0)
+        expect(r.dados.dados.irrfSemRedutor).toBe(0)
       }
     })
 
@@ -340,16 +420,16 @@ describe('calcularDecimoTerceiro', () => {
 
     it('salário na faixa de isenção do IRRF (13º ≤ R$2.428,80) não gera desconto de IRRF', () => {
       const r = calcularDecimoTerceiro({
-        salarioBruto: 1518,
+        salarioBruto: 1621,
         mesAdmissao: null,
         numeroDependentesIRRF: 0,
         parcela: 'total',
       })
       expect(r.sucesso).toBe(true)
       if (r.sucesso) {
-        expect(r.dados.dados.descontoINSS).toBe(113.85)
+        expect(r.dados.dados.descontoINSS).toBe(121.58)
         expect(r.dados.dados.descontoIRRF).toBe(0)
-        expect(r.dados.dados.valorLiquido).toBe(1404.15)
+        expect(r.dados.dados.valorLiquido).toBe(1499.42)
       }
     })
   })

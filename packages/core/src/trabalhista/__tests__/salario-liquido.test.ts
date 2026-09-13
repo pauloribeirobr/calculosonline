@@ -51,39 +51,67 @@ describe('calcularSalarioLiquido', () => {
     })
   })
 
-  describe('salário mínimo 2026 (R$ 1.518,00)', () => {
-    it('INSS = R$ 113,85 (7,5% sobre o piso) e IRRF isento', () => {
-      const r = calcularSalarioLiquido({ salarioBruto: 1518, numeroDependentesIRRF: 0 })
+  describe('salário mínimo 2026 (R$ 1.621,00)', () => {
+    it('INSS = R$ 121,58 (7,5% sobre o piso) e IRRF isento', () => {
+      const r = calcularSalarioLiquido({ salarioBruto: 1621, numeroDependentesIRRF: 0 })
       expect(r.sucesso).toBe(true)
       if (r.sucesso) {
-        expect(r.dados.dados.descontoINSS).toBe(113.85)
+        expect(r.dados.dados.descontoINSS).toBe(121.58)
         expect(r.dados.dados.descontoIRRF).toBe(0)
       }
     })
   })
 
   describe('salário R$ 3.000,00 sem dependentes', () => {
-    it('INSS progressivo soma 3 faixas (R$253,41)', () => {
+    it('INSS progressivo soma 3 faixas (R$248,60)', () => {
       const r = calcularSalarioLiquido({ salarioBruto: 3000, numeroDependentesIRRF: 0 })
       expect(r.sucesso).toBe(true)
-      if (r.sucesso) expect(r.dados.dados.descontoINSS).toBe(253.41)
+      if (r.sucesso) expect(r.dados.dados.descontoINSS).toBe(248.6)
     })
 
-    it('IRRF é calculado na faixa 7,5%', () => {
+    it('IRRF é zero — base abaixo da isenção pelo desconto simplificado', () => {
+      // 3.000 − 607,20 = 2.392,80, abaixo dos R$ 2.428,80 de isenção.
       const r = calcularSalarioLiquido({ salarioBruto: 3000, numeroDependentesIRRF: 0 })
       expect(r.sucesso).toBe(true)
-      if (r.sucesso) expect(r.dados.dados.descontoIRRF).toBeGreaterThan(0)
+      if (r.sucesso) {
+        expect(r.dados.dados.descontoIRRF).toBe(0)
+        expect(r.dados.dados.usouDescontoSimplificado).toBe(true)
+      }
     })
   })
 
   describe('salário R$ 5.000,00 com 2 dependentes', () => {
-    it('descontos plausíveis e líquido < bruto', () => {
+    it('IRRF zerado pelo redutor da Lei 15.270/2025', () => {
       const r = calcularSalarioLiquido({ salarioBruto: 5000, numeroDependentesIRRF: 2 })
       expect(r.sucesso).toBe(true)
       if (r.sucesso) {
         expect(r.dados.dados.descontoINSS).toBeGreaterThan(0)
-        expect(r.dados.dados.descontoIRRF).toBeGreaterThan(0)
+        expect(r.dados.dados.descontoIRRF).toBe(0)
+        expect(r.dados.dados.redutorIRRF).toBeGreaterThan(0)
         expect(r.dados.dados.salarioLiquido).toBeLessThan(5000)
+      }
+    })
+
+    it('expõe quanto a nova regra economizou (irrfSemRedutor − IRRF final)', () => {
+      const r = calcularSalarioLiquido({ salarioBruto: 5000, numeroDependentesIRRF: 0 })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        const d = r.dados.dados
+        expect(d.irrfSemRedutor).toBe(312.89)
+        expect(d.irrfSemRedutor - d.descontoIRRF).toBe(d.redutorIRRF)
+      }
+    })
+  })
+
+  describe('salário acima da faixa do redutor (R$ 8.000)', () => {
+    it('sem redutor, IRRF cheio pela tabela', () => {
+      const r = calcularSalarioLiquido({ salarioBruto: 8000, numeroDependentesIRRF: 0 })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        expect(r.dados.dados.descontoINSS).toBe(921.51)
+        expect(r.dados.dados.redutorIRRF).toBe(0)
+        expect(r.dados.dados.descontoIRRF).toBe(1037.85)
+        expect(r.dados.dados.usouDescontoSimplificado).toBe(false)
       }
     })
   })
@@ -108,9 +136,11 @@ describe('calcularSalarioLiquido', () => {
 
   describe('outras deduções (itemizadas)', () => {
     it('reduzem a base do IRRF', () => {
-      const sem = calcularSalarioLiquido({ salarioBruto: 5000, numeroDependentesIRRF: 0 })
+      // R$ 8.000 de propósito: abaixo da faixa do redutor o IRRF já é zero nos
+      // dois casos e a comparação não mediria nada.
+      const sem = calcularSalarioLiquido({ salarioBruto: 8000, numeroDependentesIRRF: 0 })
       const com = calcularSalarioLiquido({
-        salarioBruto: 5000,
+        salarioBruto: 8000,
         numeroDependentesIRRF: 0,
         outrasDeducoes: [{ descricao: 'Plano de Saúde', valor: 500 }],
       })

@@ -8,11 +8,11 @@ import { test, expect, type Page } from '@playwright/test'
 // próprio trabalhador (→ sem multa).
 //
 // Com R$ 3.000 de salário, 9.000 de FGTS e 3 anos de casa, a diferença entre
-// as duas leituras é de **R$ 8.617,73** no líquido — todos os valores abaixo
+// as duas leituras é de **R$ 8.621,66** no líquido — todos os valores abaixo
 // saíram de execuções do core (disciplina do F47/F49).
 
-const LIQUIDO_A_PEDIDO = 'R$ 2.692,91'
-const LIQUIDO_DISPENSA = 'R$ 11.310,64'
+const LIQUIDO_A_PEDIDO = 'R$ 2.694,45'
+const LIQUIDO_DISPENSA = 'R$ 11.316,11'
 
 async function calcular(page: Page, motivo: string) {
   await page.goto('/calculadora/rescisao-trabalhista')

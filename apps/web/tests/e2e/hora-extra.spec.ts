@@ -19,8 +19,10 @@ test.describe('calculadora de hora extra — parâmetros novos (F48)', () => {
     await page.getByLabel('Minutos', { exact: true }).fill('30')
     await page.getByRole('button', { name: 'Calcular Hora Extra' }).click()
 
-    // 3000/220 = 13,6363... → hora extra 20,45 → × 1,5h = 30,67
-    await expect(page.getByText('R$ 30,67').first()).toBeVisible()
+    // 3000/220 = 13,6363... → hora extra 20,45 → × 1,5h = 30,675 → R$ 30,68.
+    // Era R$ 30,67 até o fix de arredondamento entrar: `30.675 * 100` dá
+    // 3067.4999... em float e o Math.round derrubava o meio centavo.
+    await expect(page.getByText('R$ 30,68').first()).toBeVisible()
   })
 
   test('o percentual da CCT aparece só quando "Outro" é escolhido', async ({ page }) => {

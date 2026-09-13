@@ -82,7 +82,7 @@ export const blogRegistry: PostBlog[] = [
     resumo:
       'A 2ª parcela vence num domingo em 2026, o que antecipa o pagamento para 18 de dezembro. Veja as datas, a tabela de quanto sobra por faixa de salário e por que a segunda parcela vem bem menor que a primeira.',
     dataPublicacao: '2026-08-30',
-    dataAtualizacao: '2026-08-30',
+    dataAtualizacao: '2026-09-13',
     palavrasChave: [
       'décimo terceiro 2026',
       '13º salário 2026',
@@ -111,7 +111,7 @@ export const blogRegistry: PostBlog[] = [
     resumo:
       'Sair por acordo rende mais que pedir demissão e bem menos que ser mandado embora. Veja a comparação lado a lado, quanto some do FGTS e a divergência do aviso prévio que pode valer R$ 1.500.',
     dataPublicacao: '2026-09-08',
-    dataAtualizacao: '2026-09-08',
+    dataAtualizacao: '2026-09-13',
     palavrasChave: [
       'rescisão por acordo mútuo',
       'cálculo rescisão comum acordo',
@@ -135,7 +135,7 @@ export const blogRegistry: PostBlog[] = [
     resumo:
       'A empresa tem 10 dias corridos para pagar — e uma multa de um salário inteiro se atrasar. Veja o que entra no acerto em cada tipo de saída, com os valores calculados, e o que conferir antes de dar quitação.',
     dataPublicacao: '2026-09-08',
-    dataAtualizacao: '2026-09-08',
+    dataAtualizacao: '2026-09-13',
     palavrasChave: [
       'acerto trabalhista',
       'verbas rescisórias',
@@ -159,7 +159,7 @@ export const blogRegistry: PostBlog[] = [
     resumo:
       'A conta é 1/12 por mês trabalhado — mas o que decide se um mês conta são 15 dias, e um único dia de diferença na admissão chega a valer R$ 227. Tabela por mês, por faixa de salário e as regras de afastamento.',
     dataPublicacao: '2026-09-08',
-    dataAtualizacao: '2026-09-08',
+    dataAtualizacao: '2026-09-13',
     palavrasChave: [
       '13º salário proporcional',
       'calcular 13º proporcional online',
@@ -187,7 +187,7 @@ export const blogRegistry: PostBlog[] = [
     resumo:
       'Rescisão, 13º, férias e FGTS não são quatro contas independentes — a rescisão já embute três delas. Somar os quatro dá R$ 36.681 onde a pessoa recebe R$ 15.558. Veja o que realmente entra e o que é dupla contagem.',
     dataPublicacao: '2026-09-08',
-    dataAtualizacao: '2026-09-08',
+    dataAtualizacao: '2026-09-13',
     palavrasChave: [
       'direitos trabalhistas na demissão',
       'calculadora trabalhista',
