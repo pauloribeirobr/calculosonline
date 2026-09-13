@@ -109,7 +109,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'trabalhista',
     icone: 'rescisao',
     fonteJuridica: 'CLT arts. 477–487 | Lei 12.506/2011 | Lei 8.036/1990',
-    dataAtualizacao: '2026-01-01',
+    dataAtualizacao: '2026-09-13',
     palavrasChave: [
       'rescisão trabalhista',
       'calcular rescisão',
@@ -137,7 +137,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'trabalhista',
     icone: 'ferias',
     fonteJuridica: 'CLT arts. 129–153 | CF/88 art. 7º, XVII',
-    dataAtualizacao: '2026-01-01',
+    dataAtualizacao: '2026-09-13',
     palavrasChave: [
       'calcular férias',
       'férias proporcional',
@@ -161,7 +161,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'trabalhista',
     icone: 'decimoTerceiro',
     fonteJuridica: 'Lei 4.090/1962 | Lei 4.749/1965',
-    dataAtualizacao: '2026-01-01',
+    dataAtualizacao: '2026-09-13',
     palavrasChave: [
       'décimo terceiro salário',
       'calculadora décimo terceiro',
@@ -170,7 +170,17 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'calcular 13 salario',
       'gratificação natalina',
     ],
-    relacionadas: ['ferias', 'fgts', 'hora-extra', 'rescisao-trabalhista'],
+    relacionadas: [
+      'salario-liquido',
+      'inss',
+      'irrf',
+      'ferias',
+      'rescisao-trabalhista',
+      'fgts',
+      // `hora-extra` fecha o cluster e sustenta a escultura de link do F43:
+      // ela precisa receber mais links internos que `juros-compostos`.
+      'hora-extra',
+    ],
   },
   {
     slug: 'hora-extra',
@@ -182,9 +192,9 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'trabalhista',
     icone: 'horaExtra',
     fonteJuridica: 'CLT art. 59 | CF/88 art. 7º, XVI',
-    dataAtualizacao: '2026-01-01',
+    dataAtualizacao: '2026-09-13',
     palavrasChave: ['hora extra', 'calcular hora extra', 'adicional hora extra'],
-    relacionadas: ['salario-liquido', 'fgts', 'ferias', 'rescisao-trabalhista'],
+    relacionadas: ['salario-liquido', 'decimo-terceiro', 'fgts', 'ferias', 'rescisao-trabalhista'],
   },
   {
     slug: 'fgts',
@@ -196,7 +206,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'trabalhista',
     icone: 'fgts',
     fonteJuridica: 'Lei 8.036/1990 | Lei 13.932/2019',
-    dataAtualizacao: '2026-01-01',
+    dataAtualizacao: '2026-09-13',
     palavrasChave: ['FGTS', 'multa FGTS', 'saque aniversário FGTS', 'calcular FGTS'],
     relacionadas: ['rescisao-trabalhista', 'hora-extra', 'ferias', 'decimo-terceiro'],
   },
@@ -210,7 +220,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'trabalhista',
     icone: 'salarioLiquido',
     fonteJuridica: 'Decreto 11.936/2024 (INSS) | RIR/2018 (IRRF)',
-    dataAtualizacao: '2026-01-01',
+    dataAtualizacao: '2026-09-13',
     palavrasChave: [
       'salário líquido',
       'calcular salário líquido',
@@ -219,7 +229,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'como calcular salário líquido',
       'desconto INSS IRRF',
     ],
-    relacionadas: ['irrf', 'hora-extra', 'fgts', 'rescisao-trabalhista'],
+    relacionadas: ['irrf', 'decimo-terceiro', 'hora-extra', 'fgts', 'rescisao-trabalhista'],
     featured: true,
   },
 
@@ -234,7 +244,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'impostos',
     icone: 'inss',
     fonteJuridica: 'Decreto 11.936/2024',
-    dataAtualizacao: '2026-01-01',
+    dataAtualizacao: '2026-09-13',
     palavrasChave: ['calcular INSS', 'tabela INSS 2026', 'contribuição INSS'],
     dataset: {
       nome: 'Tabela progressiva de contribuição do INSS 2026',
@@ -252,7 +262,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'calcular contribuição do INSS',
       'tabela do INSS 2026',
     ],
-    relacionadas: ['salario-liquido', 'irrf', 'fgts', 'das-mei'],
+    relacionadas: ['salario-liquido', 'irrf', 'decimo-terceiro', 'fgts', 'das-mei'],
   },
   {
     slug: 'irrf',
@@ -264,7 +274,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'impostos',
     icone: 'irrf',
     fonteJuridica: 'RIR/2018 (Decreto 9.580/2018) | Lei 11.482/2007',
-    dataAtualizacao: '2026-01-01',
+    dataAtualizacao: '2026-09-13',
     palavrasChave: ['IRRF', 'imposto de renda retido', 'tabela IRRF 2026'],
     dataset: {
       nome: 'Tabela progressiva mensal do IRRF 2026',
@@ -333,7 +343,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'impostos',
     icone: 'dasMei',
     fonteJuridica: 'LC 123/2006 art. 18-A | Resolução CGSN 140/2018',
-    dataAtualizacao: '2026-01-01',
+    dataAtualizacao: '2026-09-13',
     palavrasChave: ['DAS MEI', 'calcular MEI', 'imposto MEI', 'boleto MEI 2026'],
     dataset: {
       nome: 'Valores do DAS MEI 2026',

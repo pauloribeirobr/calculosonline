@@ -15,7 +15,7 @@
  */
 
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
-import { calcularINSSProgressivo, getTabelasVigentes } from '../tabelas'
+import { calcularINSSProgressivo, calcularIRRFMensal, getTabelasVigentes } from '../tabelas'
 import { arredondar, formatarBRL, validarSalario } from '../utils'
 
 /**
@@ -64,6 +64,12 @@ export interface IRRFResultado {
   origemRendimento: OrigemRendimentoIRRF
   /** Soma das despesas do aluguel abatidas. 0 quando a origem é salário. */
   despesasDedutiveis: number
+  /** Imposto pela tabela progressiva, antes do redutor da Lei 15.270/2025. */
+  irrfSemRedutor: number
+  /** Redutor da Lei 15.270/2025 aplicado (R$). */
+  redutorIRRF: number
+  /** true quando o desconto simplificado de R$ 607,20 venceu as deduções legais. */
+  usouDescontoSimplificado: boolean
 }
 
 export function calcularIRRF(params: IRRFParams): ResultadoOuErro<IRRFResultado> {
@@ -113,19 +119,30 @@ export function calcularIRRF(params: IRRFParams): ResultadoOuErro<IRRFResultado>
   const pensao = params.pensaoAlimenticia ?? 0
   const outras = params.outrasDeducoes ?? 0
 
-  const baseCalculo = arredondar(
-    Math.max(
-      0,
-      params.salarioBruto - inss - despesasDedutiveis - deducaoDependentes - pensao - outras,
-    ),
+  // As despesas do aluguel não são "dedução" do art. 4º — são exclusão do
+  // rendimento bruto. Por isso saem antes, e o que sobra é o rendimento
+  // tributável que serve de base tanto à tabela quanto ao redutor.
+  const rendimentoTributavel = arredondar(
+    Math.max(0, params.salarioBruto - despesasDedutiveis),
   )
 
-  // Última faixa tem ate=null (Infinity), portanto find sempre encontra alguma faixa.
-  const faixa = tabelas.irrf.find(
-    (f) => baseCalculo <= (f.ate ?? Number.POSITIVE_INFINITY),
-  )!
-  const irrfBruto = arredondar(baseCalculo * faixa.aliquota - faixa.deducao)
-  const irrf = Math.max(0, irrfBruto)
+  const {
+    valorIRRF: irrf,
+    baseCalculo,
+    aliquota,
+    deducao: deducaoParcela,
+    deducaoAplicada,
+    usouDescontoSimplificado,
+    impostoApurado,
+    redutor,
+  } = calcularIRRFMensal({
+    salarioBruto: rendimentoTributavel,
+    inss,
+    numeroDependentes: params.numeroDependentes,
+    outrasDeducoes: arredondar(pensao + outras),
+    tabelas,
+  })
+
   const isento = irrf === 0
 
   const detalhamento: ItemDetalhamento[] = [
@@ -134,7 +151,9 @@ export function calcularIRRF(params: IRRFParams): ResultadoOuErro<IRRFResultado>
       valor: params.salarioBruto,
       tipo: 'neutro',
     },
-    ...(ehAluguel ? [] : [{ descricao: '(-) INSS', valor: inss, tipo: 'debito' as const }]),
+    ...(ehAluguel || usouDescontoSimplificado
+      ? []
+      : [{ descricao: '(-) INSS', valor: inss, tipo: 'debito' as const }]),
     ...(ehAluguel && (despesas.iptu ?? 0) > 0
       ? [{ descricao: '(-) IPTU', valor: despesas.iptu!, tipo: 'debito' as const }]
       : []),
@@ -150,34 +169,64 @@ export function calcularIRRF(params: IRRFParams): ResultadoOuErro<IRRFResultado>
           },
         ]
       : []),
-    ...(deducaoDependentes > 0
+    // Com despesas abatidas, o rendimento tributável deixa de ser o bruto —
+    // sem esta linha a base de cálculo apareceria sem mostrar de onde veio.
+    ...(despesasDedutiveis > 0
       ? [
           {
-            descricao: `(-) Dependentes (${params.numeroDependentes} × ${formatarBRL(
-              tabelas.deducaoDependenteIRRF,
-            )})`,
-            valor: deducaoDependentes,
-            tipo: 'debito' as const,
+            descricao: 'Rendimento tributável',
+            valor: rendimentoTributavel,
+            tipo: 'neutro' as const,
           },
         ]
       : []),
-    ...(pensao > 0
-      ? [{ descricao: '(-) Pensão Alimentícia', valor: pensao, tipo: 'debito' as const }]
-      : []),
-    ...(outras > 0
-      ? [{ descricao: '(-) Outras Deduções', valor: outras, tipo: 'debito' as const }]
-      : []),
-    { descricao: 'Base de Cálculo IRRF', valor: baseCalculo, tipo: 'neutro' },
-    ...(faixa.aliquota > 0
+    ...(usouDescontoSimplificado
       ? [
           {
-            descricao: `Alíquota ${(faixa.aliquota * 100).toFixed(1)}%`,
-            valor: arredondar(baseCalculo * faixa.aliquota),
+            descricao: '(-) Desconto simplificado (mais vantajoso que as deduções legais)',
+            valor: deducaoAplicada,
+            tipo: 'debito' as const,
+          },
+        ]
+      : [
+          ...(deducaoDependentes > 0
+            ? [
+                {
+                  descricao: `(-) Dependentes (${params.numeroDependentes} × ${formatarBRL(
+                    tabelas.deducaoDependenteIRRF,
+                  )})`,
+                  valor: deducaoDependentes,
+                  tipo: 'debito' as const,
+                },
+              ]
+            : []),
+          ...(pensao > 0
+            ? [{ descricao: '(-) Pensão Alimentícia', valor: pensao, tipo: 'debito' as const }]
+            : []),
+          ...(outras > 0
+            ? [{ descricao: '(-) Outras Deduções', valor: outras, tipo: 'debito' as const }]
+            : []),
+        ]),
+    { descricao: 'Base de Cálculo IRRF', valor: baseCalculo, tipo: 'neutro' },
+    ...(aliquota > 0
+      ? [
+          {
+            descricao: `Alíquota ${(aliquota * 100).toFixed(1)}%`,
+            valor: arredondar(baseCalculo * aliquota),
             tipo: 'debito' as const,
           },
           {
             descricao: '(-) Parcela a Deduzir',
-            valor: faixa.deducao,
+            valor: deducaoParcela,
+            tipo: 'credito' as const,
+          },
+        ]
+      : []),
+    ...(redutor > 0
+      ? [
+          {
+            descricao: '(-) Redutor da Lei 15.270/2025',
+            valor: redutor,
             tipo: 'credito' as const,
           },
         ]
@@ -195,21 +244,24 @@ export function calcularIRRF(params: IRRFParams): ResultadoOuErro<IRRFResultado>
       resultado: irrf,
       detalhamento,
       baseCalculo: ehAluguel
-        ? 'Aluguel − IPTU − condomínio − taxa de administração − dependentes − pensão − outras deduções'
-        : 'Bruto − INSS − Dependentes − pensão − outras deduções',
+        ? 'Aluguel − IPTU − condomínio − taxa de administração − (deduções legais ou desconto simplificado) − redutor'
+        : 'Bruto − (INSS + dependentes + pensão + outras deduções, ou desconto simplificado) − redutor',
       fonteJuridica: ehAluguel
-        ? 'RIR/2018 (Decreto 9.580/2018) arts. 42 e 776 | IN RFB 1.500 art. 31'
-        : 'RIR/2018 (Decreto 9.580/2018) | Lei 11.482/2007',
+        ? 'RIR/2018 (Decreto 9.580/2018) arts. 42 e 776 | IN RFB 1.500 art. 31 | Lei 15.270/2025'
+        : 'RIR/2018 (Decreto 9.580/2018) | Lei 11.482/2007 | Lei 15.270/2025',
       dataReferencia: tabelas.vigenciaInicio,
       dados: {
         baseCalculo,
-        aliquota: faixa.aliquota,
-        deducaoParcela: faixa.deducao,
+        aliquota,
+        deducaoParcela,
         deducaoDependentes,
         irrf,
         isento,
         origemRendimento,
         despesasDedutiveis,
+        irrfSemRedutor: impostoApurado,
+        redutorIRRF: redutor,
+        usouDescontoSimplificado,
       },
     },
   }

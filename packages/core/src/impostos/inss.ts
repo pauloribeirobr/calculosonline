@@ -2,14 +2,18 @@
  * Cálculo standalone da contribuição previdenciária ao INSS.
  *
  * Cobre quatro categorias:
- *  - Empregado (CLT): tabela progressiva (Decreto 11.936/2024)
+ *  - Empregado (CLT): tabela progressiva (Portaria MPS/MF nº 13/2026)
  *  - Autônomo / Contribuinte Individual: 20% sobre salário-base (Lei 8.212/1991 art. 21)
  *  - Facultativo: mesma alíquota de 20%
  *  - MEI: 5% do salário mínimo (LC 123/2006)
  */
 
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
-import { calcularINSSProgressivo, getTabelasVigentes } from '../tabelas'
+import {
+  type TabelasLegislativas,
+  calcularINSSProgressivo,
+  getTabelasVigentes,
+} from '../tabelas'
 import { arredondar, formatarBRL, validarSalario } from '../utils'
 
 export type CategoriaINSS = 'empregado' | 'autonomo' | 'facultativo' | 'mei'
@@ -27,8 +31,17 @@ export interface INSSResultado {
   teto: boolean
 }
 
-/** Teto da última faixa do INSS em 2026 (Portaria Interministerial MPS/MF nº 2/2024). */
-export const TETO_INSS_2026 = 8157.41
+/**
+ * Teto do salário de contribuição, lido da última faixa da tabela vigente.
+ *
+ * Era uma constante hardcoded (R$ 8.157,41) que duplicava a tabela e ficou em
+ * 2025 quando a Portaria MPS/MF nº 13/2026 levou o teto a R$ 8.475,55. Derivar
+ * da tabela deixa um único lugar para atualizar por ano.
+ */
+export function getTetoINSS(tabelas: TabelasLegislativas = getTabelasVigentes()): number {
+  const ultima = tabelas.inss[tabelas.inss.length - 1]
+  return ultima?.ate ?? Number.POSITIVE_INFINITY
+}
 
 export function calcularINSS(params: INSSParams): ResultadoOuErro<INSSResultado> {
   const erros: ErroValidacao[] = []
@@ -53,15 +66,15 @@ export function calcularINSS(params: INSSParams): ResultadoOuErro<INSSResultado>
     formula = `5% × ${formatarBRL(sm)} (SM ${tabelas.vigenciaInicio.slice(0, 4)})`
   } else if (params.categoria === 'empregado') {
     salarioBase = params.salarioBruto
-    const baseLimitada = Math.min(params.salarioBruto, TETO_INSS_2026)
+    const baseLimitada = Math.min(params.salarioBruto, getTetoINSS(tabelas))
     const { valorINSS } = calcularINSSProgressivo(baseLimitada)
     contribuicao = valorINSS
-    fonteJuridica = 'Decreto 11.936/2024'
+    fonteJuridica = 'Portaria Interministerial MPS/MF nº 13/2026'
     formula = 'Tabela progressiva por faixa salarial (cap no teto)'
   } else {
     // autonomo / facultativo
     salarioBase = params.salarioBruto
-    const base = Math.min(params.salarioBruto, TETO_INSS_2026)
+    const base = Math.min(params.salarioBruto, getTetoINSS(tabelas))
     contribuicao = arredondar(base * 0.2)
     fonteJuridica = 'Lei 8.212/1991 art. 21 | IN RFB 2.110/2022'
     formula = `20% × ${formatarBRL(base)}`
@@ -72,7 +85,7 @@ export function calcularINSS(params: INSSParams): ResultadoOuErro<INSSResultado>
       ? 0.05
       : arredondar((contribuicao / params.salarioBruto) * 10000) / 10000
 
-  const teto = params.categoria !== 'mei' && params.salarioBruto >= TETO_INSS_2026
+  const teto = params.categoria !== 'mei' && params.salarioBruto >= getTetoINSS(tabelas)
 
   const detalhamento: ItemDetalhamento[] = [
     { descricao: 'Salário Base', valor: salarioBase, tipo: 'neutro' },

@@ -54,6 +54,12 @@ export interface SalarioLiquidoResultado {
   aliquotaEfetivaINSS: number
   /** Alíquota efetiva real do IRRF sobre o salário bruto */
   aliquotaEfetivaIRRF: number
+  /** IRRF que seria retido sem o redutor da Lei 15.270/2025. */
+  irrfSemRedutor: number
+  /** Redutor da Lei 15.270/2025 aplicado (R$). */
+  redutorIRRF: number
+  /** true quando o desconto simplificado de R$ 607,20 venceu as deduções legais. */
+  usouDescontoSimplificado: boolean
 }
 
 export function calcularSalarioLiquido(
@@ -89,6 +95,9 @@ export function calcularSalarioLiquido(
     valorIRRF,
     baseCalculo: baseIRRF,
     aliquota,
+    impostoApurado,
+    redutor,
+    usouDescontoSimplificado,
   } = calcularIRRFMensal({
     salarioBruto: params.salarioBruto,
     inss: valorINSS,
@@ -111,8 +120,21 @@ export function calcularSalarioLiquido(
       tipo: 'debito',
       formula: `${formatarBRL(d.base)} × ${(d.aliquota * 100).toFixed(1)}%`,
     })),
+    ...(redutor > 0
+      ? [
+          {
+            descricao: 'Redutor da Lei 15.270/2025',
+            valor: redutor,
+            tipo: 'credito' as const,
+            formula:
+              valorIRRF === 0
+                ? `Zera o IRRF de ${formatarBRL(impostoApurado)}`
+                : `${formatarBRL(impostoApurado)} − ${formatarBRL(redutor)}`,
+          },
+        ]
+      : []),
     {
-      descricao: 'IRRF',
+      descricao: valorIRRF === 0 && redutor > 0 ? 'IRRF (zerado pelo redutor)' : 'IRRF',
       valor: valorIRRF,
       tipo: 'debito',
       formula:
@@ -170,7 +192,7 @@ export function calcularSalarioLiquido(
       detalhamento,
       baseCalculo: `Salário Bruto (${formatarBRL(params.salarioBruto)}) − INSS − IRRF − descontos`,
       fonteJuridica:
-        'Decreto 11.936/2024 (INSS) | RIR/2018 (IRRF) | Lei 7.418/1985 (vale-transporte)',
+        'Portaria MPS/MF 13/2026 (INSS) | RIR/2018 e Lei 15.270/2025 (IRRF) | Lei 7.418/1985 (vale-transporte)',
       dataReferencia: getTabelasVigentes().vigenciaInicio,
       dados: {
         salarioBruto: params.salarioBruto,
@@ -185,6 +207,9 @@ export function calcularSalarioLiquido(
         totalComAdicionais,
         aliquotaEfetivaINSS: arredondar((valorINSS / params.salarioBruto) * 10000) / 10000,
         aliquotaEfetivaIRRF: arredondar((valorIRRF / params.salarioBruto) * 10000) / 10000,
+        irrfSemRedutor: impostoApurado,
+        redutorIRRF: redutor,
+        usouDescontoSimplificado,
       },
     },
   }

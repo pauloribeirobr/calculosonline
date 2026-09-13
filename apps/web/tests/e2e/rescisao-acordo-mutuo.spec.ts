@@ -40,8 +40,8 @@ test.describe('rescisão por acordo mútuo — as duas leituras do aviso prévio
     // R$ 6.553,74 é o líquido pela leitura praticada; R$ 7.003,74 é o da
     // alternativa — os dois aparecem, mas o resultado principal é o primeiro.
     const resultado = page.getByRole('region', { name: 'Resultado do cálculo' })
-    await expect(resultado).toContainText('R$ 6.553,74')
-    await expect(detalhamento).toContainText('R$ 7.003,74')
+    await expect(resultado).toContainText('R$ 6.555,28')
+    await expect(detalhamento).toContainText('R$ 7.005,28')
   })
 
   test('até 1 ano de casa as duas leituras coincidem e a alternativa some', async ({ page }) => {

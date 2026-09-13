@@ -28,30 +28,41 @@ intervalo):
 
 | Faixa | Alíquota |
 |---|:---:|
-| Até R$ 1.518,00 | 7,5% |
-| R$ 1.518,01 a R$ 2.793,88 | 9% |
-| R$ 2.793,89 a R$ 4.190,83 | 12% |
-| R$ 4.190,84 a R$ 8.157,41 | 14% |
+| Até R$ 1.621,00 | 7,5% |
+| R$ 1.621,01 a R$ 2.902,84 | 9% |
+| R$ 2.902,85 a R$ 4.354,27 | 12% |
+| R$ 4.354,28 a R$ 8.475,55 | 14% |
 
-O teto do INSS é **R$ 8.157,41** — salários acima disso não pagam INSS adicional.
+O teto do INSS é **R$ 8.475,55** — salários acima disso não pagam INSS adicional, e a
+contribuição máxima é de R$ 988,09.
 
 **Exemplo:** salário de R$ 5.000
 
 ```
-Faixa 1: 1.518,00 × 7,5%  = R$ 113,85
-Faixa 2: 1.275,88 × 9%    = R$ 114,83  (2.793,88 − 1.518,00)
-Faixa 3: 1.396,94 × 12%   = R$ 167,63  (4.190,83 − 2.793,89)
-Faixa 4:   809,17 × 14%   = R$ 113,28  (5.000 − 4.190,83)
-INSS total = R$ 509,59
+Faixa 1: 1.621,00 × 7,5%  = R$ 121,58
+Faixa 2: 1.281,84 × 9%    = R$ 115,36  (2.902,84 − 1.621,00)
+Faixa 3: 1.451,43 × 12%   = R$ 174,17  (4.354,27 − 2.902,84)
+Faixa 4:   645,73 × 14%   = R$  90,40  (5.000 − 4.354,27)
+INSS total = R$ 501,51
 ```
 
-**Alíquota efetiva:** 509,59 ÷ 5.000 = **10,19%** (bem menor que a alíquota nominal de 14%).
+**Alíquota efetiva:** 501,51 ÷ 5.000 = **10,03%** (bem menor que a alíquota nominal de 14%).
 
 ### 2. Calcular a base do IRRF
 
+Aqui existem **dois caminhos**, e a folha é obrigada a usar o que for mais vantajoso para o
+trabalhador:
+
 ```
-Base IRRF = Salário bruto − INSS − Dedução por dependente (R$ 189,59/dep.)
+Deduções legais  = INSS + (R$ 189,59 × dependentes) + pensão + previdência privada
+Desconto simplificado = R$ 607,20  (25% do limite de isenção)
+
+Base IRRF = Salário bruto − o maior dos dois
 ```
+
+O desconto simplificado (art. 4º, IX da Lei 9.250/1995) substitui **todas** as deduções legais
+de uma vez. Para quem ganha até cerca de R$ 5.750 sem dependentes, ele vence — o INSS sozinho
+ainda não chega a R$ 607,20.
 
 ### 3. Aplicar a tabela do IRRF 2026
 
@@ -63,18 +74,38 @@ Base IRRF = Salário bruto − INSS − Dedução por dependente (R$ 189,59/dep.
 | R$ 3.751,06 a R$ 4.664,68 | 22,5% | R$ 675,49 |
 | Acima de R$ 4.664,68 | 27,5% | R$ 908,73 |
 
+### 4. Aplicar o redutor da Lei 15.270/2025
+
+Desde 1º de janeiro de 2026, sobre o imposto apurado na tabela ainda incide um **redutor**, que
+depende do rendimento **bruto** do mês:
+
+| Rendimento bruto no mês | Redutor |
+|---|---|
+| Até R$ 5.000,00 | Até R$ 312,89 — na prática, zera o imposto |
+| R$ 5.000,01 a R$ 7.350,00 | R$ 978,62 − (0,133145 × rendimento) |
+| Acima de R$ 7.350,00 | Sem redutor |
+
+O redutor nunca passa do imposto apurado: ele zera o imposto, não gera crédito nem restituição
+extra.
+
 **Exemplo** continuando com salário de R$ 5.000 e sem dependentes:
 
 ```
-Base IRRF = 5.000 − 509,59 = R$ 4.490,41
-IRRF = 4.490,41 × 22,5% − 675,49 = R$ 1.010,34 − 675,49 = R$ 334,85
+INSS = R$ 501,51  →  menor que o desconto simplificado de R$ 607,20
+Base IRRF = 5.000 − 607,20 = R$ 4.392,80
+IRRF pela tabela = 4.392,80 × 22,5% − 675,49 = R$ 312,89
+Redutor (bruto de R$ 5.000) = R$ 312,89, limitado ao imposto
+IRRF final = R$ 0,00
 ```
 
-### 4. Calcular o salário líquido
+Os R$ 312,89 de imposto e os R$ 312,89 de redutor coincidirem não é acaso: o redutor máximo foi
+calibrado exatamente sobre esse ponto, e é o que faz a isenção até R$ 5.000 fechar em zero.
+
+### 5. Calcular o salário líquido
 
 ```
 Salário líquido = Salário bruto − INSS − IRRF − outros descontos
-Salário líquido = 5.000 − 509,59 − 334,85 = R$ 4.155,56
+Salário líquido = 5.000 − 501,51 − 0,00 = R$ 4.498,49
 ```
 
 ## Vale-transporte: desconto máximo de 6%
@@ -107,16 +138,25 @@ cálculo do IRRF em **R$ 189,59/mês**:
 Base IRRF c/ dependentes = Salário bruto − INSS − (189,59 × nº dependentes)
 ```
 
+Com uma ressalva que vale desde 2024: os dependentes só mudam a conta quando as deduções legais
+somadas passam dos R$ 607,20 do desconto simplificado. Até aí, a base é a mesma com ou sem
+dependentes — e, na faixa até R$ 5.000, o imposto já é zero de qualquer forma.
+
 ## Simulação comparativa por faixa salarial
 
 | Salário bruto | INSS | IRRF | Salário líquido | Alíquota efetiva total |
 |---|---|---|---|:---:|
-| R$ 1.518 | R$ 113,85 | R$ 0,00 | R$ 1.404,15 | 7,5% |
-| R$ 2.500 | R$ 194,68 | R$ 0,00 | R$ 2.305,32 | 7,8% |
-| R$ 3.500 | R$ 335,81 | R$ 9,92 | R$ 3.154,27 | 9,9% |
-| R$ 5.000 | R$ 509,59 | R$ 334,85 | R$ 4.155,56 | 16,9% |
-| R$ 8.000 | R$ 803,20 | R$ 900,97 | R$ 6.295,83 | 21,3% |
-| R$ 10.000 | R$ 876,97 | R$ 1.422,83 | R$ 7.700,20 | 23,0% |
+| R$ 1.621 | R$ 121,58 | R$ 0,00 | R$ 1.499,42 | 7,5% |
+| R$ 2.500 | R$ 200,69 | R$ 0,00 | R$ 2.299,31 | 8,0% |
+| R$ 3.500 | R$ 308,60 | R$ 0,00 | R$ 3.191,40 | 8,8% |
+| R$ 5.000 | R$ 501,51 | R$ 0,00 | R$ 4.498,49 | 10,0% |
+| R$ 8.000 | R$ 921,51 | R$ 1.037,85 | R$ 6.040,64 | 24,5% |
+| R$ 10.000 | R$ 988,09 | R$ 1.569,55 | R$ 7.442,36 | 25,6% |
+
+Repare nas quatro primeiras linhas: **o IRRF é zero até R$ 5.000 de salário**. Não é erro da
+tabela — é o redutor da Lei 15.270/2025, que desde 1º de janeiro de 2026 zera o imposto nessa
+faixa. Entre R$ 5.000,01 e R$ 7.350 a redução é parcial e decrescente; acima de R$ 7.350 o
+imposto sai cheio pela tabela.
 
 ## Perguntas frequentes sobre salário líquido
 

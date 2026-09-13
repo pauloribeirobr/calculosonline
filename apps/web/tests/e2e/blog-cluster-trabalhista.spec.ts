@@ -144,9 +144,9 @@ test.describe('cluster trabalhista — os números vêm do motor', () => {
       ACORDO,
       [
         // salário 3.000, contrato 01/03/2021 → 30/09/2026, acordo mútuo
-        'R$ 11.525,36', // líquido do acordo
-        'R$ 18.230,57', // líquido da demissão sem justa causa
-        'R$ 6.320,15', // líquido do pedido de demissão
+        'R$ 11.787,35', // líquido do acordo
+        'R$ 18.449,66', // líquido da demissão sem justa causa
+        'R$ 6.623,96', // líquido do pedido de demissão
         'R$ 3.216,00', // multa de 20% do FGTS
         'R$ 12.549,33', // total bruto
         // F40 — as duas leituras do aviso prévio, 10 anos de casa
@@ -158,9 +158,9 @@ test.describe('cluster trabalhista — os números vêm do motor', () => {
       ACERTO,
       [
         // salário 2.500, 10/05/2023 → 15/09/2026, 1 férias vencida
-        'R$ 14.583,93', // líquido sem justa causa
-        'R$ 10.550,31', // líquido acordo mútuo
-        'R$ 7.266,70', // líquido pedido de demissão
+        'R$ 14.678,07', // líquido sem justa causa
+        'R$ 10.616,95', // líquido acordo mútuo
+        'R$ 7.305,84', // líquido pedido de demissão
         'R$ 4.489,58', // líquido justa causa — não é zero
         'R$ 3.250,00', // aviso proporcional de 39 dias
       ],
@@ -169,23 +169,24 @@ test.describe('cluster trabalhista — os números vêm do motor', () => {
       PROPORCIONAL,
       [
         // degrau da regra dos 15 dias, salário 3.000, junho
-        'R$ 1.615,27',
+        'R$ 1.616,81',
         'R$ 1.387,50',
         // tabela por mês de admissão, salário 2.500
-        'R$ 2.297,77',
+        'R$ 2.299,31',
         'R$ 1.156,25',
         'R$ 192,71',
-        // 6/12 com salário 7.500 — a única faixa em que o IRRF aparece
-        'R$ 3.289,76',
+        // 6/12 com salário 12.000 — a única faixa em que o IRRF ainda aparece,
+        // porque o redutor de 2026 zera todo 13º de até R$ 5.000
+        'R$ 4.973,39',
       ],
     ],
     [
       DIREITOS,
       [
         // panorama do F58: salário 3.000, 5 anos
-        'R$ 15.558,57', // o que a pessoa recebe de fato
-        'R$ 36.681,33', // a soma ingênua, que não existe
-        'R$ 2.722,76',
+        'R$ 15.777,66', // o que a pessoa recebe de fato
+        'R$ 36.929,06', // a soma ingênua, que não existe
+        'R$ 2.751,40',
         'R$ 4.000,00',
         'R$ 14.400,00',
       ],
@@ -211,7 +212,7 @@ test.describe('cluster trabalhista — os números vêm do motor', () => {
     const artigo = page.locator('article')
 
     const aviso = artigo.getByRole('heading', { name: /O erro de somar/i }).first()
-    const soma = artigo.getByText('R$ 36.681,33').first()
+    const soma = artigo.getByText('R$ 36.929,06').first()
     await expect(aviso).toBeVisible()
     await expect(soma).toBeVisible()
 

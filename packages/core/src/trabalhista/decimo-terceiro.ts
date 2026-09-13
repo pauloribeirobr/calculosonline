@@ -39,6 +39,17 @@ export interface DecimoTerceiroResultado {
   descontoIRRF: number
   valorLiquido: number
   parcela: ParcelaDecimoTerceiro
+  /**
+   * IRRF que seria retido sem o redutor da Lei 15.270/2025 — o imposto apurado
+   * pela tabela progressiva. A diferença em relação a `descontoIRRF` é
+   * exatamente `redutorIRRF`, e é o que a página do 13º mostra como ganho de
+   * 2026.
+   */
+  irrfSemRedutor: number
+  /** Redutor da Lei 15.270/2025 aplicado ao 13º (R$). */
+  redutorIRRF: number
+  /** true quando o desconto simplificado de R$ 607,20 venceu as deduções legais. */
+  usouDescontoSimplificado: boolean
 }
 
 function calcularMesesDireito(mesAdmissao: number | null, diasTrabalhados: number): number {
@@ -104,14 +115,29 @@ export function calcularDecimoTerceiro(
           descontoIRRF: 0,
           valorLiquido: valorPrimeira,
           parcela: 'primeira',
+          irrfSemRedutor: 0,
+          redutorIRRF: 0,
+          usouDescontoSimplificado: false,
         },
       },
     }
   }
 
-  // 2ª parcela ou total: INSS e IRRF incidem sobre o valor integral do 13º
-  const { valorINSS } = calcularINSSProgressivo(valorBruto)
-  const { valorIRRF, baseCalculo: baseIRRF } = calcularIRRFMensal({
+  // 2ª parcela ou total: INSS e IRRF incidem sobre o valor integral do 13º.
+  //
+  // O 13º é tributado exclusivamente na fonte — o imposto sai isolado, sem
+  // somar com o salário do mês (RIR/2018). Isso vale também para o redutor da
+  // Lei 15.270/2025, que a Receita Federal confirmou aplicável ao 13º: o
+  // rendimento que entra na fórmula do redutor é o próprio 13º bruto.
+  const { valorINSS, detalhamento: detINSS } = calcularINSSProgressivo(valorBruto)
+  const {
+    valorIRRF,
+    baseCalculo: baseIRRF,
+    deducaoAplicada,
+    usouDescontoSimplificado,
+    impostoApurado,
+    redutor,
+  } = calcularIRRFMensal({
     salarioBruto: valorBruto,
     inss: valorINSS,
     numeroDependentes: params.numeroDependentesIRRF,
@@ -131,12 +157,47 @@ export function calcularDecimoTerceiro(
       tipo: 'credito',
       formula: `${formatarBRL(params.salarioBruto)} ÷ 12 × ${mesesDireito}`,
     },
-    { descricao: 'Desconto INSS', valor: valorINSS, tipo: 'debito' },
-    {
-      descricao: 'Desconto IRRF',
-      valor: valorIRRF,
+    ...detINSS.map<ItemDetalhamento>((d) => ({
+      descricao: `INSS ${(d.aliquota * 100).toFixed(1)}% (${d.faixa})`,
+      valor: d.valor,
       tipo: 'debito',
-      formula: `Base ${formatarBRL(baseIRRF)}`,
+      formula: `${formatarBRL(d.base)} × ${(d.aliquota * 100).toFixed(1)}%`,
+    })),
+    {
+      descricao: usouDescontoSimplificado
+        ? 'Desconto simplificado (mais vantajoso)'
+        : 'Deduções legais (INSS + dependentes)',
+      valor: deducaoAplicada,
+      tipo: 'neutro',
+    },
+    { descricao: 'Base de cálculo do IRRF', valor: baseIRRF, tipo: 'neutro' },
+    ...(impostoApurado > 0
+      ? [
+          {
+            descricao: 'IRRF pela tabela',
+            valor: impostoApurado,
+            tipo: 'neutro' as const,
+            formula: `Base ${formatarBRL(baseIRRF)}`,
+          },
+        ]
+      : []),
+    ...(redutor > 0
+      ? [
+          {
+            descricao: 'Redutor da Lei 15.270/2025',
+            valor: redutor,
+            tipo: 'credito' as const,
+            formula:
+              valorIRRF === 0
+                ? 'Zera o imposto do 13º'
+                : `${formatarBRL(impostoApurado)} − ${formatarBRL(redutor)}`,
+          },
+        ]
+      : []),
+    {
+      descricao: valorIRRF === 0 ? 'Desconto IRRF (isento)' : 'Desconto IRRF',
+      valor: valorIRRF,
+      tipo: valorIRRF === 0 ? 'neutro' : 'debito',
     },
     ...(params.parcela === 'segunda'
       ? [
@@ -161,7 +222,7 @@ export function calcularDecimoTerceiro(
       detalhamento,
       baseCalculo: `(Salário ÷ 12) × ${mesesDireito} meses`,
       fonteJuridica:
-        'Lei 4.090/1962 | Lei 4.749/1965 | Decreto 11.936/2024 (INSS) | RIR/2018 (IRRF)',
+        'Lei 4.090/1962 | Lei 4.749/1965 | Portaria MPS/MF 13/2026 (INSS) | RIR/2018 e Lei 15.270/2025 (IRRF)',
       dataReferencia: getTabelasVigentes().vigenciaInicio,
       dados: {
         valorBruto,
@@ -170,6 +231,9 @@ export function calcularDecimoTerceiro(
         descontoIRRF: valorIRRF,
         valorLiquido: valorPagar,
         parcela: params.parcela,
+        irrfSemRedutor: impostoApurado,
+        redutorIRRF: redutor,
+        usouDescontoSimplificado,
       },
     },
   }

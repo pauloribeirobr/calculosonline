@@ -138,17 +138,18 @@ test.describe('blog — os números vêm do motor (mesma trava do F47)', () => {
   const valores = [
     // salário R$ 2.500, 12 meses: 1ª parcela, INSS e total líquido
     'R$ 1.250,00',
-    'R$ 202,23',
-    'R$ 2.297,77',
+    'R$ 200,69',
+    'R$ 2.299,31',
     // salário R$ 10.000: a 2ª parcela é menos da metade da 1ª
     'R$ 5.000,00',
-    'R$ 2.468,80',
+    'R$ 2.442,36',
     // regra dos 15 dias: 9 meses vs 10 meses com um dia de diferença
-    'R$ 2.475,95',
-    'R$ 2.722,76',
-    // dependentes derrubando o IRRF de R$ 4.000
-    'R$ 149,83',
-    'R$ 64,51',
+    'R$ 2.481,31',
+    'R$ 2.751,40',
+    // dependentes derrubando o IRRF de R$ 8.000 — abaixo de R$ 5.000 de 13º o
+    // redutor da Lei 15.270/2025 já zera o imposto com ou sem dependentes
+    'R$ 1.037,85',
+    'R$ 881,44',
   ]
 
   for (const valor of valores) {

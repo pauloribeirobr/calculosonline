@@ -4,9 +4,18 @@
 
 import type { ErroValidacao } from '../types'
 
-/** Arredonda um valor monetário para 2 casas decimais (padrão monetário brasileiro). */
+/**
+ * Arredonda um valor monetário para 2 casas decimais (padrão monetário
+ * brasileiro), em meio-para-cima.
+ *
+ * `valor * 100` carrega erro binário: `1621 × 7,5%` dá 121.57499999999999 em
+ * float, e `Math.round` derruba para R$ 121,57 quando a tabela do INSS publica
+ * R$ 121,58 na primeira faixa. Normalizar a 12 dígitos significativos antes do
+ * round recupera o meio centavo e não altera valores que já eram exatos.
+ */
 export function arredondar(valor: number): number {
-  return Math.round(valor * 100) / 100
+  if (!Number.isFinite(valor)) return valor
+  return Math.round(Number((valor * 100).toPrecision(12))) / 100
 }
 
 /**

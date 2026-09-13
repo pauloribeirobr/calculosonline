@@ -25,7 +25,32 @@
       "Bash(git log *)",
       "Bash(pnpm --filter web lint)",
       "Bash(pnpm test:e2e rescisao-aposentadoria error-logger)",
-      "Bash(pnpm --filter @calculosonline/core typecheck)"
+      "Bash(pnpm --filter @calculosonline/core typecheck)",
+      "WebFetch(domain:www.legisweb.com.br)",
+      "Bash(grep -n \"relacionadas\" apps/web/src/lib/calculators.ts && echo \"=== title ===\" && sed -n '/buildCalculatorTitle/,/^}/p' apps/web/src/lib/seo.ts)",
+      "Bash(awk 'NR>=160 && NR<=300 && \\(/slug:/ || /relacionadas:/\\)' apps/web/src/lib/calculators.ts)",
+      "Bash(npx vitest *)",
+      "Bash(node -e \"console.log\\(1621*0.075, \\(1621*0.075\\)*100, Math.round\\(\\(1621*0.075\\)*100\\)\\)\")",
+      "WebFetch(domain:www.gov.br)",
+      "Bash(sed -n '/export interface RescisaoParams/,/^}/p' packages/core/src/trabalhista/rescisao.ts)",
+      "Bash(sed -n '/export interface FeriasParams/,/^}/p' packages/core/src/trabalhista/ferias.ts)",
+      "Bash(sed -n '/export interface HoraExtraParams/,/^}/p' packages/core/src/trabalhista/hora-extra.ts)",
+      "Bash(sed -n '/export interface FGTSParams/,/^}/p' packages/core/src/trabalhista/fgts.ts)",
+      "WebFetch(domain:www.planalto.gov.br)",
+      "Bash(awk 'NR>=150 && NR<=310 && \\(/slug:/ || /relacionadas: \\\\[/ || /^      .decimo/ \\)' apps/web/src/lib/calculators.ts)",
+      "Bash(grep -n \"IRRF\\\\|INSS\\\\|R\\\\$ \" apps/web/content/blog/decimo-terceiro-2026-quando-cai-e-quanto-voce-recebe.mdx)",
+      "Bash(grep -nE \"R\\\\\\\\$ ?[0-9]\" apps/web/content/blog/13-salario-proporcional-como-calcular.mdx)",
+      "Bash(grep -vE \"^\\\\s*$|at |attachment|test-results|Usage|playwright show-trace|─\")",
+      "Bash(timeout 420 pnpm exec playwright test tests/e2e/hora-extra.spec.ts tests/e2e/irrf-aluguel-geo.spec.ts tests/e2e/link-interno.spec.ts tests/e2e/rescisao-acordo-mutuo.spec.ts --reporter=line)",
+      "Bash(grep -vE \"^\\\\s*$\")",
+      "Bash(timeout 300 pnpm exec playwright test tests/e2e/hora-extra.spec.ts tests/e2e/irrf-aluguel-geo.spec.ts --reporter=line)",
+      "Bash(timeout 300 pnpm exec playwright test tests/e2e/irrf-aluguel-geo.spec.ts --reporter=line)",
+      "Bash(rm -rf apps/web/.next)",
+      "Bash(timeout 600 pnpm build)",
+      "Bash(grep -o \"<loc>[^<]*decimo-terceiro</loc>.\\\\{0,80\\\\}\" apps/web/.next/server/app/sitemap.xml.body)"
+    ],
+    "additionalDirectories": [
+      "/home/paulo/projects/next/calculosonline/apps/web/src/lib"
     ]
   }
 }

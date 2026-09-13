@@ -59,8 +59,8 @@ test.describe('hub trabalhista — o fluxo único', () => {
     // Os quatro valores saíram de `calcularPanoramaTrabalhista`, não de conta à
     // mão — mesma disciplina do F47. Se uma regra de INSS, IRRF, aviso prévio
     // ou 13º mudar, este teste quebra antes de a página passar a mentir.
-    await expect(bloco(page, 'Rescisão')).toContainText('R$ 15.558,57')
-    await expect(bloco(page, '13º salário')).toContainText('R$ 2.722,76')
+    await expect(bloco(page, 'Rescisão')).toContainText('R$ 15.777,66')
+    await expect(bloco(page, '13º salário')).toContainText('R$ 2.751,40')
     await expect(bloco(page, 'Férias')).toContainText('R$ 4.000,00')
     await expect(bloco(page, 'FGTS')).toContainText('R$ 14.400,00')
   })
@@ -85,14 +85,14 @@ test.describe('hub trabalhista — o fluxo único', () => {
   test('a página não oferece um "total geral" somando os blocos', async ({ page }) => {
     await preencher(page)
 
-    // R$ 36.681,33 é a soma ingênua dos quatro blocos — mais que o dobro do
+    // R$ 36.929,06 é a soma ingênua dos quatro blocos — mais que o dobro do
     // que a pessoa realmente recebe. Ele só pode aparecer no texto editorial,
     // como contraexemplo, nunca como um resultado do cálculo.
     const resultado = page.getByRole('heading', { name: 'Seu panorama trabalhista' })
     await expect(resultado).toBeVisible()
 
     const secaoDeResultado = page.locator('section[aria-label="Calculadora trabalhista completa"]')
-    await expect(secaoDeResultado).not.toContainText('R$ 36.681,33')
+    await expect(secaoDeResultado).not.toContainText('R$ 36.929,06')
     await expect(secaoDeResultado).not.toContainText(/Total geral/i)
   })
 
@@ -211,12 +211,12 @@ test.describe('hub trabalhista — os números do texto vêm do motor (trava do 
     // Todos gerados rodando o próprio core, não escritos à mão. O primeiro é o
     // contraexemplo da soma indevida, e é o número que dá o tamanho do erro.
     for (const valor of [
-      'R$ 36.681,33', // soma ingênua dos quatro blocos
-      'R$ 15.558,57', // rescisão real no mesmo caso
-      'R$ 9.189,36', // acordo mútuo
-      'R$ 8.320,15', // pedido de demissão
-      'R$ 2.722,76', // justa causa (só o 13º proporcional)
-      'R$ 7.286,40', // FGTS de 60 meses no salário mínimo
+      'R$ 36.929,06', // soma ingênua dos quatro blocos
+      'R$ 15.777,66', // rescisão real no mesmo caso
+      'R$ 9.451,35', // acordo mútuo
+      'R$ 8.623,96', // pedido de demissão
+      'R$ 2.751,40', // justa causa (só o 13º proporcional)
+      'R$ 7.780,80', // FGTS de 60 meses no salário mínimo
     ]) {
       await expect(artigo, `${valor} sumiu do conteúdo`).toContainText(valor)
     }

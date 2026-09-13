@@ -187,6 +187,24 @@ Componentes globais: `Header`, `Footer`, `PageSeo`, `JsonLd`.
 
 ## Decisões técnicas registradas
 
+- **Ordem do cálculo do IRRF mensal (2026)** — `deduções legais (INSS +
+  dependentes + pensão + outras)` **ou** `desconto simplificado de R$ 607,20`, o
+  que for maior (Lei 9.250/1995 art. 4º, IX) → tabela progressiva → **redutor da
+  Lei 15.270/2025** sobre o **rendimento tributável bruto** (não sobre a base
+  líquida de INSS), limitado ao imposto apurado. Implementado em
+  `packages/core/src/tabelas/index.ts` (`calcularIRRFMensal`,
+  `calcularRedutorIRRF`) e validado contra os 5 exemplos oficiais da Receita
+  Federal, que são teste. **Pular o desconto simplificado quebra o redutor:** o
+  máximo de R$ 312,89 é exatamente `(5.000 − 607,20) × 22,5% − 675,49`, e sem
+  ele um 13º de R$ 5.000 sobra com R$ 23,78 de imposto (F64).
+- **Faixas do INSS são contíguas pelo valor exato, não `limite + 0,01`** — o
+  campo `de` de `FaixaINSS` guarda o teto da faixa anterior, porque a tabela
+  oficial trata as faixas como intervalos contínuos; somar um centavo em cada
+  piso encurta as faixas e fecha o teto em R$ 988,10 em vez dos R$ 988,09 da
+  Portaria MPS/MF nº 13/2026. E o INSS arredonda o **acumulado**, não cada
+  faixa: cada linha do detalhamento recebe a diferença entre dois acumulados já
+  arredondados, o que preserva a invariante do F57 (as linhas exibidas somam
+  exatamente o total exibido) (F64).
 - **Sem gate de cobertura 100% no CI** (2026-07-20) — `packages/core/vitest.config.ts` tinha
   `thresholds: { lines/functions/branches/statements: 100 }`, e o CI rodava
   `test:coverage` (falhava a cada branch não coberto, ex.: `explainability/index.ts`).

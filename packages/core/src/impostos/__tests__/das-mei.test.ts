@@ -17,10 +17,10 @@ describe('calcularDASMEI', () => {
       const r = calcularDASMEI({ atividadePrincipal: 'comercio' })
       expect(r.sucesso).toBe(true)
       if (r.sucesso) {
-        expect(r.dados.dados.inss).toBe(75.9)
+        expect(r.dados.dados.inss).toBe(81.05)
         expect(r.dados.dados.icms).toBe(1)
         expect(r.dados.dados.iss).toBe(0)
-        expect(r.dados.dados.total).toBe(76.9)
+        expect(r.dados.dados.total).toBe(82.05)
       }
     })
 
@@ -37,7 +37,7 @@ describe('calcularDASMEI', () => {
       if (r.sucesso) {
         expect(r.dados.dados.icms).toBe(0)
         expect(r.dados.dados.iss).toBe(5)
-        expect(r.dados.dados.total).toBe(80.9)
+        expect(r.dados.dados.total).toBe(86.05)
       }
     })
 
@@ -46,7 +46,7 @@ describe('calcularDASMEI', () => {
       if (r.sucesso) {
         expect(r.dados.dados.icms).toBe(1)
         expect(r.dados.dados.iss).toBe(5)
-        expect(r.dados.dados.total).toBe(81.9)
+        expect(r.dados.dados.total).toBe(87.05)
       }
     })
   })

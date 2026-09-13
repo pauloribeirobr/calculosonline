@@ -13,6 +13,9 @@ import { siteConfig } from '@/lib/seo'
 // único + FAQPage real, ver AGENTS.md Sprint 1.4.2); o lastmod de cada
 // calculadora usa a mais recente entre as duas. Páginas institucionais/
 // categoria usam `staticLastModified`; bump manual ao editar o conteúdo delas.
+// 2026-09-13: F64 (tabelas de 2026 — INSS da Portaria MPS/MF 13/2026, desconto
+// simplificado e redutor da Lei 15.270/2025). Mexeu no número que 9 calculadoras
+// devolvem, não só no texto: é o bump mais importante desde a criação da chave.
 // 2026-08-20: F38/F39 (title, H1, description e MDX de 6 calculadoras) e
 // F41/F42 (ícone no header das 20, og-image própria por calculadora).
 // 2026-08-27: F43 (escultura de link interno — `relacionadas` reordenadas nas
@@ -24,7 +27,7 @@ import { siteConfig } from '@/lib/seo'
 // 2026-08-31: F58 (hub trabalhista) acrescentou um link novo ao rodapé de
 // todas as páginas e um CTA no fim das quatro calculadoras que ele encadeia —
 // muda a estrutura de links do site inteiro, que é o que o Google recrawleia.
-const seoRefreshDate = new Date('2026-08-31')
+const seoRefreshDate = new Date('2026-09-13')
 const staticLastModified = new Date('2026-05-11')
 
 export default function sitemap(): MetadataRoute.Sitemap {

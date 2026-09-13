@@ -29,18 +29,29 @@ restituição; se pagou a menos, paga o saldo na declaração.
 **Exemplo prático:** base de cálculo de R$ 4.200 (após INSS e deduções)
 
 ```
-IRRF = 4.200 × 22,5% − 675,49 = 945,00 − 675,49 = R$ 269,51
+IRRF pela tabela = 4.200 × 22,5% − 675,49 = 945,00 − 675,49 = R$ 269,51
 ```
+
+Atenção: em 2026 esse **não** é o imposto final. Sobre o valor apurado na tabela ainda incide o
+redutor da Lei 15.270/2025 — veja a seção abaixo.
 
 ## Como chegar à base de cálculo do IRRF
 
 ```
-Base IRRF = Salário bruto
-           − Contribuição INSS
-           − Dedução por dependentes (R$ 189,59 por dependente)
-           − Pensão alimentícia (valor determinado judicialmente)
-           − Contribuição a entidade de previdência privada (PGBL)
+Deduções legais = Contribuição INSS
+                 + Dedução por dependentes (R$ 189,59 por dependente)
+                 + Pensão alimentícia (valor determinado judicialmente)
+                 + Contribuição a entidade de previdência privada (PGBL)
+
+Desconto simplificado = R$ 607,20  (25% do limite de isenção de R$ 2.428,80)
+
+Base IRRF = Rendimento bruto − o MAIOR entre os dois
 ```
+
+O **desconto simplificado** (art. 4º, IX da Lei 9.250/1995, incluído pela Lei 14.848/2024)
+substitui todas as deduções legais de uma vez, e a fonte pagadora é obrigada a aplicar o que for
+mais vantajoso para o contribuinte. Em salários até cerca de R$ 5.750 sem dependentes é ele que
+vence — o INSS sozinho ainda não alcança os R$ 607,20.
 
 ## Deduções: dependentes, pensão e previdência
 
@@ -54,10 +65,45 @@ integralmente da base de cálculo.
 Livre) são dedutíveis até 12% da renda bruta anual. Essa dedução impacta tanto o IRRF mensal
 quanto o IRPF anual.
 
+## O redutor da Lei 15.270/2025 — o que mudou em 2026
+
+Desde 1º de janeiro de 2026 o cálculo ganhou um passo final. A tabela progressiva continua a
+mesma, com as faixas e alíquotas de 2025; o que a Lei 15.270/2025 criou não foi uma faixa nova
+de isenção, e sim um **redutor aplicado depois** do imposto apurado.
+
+A entrada da fórmula é o **rendimento tributável bruto do mês** — não a base de cálculo já
+líquida de INSS:
+
+| Rendimento bruto no mês | Redutor |
+|---|---|
+| Até R$ 5.000,00 | Até R$ 312,89 — na prática, zera o imposto |
+| R$ 5.000,01 a R$ 7.350,00 | R$ 978,62 − (0,133145 × rendimento) |
+| Acima de R$ 7.350,00 | Sem redutor |
+
+O redutor é limitado ao imposto apurado: zera o imposto, nunca gera crédito. Em R$ 5.000 a
+fórmula devolve exatamente R$ 312,89 e em R$ 7.350 devolve exatamente zero — a transição entre
+as faixas é contínua, sem degrau.
+
+**Exemplo — salário de R$ 6.000, sem dependentes:**
+
+```
+INSS = R$ 641,51  (maior que o desconto simplificado, então prevalece)
+Base IRRF = 6.000 − 641,51 = R$ 5.358,49
+IRRF pela tabela = 5.358,49 × 27,5% − 908,73 = R$ 564,85
+Redutor = 978,62 − (0,133145 × 6.000) = R$ 179,75
+IRRF final = 564,85 − 179,75 = R$ 385,10
+```
+
+A Receita Federal publicou
+[exemplos oficiais de aplicação da Lei 15.270/2025](https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/exemplos-de-aplicacao-da-lei-15-270-2025)
+com cinco casos resolvidos — os cálculos desta calculadora seguem exatamente essa ordem.
+
 ## Quem é isento em 2026?
 
-Está isento de IRRF quem tiver **base de cálculo até R$ 2.428,80/mês** — ou seja, após
-descontar INSS e deduções, o rendimento tributável não ultrapasse esse valor.
+Na prática, **quem recebe até R$ 5.000 brutos por mês não paga IRRF** — o redutor zera o
+imposto. Independentemente do redutor, também está isento quem tiver **base de cálculo até
+R$ 2.428,80/mês**, ou seja, quem, após o desconto simplificado ou as deduções legais, fica
+abaixo desse valor.
 
 Rendimentos que **não entram na base** (isentos):
 - Participação nos Lucros e Resultados (PLR) — tem tabela própria

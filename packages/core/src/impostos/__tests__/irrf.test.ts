@@ -63,8 +63,10 @@ describe('calcularIRRF', () => {
     })
 
     it('dependentes reduzem a base de cálculo', () => {
-      const sem = calcularIRRF({ salarioBruto: 5000, numeroDependentes: 0 })
-      const com = calcularIRRF({ salarioBruto: 5000, numeroDependentes: 2 })
+      // R$ 8.000 de propósito: abaixo da faixa do redutor o IRRF já sai zero
+      // com ou sem dependentes, e a comparação não mediria nada.
+      const sem = calcularIRRF({ salarioBruto: 8000, numeroDependentes: 0 })
+      const com = calcularIRRF({ salarioBruto: 8000, numeroDependentes: 2 })
       expect(sem.sucesso && com.sucesso).toBe(true)
       if (sem.sucesso && com.sucesso) {
         expect(com.dados.dados.irrf).toBeLessThan(sem.dados.dados.irrf)
@@ -97,13 +99,15 @@ describe('calcularIRRF', () => {
     })
 
     it('aceita INSS informado externamente', () => {
+      // INSS acima do desconto simplificado, senão a base sairia dos R$ 607,20
+      // e o valor informado não apareceria nela.
       const r = calcularIRRF({
-        salarioBruto: 5000,
+        salarioBruto: 8000,
         numeroDependentes: 0,
-        descontoINSS: 600,
+        descontoINSS: 900,
       })
       expect(r.sucesso).toBe(true)
-      if (r.sucesso) expect(r.dados.dados.baseCalculo).toBeCloseTo(4400, 0)
+      if (r.sucesso) expect(r.dados.dados.baseCalculo).toBeCloseTo(7100, 0)
     })
 
     it('detalhamento omite linha de Alíquota quando isento', () => {
@@ -145,9 +149,12 @@ describe('calcularIRRF', () => {
       const salario = calcularIRRF({ salarioBruto: 5000, numeroDependentes: 0 })
       expect(aluguel.sucesso && salario.sucesso).toBe(true)
       if (aluguel.sucesso && salario.sucesso) {
-        // Sem INSS a base é o próprio bruto, então o imposto é maior.
-        expect(aluguel.dados.dados.baseCalculo).toBe(5000)
-        expect(aluguel.dados.dados.irrf).toBeGreaterThan(salario.dados.dados.irrf)
+        // Sem INSS a única dedução é o desconto simplificado de R$ 607,20 —
+        // o mesmo que o salário acaba usando nesta faixa, então as bases
+        // coincidem e os dois caem no mesmo imposto.
+        expect(aluguel.dados.dados.baseCalculo).toBe(4392.8)
+        expect(aluguel.dados.dados.usouDescontoSimplificado).toBe(true)
+        expect(aluguel.dados.dados.irrf).toBeGreaterThanOrEqual(salario.dados.dados.irrf)
       }
     })
 
@@ -159,7 +166,8 @@ describe('calcularIRRF', () => {
         descontoINSS: 500,
       })
       expect(r.sucesso).toBe(true)
-      if (r.sucesso) expect(r.dados.dados.baseCalculo).toBe(5000)
+      // Base pelo desconto simplificado (R$ 607,20), não pelo INSS informado.
+      if (r.sucesso) expect(r.dados.dados.baseCalculo).toBe(4392.8)
     })
 
     it('abate IPTU, condomínio e taxa de administração da base', () => {
@@ -172,7 +180,9 @@ describe('calcularIRRF', () => {
       expect(r.sucesso).toBe(true)
       if (r.sucesso) {
         expect(r.dados.dados.despesasDedutiveis).toBe(1000)
-        expect(r.dados.dados.baseCalculo).toBe(4000)
+        // 5.000 − 1.000 de despesas = R$ 4.000 de rendimento tributável, do
+        // qual sai ainda o desconto simplificado de R$ 607,20.
+        expect(r.dados.dados.baseCalculo).toBe(3392.8)
       }
     })
 
@@ -226,7 +236,9 @@ describe('calcularIRRF', () => {
       })
       expect(r.sucesso).toBe(true)
       if (r.sucesso) {
-        expect(r.dados.dados.baseCalculo).toBe(1900)
+        // 3.000 − 1.100 de despesas = 1.900 tributável, − 607,20 do desconto
+        // simplificado = 1.292,80 de base, bem abaixo da isenção.
+        expect(r.dados.dados.baseCalculo).toBe(1292.8)
         expect(r.dados.dados.isento).toBe(true)
       }
     })
