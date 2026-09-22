@@ -16,6 +16,171 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **F65 (22/09) — "Salário depois das férias", o post que responde a maior
+  pergunta do relatório do Bing**, numa página em que o índice da Microsoft já
+  nos põe na página 1. Junto vieram **7 correções de conteúdo**: a `ferias.mdx`
+  era a pior página do site em direito (Súmula 450 derrubada pelo STF na ADPF
+  501, art. 138 citado fora de contexto, duas atribuições erradas), e a
+  calculadora prometia **"descontos de INSS e IRRF" que ela não calcula**.
+  Detalhe no Diário de 22/09 (parte 6).
+- **Candidato de feature que nasceu daí: descontos no `calcularFerias`.**
+  "Quanto vou receber de férias" é sinônimo declarado da calculadora e é o que o
+  público do Bing/IA pergunta; hoje ela devolve só o bruto. O F65 já deixou o
+  método pronto. **Não abri feature.**
+- **Estratégia do Google, decidida em 22/09:** parar de perseguir head term
+  este ano; escrever para **pergunta longa com número** (serve aos dois
+  índices); **pedir indexação manual no GSC** do hub, dos 5 posts e do F65, que
+  é a última hipótese barata (o IndexNow não fala com o Google); e **checkpoint
+  em ~27/10** — se rescisão e 13º continuarem em 85-95 com o Bing em 7, vale a
+  decisão de ordem de grandeza de 14/09. **Não comprar o link 5 antes disso.**
+- **Fora da fila (Paulo, 22/09):** Vínculos regressivos do BWT, `description` do
+  `exception` no GA4 e Authority Score do Semrush. **Não pedir a cada rodada.**
+- **BWT por página (08→20/09): o Bing põe o site na página 1 em tudo, com
+  posição média ~7.** IRRF 507 impressões @ 7,0, rescisão 401 @ 7,3 (11 dos 39
+  cliques), INSS 353 @ 7,9, férias 292 @ 8,1. No Google as mesmas páginas estão
+  em 75-91. Detalhe no Diário de 22/09 (parte 4).
+- **"IA" e "Bing" não são dois públicos, são o mesmo índice (Microsoft).** Os 4
+  temas do topo do Bing são os 4 da IA, com o mesmo vocabulário com ano, e o
+  relatório de consultas do BWT traz **prompt do Copilot** misturado com busca.
+  A divisão real é Microsoft × Google. **Isso corrige 14/09:** o conteúdo
+  trabalhista não foi desperdiçado. Rescisão é a página com mais cliques no
+  Bing e os posts do F60 estão em 5,5-5,7 lá (zero no Google).
+- **Base do Bing para medir os links, pela posição:** rescisão **7,29** (link 3,
+  base limpa) e 13º **8,39** (link 4; a impressão do 13º vai subir sozinha com a
+  sazonalidade). **O Bing é 99,4% desktop.**
+- **Candidato mais barato da rodada: férias.** É a 4ª página do Bing e o tema de
+  IA com o menor SoA (14,5%), e o maior prompt do relatório é "quanto receberia
+  no próximo mês pós férias". O `ferias.mdx` não trata disso. Não abri feature.
+- **Export de 22/09: a posição do Google "foi de 61 para 25" na semana, e não é
+  ranking.** **Confirmado pelo comparativo de 7 dias:** `margem-lucro` (21 →
+  170) e `porcentagem` (15 → 101), em posição ~10 e sem clique, são **69%** das
+  impressões de 13→19/09 (eram 15%). Sem elas o resto está em 65,8 (era 72,9).
+  **Rescisão caiu 49% e 13º 37% em impressão**, com a posição igual: sumiu a
+  cauda de 78-100. **Zero clique no Google nas duas semanas.** Detalhe no
+  Diário de 22/09 (partes 3 e 5).
+- **Na mesma semana, os canais que já funcionavam cresceram:** Bing **+48% de
+  impressão por dia útil** (275 contra 186, 24 cliques em 5 dias), citações de
+  IA **+59%** (625 → 994, SoA 21,5%) e ChatGPT **3,5x** em sessões no GA4 (8 →
+  28). **Férias entrou no vocabulário da IA** (`cálculo de férias 2026`, 75
+  citações) com o menor SoA dos temas grandes (14,5%).
+- **Duas correções de leitura:** "Leads qualificados = 0" no GA4 conta
+  `qualify_lead` e vai ser sempre 0. **O F45 funciona, e o número certo é
+  "Eventos principais" (235).** E o Bing tem padrão de dia útil (~235
+  impressões/dia) contra fim de semana (~51); o "12/09 parcial" de 14/09 era
+  sábado.
+- **Export de 14/09 — o CSV solto na raiz da `gsc/` não era do Search Console,
+  era do Bing Webmaster Tools.** Data `08/09/2026 00:00:00` e decimal com
+  vírgula, sem coluna de posição — o GSC usa ISO e ponto. Descoberto porque as
+  duas fontes cobrem os **mesmos 5 dias** e discordam por 5,7x.
+- **Primeira medição lado a lado dos dois buscadores, 4 dias completos: Bing 743
+  impressões e 15 cliques (CTR 2,0%); Google 130 impressões e ZERO cliques.**
+  A ressalva de 10/09 ("é 1 dia e 9 linhas") caiu. O Bing não é o outro
+  buscador; é **o** buscador deste site.
+- **A suspeita de pipeline de 08/09 estava errada e está fechada.** O hub do F58
+  está em `apps/web/src/app/sitemap.ts:67`, está no `sitemap.xml` de produção
+  (39 URLs, com os 5 posts), e o `indexnow.mjs:42` monta a lista lendo esse
+  mesmo sitemap. **Hub e posts são submetidos — o que falta é autoridade, não
+  rota.** Não gastar rodada nisso de novo.
+- **O desalinhamento que reordena o roadmap: o site tem dois públicos.** `irrf`
+  (224 citações de IA em 7 dias) e `inss` (223) fazem **71% das citações** e
+  somam **31 impressões no Google em 3 meses**. O vocabulário da IA tem ano e é
+  fiscal (`calculo inss`, `calculadora irrf 2026`); o do GSC é trabalhista sem
+  ano. *(22/09: o BWT mostrou que o público da IA é o mesmo do Bing, e que no
+  Bing o trabalhista também rende. Ver parte 4.)*
+- **Mas o Semrush corrigiu a conclusão fácil: não é pivô, são dois jogos.**
+  `inss` tem **ZERO keyword no top 100**, e `irpf`+`irrf` somam 10,3K/mês contra
+  **78,6K** do cluster trabalhista. GEO já funciona **sem posição no Google** (é
+  só continuar alimentando); o Google está travado no cluster certo, com KD
+  baixo (16-28) e posição 84-100 — **falta autoridade, não conteúdo** (F15, AS 2).
+- **Links 3 e 4 do F15 decididos em 14/09 (Paulo compra conforme conseguir os
+  placements; nada mais muda até lá).** **Link 3: `rescisao-trabalhista`** —
+  maior cluster sem link (34.290/mês, 54 kws) e centro do grafo interno (hub
+  F58 + 4 posts F60 + guia F22 apontam para lá), âncora "calcular rescisão do
+  contrato de trabalho" (KD 17). **Link 4: `decimo-terceiro` de novo**, âncora
+  "cálculo 13 proporcional" (KD 16) — segundo link na mesma página **de
+  propósito**, porque com um link por página não dá para separar "link não
+  funciona" de "um link não basta", e é essa dúvida que trava o orçamento do
+  F15. Detalhe e descartes em "Plano de backlink", parte 7.
+- **Veículos encomendados (14/09): `msnoticias.com.br`** (jornal regional do MS,
+  mesmo perfil do `acritica`) → rescisão, e **`mercadohoje.uai.com.br`**
+  (editoria de finanças do portal UAI, **Diários Associados**) → 13º, que
+  tematicamente é o melhor placement dos quatro. **Risco específico do nº 4: o
+  `mercadohoje` tem blocos "Publicidade" e nenhuma política visível de rotulagem
+  de patrocinado — se a matéria cair em slot publieditorial, o link pode vir
+  com `sponsored`/`nofollow`.** Conferir `rel` no HTML bruto é a primeira coisa
+  a fazer quando publicar.
+- **O link 4 publicou em 15/09 e o risco não se confirmou: veio dofollow, sem
+  `rel` nenhum, em matéria editorial.** Âncora exata do plano ("cálculo 13
+  proporcional"), 3º parágrafo do corpo, página indexável e no
+  `sitemap-news.xml`, destino 200 — e **é o único link externo editorial da
+  matéria** (os outros 8 externos são do próprio grupo Diários Associados).
+  Ressalva: é subdomínio do UAI, não o domínio raiz. **Placar: 3 backlinks
+  reais**; falta o `msnoticias` → rescisão. Detalhe no Diário de 15/09.
+- **O link 3 publicou em 21/09, mas no `jornaldebrasilia.com.br` e não no
+  `msnoticias`.** Destino e âncora são os do plano, é dofollow, é o único link
+  externo do corpo e a matéria (demissão por acordo, simulando as três
+  modalidades) é o melhor encaixe temático dos quatro. **Ressalva séria: saiu na
+  `/brasil-7/`, um balde de conteúdo pago** (972 posts, "10 melhores…", post em
+  inglês, e cada vizinho com um link comercial). No Google pode ser
+  neutralizado; no Bing deve contar. Os sitemaps do jornal estão congelados
+  desde 18/03, então a descoberta também é risco. **Placar: 4 placements
+  publicados.** **O `msnoticias` não vem** (Paulo, 22/09): o Jornal de Brasília
+  o substituiu, e **o plano de 14/09 fecha em 4 links**. Regra
+  nova no checklist: **olhar a seção e os vizinhos, não só a página.** Detalhe
+  no Diário de 22/09 (parte 1).
+- **O dado que motivou essa escolha: os 2 primeiros links não moveram
+  posição.** `salario-liquido` 54,8 → 69,4; `decimo-terceiro` 76,6 → 86,5 (com
+  impressões de 87 → 277). Medir o efeito dos próximos **no BWT, não no GSC** —
+  o Bing responde em semanas e é quem manda tráfego. **Paulo encomendou os dois
+  em 14/09.**
+- **Correção de método (14/09): `GSC → Links` não é detector confiável de
+  ausência.** O `acritica.com` não aparece lá 33 dias depois, e o critério de
+  20/08 mandava concluir "o link não conta". **Fui verificar a matéria: ela está
+  no ar (200), o link continua lá com a âncora exata, sem `nofollow`, sem
+  `noindex`, sem `X-Robots-Tag`, self-canonical, e `/economia/` não é bloqueado
+  no `robots.txt`.** O placement está perfeito — o clássico "editam a matéria e
+  tiram o link depois do pagamento" **não aconteceu**. Só a verificação do HTML
+  bruto decide se um link conta; o GSC amostra e atrasa. **E o BWT confirmou na
+  hora: "Vínculos regressivos" lista `acritica.com` E `band.com.br`.** Caso
+  encerrado — o link conta, quem falhou foi o relatório do Google.
+- **O BWT é o placar correto de backlink deste projeto.** Semrush diz 122
+  domínios, GSC diz 1, **BWT diz 2 — exatamente os dois placements editoriais
+  reais**. Terceira fonte independente confirmando a hipótese de 09/08 de que os
+  122 do Semrush são scraper/agregador. **O site tinha 2 backlinks reais; os
+  dois encomendados em 14/09 dobram isso, de 2 para 4** — o nº 4
+  (`mercadohoje`) publicou em 15/09 e já está validado, então o placar hoje é
+  **3, a caminho de 4**. *(22/09: o 4º publicou no `jornaldebrasilia`, com a
+  ressalva da seção paga.)*
+- **A leitura desconfortável do mesmo dado: os MESMOS 2 links convivem com
+  posição 4-9 no Bing e 85-95 no Google.** O que difere não é o link, é o
+  limiar de confiança de cada buscador. **O risco dos links 3 e 4 não é "vão
+  contar" (vão) — é "4 ainda ser longe demais do limiar do Google".** Se não
+  moverem nada enquanto o Bing segue em 4-9, a decisão vira de ordem de
+  grandeza: ou o orçamento sobe muito, ou o Google sai do plano e o projeto se
+  organiza em torno de Bing + IA, onde já ganha.
+- **Tríplice validação de que o canal Google não existe:** GSC 2 cliques/3 meses,
+  GA4 0 sessão/28 dias, Semrush **1 visita/mês** sobre 130.160 buscas
+  endereçadas. Mediana de posição 84; 2 keywords de 201 em top 50.
+- **Único alvo de Google ganhável, com o produto já pronto: `calculo irrf
+  aluguel 2026`** — KD **12** (o menor de 201), pos. 65, 140/mês. O F54 já trata
+  aluguel com RIR/2018 art. 42, e `#origemRendimento` é o campo mais clicado da
+  página (22,7%) — mas `tituloLongo` e `palavrasChave` não mencionam aluguel
+  (`calculators.ts:270-278`). Falta endereçamento, não trabalho. **Ressalva:
+  140/mês é a mais ganhável, não a mais valiosa.**
+- **A página mais usada do site é invisível no Google.** O hub do F58 empata com
+  a home em sessões no Clarity e é a de maior interação (45 cliques em 7
+  pageviews), com **0 impressão no GSC**.
+- **Correção barata achada no heatmap: ~45% dos cliques nos cards de resultado
+  do hub erram o alvo** (4 caem no `LI`, 5 no `SUMMARY`), e o Clarity acusa
+  "Clique inativo" em 17,86% das sessões. O gatilho do `<details>` tem de ser o
+  cabeçalho inteiro do card.
+- **`porcentagem` e `margem-lucro`: questão fechada por três fontes.** 497
+  impressões em página 1 (pos. 9,1 e 11,4) e zero clique; e `porcentagem` tem
+  **zero keyword no Semrush** — nem ele rastreia aquelas buscas. Não investir.
+- **Performance sai da lista de suspeitos:** score 90, LCP 1,572s, INP 182ms,
+  CLS 0,00025, zero erro de JS.
+- **Cuidado com os números do Clarity desta janela: 16 das 28 sessões são bot.**
+  Serve como fonte qualitativa (heatmap, Share of Authority), não de volume.
 - **F64 (13/09) — o motor estava calculando 2025: tabela do INSS de 2025
   rotulada como 2026, e nem o redutor da Lei 15.270/2025 nem o desconto
   simplificado de R$ 607,20 existiam no código.** Consequência publicada: 13º de
@@ -926,6 +1091,938 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-09-22 (parte 6) — F65: o post que a pergunta do Copilot pediu, 7 erros de conteúdo e a estratégia do lado do Google
+
+Paulo mandou fazer a página sugerida na parte 4, registrar como feature,
+corrigir todos os erros encontrados e responder o que fazer do lado do Google.
+**E tirou da fila os três pedidos pendentes** (Vínculos regressivos do BWT,
+`description` do `exception` no GA4 e Authority Score do Semrush): não vai
+conseguir agora. **Não pedir de novo a cada rodada** — voltam quando ele
+trouxer, e a checagem dos links no BWT é a única que tem data (parte 1).
+
+**1. O F65 saiu do dado, não de intuição.** A maior pergunta em linguagem
+natural do relatório do BWT era *"vou tirar 10 dias de férias somente, quanto
+receberia no proximo mês pós ferias"* (17 impressões, posição 6,8), e a página
+de férias — 4ª do site no Bing, 3º tema da IA, menor SoA dos grandes (14,5%) —
+não tinha **uma linha** sobre isso. O post
+`/blog/salario-depois-das-ferias-por-que-vem-menor` responde exatamente essa
+pergunta: os dias de férias saem da folha porque já foram pagos adiantados no
+recibo (CLT art. 145 contra art. 459, §1º), então o contracheque seguinte vem
+menor — mas a soma dos dois pagamentos é **maior** que um mês normal, por causa
+do terço.
+
+**Os números que ficam** (salário R$ 3.000, sem dependentes, motor):
+
+| Dias | Recibo antes | Contracheque depois | Soma | Mês normal |
+|---|---|---|---|---|
+| 10 | R$ 1.233,33 | R$ 1.811,40 | R$ 3.044,73 | R$ 2.751,40 |
+| 30 | R$ 3.631,40 | R$ 0,00 | R$ 3.631,40 | R$ 2.751,40 |
+| 20 + 10 vendidos | R$ 3.784,31 | R$ 887,09 | R$ 4.671,40 | R$ 2.751,40 |
+
+**O achado que virou seção, e que nenhum concorrente tem:** em 2026 um salário
+de R$ 4.000 **não paga IRRF**, mas 30 dias de férias desse mesmo salário pagam
+**R$ 122,45** — o terço leva o recibo a R$ 5.333,33 e tira o valor da faixa em
+que o redutor da Lei 15.270/2025 zera o imposto. Vendendo 10 dias, o imposto
+volta a zero. É consequência direta do F64: só quem tem o motor de 2026 certo
+enxerga isso.
+
+**2. Sete erros de conteúdo achados na apuração — a página de férias era a pior
+do site em direito.** Nenhum deles tinha teste, e nenhum apareceria numa
+revisão de copy:
+
+| # | Onde | Erro |
+|---|---|---|
+| 1-2 | `ferias.mdx` (texto e FAQ) | "acréscimo de 50%" por atraso no pagamento, citando a **Súmula 450 do TST**. A súmula falava em **dobro**, não em 50% — e **o STF a derrubou na ADPF 501** |
+| 3 | `ferias.mdx` | "férias em dobro" citando o **art. 138 da CLT** (que trata de trabalhar para outro empregador durante as férias) e uma terceira hipótese inventada. Trocado por art. 137 + **Súmula 81 do TST** |
+| 4 | `ferias.mdx` | férias do doméstico atribuídas à EC 72/2013; quem assegura é a **LC 150/2015, art. 17** |
+| 5 | `ferias.mdx` | férias no aviso prévio justificadas pela **Súmula 261**, que trata de férias proporcionais no pedido de demissão |
+| 6 | `ferias.mdx` | o exemplo da venda de 10 dias dizia render "o mesmo total" — ignora que os dias vendidos são **trabalhados** e continuam pagos na folha (R$ 1.700 no caso) |
+| 7 | `calculators.ts`, meta description e `llms.txt` | a calculadora de férias prometia **"descontos de INSS e IRRF"**, e `calcularFerias` devolve **bruto** |
+| + | `decimo-terceiro.mdx` | 13º do doméstico atribuído à EC 72/2013; vem da CF/88, art. 7º, parágrafo único |
+
+**O nº 7 é o mais caro, e é de produto, não de texto.** A promessa estava nos
+três lugares que alimentam Google e IA, e a ferramenta não cumpria. Corrigi o
+texto — **mas a pergunta certa é a inversa: por que a calculadora de férias não
+calcula o líquido?** "Quanto vou receber de férias" já é sinônimo declarado dela
+no registry, e é exatamente o que o público do Bing/IA pergunta. **Candidato a
+feature (não abri): descontos no `calcularFerias`.** O F65 já deixou o método
+pronto (INSS sobre o mês inteiro, IRRF em separado).
+
+**E um teste quebrado em silêncio desde o F64:** `blog.spec.ts` travava o
+`dateModified` do post do 13º na data literal de 30/08, e o F64 moveu a
+`dataAtualizacao` para 13/09. **Toda revisão legítima de conteúdo quebrava o
+teste** — a asserção agora sai do registry. Lição: data literal em teste só
+serve para `datePublished`, que não muda.
+
+**3. A estratégia do lado do Google, que o Paulo perguntou.** O quadro, sem
+rodeio: AS 2, 4 links, posição 85-95 no cluster trabalhista, KD 16-28, zero
+clique em 3 meses e, na semana passada, impressão caindo (parte 5). **O Google
+não é um canal que está quase lá; é um canal que não começou.** Quatro
+movimentos, em ordem:
+
+- **A. Parar de perseguir head term este ano.** `calculadora de férias`,
+  `calculadora decimo terceiro` e afins têm KD 16-28 e volume alto, e o site
+  está em 85-95 com AS 2. Não se ganha isso antes do pico de nov/dez, por mais
+  conteúdo que se escreva. Conteúdo não é o gargalo — autoridade é, e está
+  registrado desde 09/08.
+- **B. Ir onde autoridade pesa menos: pergunta longa e específica.** O próprio
+  GSC mostra o site aparecendo (em 78-100, mas aparecendo) em
+  `trabalhei 5 meses quanto vou receber de rescisão`,
+  `trabalhei 8 meses quanto vou receber de acerto`,
+  `como calcular rescisão sem justa causa`. São buscas de cauda, com pouca
+  concorrência e intenção exata, e **o mesmo conteúdo serve aos dois índices** —
+  é o molde do F65. Regra editorial que fica: **um post responde uma pergunta
+  com número, não cobre um tema.**
+- **C. Resolver o que talvez nem seja autoridade: o Google não testou as
+  páginas novas.** O hub do F58 e os 4 posts do F60 seguem com **zero
+  impressão**, 14 e 21 dias depois. Sitemap e IndexNow estão certos (fechado em
+  14/09), mas **o IndexNow não fala com o Google**. O que falta é Inspeção de
+  URL → "Solicitar indexação" no GSC, para o hub, os 5 posts e o F65 — cinco
+  minutos de painel, e a única hipótese barata que ainda não foi testada. Se
+  depois de indexadas elas continuarem em zero, aí é autoridade e está provado.
+- **D. Checkpoint com data: ~27/10** (6 semanas do link 4, 5 semanas do link 3).
+  Se `rescisao-trabalhista` e `decimo-terceiro` continuarem em 85-95 no Google
+  enquanto o Bing segue em 7, aplicar a decisão de ordem de grandeza já
+  registrada em 14/09: **parar de comprar link para o Google** e organizar o
+  projeto em torno de Bing + IA, com o Google como subproduto do conteúdo.
+
+**O que NÃO fazer, e por quê:**
+- **Não comprar o link 5 antes do checkpoint.** Compraram-se 4 para responder
+  "um link não basta?" — comprar mais antes de medir joga fora o teste.
+- **Não investir em `porcentagem`/`margem-lucro`.** Fechado por três fontes, e
+  a parte 5 mostrou que o crescimento delas é justamente o que não clica.
+- **Google Ads (F17) não resolve isto.** Ads compra clique, não posição, e com
+  AdSense como monetização é arbitragem de margem negativa. Só valeria como
+  pesquisa de palavra-chave paga — que o Semrush já dá de graça aqui.
+
+### 2026-09-22 (parte 5) — GSC 7 dias × 7 anteriores: a mistura se confirma, e o trabalhista encolheu no Google
+
+Paulo mandou o comparativo que a parte 3 pediu (colado na conversa, fora da
+pasta `gsc/`). **Janela: 13→19/09 contra 06→12/09.** Confere com a série diária
+do export de 3 meses: 394 e 224 impressões. O relatório de páginas soma 394 e
+233.
+
+**1. A leitura de mistura estava certa, e o efeito é maior do que eu estimei.**
+Na parte 3 o piso calculado era 54%; o número real é 69%:
+
+| | Total | Pos. | `margem-lucro` + `porcentagem` | Resto | Pos. do resto |
+|---|---|---|---|---|---|
+| 06→12/09 | 233 | 63,0 | 36 (15%) | 197 | 72,9 |
+| **13→19/09** | **394** | **27,6** | **271 (69%)** | 123 | **65,8** |
+
+- **`margem-lucro` 21 → 170 (8x) @ 10,5** e **`porcentagem` 15 → 101 (6,7x)
+  @ 9,9.** Zero clique nas duas.
+- As consultas nomeadas de `margem-lucro` estão em 78-84 ("calcular valor
+  baseado na margem de lucro", "porcentagem de lucro"). **Então o grosso das
+  170 impressões em posição ~10 é consulta anonimizada**: o mesmo padrão de
+  "aritmética única" que o 08/09 diagnosticou para `porcentagem`. **A
+  `margem-lucro` entra na mesma gaveta, e a questão fechada em 14/09 continua
+  fechada.**
+- O celular foi de 63 para 190 impressões, com posição 41,6 → 14,2. É a mesma
+  mistura, conta de cabeça feita no telefone.
+
+**2. O que o pico escondia: o cluster trabalhista encolheu no Google.**
+
+| Página | 06→12/09 | 13→19/09 | Pos. |
+|---|---|---|---|
+| `rescisao-trabalhista` | 83 | **42 (−49%)** | 91,4 → 86,1 |
+| `decimo-terceiro` | 51 | **32 (−37%)** | 88,5 → 90,2 |
+
+A posição não mudou. **O que sumiu foi a cauda mais funda:** a semana
+anterior tinha dezenas de consultas de 1-3 impressões em 78-100 ("como calcular
+rescisão trabalhista" @ 99,5, "calculo de rescisão contratual" @ 98, "calculadora
+13" @ 99,7), e elas não aparecem na semana nova. **O Google testou menos o site
+nessas buscas, não o rebaixou.** Com uma semana só, é flutuação até prova em
+contrário. Mas é o contrário do que a sazonalidade do 13º deveria fazer, então
+vale acompanhar.
+
+**Link 4 (`mercadohoje`, 15/09):** o 13º foi de 88,5 para 90,2, com 5 dias de
+link. **Sem efeito mensurável, como esperado.** A medida dele é o BWT (base
+8,39, parte 4).
+
+**3. Sinal descartado: o `salário líquido` em 18-20 da parte 3 não é recente.**
+`salario-liquido` **não aparece em nenhuma das duas semanas**, então aquelas
+impressões são de antes de 06/09. **Não acompanhar como tendência.**
+
+**4. Resto, para a próxima comparação:** **zero clique nas duas semanas.**
+`tesouro-direto` 6 → 10 @ 36, `cdb` 6 → 9 @ 53, `financiamento` 14 → 6 @ 41,
+`hora-extra` 6 → 5 (96,7 → 56,6), `ferias` 2 → 5 @ 7,2, `inss` 0 → 3 @ 11,3,
+`irpf` 3 → 3 (82 → 5) e `irrf` 3 → 1 @ 63. `calculo irrf aluguel 2026` segue lá
+(1 @ 63; eram 2 @ 66,5). Nenhuma dessas passa de 10 impressões, então as
+posições são ruído.
+
+**Leitura:** o Google continua onde estava. **A única coisa que cresceu nele foi
+tráfego sem valor** (aritmética em posição 10, que não clica), e o cluster em que
+os links foram investidos perdeu impressão na semana. Nada disso muda o plano:
+**a medida dos links é o BWT, pela posição**, e é lá que o site já está na
+página 1.
+
+### 2026-09-22 (parte 4) — BWT por consulta e página: o Bing põe o site na página 1, e "IA" e "Bing" são o mesmo público
+
+Paulo colou os quatro relatórios do Bing Webmaster Tools que faltavam desde
+08/09: consultas, páginas, países e dispositivos. **Vieram colados na conversa
+e não estão na pasta `gsc/`**, então os números brutos ficam aqui. **Janela:
+08→20/09 (13 dias).** Confirmado pela soma: países e dispositivos dão
+**2.322 impressões e 43 cliques**, exatamente o total do overview diário da
+parte 3. O relatório de páginas soma 1.879/39.
+
+**1. Posição média ~7 em todas as páginas.** No Google as mesmas páginas estão
+em 75-91. Por dia, porque as janelas são diferentes (Google 92 dias, Bing 13):
+
+| Página | Bing impr (13d) | Cliq | Pos | Bing /dia | Google /dia | Google pos |
+|---|---|---|---|---|---|---|
+| `irrf` | **507** | 9 | 6,97 | **39,0** | 0,2 | 74,6 |
+| `rescisao-trabalhista` | **401** | **11** | 7,29 | 30,8 | 4,0 | 91,4 |
+| `inss` | **353** | 5 | 7,85 | 27,2 | 0,1 | 42,1 |
+| `ferias` | **292** | 5 | 8,07 | 22,5 | 2,3 | 85,5 |
+| `cdb` | 66 | 1 | 6,38 | 5,1 | 0,5 | 42,3 |
+| `decimo-terceiro` | 51 | 0 | 8,39 | 3,9 | 3,3 | 86,9 |
+| `poupanca` | 47 | 0 | 6,57 | 3,6 | 2,2 | 64,4 |
+| `salario-liquido` | 39 | 2 | 7,33 | 3,0 | 0,8 | 69,0 |
+| `emprestimo` | 33 | 2 | 8,76 | 2,5 | 0,2 | 25,4 |
+| home | 26 | 0 | 8,58 | | | |
+| blog `acerto-trabalhista…` (F60) | 23 | 1 | 5,48 | | 0 | — |
+| blog `rescisao-por-acordo-mutuo…` (F60) | 20 | 1 | 5,70 | | 0 | — |
+| `hora-extra` | 9 | 0 | 5,44 | 0,7 | 2,8 | 85,1 |
+| `financiamento` | 4 | 0 | 7 | 0,3 | 3,9 | 78,4 |
+| `margem-lucro` | 3 | 0 | 7,67 | 0,2 | 3,4 | 11,1 |
+| blog `direitos-trabalhistas…` (F60) | 3 | 0 | 6 | | 0 | — |
+| `tesouro-direto` | 1 | 0 | 7 | | | |
+| `das-mei` | 1 | 2 | 1 | | | |
+
+**As 4 primeiras fazem 83% das impressões do Bing.** CTR geral 1,85%.
+
+**2. O achado que reescreve o "dois públicos" de 14/09: IA e Bing são o mesmo
+público.** As 4 páginas do topo do Bing (IRRF, rescisão, INSS, férias) são os
+mesmos temas que lideram as citações de IA da parte 3 (INSS 353, IRRF 311,
+férias 112). O vocabulário também é o mesmo, com o ano no nome:
+`calculadora inss`, `cálculo irrf 2026`, `calculadora de férias 2026`. **E o
+relatório de consultas do BWT tem prompt de chat misturado com busca:**
+- "vou tirar 10 dias de férias somente, quanto receberia no proximo mês pós
+  ferias" (17 @ 6,8)
+- "faça esse cálculo para um salário de 6200 sem dependentes" (3 @ 6,7)
+- "fazer uma simulação de emprestimo de 140mil com pagamento de r$3mil
+  mensais…" (4 @ 4,5)
+
+Isso ninguém digita numa busca; é conversa com o Copilot. O painel de SoA do
+Clarity também é da Microsoft. **A divisão real não é "IA × busca", é índice
+da Microsoft (Bing + Copilot) × índice do Google.** O ChatGPT usa o Bing como
+uma de suas fontes de busca, o que explicaria o 3,5x dele no GA4. É
+provável, mas não medi.
+
+**A correção que isso impõe a 14/09:** lá ficou registrado que o conteúdo
+trabalhista dos últimos três meses (F22, F58, F60) foi investido no mercado do
+Google, que entrega zero clique. **No Bing ele funciona:** `rescisao-trabalhista`
+é a página com mais cliques do site (11 de 39, 28%), e **os posts do F60, com
+zero impressão no Google, estão em 5,5-5,7 no Bing e já deram clique.** O post
+do F22 (13º) não aparece no Bing.
+
+**3. Fenômenos só do Google:** `porcentagem` (zero no Bing), `margem-lucro` (3),
+`hora-extra` (9 contra 259) e `financiamento` (4 contra 356). No Google essas
+páginas somam 1.323 impressões e 1 clique (o de `hora-extra`). O Bing
+simplesmente não as mostra.
+
+**4. Base do Bing para medir os links 3 e 4 (08→20/09):**
+
+| Página | Impr | Cliq | Pos | Link |
+|---|---|---|---|---|
+| `rescisao-trabalhista` | 401 | 11 | **7,29** | nº 3 publicou em 21/09, depois da janela: **base limpa** |
+| `decimo-terceiro` | 51 | 0 | **8,39** | nº 4 publicou em 15/09: 5 dos 13 dias já têm o link, cedo demais para efeito |
+
+**Ressalva do 13º:** a página com dois links pagos tem pouca demanda no Bing
+agora (51 impressões), e ela vai subir sozinha com a sazonalidade de
+outubro-dezembro. **Medir o link 4 pela posição, nunca pela impressão.**
+
+**5. Consultas de página 1 com zero clique:**
+
+| Consulta | Impr | Pos |
+|---|---|---|
+| `calculadora inss` | 59 | 9,5 |
+| `cálculo irrf 2026` | 55 | 7,4 |
+| `cálculo verbas rescisórias sem justa causa brasil 2026` | 40 | **3,3** |
+| `calcular inss` | 39 | 7,8 |
+| `calculadora irpf 2026` | 30 | 8,8 |
+| `calculo de rescisão trabalhista` | 25 | 9,4 |
+
+Somam ~248 impressões. As que deram clique ficam ao lado:
+`calculadora irrf 2026` 27 @ 6,2 (2 cliques), `calcular férias 2026` 10 @ 6,6
+(2), `calculadora de férias 2026` 40 @ 8,6 (1). **A anomalia é a posição 3,3
+com 40 impressões e zero clique.** Tem a forma de citação dentro de resposta do
+Copilot (aparece, mas ninguém clica), e não de link azul. **É hipótese.**
+Também: não há `/calculadora/irpf` na lista de páginas, embora a consulta
+`calculadora irpf 2026` exista. O Bing provavelmente mostra o IRRF para quem
+busca IRPF.
+
+**6. O Bing é desktop: 2.307 impressões contra 15 no celular (99,4%).** Isso
+bate com o Clarity (Edge em 40% das sessões) e com o resumo do Copilot de hoje
+("usuários de desktop"). **Para este canal, UX de desktop é a que importa.** O
+F56 (mobile) não o afeta.
+
+**7. Países:** Brasil 2.168 e 40 cliques (93%). EUA 118 e zero clique, com
+consulta lixo em posição 10 ("cheap hotels in paris", "panini near me", "how to
+get rid of fruit flies"). Ignorar.
+
+**8. A lacuna concreta: férias.** É a 4ª página do Bing (292 @ 8,1) e o 3º tema
+da IA, com o **menor SoA** (14,5%). E o maior prompt do relatório é
+exatamente sobre ela: *"vou tirar 10 dias de férias somente, quanto receberia
+no próximo mês pós férias"* (17 @ 6,8). **O `ferias.mdx` não trata do
+salário do mês seguinte às férias**: não há nenhuma ocorrência de "mês
+seguinte", "próximo mês" ou "depois das férias". Ele cobre abono e venda de 10
+dias, mas não a dúvida clássica de quem volta e recebe um contracheque menor,
+porque as férias foram pagas adiantadas. **Candidato mais barato da rodada:**
+uma seção/FAQ (ou um post no molde do F60) sobre o salário do mês depois das
+férias, numa página em que o índice da Microsoft já nos põe na página 1. Não
+abri feature; é decisão do Paulo.
+
+**O que checar no próximo export do BWT:**
+- `rescisao-trabalhista` contra a base 7,29 (link 3) e `decimo-terceiro` contra
+  8,39, por posição (link 4).
+- Se os posts do F60 sobem de 5,5 e se o post do F22 aparece.
+- Se a consulta em 3,3 com zero clique continua. Se continuar, é citação
+  do Copilot.
+- Mesma janela de 13 dias ou exportar "últimos 28 dias". Sempre ler o
+  período antes de comparar.
+
+### 2026-09-22 (parte 3) — Export novo: a "melhora de posição" do Google é mistura, e quem cresceu foi Bing e IA
+
+Paulo pediu para incluir a pasta `gsc/` junto do resumo do Clarity. Vieram as
+quatro fontes: GSC (`...-2026-09-22/`, 20/06→19/09), BWT (CSV solto, 08→20/09),
+GA4 (4 relatórios, 25/08→21/09, 28 dias) e Clarity (2 painéis e 2 exports de
+clique, 20→22/09; SoA 16→22/09).
+
+**1. O GSC parece ter dado um salto, e não deu.** A série semanal:
+
+| Semana | Impr | Impr/dia | Pos. ponderada |
+|---|---|---|---|
+| W35 (24/08) | 186 | 26,6 | 68,1 |
+| W36 (31/08) | 265 | 37,9 | 66,2 |
+| W37 (07/09) | 218 | 31,1 | 61,3 |
+| **W38 (14/09, 6d)** | **360** | **60,0** | **25,3** |
+
+Impressão dobrou e a posição foi de 61 para 25. A diária de 14 a 19/09 ficou
+em 28,4 · 19,1 · 22,1 · 19,6 · 30,3 · 34,0. **A explicação está nas páginas, não
+no ranking:**
+
+| Página | 14/09 | 22/09 | Δ |
+|---|---|---|---|
+| `porcentagem` | 293 @ 9,09 | **394 @ 9,30** | **+101** |
+| `margem-lucro` | 204 @ 11,35 | **314 @ 11,11** | **+110** |
+| `rescisao-trabalhista` | 330 @ 91,8 | 370 @ 91,39 | +40 |
+| `decimo-terceiro` | 277 @ 86,5 | 308 @ 86,93 | +31 |
+| `salario-liquido` | 74 | 73 @ 68,96 | −1 |
+| `cdb` | 52 | 43 @ 42,26 | −9 |
+| `irrf` | 26 | 23 @ 74,61 | −3 |
+| `inss` | 5 | 8 @ 42,12 | +3 |
+
+A janela andou 7 dias: entraram 13→19/09 (394 impressões) e saíram 13→19/06
+(~110, deduzido de 2.683 → 2.967). **`porcentagem` e `margem-lucro` somam +211
+líquidas, ou seja, ao menos 54% das impressões da semana nova, em posição
+9-11.** Tirando as duas, o resto da semana fica em torno de 48-62, a mesma
+faixa de antes. **É mudança de mistura, não ganho de ranking.** Rescisão e 13º
+não mexeram (91 e 87). O "sinal fraco a favor" de 14/09 (29,8 em 12/09) fica
+respondido: era o começo desse mesmo pico de `porcentagem`/`margem-lucro`, que
+continuam com **zero clique**, como fechado em 14/09.
+
+Outros números da rodada, para a próxima comparação:
+- **2.967 impressões, 2 cliques em 3 meses** (os mesmos de 09/08 e 25/08, então
+  zero clique novo). Dispositivo: computador 1.877 @ 71,7, celular 1.074 @ 49,1.
+  14% das impressões são de fora do Brasil.
+- **798 consultas nomeadas, 1.997 impressões: 73,5% em 80+, 98,3% pior que 50.**
+  Bucket anonimizado: 970 (32,7%).
+- **Única cauda boa entre as nomeadas: `salário líquido` em 18-20**, com 11
+  variantes ("calculo de salario liquido", "calculadora salário líquido" etc.)
+  de 1-2 impressões cada. É a página do link da Band, e o F64 deixou o motor em
+  2026. Pouco demais para concluir; **acompanhar.** *(Parte 5: descartado. A
+  página não aparece em nenhuma das duas últimas semanas, então essas
+  impressões são de antes de 06/09.)*
+- `calculo rescisão comum acordo`: 9 @ 94,8. É o tema exato da matéria do Jornal
+  de Brasília (parte 1).
+- **O F58 e os 4 posts do F60 continuam com zero impressão.** O post do F22
+  segue sozinho: 13 @ 15,46.
+
+**2. BWT: 13 dias, e a semana nova cresceu.** Uma correção de método antes:
+**12/09 não era dia parcial, era sábado.** O Bing tem padrão forte de dia útil:
+
+| | Dias | Impr/dia | Cliq/dia |
+|---|---|---|---|
+| Dias úteis | 9 | **235** | **4,3** |
+| Fim de semana | 4 | 51 | 1,0 |
+
+| Semana (dias úteis) | Cliques | Impr | Impr/dia |
+|---|---|---|---|
+| 08→11/09 (ter-sex) | 15 | 743 | 186 |
+| **14→18/09 (seg-sex)** | **24** | **1.375** | **275 (+48%)** |
+
+Pico em 15/09 (341). **Não atribuir ao link do `mercadohoje`**: ele publicou às
+15:00 UTC desse mesmo dia, e o Bing leva semanas. **Semana nova: 27 cliques no
+Bing contra zero no Google.** Continua faltando o export de consultas e páginas
+do BWT (só veio o overview diário).
+
+**3. GA4 (25/08→21/09): 223 usuários, +26% sobre 177 (11/08→07/09).** As
+janelas se sobrepõem em duas semanas. Sessões por origem:
+
+| Origem | 08/09 | 22/09 |
+|---|---|---|
+| direto | 76 | 111 |
+| `bing` | 109 | 89 |
+| **`chatgpt.com`** | **8** | **28 (3,5x)** |
+| Yahoo | 10 | 16 |
+| `band.com.br` | 15 | 12 |
+| `qmix` | 6 | 5 |
+| Copilot | 5 | 5 |
+| `mercadohoje.uai.com.br` | — | **3 (1ª semana)** |
+| DuckDuckGo | 2 | 2 |
+| **`google / organic`** | **0** | **0** |
+
+- **Os links pagos mandam gente de verdade**, além de autoridade: `band.com.br`
+  com 12 sessões e `mercadohoje` com 3 na primeira semana. O `acritica.com` não
+  aparece.
+- **O direto está inflado por bot:** 25 usuários da China (Zhangjiajie, Wuxi) e
+  25 dos EUA, vários em cidades de datacenter (Ashburn, Council Bluffs,
+  Boardman, Santa Clara). Brasil: **156 usuários**.
+- Páginas: home 81 views, **IRRF 49 (41 usuários)**, rescisão 45, hub 37,
+  Tesouro 21. O IRRF tem 41 usuários no mês e 23 impressões no Google em 3
+  meses: são os "dois públicos" de 14/09 de novo.
+- `calculator_calculated` **271** (242 em 08/09).
+- **Correção sobre o F45: "Leads qualificados" vai continuar 0, e isso não
+  indica falha.** Esse relatório conta o evento recomendado `qualify_lead`, que o
+  site não dispara. Marcar `calculator_calculated` como evento principal
+  aparece em outro lugar: **"Eventos principais: 235"** no mesmo export. **O F45
+  está funcionando; parar de ler "Leads qualificados"** (a nota de 10/09 dizia
+  que ele deixaria de ser 0, e não deixa).
+- **Erros:** `exception` 165 + `resource_error` 132 para 382 `page_view`. A
+  janela mistura antes e depois do F62 (10/09), então ainda não dá para ler a
+  proporção. **O `description` continua fora do export padrão.** É a 4ª rodada
+  sem ele. Para lê-lo, o Paulo precisa abrir um relatório Explorar com o evento
+  `exception` e a dimensão `description`.
+
+**4. Clarity (20→22/09): o dado mais limpo até agora.** 25 sessões, **5 de bot
+(20%, contra 57% em 14/09)**, 23 usuários únicos. Páginas: **rescisão 10
+sessões**, IRRF 8, e 2 cada para home, hub e poupança. Referenciadores: `bing`
+10, `chatgpt` 2, e **Google zero de novo**. "Enviar formulário" em 48% das
+sessões. Performance **95** (LCP 0,596s, INP 112ms, CLS 0,002), zero erro de JS.
+Clique inativo em 16% (4 sessões).
+
+**Heatmap da rescisão (15 pageviews, 147 cliques):**
+- Botão de calcular 31 (**2,1 por pageview**, contra 2,8 em 14/09). `#dataRescisao`
+  20, `#motivoRescisao` 14, `#dataAdmissao` 7, `#saldoFGTS` 6.
+- **Cliques em coisa que não é clicável:** o valor grande do resultado
+  (`P.text-result-lg`) leva 10, e as linhas do `#detalhamento-lista` ~15. É a
+  mesma família do achado do hub em 14/09. A leitura mais provável é gente
+  querendo copiar o valor ou esperando uma explicação da linha. **Ver um replay
+  antes de decidir.**
+- Chips de atalho ~8 cliques e botões de +/− ~15: estão sendo usados.
+
+**Heatmap do IRRF:** está na parte 2 (`#origemRendimento` 16 de 34, breadcrumb
+"Impostos" 2).
+
+**5. GEO cresceu 59% numa semana.** Share of Authority **21,48%** (era 20,6%),
+**994 citações** em 7 dias (eram 625). O tráfego de IA medido pelo Clarity foi de
+11 para 7, mas o GA4 do mês mostra o ChatGPT em 3,5x. Por tema (963 das 994
+citações estão nas queries listadas):
+
+| Tema | Citações | Destaques |
+|---|---|---|
+| INSS | 353 | `calculo inss` 144 (SoA 26,7%), `calcular inss` 94 (37,6%) |
+| IRRF/IR | 311 | `cálculo irrf 2026` 70, `base de calculo irrf` 36 (33,3%) |
+| **Férias** | **112** | **`cálculo de férias 2026` 75 (SoA 14,5%)**, `calcular horas de férias` 25 |
+| CDB | 48 | |
+| Tesouro | 30 | incluindo 2 perguntas longas de simulação |
+| 13º | 30 | `calcular decimo` 18 (46,2%) |
+| Rescisão/trabalhista | 20 | `calculo rescisão trabalhista 2026` 10, igual a 14/09 |
+
+**Férias entrou no vocabulário da IA.** Em 14/09 não havia uma query de férias
+na lista; agora é o 3º tema, e com o **menor SoA** dos grandes (14,5%, contra
+27-38% do INSS). Tem demanda e a gente divide com muita gente. Na mesma lista,
+`calcule net ir` (28 citações, SoA 35%) é a **marca de um concorrente** sendo
+buscada na IA, e a resposta cita a gente em um terço das vezes.
+
+**Leitura da rodada:** nada mudou no Google (a melhora é mistura), e **os dois
+canais que já funcionavam cresceram na mesma semana**: Bing +48% por dia útil e
+citações de IA +59%. O F64 (13/09) é o candidato natural para a parte da IA,
+porque INSS e IRRF 2026 são exatamente o que ele corrigiu. Mas é uma semana e
+não prova causa.
+
+**O que checar no próximo export:**
+- ~~**GSC com filtro de data, por página: últimos 7 dias × 7 anteriores.**~~ ✅
+  veio na mesma sessão (parte 5). A mistura se confirmou (69% da semana), e o
+  `salario-liquido` em 18-20 não é recente.
+- ~~**BWT → consultas e páginas**~~ ✅ veio na mesma sessão (parte 4). Falta
+  **BWT → Vínculos regressivos**: `mercadohoje` e `jornaldebrasilia` devem
+  entrar (parte 1).
+- Se o SoA de férias sobe e se INSS/IRRF sustentam o patamar pós-F64.
+- GA4: `exception` por `description` num relatório Explorar (4ª rodada).
+  Com a janela inteira depois do F62 (a partir de ~08/10), comparar
+  `exception` com `resource_error`.
+- Semrush Domain Overview (AS): em 09/08 era 2, e com 4 links publicados é a
+  hora de medir de novo.
+
+### 2026-09-22 (parte 2) — Resumo do Clarity sobre a calculadora de IRRF
+
+Paulo colou o resumo que o próprio Clarity gerou (Copilot). O resumo não diz a
+janela nem o número de sessões. Página: `/calculadora/irrf`, reconhecida pelo
+botão "Calcular IRRF". Texto original:
+
+> **Comportamentos do usuário**
+> - Usuários de desktop clicaram primeiro em Origem do rendimento e depois em
+>   Impostos.
+> - Últimos cliques foram em Salário bruto e no botão de envio (Calcular IRRF).
+> - Poucos usuários rolaram além de 20% da página, nenhum chegou ao final.
+>
+> **Principais conclusões**
+> - Para melhorar a interação, destacar campos como Origem do rendimento e
+>   Salário bruto.
+> - Otimizar conteúdo acima da dobra média (728px), pois poucos rolam mais que
+>   20%.
+> - Reduzir cliques mortos em Impostos para evitar frustração.
+
+**Contexto para ler isso:**
+- **Origem do rendimento em primeiro confirma o dado de 14/09**: `#origemRendimento`
+  já era o campo mais clicado da página (5 de 22 cliques, 22,7%). No export de
+  cliques desta rodada são **16 de 34 (47%)** em 13 pageviews. Parte disso é
+  mecânica: é um `<select>` nativo, e abrir e escolher contam dois cliques. Ainda
+  assim, o default é `salario` e só há outra opção (`aluguel`), então quem
+  clica ali está olhando a alternativa. Isso reforça a tese do `calculo irrf
+  aluguel 2026` (ver "Ao voltar").
+- **"Impostos" é o breadcrumb, e ele funciona.** O export de cliques localiza o
+  elemento: `NAV > OL > LI:nth-of-type(2) > A`, que é o segundo item do
+  breadcrumb (`Início > Impostos > IRRF`), com 2 cliques. É um `<Link>` para
+  `/categoria/impostos`, que responde 200 e aparece no painel do Clarity como
+  página visitada na mesma janela. Minha primeira leitura (o dropdown do menu
+  do topo, `Navigation.tsx:59`) estava errada; o menu fica fora do `MAIN` e não
+  aparece no export. **O "clique morto" do Copilot é fraco:** o link navega. O
+  mais provável é um dos dois cliques ter sido marcado como inativo pela
+  navegação client-side do Next, que não recarrega a página. **Não mexer.** Na
+  verdade é sinal bom: quem chega pelo IRRF vai procurar outras calculadoras de
+  imposto.
+- **Rolagem abaixo de 20% casa com o fluxo esperado**: a pessoa preenche,
+  calcula e vai embora, e o F59 já abre o resultado. O que fica abaixo da dobra
+  é FAQ e conteúdo, que existem para o Google e para a IA, não para quem usa a
+  calculadora. Não é sinal de problema por si só.
+- **Cuidado com o volume**: na janela de 14/09, 16 das 28 sessões do Clarity
+  eram bot. Tratar o resumo como qualitativo até ver quantas sessões ele cobre.
+
+Nenhuma feature aberta. O único candidato, se o padrão se repetir no próximo
+export, é o endereçamento de aluguel no IRRF (já registrado em "Ao voltar"). O
+`origemRendimento` já é o primeiro campo do formulário. Números brutos deste
+Clarity e do resto do export na parte 3, logo acima.
+
+### 2026-09-22 (parte 1) — Link 3 publicado, mas no Jornal de Brasília e numa seção de link pago
+
+Paulo mandou a URL e pediu "avalie e registre esse novo backlink". É o **link 3
+do plano**: destino `/calculadora/rescisao-trabalhista` e âncora
+`calcular rescisão do contrato de trabalho`, os dois exatamente como decidido em
+14/09. **Só que o veículo não é o encomendado:** o plano registrou
+`msnoticias.com.br`, e o link saiu em **`jornaldebrasilia.com.br`** (Jornal de
+Brasília, jornal tradicional do DF). Publicado em **21/09 às 12:16 (BRT)**, 7
+dias depois da encomenda.
+
+**URL:** `https://jornaldebrasilia.com.br/brasil-7/demissao-por-acordo-o-que-o-trabalhador-do-df-recebe-e-o-que-perde/`
+
+Anchor extraído do HTML bruto:
+
+```html
+<a href="https://calculosonline.com.br/calculadora/rescisao-trabalhista">calcular rescisão do contrato de trabalho</a>
+```
+
+**O checklist de 14/09 passa inteiro:**
+
+| Critério | Resultado |
+|---|---|
+| Link no HTML servido (SSR) | ✅ não depende de JS |
+| `rel` nofollow/sponsored/ugc | ✅ ausente → dofollow. O único `rel="nofollow noopener"` da página é dos 12 botões de compartilhar do AddToAny |
+| Posição | ✅ 21º de 29 blocos do corpo: fecha a seção "Simulação: o mesmo trabalhador em três saídas" |
+| Âncora | ✅ a do plano, em frase natural ("Antes de assinar, vale calcular rescisão do contrato de trabalho nas três modalidades com os próprios números…") |
+| Destino | ✅ HTTP 200, sem redirect |
+| Indexável | ✅ `robots: index, follow`, sem `X-Robots-Tag`, `Disallow:` vazio no `robots.txt` |
+| Canonical | ✅ self-canonical |
+| Rotulagem | ✅ nenhum "patrocinado"/"publieditorial"/"informe publicitário" |
+| Links externos no corpo | ✅ **o nosso é o único**; o outro link do corpo é interno do jornal (FGTS) |
+
+**O encaixe temático é o melhor dos quatro placements.** A matéria tem 1.392
+palavras sobre demissão por acordo (art. 484-A, Lei 13.467, Lei 12.506, art. 477)
+e monta uma simulação comparando **dispensa sem justa causa, pedido de demissão e
+acordo**. A frase do link manda o leitor calcular "nas três modalidades", e o
+`RescisaoForm` tem as três (`sem_justa_causa`, `pedido_demissao` e `acordo_mutuo`,
+esta com as duas leituras do aviso desde o F40). A promessa da âncora é cumprida
+na página de destino. Ainda existe o post do F60
+`rescisao-por-acordo-mutuo-quanto-voce-recebe` para quem quiser o texto.
+
+**O problema está na seção onde a matéria saiu, não no link.** `brasil-7` não é
+editoria do jornal, é **um balde de conteúdo pago**:
+
+- O noticiário de verdade fica em `/noticias/economia/` (categoria 38). A
+  `brasil-7` (categoria 444297, "brasil") tem **972 posts** e **não é linkada nem
+  pela home nem pela própria matéria**.
+- Os vizinhos do mesmo dia e da mesma semana: "10 melhores especialistas em
+  cirurgia da mão em Goiânia e Brasília", "10 melhores espaços de coworking em
+  Brasília", "Maxim no Brasil… 3", "Melhores ERPs para comércio" e um post
+  **em inglês** ("best portable monitors for home office…").
+- Abri três deles e **cada um tem exatamente um link comercial de saída com
+  âncora de palavra-chave**: `conceptoffices.com.br` ("espaço de coworking em
+  Brasília"), `certifica.com.br` ("certificadora digital online") e
+  `internationalenglishtest.com` ("teste de nível de inglês"). É o mesmo padrão
+  do nosso link.
+
+**O que isso significa, sem exagerar:** nenhum dos três placements anteriores
+estava numa seção assim (`acritica` em `/economia/`, `mercadohoje` no
+`sitemap-news.xml`). Seção de notícia com um post pago atrás do outro, cada um
+com um link comercial, é exatamente o que a política de *site reputation abuse*
+do Google (2024) e os sistemas de link spam procuram. **O efeito provável não é
+punição para o `calculosonline`, é o link ser neutralizado no Google.** No Bing,
+que é quem manda tráfego e rankeia o site em 4-9, a expectativa é contar.
+**Consequência para o F15:** este link é **pior evidência** que os outros para
+responder "link move o Google?". Se `rescisao-trabalhista` não sair do lugar no
+Google, a leitura é "este link pode não ter contado", e não "link não funciona".
+
+**Segundo risco: descoberta.** Os sitemaps do jornal **pararam em 18/03/2026**
+(o último `post-sitemap1275.xml` termina aí e o `news-sitemap.xml` está vazio).
+Isso vale para o site inteiro, não só para esta matéria, mas deixa a página sem
+nenhum caminho de sitemap. Ela também não está no `/feed/` nem na home. **O único
+caminho de rastreio é a página 1 da `/brasil-7/`**, e ela recebe ~5 posts por dia
+(só em 21/09 foram 5). Em poucos dias a matéria cai para a paginação. IndexNow
+não ajuda, porque só submete URL do próprio host. **Se o `jornaldebrasilia.com.br`
+não aparecer no BWT → Vínculos regressivos em ~4 semanas, suspeitar da descoberta
+antes de suspeitar do link.**
+
+**O `msnoticias` não vem (confirmado pelo Paulo na mesma sessão).** O
+Jornal de Brasília **substituiu** o MS Notícias como link 3; destino e âncora
+idênticos já indicavam troca de veículo pelo fornecedor (`qmix`). **O plano de
+14/09 fecha em 4 links**, e `rescisao-trabalhista` fica com um só.
+
+**Placar: 4 placements publicados** (`band.com.br`, `acritica.com`,
+`mercadohoje.uai.com.br` e `jornaldebrasilia.com.br`). O 4º vale com a ressalva da
+seção. No BWT o esperado é ir de 2 para 4 domínios quando o `mercadohoje` e o
+`jornaldebrasilia` forem descobertos.
+
+**Regra nova para as próximas compras:** o checklist de 14/09 confere a página e
+não a seção. **Item 6: abrir a categoria da matéria e 2-3 vizinhos. Se cada
+vizinho tem um link comercial de saída, é balde de link pago, mesmo que o domínio
+seja de jornal de verdade.** E, antes de pagar, pedir ao fornecedor a URL da
+seção onde a matéria vai sair. Só com o nome do veículo não dá para saber se ela
+cai numa editoria ou num balde.
+
+**Agenda deste link:**
+1. ~~Paulo confirmar se o `msnoticias` ainda vem~~ ✅ não vem, foi substituído.
+2. Reconferir o HTML bruto em ~30 dias (~21/10).
+3. BWT → Vínculos regressivos: `jornaldebrasilia.com.br` deve entrar. Se não
+   entrar em ~4 semanas, o suspeito é a descoberta (sitemap congelado).
+4. Posição de `rescisao-trabalhista` no **BWT**. No Google, qualquer leitura
+   deste link sai com a ressalva da seção.
+
+### 2026-09-15 — Link 4 publicado: o `mercadohoje` veio dofollow, e o risco de `sponsored` não se confirmou
+
+Paulo mandou a URL e pediu "valide o backlink". É o **link 4 do plano** —
+`mercadohoje.uai.com.br`, editoria de finanças do portal UAI (Diários
+Associados), apontando para `/calculadora/decimo-terceiro`. Encomendado em
+14/09, publicado em **15/09 às 15:00 UTC**, ou seja, menos de 24h entre pedido
+e publicação.
+
+**URL:** `https://mercadohoje.uai.com.br/2026/09/15/13o-salario-ferias-e-horas-extras-as-contas-que-mais-geram-duvida`
+
+O anchor, extraído do HTML bruto (não do markdown renderizado, justamente para
+ver o `rel`):
+
+```html
+<a href="https://calculosonline.com.br/calculadora/decimo-terceiro">cálculo 13 proporcional</a>
+```
+
+**O risco específico que eu tinha registrado em 14/09 não aconteceu.** A
+ressalva era que o `mercadohoje` tem blocos "Publicidade" e nenhuma política
+visível de rotulagem de patrocinado, e que o link podia vir com
+`sponsored`/`nofollow` se a matéria caísse em slot publieditorial. **Não veio
+atributo `rel` nenhum** — é dofollow limpo, em matéria editorial normal, com a
+âncora exata que o plano pediu ("cálculo 13 proporcional", KD 16).
+
+Checklist completo, aplicando o método de 14/09 (**só o HTML bruto decide se um
+link conta**, o `GSC → Links` amostra e atrasa):
+
+| Critério | Resultado |
+|---|---|
+| Link no HTML servido (SSR) | ✅ não depende de JS |
+| `rel` nofollow/sponsored/ugc | ✅ ausente → dofollow |
+| Posição | ✅ 3º parágrafo do corpo editorial, não footer/sidebar |
+| Âncora | ✅ `cálculo 13 proporcional` — a do plano |
+| Destino | ✅ HTTP 200, sem redirect |
+| Relevância temática | ✅ matéria sobre 13º → calculadora de 13º |
+| Indexável | ✅ `robots: index, follow` + `Disallow:` vazio no `robots.txt` |
+| Canonical | ✅ self-canonical (só difere pela barra final) |
+| Sitemap | ✅ no `sitemap-news.xml` |
+
+**O detalhe que faz esse placement valer mais que os anteriores: é o único link
+externo editorial da página.** São 33 links no total — 24 internos e 9
+externos, e desses 9, oito são propriedades do próprio grupo (em.com.br,
+uai.com.br, alterosa, lugarcerto, vrum, superesportes, revista encontro) mais
+um institucional (a4d.com.br). Nenhum outro site de fora divide o link juice.
+Nada de link farm.
+
+**Ressalva de autoridade:** é *subdomínio* do UAI, não o domínio raiz. Herda
+força do `uai.com.br`, mas não é o mesmo que um link em `uai.com.br/economia`.
+Vale como link editorial real; não vale como se fosse home do portal.
+
+**Placar de backlink agora: 3 reais** (`acritica.com`, `band.com.br`,
+`mercadohoje.uai.com.br`), com o 4º (`msnoticias.com.br` → rescisão) ainda
+pendente de publicação. **Medir no BWT, não no GSC** — o Bing responde em
+semanas, o Google amostra e atrasa, e foi exatamente isso que o caso
+`acritica` de 14/09 provou.
+
+**Agenda deste link:**
+1. Reconferir o HTML bruto em ~30 dias (portal pode editar e tirar o link
+   depois do pagamento — foi a suspeita que motivou o método, e que no
+   `acritica` se mostrou infundada).
+2. Acompanhar `decimo-terceiro` em "Vínculos regressivos" do BWT e a posição
+   do cluster do 13º — **este é o segundo link na mesma página, de propósito**,
+   para separar "link não funciona" de "um link não basta". É essa resposta
+   que destrava o orçamento do F15.
+3. A janela é curta: seis semanas até o pico de nov/dez. O F64 já consertou o
+   motor da página que recebe o link.
+
+### 2026-09-14 — Export novo: o arquivo solto na raiz é do Bing, e ele mede o mesmo dia que o Google
+
+Paulo pediu "avalie a pasta gsc". Vieram três fontes: a pasta datada do GSC
+(`...-Performance-on-Search-2026-09-14/`, 13/06→12/09), **sete arquivos do
+Clarity** (voltaram depois de faltarem em 08/09) e um CSV solto na raiz,
+`calculosonline.com.br_SearchPerformanceOverview_All_14_09_2026.csv`.
+
+**1. O achado de método: aquele CSV solto NÃO é do GSC — é do Bing Webmaster
+Tools.** Foi o furo de 08/09 sendo fechado, e passou despercebido porque o
+arquivo tem cara de export do Search Console. As assinaturas que separam os dois:
+
+| | Pasta GSC | CSV solto |
+|---|---|---|
+| Data | `2026-06-13` (ISO) | `08/09/2026 00:00:00` |
+| Decimal | `40.9` (ponto) | `2,29` (vírgula) |
+| Coluna posição | sim | **não existe** |
+
+E o teste que não deixa dúvida: **os dois cobrem os mesmos 5 dias e discordam
+por 5,7x.** Se fossem a mesma propriedade seriam iguais.
+
+| Dia | Bing impr | Bing cliq | Google impr | Google cliq |
+|---|---|---|---|---|
+| 08/09 | 175 | 4 | 47 | 0 |
+| 09/09 | 186 | 0 | 22 | 0 |
+| 10/09 | 194 | 4 | 24 | 0 |
+| 11/09 | 188 | 7 | 37 | 0 |
+| 12/09 | 35 (parcial) | 1 | 11 (parcial) | 0 |
+
+*(Correção de 22/09: 12/09 não era parcial, era **sábado**. O export seguinte
+manteve 35 e 11, e o Bing tem ~51 impressões/dia no fim de semana contra ~235
+em dia útil.)*
+
+**Nos 4 dias completos: Bing 743 impressões e 15 cliques (CTR 2,0%); Google 130
+impressões e ZERO cliques.** Confere com a nota de 10/09 (lá o primeiro dia do
+BWT tinha 3 cliques; aqui 10/09 aparece com 4 — o BWT consolida para cima, o que
+é mais uma confirmação de que a fonte é ele).
+
+**O que isso muda:** a leitura de 10/09 ficou registrada com ressalva ("é 1 dia e
+9 linhas, não dá base para decisão"). **A ressalva caiu.** São 5 dias, série
+contínua, medindo os mesmos dias que o Google — e a conclusão é a mesma. O Bing
+não é "o outro buscador"; é **o** buscador deste site.
+
+**2. GSC: 2.683 impressões e 2 cliques em 3 meses.** Contra 2.562/3 em 08/09 —
+janela rolante, então o volume está estável e o clique é ruído em torno de zero.
+
+| Semana | Impr | Impr/dia | Pos. ponderada |
+|---|---|---|---|
+| W33 (10/08) | 168 | 24,0 | 59,9 |
+| W34 (17/08) | 167 | 23,9 | 58,4 |
+| W35 (24/08) | 186 | 26,6 | 68,1 |
+| W36 (31/08) | 265 | 37,9 | 66,2 |
+| W37 (07/09, 6d) | 184 | 30,7 | 62,9 |
+
+As quatro primeiras linhas batem **exatamente** com a tabela de 08/09 — o export
+é consistente entre rodadas, o que valida o método de comparar pelas séries
+semanais.
+
+**Distribuição por posição, medida agora sobre as 772 consultas nomeadas
+(1.933 impressões): 73,4% em posição 80+ e 98,3% pior que 50.** Só **1
+impressão** do site inteiro em top 10 por consulta nomeada. O bucket anonimizado
+é 750 impressões (28,0%).
+
+**Sinal fraco a favor:** os 4 últimos dias da janela têm posição 60,0 → 43,1 →
+50,6 → 29,8, bem melhor que a média da semana. Pode ser o F58/F60/F64 assentando
+ou ruído de dia parcial. **Não decidir nada com isso** — conferir na próxima.
+
+**3. Os itens que a rodada de 08/09 mandou checar, respondidos.**
+
+- **`porcentagem` e `margem-lucro`: confirmado pela 2ª rodada seguida.**
+  `porcentagem` 293 impr @ **9,09** e `margem-lucro` 204 @ **11,35**, as duas com
+  **zero clique**. 497 impressões em página 1 que não viram nada. **Questão
+  fechada pelo critério combinado — não investir mais nessas duas.**
+- **`rescisao-trabalhista` 266 → 330 (+24%) e `decimo-terceiro` 239 → 277
+  (+16%).** As impressões continuam subindo e **a posição não mexeu** (91,8 e
+  86,5, contra 91,5 e 85,8). Era o esperado: 6 dias de F60.
+- **O F58 continua com ZERO impressão no GSC**, 13 dias depois.
+- **Os 4 posts do F60 também têm zero impressão no GSC.** O único post que
+  aparece é o do F22 (30/08): 12 impressões @ 15,83.
+- **O breakdown de `exception` por `description` não veio.** Pendência aberta
+  desde 20/08 — **terceira rodada**.
+- **O GA4 não veio nesta rodada.** Sem ele não há sessão nem conversão.
+
+**4. A suspeita de pipeline de 08/09 estava ERRADA, e isso é bom saber.** A
+hipótese registrada era que o hub do F58 pudesse estar fora do `sitemap.xml` e,
+por consequência, fora do IndexNow. Verificado nos três pontos:
+`apps/web/src/app/sitemap.ts:67` inclui o hub com prioridade 0,9; o
+`sitemap.xml` **em produção** traz as 39 URLs, o hub e os 5 posts; e
+`apps/web/scripts/indexnow.mjs:42` monta a lista de URLs lendo o próprio
+sitemap de produção. **O hub e os posts são submetidos. Não há bug de rota** —
+o que há é o Google não rankeando. Fechar essa suspeita evita gastar a próxima
+rodada nela.
+
+**5. O achado que reordena a prioridade: a página mais usada do site é invisível
+no Google.** No Clarity (12→14/09) `/calculadora-trabalhista-completa` empata em
+1º lugar em sessões com a home (7 cada) e é **a página com mais interação do
+site** — 45 cliques em 7 pageviews no PC, 13 toques em 3 no celular. E tem 0
+impressão no GSC. O F58 funciona; quem chega nele não vem do Google.
+
+**6. GEO: o site tem dois públicos e só um deles aparece no GSC.** Share of
+Authority de **20,6%**, **625 citações** em 7 dias, 11 sessões de AI referral.
+
+| Página | Citações (7d) | Impressões GSC (3 meses) |
+|---|---|---|
+| `calculadora/irrf` | **224** | 26 |
+| `calculadora/inss` | **223** | 5 |
+| `calculadora/cdb` | 35 | 52 |
+| `calculadora/salario-liquido` | 30 | 74 |
+
+**Duas páginas fazem 71% das citações de IA e somam 31 impressões no Google em
+três meses.** E os vocabulários são de mercados diferentes:
+
+- **Vocabulário da IA** — com ano, e financeiro/fiscal: `calculo inss` (204),
+  `calculadora irrf 2026` (66), `calculo de salario liquido online` (30),
+  `calcular ir 2026` (28), `calculo de irrf 2026` (24), `calculadora de
+  investimento tesouro direto` (15), `calcular rendimento cdb` (14).
+- **Vocabulário do GSC** — sem ano, e trabalhista: `calculadora hora extra` (61),
+  `calculadora de décimo terceiro` (50), `calculadora ferias` (41),
+  `calculadora de financiamento` (38).
+
+**A consequência incômoda: os últimos três meses de conteúdo (F22, F58, F60 — o
+cluster 13º/rescisão) foram todos investidos no mercado do Google, que entrega
+zero clique.** O mercado que entrega — Bing + IA — pede INSS/IRRF/salário
+líquido com o ano no nome, que é exatamente o que o F64 acabou de deixar certo e
+que quase nenhum concorrente atualizou. O cluster trabalhista aparece na IA, mas
+pequeno (`calculo rescisão trabalhista 2026`, 10 citações).
+
+**7. UX concreto do heatmap: quase metade dos cliques nos cards de resultado do
+hub erra o alvo.** No `/calculadora-trabalhista-completa`, dos cliques em cards
+de resultado, **5 caem no `SUMMARY`** (funcionam) e **4 caem no `LI` do card**
+(não fazem nada). Mais 8 cliques em containers puros (`MAIN.flex-grow`,
+`DIV.mx-auto`, `SECTION.rounded-xl`). O painel do Clarity confirma por outro
+caminho: **"Clique inativo" em 17,86% das sessões**. A correção é barata —
+o gatilho do `<details>` tem de ser o cabeçalho inteiro do card, não só o texto
+do `summary`.
+
+Dois sinais menores da mesma fonte: na rescisão, **`#dataAdmissao-hint` levou 3
+cliques** (gente clicando no texto de dica, que não é interativo), e o botão de
+calcular levou **14 cliques em 5 pageviews**. Recalcular é uso normal de
+calculadora, mas 2,8x por visita merece um replay de sessão antes de assumir que
+é iteração e não botão que não responde.
+
+**8. Performance não é gargalo e pode sair da lista:** score 90, LCP 1,572s,
+INP 182ms, CLS 0,00025, **zero erro de JavaScript**.
+
+**9. Dado sujo a registrar antes que a pasta seja sobrescrita: 16 das 28 sessões
+do Clarity (57%) são bot.** Sobram ~12 sessões reais em 3 dias. **Nesta janela o
+Clarity é fonte qualitativa (heatmap e Share of Authority), não quantitativa** —
+nenhuma conclusão de volume sai dele. Os referenciadores das sessões reais:
+`bing` 6, `chatgpt` 4, `yahoo` 2, `copilot` 2, e uma da própria preview da
+Vercel (Paulo testando). **Google: zero, de novo.**
+
+**10. Semrush (mesma sessão): 201 keywords, 130.160 buscas/mês endereçadas, 1
+visita.** Paulo mandou 3 páginas de posições. Deduplicado por keyword (o Semrush
+repete a mesma com SERPs diferentes), mantendo a melhor posição:
+
+| Página | Kws | Volume/mês | Melhor pos |
+|---|---|---|---|
+| `decimo-terceiro` | 55 | **44.310** | 47 |
+| `rescisao-trabalhista` | 54 | **34.290** | 74 |
+| `financiamento` | 26 | 12.390 | 60 |
+| `irpf` | 13 | 8.890 | 81 |
+| `tesouro-direto` | 3 | 7.690 | 67 |
+| `salario-liquido` | 10 | 5.650 | 66 |
+| `hora-extra` | 18 | 5.160 | 54 |
+| `cdb` | 3 | 4.620 | **46** |
+| `ferias` | 9 | 3.910 | 77 |
+| `irrf` | 3 | 1.450 | 65 |
+
+**Mediana de posição 84. Duas keywords de 201 em top 50.** A melhor posição do
+domínio inteiro é 46 (`simulador cdb`), e é a única linha com tráfego: **1
+visita/mês**, que é o total do site.
+
+**A tríplice validação que encerra a dúvida de medição:** GSC diz 2 cliques em 3
+meses, GA4 disse 0 sessão em 28 dias, Semrush estima 1 visita/mês sobre 130 mil
+buscas endereçadas. **Três fontes independentes, mesma resposta.** O canal
+Google não está mal medido — ele não existe.
+
+**11. O Semrush CORRIGIU a recomendação que eu tinha acabado de dar.** Eu havia
+proposto mover o conteúdo para INSS/IRRF/salário líquido porque é lá que estão
+71% das citações de IA. Como jogada de **Google** isso não se sustenta:
+
+- **`inss` tem ZERO keyword no top 100 do Semrush.** A 2ª página mais citada por
+  IA do site (223 citações em 7 dias) não tem rastro nenhum no Google.
+- `irpf` + `irrf` somam ~10,3K de volume/mês, contra **78,6K** do cluster
+  trabalhista (`decimo-terceiro` + `rescisao-trabalhista`).
+
+**A leitura certa não é pivô, são dois jogos diferentes:**
+- **IA/GEO — já está funcionando, e funciona SEM posição no Google.** `irrf` e
+  `inss` rendem 447 citações/semana com zero e 26 impressões. Citação de IA não
+  depende de ranking, então não há o que "destravar" aqui: é só continuar
+  alimentando, e o F64 é exatamente o insumo certo.
+- **Google — o cluster trabalhista tem o volume E o KD baixo** (16-28 em boa
+  parte: `décimo terceiro 2025 calcular` 1K/KD 18, `calculador decimo terceiro`
+  480/KD 17, `cálculo de 13 proporcional` 320/KD 16) **e mesmo assim está em
+  84-100.** Quando o KD é 17 e a posição é 92, o que falta não é conteúdo nem
+  keyword — **é autoridade**, como está registrado desde 09/08 (F15, Authority
+  Score 2). O Semrush fecha essa porta em vez de abrir outra.
+
+**12. O único alvo de Google realmente ganhável do conjunto, e o produto já está
+pronto: `calculo irrf aluguel 2026`.** KD **12** (o menor de todas as 201), SF 4,
+**posição 65** (a 2ª melhor do site), 140 buscas/mês. E:
+
+- O recurso **existe e está completo** — F54, `packages/core/src/impostos/irrf.ts`
+  trata `origemRendimento: 'aluguel'` com RIR/2018 art. 42 e IN RFB 1.500 art. 31,
+  INSS zerado e despesas dedutíveis.
+- É **o campo mais clicado da página** no Clarity: `#origemRendimento`, 5 de 22
+  cliques (22,7%).
+- Mas o `tituloLongo` é só "Calculadora de IRRF" e `palavrasChave` não menciona
+  aluguel (`calculators.ts:270-278`) — aluguel só aparece na `descricao` e num
+  `sinonimos`.
+
+**É o único caso do dataset em que falta só endereçamento, não trabalho.**
+Ressalva honesta para não superestimar: **140 buscas/mês é pouco** — é a mais
+ganhável, não a mais valiosa.
+
+**13. Terceira confirmação independente sobre `porcentagem`: ela tem ZERO
+keyword no Semrush**, apesar das 293 impressões @ pos. 9,09 no GSC. Nem o
+Semrush rastreia aquelas buscas. É aritmética única e anonimizada, como
+diagnosticado em 08/09. **A questão está fechada por três fontes.**
+
+**14. Detalhes menores que valem guardar.** O site rankeia para bastante cauda
+**datada em 2025** (`décimo terceiro 2025 calcular` 1K, `calculadora férias 2025`
+1,3K, `calculadora irpf 2025` 590) — cauda velha em set/2026. E as keywords
+fiscais têm **SF 2-4** contra **SF 5-8** das trabalhistas: menos recurso de SERP
+disputando o clique do lado fiscal. Sazonalidade: `calculadora decimo terceiro`
+é 12,1K/mês com KD 22, a ~6-10 semanas do pico — KD baixo, mas partindo da
+posição 89 com AS 2 não dá para pegar este ano.
+
+**Arquivo ignorado de propósito:** `~/Downloads/semrush_positions_2026-03-01.csv`
+é de **`cnpj.biz`**, outro domínio (provavelmente pesquisa de concorrente). Não
+entra nesta análise.
+
+**O que checar no próximo export (marco: 14/09):**
+- **Domain Overview do Semrush (Authority Score)** — em 09/08 era **2**. É a
+  métrica que explica a mediana de posição 84 com KD 17, e a única cujo
+  movimento mudaria o plano.
+- **Export de consultas e páginas do BWT** — esta rodada só trouxe o overview
+  diário, que não tem posição nem query. É o dado que falta para agir no
+  buscador que entrega.
+- **Se a melhora de posição dos últimos 4 dias (29,8 em 12/09) se sustenta.**
+- **Se o F58 e os 4 posts do F60 saíram de zero impressão** — agora sabendo que
+  o sitemap e o IndexNow estão corretos, se continuar zero a causa é autoridade.
+- **Se as citações de IA de `irrf`/`inss` crescem depois do F64** (base: 224 e
+  223 em 7 dias).
+- **GA4** e o **breakdown de `exception` por `description`** (3ª rodada pedindo).
 
 ### 2026-09-13 — O F64: a copy do 13º estava melhor que o motor, e o motor estava em 2025
 
@@ -2814,6 +3911,197 @@ nesta sessão, sem necessidade de fix).
   pos. 54,8 em 25/07) no próximo export do GSC — sinal mais rápido que
   décimo terceiro pra validar se a estratégia de backlink está funcionando,
   já que não depende de esperar a sazonalidade de fim de ano.
+
+### Revisão de 14/09 (parte 7) — links 3 e 4 escolhidos
+
+Paulo pediu "qual o próximo backlink? aliás, 2 próximos?" depois da análise de
+14/09 (GSC + Clarity + BWT + Semrush). **Decidido e aprovado por ele; ele compra
+conforme conseguir os placements, sem prazo fixo. Nada mais muda no roadmap até
+lá.**
+
+**O dado que precisa estar na mesa antes de gastar de novo: os dois primeiros
+links não moveram posição.**
+
+| Página | Link | Pos. antes | Pos. em 14/09 | Impressões |
+|---|---|---|---|---|
+| `salario-liquido` | `band.com.br` (05/08) | 54,8 (25/07) | **69,4** | 74 |
+| `decimo-terceiro` | `acritica.com` (12/08) | 76,6 (09/08) | **86,5** | 87 → **277** |
+
+As impressões do 13º triplicaram (reexpansão, o padrão já registrado), mas
+**nenhuma das duas melhorou de posição em 4-6 semanas**. Isso não prova que
+link não funciona nessa SERP — prova que **um** link por página não resolve, e
+é exatamente essa ambiguidade que trava a decisão de orçamento do F15 desde
+agosto. A escolha de 3 e 4 foi feita para desfazê-la.
+
+**Link 3 — `/calculadora/rescisao-trabalhista`.** Maior cluster ainda sem link:
+**34.290 buscas/mês e 54 keywords** no Semrush, 330 impressões no GSC. E é o
+**centro do grafo interno** — o hub do F58, os 4 posts do F60 e o guia do F22 já
+apontam todos para lá, então com AS 2 (onde o PageRank interno é o único capital
+de autoridade) é o nó em que autoridade externa mais se redistribui. Sem risco
+de calendário, que é a mesma lógica que elegeu `salario-liquido` como link 1.
+Entradas de KD baixo para medir efeito: `cálculo rescisão gratuito` KD 11,
+`calcular rescisão do contrato de trabalho` KD 17 (590/mês),
+`trabalhei 8 anos quanto vou receber de acerto` KD 19.
+- **Âncora: "calcular rescisão do contrato de trabalho"** (590/mês, KD 17).
+  Alternativa se a frase ficar forçada: "cálculo trabalhista online" (720/mês,
+  KD 23).
+
+**Link 4 — `/calculadora/decimo-terceiro` OUTRA VEZ, de propósito.** É o segundo
+link na mesma página, contra a intuição de espalhar. **A razão é de método: com
+um link por página nunca se distingue "link não funciona nessa SERP" de "um link
+não basta".** O 13º é o melhor lugar para testar — maior cluster do site
+(44.310/mês, 55 keywords, KD 17-28), já tem um link de referência para comparar,
+o F64 acabou de deixá-la como a única página com os números de 2026 certos e o
+F60 construiu 4 posts em volta dela.
+- **Âncora: "cálculo de 13 proporcional"** (320/mês, KD 16) ou "calculadora
+  décimo terceiro proporcional" (210/mês, KD 15). **Tem de diferir de "calcular
+  décimo terceiro"**, que foi a do `acritica.com` — variação de âncora, regra de
+  11/08.
+- **Ressalva registrada junto com a decisão: de posição 86,5 não se chega à
+  página 1 até novembro.** Este link não é aposta no pico deste ano; é a
+  resposta à pergunta de orçamento, e o efeito vale para os anos seguintes.
+
+**Por que não as outras, com o número que descarta cada uma:**
+- **`financiamento`** — 351 impressões e 12.390/mês, mas **KD 49-65 no cluster
+  inteiro**. Termo comercial de banco e fintech; o mais caro de todos.
+- **`hora-extra`** — alternativa legítima ao link 4 (melhor posição do
+  trabalhista não linkado: Semrush 54; KD 17-25; `calculo hora extra online` com
+  SF 2). **Trocar o 13º por ela só se a escolha for espalhar em vez de testar
+  profundidade** — mas aí não se aprende nada sobre orçamento.
+- **`irrf` e `inss`** — fora. O `inss` não tem **uma keyword sequer no top 100**
+  e o `irrf` tem 3. Link ali não tem em que se apoiar, e os dois já ganham no
+  canal que não depende de posição (447 citações de IA por semana).
+
+**Mudança no jeito de medir, que sai do achado de 14/09: acompanhar o efeito no
+Bing Webmaster Tools, não no GSC.** O site já rankeia em posição 4-9 no Bing nas
+queries que viram clique, e o BWT não tem a média de 90 dias que trava a leitura
+do GSC. Se o link fizer efeito, o Bing mostra semanas antes — e é o buscador que
+de fato manda tráfego. O GSC continua como confirmação lenta.
+
+**Disciplina mantida dos dois primeiros:** conferir **dofollow no HTML bruto**
+(não confiar no que o vendedor diz), âncora embutida em frase natural (nunca
+isolada), e veículo editorial de finanças/RH/notícia regional — `band.com.br` e
+`acritica.com` são o patamar de referência.
+
+**Paulo encomendou os dois links em 14/09**, na mesma sessão da decisão, nas
+duas páginas recomendadas e com as âncoras recomendadas:
+
+| # | Veículo | Destino | Âncora |
+|---|---|---|---|
+| 3 | **MS Notícias** (`msnoticias.com.br`) | `/calculadora/rescisao-trabalhista` | `calcular rescisão do contrato de trabalho` |
+| 4 | **Mercado Hoje** (`mercadohoje.uai.com.br`) | `/calculadora/decimo-terceiro` | `cálculo 13 proporcional` |
+
+> **Atualização 22/09:** o nº 4 publicou em 15/09 como planejado. **O nº 3 saiu
+> em 21/09 em outro veículo, o `jornaldebrasilia.com.br`**, com o destino e a
+> âncora do plano, mas na seção `/brasil-7/`, que é um balde de link pago. Ver
+> o Diário de 22/09 (parte 1). **O MS Notícias não vem:** o Jornal de Brasília
+> o substituiu, e o plano fecha com os 4 links.
+
+**Checagem dos dois veículos feita antes da publicação** (único momento em que
+achar problema ainda permite trocar):
+
+- **MS Notícias** — jornal regional de Mato Grosso do Sul, no ar (200). **Mesmo
+  perfil exato do `acritica.com`** (jornal regional do Amazonas), que é o
+  padrão já validado duas vezes.
+- **Mercado Hoje** — é **subdomínio do `uai.com.br`**, portal dos **Diários
+  Associados** (mesmo grupo do Estado de Minas e da TV Alterosa), e é uma
+  **editoria de finanças/mercado**. Tematicamente é **o melhor placement dos
+  quatro**: uma vertical de finanças linkando calculadora de 13º é mais
+  relevante que um jornal regional generalista, e é exatamente o perfil que o
+  plano de 25/07 pedia ("blog de finanças pessoais, RH, contabilidade").
+
+**O único risco identificado, e é específico do nº 4:** o `mercadohoje` exibe
+blocos "Publicidade" e **não declara política visível de rotulagem de conteúdo
+patrocinado**. Se a matéria cair num slot publieditorial, o link pode sair com
+`rel="sponsored"` ou `nofollow` — e aí não passa autoridade nenhuma. **É a
+primeira coisa a conferir no HTML bruto quando publicar**, antes de qualquer
+outra. Nos quatro links, `rel` é o que decide se o dinheiro virou autoridade.
+
+**Checklist de verificação quando cada um publicar** (a disciplina que já pegou
+coisa antes):
+1. `rel` do `<a>` no **HTML bruto** — sem `nofollow`, `sponsored` nem `ugc`.
+2. Âncora exata e **embutida em frase natural**, não isolada.
+3. Página sem `noindex`, sem `X-Robots-Tag`, canonical self-referencing, e a
+   seção não bloqueada no `robots.txt`.
+4. **Conferir no BWT → Vínculos regressivos** (não no GSC), que é o placar
+   correto deste projeto. O esperado é a contagem ir de **2 para 4** domínios —
+   e o `mercadohoje.uai.com.br` deve entrar como domínio próprio, por ser
+   subdomínio.
+5. Posição no **BWT**, não no GSC — o Bing responde em semanas.
+6. *(acrescentado 22/09)* **Seção e vizinhos:** abrir a categoria da matéria e
+   2-3 posts vizinhos. Se cada um tem um link comercial de saída, é balde de
+   link pago, mesmo em domínio de jornal. Antes de pagar, pedir ao fornecedor a
+   URL da seção.
+
+### O critério de 20/08 sobre o `acritica.com` estava errado, e isso é método
+
+Ficou registrado em 20/08: *"se não aparecer no GSC → Links até meados de
+setembro, o link não está sendo contado — informação crítica antes de comprar
+mais placements do mesmo fornecedor."* Em 14/09 Paulo conferiu: **continua não
+aparecendo**, 33 dias depois da publicação (o `band.com.br` levou ~1-2 semanas).
+
+Pelo critério, a conclusão seria "o link não conta". **Fui verificar a matéria e
+o critério é que não se sustenta.** URL:
+`acritica.com/economia/cinco-pontos-que-reduzem-o-13-sem-o-trabalhador-perceber-1.412123`
+
+| Checagem | Resultado |
+|---|---|
+| Página no ar | HTTP **200** |
+| Link ainda presente | ✅ `<a href="https://calculosonline.com.br/calculadora/decimo-terceiro" target="_blank" rel="noreferrer">calcular décimo terceiro</a>` |
+| `nofollow`/`sponsored`/`ugc` | **nenhum** na página inteira |
+| `noindex` no HTML | **0 ocorrências** |
+| `X-Robots-Tag` no header | ausente |
+| Canonical | self-referencing |
+| `robots.txt` bloqueia `/economia/` | não |
+
+**O placement está tecnicamente perfeito.** O modo de falha que eu temia — a
+matéria ser editada e o link sumir depois do pagamento, que é o clássico de
+placement pago — **não aconteceu**. Detalhe que fecha a dúvida do `noreferrer`:
+ele aparece **12 vezes** na página, ou seja é o padrão do template do site para
+todo link externo, não algo aplicado ao link pago.
+
+**A correção de método, que vale mais que o caso:** o relatório **GSC → Links
+não é detector confiável de ausência**. Ele amostra e atrasa, e tratá-lo como
+placar levou a um critério que quase matou um link que está perfeito. **Nunca
+mais concluir "o link não conta" a partir de o GSC não mostrá-lo** — só a
+verificação do HTML bruto decide isso.
+
+**O Bing respondeu na hora, e encerra o caso.** Paulo abriu "Vínculos
+regressivos" no BWT: **os dois domínios estão lá**, `acritica.com` (1 vínculo) e
+`band.com.br` (1 vínculo). O crawler do Bing rastreou a matéria e atribuiu o
+link. **O `acritica` é real e conta — o que falhou foi o relatório do Google, e
+o critério de 20/08 que confiava nele.** Não há mais o que investigar.
+
+### O achado maior: o BWT é o placar correto de backlink deste projeto
+
+As três fontes discordam sobre a mesma pergunta, e agora dá para dizer qual está
+certa:
+
+| Fonte | Domínios referentes | O que está contando |
+|---|---|---|
+| Semrush (20/08) | **122** (247 links) | inclui scraper/agregador |
+| GSC → Links (14/09) | **1** (só `band.com.br`) | amostra e atrasa |
+| **BWT (14/09)** | **2** — `acritica` + `band` | **exatamente os 2 links editoriais reais** |
+
+**A hipótese de 09/08 ("os 122 domínios do Semrush são lixo que o Google não
+conta") está confirmada por uma terceira fonte independente.** Um buscador de
+verdade, com crawler e filtro de qualidade próprios, foi contar e achou **2** —
+precisamente os dois placements pagos, nada mais. O Semrush infla, o GSC
+subnotifica, e o BWT acerta.
+
+**Consequência prática: o site tem exatamente 2 backlinks reais.** Os dois
+encomendados hoje **dobram** o perfil de links do site, de 2 para 4. É assim que
+a expectativa deve ser dimensionada — não é "mais 2 entre 122".
+
+**E a leitura desconfortável que sai do mesmo dado:** esses **mesmos 2 links**
+convivem com posição **4-9 no Bing** e **85-95 no Google**. Não é o link que
+difere entre os dois buscadores — é o patamar de confiança que cada um exige.
+Google não deu sinal nenhum com 2 links de jornal; nada garante que dê com 4.
+**O risco a monitorar nos links 3 e 4 não é "o link vai contar" (vai), é "4
+links ainda é longe demais do limiar do Google".** Se os dois próximos também
+não moverem posição no Google enquanto o Bing segue em 4-9, a conclusão a tirar
+é de ordem de grandeza: ou o orçamento de links sobe muito, ou o Google sai do
+plano e o projeto se organiza em torno de Bing + IA, que é onde ele já ganha.
 
 ### 2026-07-25 (parte 4)
 Paulo pediu para avaliar a pasta `gsc/` e combinar com as estratégias já

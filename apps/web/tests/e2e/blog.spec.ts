@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { findPost } from '../../src/lib/blog'
 
 // Trava o F22 — o blog, começando pelo guia sazonal do 13º salário.
 //
@@ -58,7 +59,11 @@ test.describe('blog — SEO', () => {
 
     expect(article, 'nenhum JSON-LD Article na página').toBeTruthy()
     expect(article.datePublished).toBe('2026-08-30')
-    expect(article.dateModified).toBe('2026-08-30')
+    // `dateModified` sai do registry, não de uma data literal: o F64 regerou os
+    // números do post pelo motor e moveu `dataAtualizacao` para 2026-09-13,
+    // quebrando este teste em silêncio. A invariante que importa é o JSON-LD
+    // refletir o registry — toda revisão de conteúdo legítima muda essa data.
+    expect(article.dateModified).toBe(findPost(POST)?.dataAtualizacao)
     expect(article.headline).toContain('Décimo terceiro 2026')
     expect(article.inLanguage).toBe('pt-BR')
   })

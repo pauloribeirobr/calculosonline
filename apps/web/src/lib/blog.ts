@@ -203,6 +203,35 @@ export const blogRegistry: PostBlog[] = [
     ctaHub: true,
     tempoLeituraMin: 10,
   },
+  {
+    slug: 'salario-depois-das-ferias-por-que-vem-menor',
+    titulo: 'Salário depois das férias: por que vem menor e quanto você recebe',
+    tituloSeo: 'Salário Depois das Férias 2026 — Quanto Você Recebe',
+    descricao:
+      'Por que o contracheque do mês das férias vem menor, quanto cai antes de sair e depois de voltar, e o que muda ao tirar 10 dias ou vender férias. Tabelas calculadas para 2026.',
+    resumo:
+      'O contracheque depois das férias vem menor porque parte dele já foi paga adiantada — e somando os dois pagamentos você recebe mais que num mês normal. Veja quanto cai em cada um, por dias de férias e por salário.',
+    dataPublicacao: '2026-09-22',
+    dataAtualizacao: '2026-09-22',
+    palavrasChave: [
+      'salário depois das férias',
+      'salário do mês das férias',
+      'quanto recebo no mês depois das férias',
+      'contracheque depois das férias',
+      'por que o salário vem menor depois das férias',
+      'férias de 10 dias quanto recebo',
+      'cálculo de férias 2026',
+      'vender 10 dias de férias',
+    ],
+    calculadoraPrincipal: 'ferias',
+    calculadorasRelacionadas: ['salario-liquido', 'inss', 'irrf', 'decimo-terceiro'],
+    sazonalidade: {
+      picoMeses: [12, 1, 7],
+      nota:
+        'A dúvida aparece junto do gozo das férias, que concentra em dezembro/janeiro (férias coletivas e escolares) e em julho. Diferente do 13º, a busca existe o ano todo, porque férias são individuais. Revisar as tabelas de INSS/IRRF em janeiro, quando as tabelas do ano mudam.',
+    },
+    tempoLeituraMin: 7,
+  },
 ]
 
 export function findPost(slug: string): PostBlog | undefined {

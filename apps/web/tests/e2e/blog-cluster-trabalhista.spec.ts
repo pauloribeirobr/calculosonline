@@ -30,10 +30,11 @@ test.describe('cluster trabalhista — rotas e listagem', () => {
     })
   }
 
-  test('a listagem passou a ter os 5 posts', async ({ page }) => {
+  test('a listagem lista todos os posts do registry', async ({ page }) => {
     await page.goto('/blog')
     await expect(page.getByRole('article')).toHaveCount(blogRegistry.length)
-    expect(blogRegistry).toHaveLength(5)
+    // 5 do F22/F60 + 1 do F65 (salário depois das férias).
+    expect(blogRegistry).toHaveLength(6)
   })
 
   test('o sitemap inclui os 4 posts novos', async ({ page }) => {
