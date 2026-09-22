@@ -115,13 +115,8 @@ test.describe('F65 — correções de conteúdo que vieram junto', () => {
     await expect(artigo.getByText('ADPF 501').first()).toBeVisible()
   })
 
-  test('a calculadora de férias não promete descontos que não calcula', async ({ page }) => {
-    // `calcularFerias` devolve valor bruto. A description dizia "com descontos
-    // de INSS e IRRF" — promessa que o resultado não cumpria.
-    await page.goto('/calculadora/ferias')
-    const description = await page.locator('meta[name="description"]').getAttribute('content')
-    expect(description).toBeTruthy()
-    expect(description!.toLowerCase()).toContain('bruto')
-    expect(description!.toLowerCase()).not.toContain('descontos de inss')
-  })
+  // A promessa de "descontos de INSS e IRRF" na description saiu aqui (o F65
+  // achou que `calcularFerias` devolvia bruto) e voltou no F66, que fez a
+  // função calcular o líquido. Quem guarda essa invariante agora é
+  // `ferias-liquido.spec.ts`.
 })

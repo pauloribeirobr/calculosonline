@@ -13,6 +13,7 @@ const schema = z.object({
   salarioBruto: z.number().positive('Salário deve ser positivo').default(0),
   diasFaltas: z.number().min(0, 'Não pode ser negativo').default(0),
   diasAbono: z.number().min(0).max(10, 'Máximo 10 dias de abono').default(0),
+  numeroDependentes: z.number().min(0, 'Não pode ser negativo').default(0),
   emAtraso: z.enum(['nao', 'sim']).default('nao'),
 })
 
@@ -22,6 +23,7 @@ export function FeriasForm({ onResult, onError, isLoading, sharedData, autoSubmi
       salarioBruto: data.salarioBruto,
       diasFaltas: data.diasFaltas,
       diasAbono: data.diasAbono,
+      numeroDependentes: data.numeroDependentes,
       emAtraso: data.emAtraso === 'sim',
     })
     if (r.sucesso) onResult(r.dados, data)
@@ -49,8 +51,13 @@ export function FeriasForm({ onResult, onError, isLoading, sharedData, autoSubmi
           label: 'Dias vendidos (abono)',
           type: 'stepper',
           max: 10,
-          hint: 'Máximo 1/3 dos dias de direito',
+          hint: 'Máximo 1/3 dos dias de direito — isento de INSS e IRRF',
           quickAdd: QUICK_ADD_DIAS,
+        },
+        numeroDependentes: {
+          label: 'Dependentes (IRRF)',
+          type: 'stepper',
+          hint: 'Reduzem a base do IRRF das férias',
         },
         emAtraso: {
           label: 'Férias pagas em atraso?',

@@ -23,18 +23,36 @@ que não cabe em nenhum dos outros três.
   501, art. 138 citado fora de contexto, duas atribuições erradas), e a
   calculadora prometia **"descontos de INSS e IRRF" que ela não calcula**.
   Detalhe no Diário de 22/09 (parte 6).
-- **Candidato de feature que nasceu daí: descontos no `calcularFerias`.**
-  "Quanto vou receber de férias" é sinônimo declarado da calculadora e é o que o
-  público do Bing/IA pergunta; hoje ela devolve só o bruto. O F65 já deixou o
-  método pronto. **Não abri feature.**
+- **F66 (22/09) — a calculadora de férias devolve o líquido.** O recibo tem três
+  regras próprias que o contracheque não tem: **IRRF em separado** do salário do
+  mês, **abono fora da base** dos dois e **dobra do art. 137 sem tributo** (o
+  ponto em que folhas divergem, declarado em aviso). **O hub do F58 segue em
+  bruto de propósito** — lá as férias são projeção, não recibo. Achado que virou
+  copy: vender 10 dias dá o mesmo bruto e **R$ 998,15 a mais de líquido**.
+  Detalhe no Diário de 22/09 (parte 8).
 - **Estratégia do Google, decidida em 22/09:** parar de perseguir head term
   este ano; escrever para **pergunta longa com número** (serve aos dois
   índices); **pedir indexação manual no GSC** do hub, dos 5 posts e do F65, que
   é a última hipótese barata (o IndexNow não fala com o Google); e **checkpoint
   em ~27/10** — se rescisão e 13º continuarem em 85-95 com o Bing em 7, vale a
   decisão de ordem de grandeza de 14/09. **Não comprar o link 5 antes disso.**
-- **Fora da fila (Paulo, 22/09):** Vínculos regressivos do BWT, `description` do
-  `exception` no GA4 e Authority Score do Semrush. **Não pedir a cada rodada.**
+- **Semrush de 21/09: +76 domínios referentes (122 → 198) e +104 backlinks, e o
+  Authority Score continua 2.** Quarta fonte confirmando que os domínios que ele
+  conta são scraper. **O AS é grosso demais para medir os links do F15** — a
+  medida é posição no BWT. Keywords 201 → 240 com **1 visita/mês**: o Google
+  descobre mais e continua em 50-100.
+- **A IA do Google é zero, e isso fecha a tese dos dois índices.** Semrush: AI
+  Visibility 0, **0 no AI Overview, 0 no AI Mode, 0 no Gemini**, 1 página citada
+  (ChatGPT) — enquanto o Clarity mede 994 citações no ecossistema Microsoft.
+  Não é contradição: são superfícies diferentes. **AI Overviews: 0% das
+  aparições.** Detalhe no Diário de 22/09 (parte 7).
+- **Cauda média é o alvo do Google, não a cabeça:** `calculo hora extra online`
+  pos. 54 (KD 18, 390/mês), `calculo décimo` 57 (KD 20, 480), `calcular meu
+  decimo` 52 (KD 24). `simulador cdb` (pos. 47) segue sendo **a única keyword
+  com tráfego do site**.
+- **Fora da fila (Paulo, 22/09):** Vínculos regressivos do BWT e `description` do
+  `exception` no GA4. **Não pedir a cada rodada.** *(O Authority Score saiu
+  dessa lista: ele mandou o Semrush na mesma sessão.)*
 - **BWT por página (08→20/09): o Bing põe o site na página 1 em tudo, com
   posição média ~7.** IRRF 507 impressões @ 7,0, rescisão 401 @ 7,3 (11 dos 39
   cliques), INSS 353 @ 7,9, férias 292 @ 8,1. No Google as mesmas páginas estão
@@ -1092,6 +1110,125 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
 
 ## Diário
 
+### 2026-09-22 (parte 8) — F66: a calculadora de férias passa a responder a pergunta que ela dizia responder
+
+Paulo subiu o F65 e pediu a sequência; propus três features e ele escolheu o
+F66 — descontos de INSS e IRRF nas férias. **É a correção nº 7 da parte 6
+resolvida no lugar certo:** de manhã eu tinha ajustado o texto para parar de
+prometer o que a ferramenta não fazia; agora a ferramenta faz, e a promessa
+voltou.
+
+**O argumento, em uma linha:** `ferias` é a 4ª página do site no Bing e o 3º
+tema em citação de IA, e **"quanto vou receber de férias" é pergunta de
+líquido** — o sinônimo já estava declarado no registry desde o F53.
+
+**Por que não deu para reaproveitar o `calcularSalarioLiquido`.** O recibo de
+férias tem três regras que o contracheque não tem, e são elas que o motor
+passou a aplicar:
+
+1. **O IRRF é calculado em separado** do salário do mês, sobre a própria
+   remuneração de férias. Não é o mesmo que jogar tudo numa base só.
+2. **O abono pecuniário fica fora da base** de INSS e IRRF (Lei 8.212/1991,
+   art. 28, §9º).
+3. **A dobra do art. 137 também fica** — ela indeniza o atraso na concessão,
+   não remunera trabalho. **É o ponto em que sistemas de folha divergem**, e
+   por isso saiu declarado em `avisos` em vez de virar número silencioso.
+
+**A decisão de escopo que segurou o raio de impacto: o hub do F58 continua em
+bruto.** Ele usa `dados.totalBruto` e a legenda sempre disse "valor bruto" —
+ali as férias são **projeção de um período futuro**, tributável na competência
+em que for gozado, não um recibo a pagar agora. Mexer nisso teria quebrado os
+números publicados do post agregado do F60 e as travas do hub, sem ganhar
+precisão. Ficou comentado no `panorama.ts` para a próxima pessoa não "consertar".
+
+**O caso que virou argumento editorial, e que só apareceu porque o cálculo
+ficou completo:** R$ 5.100 vendendo 10 dias dá **o mesmo bruto** de quem goza
+os 30 (R$ 6.800) — mas **R$ 6.363,82 líquidos contra R$ 5.365,67**. São
+**R$ 998,15 a mais só pela isenção do abono**, antes ainda dos 10 dias
+trabalhados que continuam na folha. O texto antigo dizia que vender dava "o
+mesmo total"; dá quase mil reais a mais, e agora a página mostra por quê.
+
+**O que o conteúdo ganhou** (tudo regerado pelo motor): tabela de referência
+com INSS, IRRF e líquido nas 8 faixas; exemplos nomeados fechando no líquido;
+duas perguntas novas na FAQ — "as férias têm desconto?" e "por que o desconto
+não bate com o do meu contracheque?", que é exatamente a dúvida do F65.
+
+**E o e2e achou um erro que estava em todas as calculadoras com faixa de
+INSS.** Ao ler o detalhamento renderizado, o rótulo saía **"Até R$ 1621.00"** —
+ponto decimal e sem separador de milhar, num site em pt-BR. Era `toFixed(2)` em
+`tabelas/index.ts:246`, e aparecia no salário líquido, na rescisão, no 13º, no
+INSS e agora nas férias. Passou a usar `formatarBRL`. **Nenhum teste pegava
+isso porque nenhum lia o rótulo da faixa** — o novo lê.
+
+**Trava de teste:** 8 casos novos no core (o arquivo foi de 21 para 29) e
+`ferias-liquido.spec.ts` no e2e. **A invariante do F57 teve de ser reescrita:**
+agora são dois totais na lista, então o teste verifica que os créditos acima do
+"Total Bruto" somam o bruto e que o bruto menos os débitos fecha o "Total
+Líquido". Era a parte mais fácil de quebrar em silêncio.
+
+### 2026-09-22 (parte 7) — Semrush: 76 domínios referentes novos não moveram o Authority Score, e a IA do Google é zero
+
+Paulo mandou quatro telas do Semrush (Domain Overview e Positions, BR/desktop,
+dado de 21/09) — o Authority Score era um dos três pedidos que ele tinha tirado
+da fila, e veio assim mesmo. **Telas coladas na conversa, números brutos aqui.**
+
+| Métrica | 09/08 | 20/08 | 14/09 | **21/09** |
+|---|---|---|---|---|
+| Authority Score | 2 | 2 | 2 | **2** |
+| Domínios referentes | 122 | — | — | **198** |
+| Backlinks | 220 | 247 | — | **324** |
+| Keywords orgânicas | — | — | 201 | **240 (+26%)** |
+| Tráfego orgânico estimado | — | — | 1 | **1** |
+| Melhor posição | — | — | 46 | **47** |
+
+**1. O achado que fecha a discussão do placar de backlink: +76 domínios
+referentes e +104 backlinks em seis semanas, e o AS não subiu um ponto.** É a
+quarta fonte dizendo a mesma coisa — os domínios que o Semrush conta são
+scraper e agregador, e não valem autoridade nenhuma. **E a leitura dura:** se 76
+domínios não movem o AS, os 2 links pagos publicados não vão mover também. O AS
+não é o instrumento para medir os links do F15; ele é grosso demais. **A medida
+continua sendo posição no BWT** (base na parte 4). Ressalva honesta: o
+`mercadohoje` tem 6 dias e o `jornaldebrasilia` tem 1 — cedo para qualquer um
+deles aparecer aqui.
+
+**2. As keywords crescem e o tráfego não sai de 1 visita/mês.** 201 → 240
+keywords (+26%) com **US$ 0,00 de traffic cost** e 1 visita. A série mensal de
+keywords mostra o salto em jun→jul (de ~70 para ~210) e depois um platô. É o
+mesmo fenômeno do GSC lido pelo outro lado: **o Google descobre o site para
+cada vez mais buscas e o mantém em posição 50-100.** Descoberta não é o
+problema; posição é.
+
+**3. A tela de IA do Semrush parece contradizer o Clarity, e não contradiz —
+ela separa os dois mundos.** Semrush: AI Visibility **0**, Mentions **0**,
+**1 cited page** (ChatGPT), e **0 no AI Overview, 0 no AI Mode, 0 no Gemini**.
+Clarity: 994 citações em 7 dias, SoA 21,5%. Não são medidas concorrentes: o
+Clarity mede citação real no ecossistema **Microsoft** (Copilot/Bing), e o
+Semrush cobre justamente as superfícies de IA **do Google**, onde o site é
+zero. **É a confirmação mais direta da tese da parte 4:** o site existe no
+índice da Microsoft e não existe no do Google — nem na busca, nem na IA dele.
+A distribuição de SERP confirma: **AI Overviews 0%** das aparições.
+
+**4. O que o Semrush diz sobre onde o Google ainda é atacável.** As 6 melhores
+posições do domínio:
+
+| Keyword | Pos | Volume | KD | Página |
+|---|---|---|---|---|
+| `simulador cdb` | **47** | 4.4K | 53 | `cdb` |
+| `calcular meu decimo` | 52 | 110 | 24 | `decimo-terceiro` |
+| `calculo hora extra online` | 54 | 390 | 18 | `hora-extra` |
+| `calculo décimo` | 57 | 480 | 20 | `decimo-terceiro` |
+| `calcular hora extra online` | 58 | 720 | 25 | `hora-extra` |
+| `calcular cdb prefixado` | 59 | 110 | 28 | `cdb` |
+
+**`simulador cdb` segue sendo a única keyword com tráfego do site inteiro** (1
+visita, 100% do total), e é a de maior KD da lista — chegou lá sem link, o que
+sugere SERP fraca, não autoridade. **O ajuste fino que isso traz para a
+estratégia da parte 6:** dentro do cluster trabalhista, o alvo não é a cabeça em
+85-95, é a **cauda média em 52-58** — `calculo hora extra online` (KD 18),
+`calculo décimo` (KD 20), `calcular meu decimo` (KD 24). São as únicas que já
+estão a uma página de distância, e `hora-extra` tem volume (390-720/mês) com o
+menor KD do conjunto. O resto do movimento (B, C, D) fica de pé sem mudança.
+
 ### 2026-09-22 (parte 6) — F65: o post que a pergunta do Copilot pediu, 7 erros de conteúdo e a estratégia do lado do Google
 
 Paulo mandou fazer a página sugerida na parte 4, registrar como feature,
@@ -1166,6 +1303,12 @@ movimentos, em ordem:
   está em 85-95 com AS 2. Não se ganha isso antes do pico de nov/dez, por mais
   conteúdo que se escreva. Conteúdo não é o gargalo — autoridade é, e está
   registrado desde 09/08.
+- **A2. (parte 7) Dentro do cluster, mirar a cauda média, não a cabeça.** O
+  Semrush de 21/09 mostra que o site já está em **52-58** em
+  `calculo hora extra online` (KD 18), `calculo décimo` (KD 20) e
+  `calcular meu decimo` (KD 24) — uma página de distância, contra as 8-9
+  páginas da cabeça. `hora-extra` é a melhor combinação de volume e KD baixo
+  que sobrou.
 - **B. Ir onde autoridade pesa menos: pergunta longa e específica.** O próprio
   GSC mostra o site aparecendo (em 78-100, mas aparecendo) em
   `trabalhei 5 meses quanto vou receber de rescisão`,

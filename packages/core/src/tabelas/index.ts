@@ -4,7 +4,7 @@
  * (Receita Federal, MTE, INSS).
  */
 
-import { arredondar } from '../utils'
+import { arredondar, formatarBRL } from '../utils'
 
 export interface FaixaINSS {
   /**
@@ -243,7 +243,11 @@ export function calcularINSSProgressivo(
     const acumulado = arredondar(exato)
 
     detalhamento.push({
-      faixa: faixa.ate === null ? 'teto' : `Até R$ ${faixa.ate.toFixed(2)}`,
+      // `formatarBRL` e não `toFixed(2)`: até 22/09/2026 o rótulo saía
+      // "Até R$ 1621.00", com ponto decimal e sem separador de milhar, em toda
+      // calculadora que lista as faixas do INSS (salário líquido, rescisão,
+      // 13º, INSS e agora férias). É texto que o usuário lê e que a IA cita.
+      faixa: faixa.ate === null ? 'teto' : `Até ${formatarBRL(faixa.ate)}`,
       base: arredondar(baseNaFaixa),
       aliquota: faixa.aliquota,
       valor: arredondar(acumulado - arredondadoAnterior),
