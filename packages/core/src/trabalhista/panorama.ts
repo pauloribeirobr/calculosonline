@@ -138,6 +138,11 @@ export function calcularPanoramaTrabalhista(
 
   // Um período completo (30 dias) + 1/3, sem abono: a pergunta é "quanto vale
   // uma férias minha", e não as proporcionais que já estão na rescisão.
+  //
+  // O bloco usa `totalBruto` de propósito, e a legenda diz isso. O F66 fez
+  // `calcularFerias` passar a devolver líquido no `resultado`, mas aqui o
+  // desconto seria enganoso: estas férias são uma projeção futura, tributada na
+  // competência em que forem gozadas, não um recibo a pagar agora.
   const ferias = calcularFerias({
     salarioBruto: params.salarioBruto,
     diasFaltas: params.diasFaltas ?? 0,

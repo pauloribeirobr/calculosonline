@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { calcularFerias } from '../ferias'
+import { calcularINSSProgressivo } from '../../tabelas'
 import { arredondar } from '../../utils'
 
 describe('calcularFerias', () => {
@@ -194,20 +195,39 @@ describe('calcularFerias', () => {
       // linhas e vê o total, e os dois têm de fechar. É por isso que os
       // componentes continuam arredondados um a um em vez de sair de um único
       // arredondamento no fim.
+      //
+      // Com o F66 são dois totais na lista: as linhas de crédito acima do
+      // "Total Bruto" somam o bruto, e o bruto menos as linhas de débito
+      // (INSS e IRRF) fecha o "Total Líquido". O redutor aparece como crédito
+      // **dentro** do bloco de descontos, por isso ele entra no segundo grupo.
       const casos = [
         { salarioBruto: 2000, diasFaltas: 0 },
         { salarioBruto: 2500, diasFaltas: 0, diasAbono: 10 },
         { salarioBruto: 3500, diasFaltas: 8 },
         { salarioBruto: 4400, diasFaltas: 0, diasAbono: 10 },
         { salarioBruto: 7777, diasFaltas: 20 },
+        { salarioBruto: 9000, diasFaltas: 0, numeroDependentes: 2 },
       ]
       for (const caso of casos) {
         const r = calcularFerias(caso)
         expect(r.sucesso).toBe(true)
         if (r.sucesso) {
-          const linhas = r.dados.detalhamento.filter((l) => l.descricao !== 'Total Bruto')
-          const soma = arredondar(linhas.reduce((acc, l) => acc + l.valor, 0))
-          expect(soma, JSON.stringify(caso)).toBe(r.dados.dados.totalBruto)
+          const linhas = r.dados.detalhamento
+          const iBruto = linhas.findIndex((l) => l.descricao === 'Total Bruto')
+          const creditos = arredondar(
+            linhas.slice(0, iBruto).reduce((acc, l) => acc + l.valor, 0),
+          )
+          expect(creditos, JSON.stringify(caso)).toBe(r.dados.dados.totalBruto)
+
+          const descontos = arredondar(
+            linhas
+              .slice(iBruto + 1)
+              .filter((l) => l.descricao !== 'Total Líquido')
+              .reduce((acc, l) => acc + (l.tipo === 'debito' ? l.valor : 0), 0),
+          )
+          expect(arredondar(r.dados.dados.totalBruto - descontos), JSON.stringify(caso)).toBe(
+            r.dados.dados.totalLiquido,
+          )
         }
       }
     })
@@ -223,4 +243,89 @@ describe('calcularFerias', () => {
     })
   })
 
+  describe('descontos de INSS e IRRF (F66)', () => {
+    it('o headline passa a ser o líquido, não o bruto', () => {
+      const r = calcularFerias({ salarioBruto: 3000, diasFaltas: 0 })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        expect(r.dados.dados.totalBruto).toBe(4000)
+        expect(r.dados.dados.descontoINSS).toBe(368.6)
+        expect(r.dados.dados.descontoIRRF).toBe(0)
+        expect(r.dados.dados.totalLiquido).toBe(3631.4)
+        expect(r.dados.resultado).toBe(r.dados.dados.totalLiquido)
+        expect(r.dados.rotuloResultado).toContain('líquido')
+      }
+    })
+
+    it('o abono fica fora da base de INSS e IRRF (Lei 8.212/1991, art. 28, §9º)', () => {
+      // R$ 4.000 com 20 dias gozados + 10 vendidos: mesmo bruto de quem tira
+      // 30 dias (R$ 5.333,33), mas base tributável menor — e é isso que zera o
+      // IRRF que apareceria nos 30 dias.
+      const trinta = calcularFerias({ salarioBruto: 4000, diasFaltas: 0 })
+      const vendido = calcularFerias({ salarioBruto: 4000, diasFaltas: 0, diasAbono: 10 })
+      expect(trinta.sucesso && vendido.sucesso).toBe(true)
+      if (trinta.sucesso && vendido.sucesso) {
+        expect(trinta.dados.dados.baseTributavel).toBe(5333.33)
+        expect(vendido.dados.dados.baseTributavel).toBe(3555.56)
+        expect(trinta.dados.dados.descontoIRRF).toBe(122.45)
+        expect(vendido.dados.dados.descontoIRRF).toBe(0)
+        expect(vendido.dados.dados.totalLiquido).toBeGreaterThan(
+          trinta.dados.dados.totalLiquido,
+        )
+      }
+    })
+
+    it('a dobra do art. 137 não é tributada', () => {
+      const normal = calcularFerias({ salarioBruto: 3000, diasFaltas: 0 })
+      const atraso = calcularFerias({ salarioBruto: 3000, diasFaltas: 0, emAtraso: true })
+      expect(normal.sucesso && atraso.sucesso).toBe(true)
+      if (normal.sucesso && atraso.sucesso) {
+        // Mesma base e mesmos descontos; o que dobra é só o que a pessoa recebe.
+        expect(atraso.dados.dados.baseTributavel).toBe(normal.dados.dados.baseTributavel)
+        expect(atraso.dados.dados.descontoINSS).toBe(normal.dados.dados.descontoINSS)
+        expect(atraso.dados.dados.totalLiquido).toBe(
+          arredondar(normal.dados.dados.totalLiquido + normal.dados.dados.totalBruto),
+        )
+        expect(atraso.dados.avisos?.join(' ')).toContain('art. 137')
+      }
+    })
+
+    it('dependentes reduzem o IRRF das férias', () => {
+      const sem = calcularFerias({ salarioBruto: 9000, diasFaltas: 0 })
+      const com = calcularFerias({ salarioBruto: 9000, diasFaltas: 0, numeroDependentes: 2 })
+      expect(sem.sucesso && com.sucesso).toBe(true)
+      if (sem.sucesso && com.sucesso) {
+        expect(sem.dados.dados.descontoIRRF).toBeGreaterThan(com.dados.dados.descontoIRRF)
+        expect(com.dados.dados.totalLiquido).toBeGreaterThan(sem.dados.dados.totalLiquido)
+      }
+    })
+
+    it('dependente negativo é erro de validação', () => {
+      const r = calcularFerias({ salarioBruto: 3000, diasFaltas: 0, numeroDependentes: -1 })
+      expect(r.sucesso).toBe(false)
+      if (!r.sucesso) expect(r.erros[0]?.campo).toBe('numeroDependentes')
+    })
+
+    it('quem perdeu o direito não tem desconto nenhum', () => {
+      const r = calcularFerias({ salarioBruto: 3000, diasFaltas: 40 })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        expect(r.dados.dados.totalLiquido).toBe(0)
+        expect(r.dados.dados.descontoINSS).toBe(0)
+        expect(r.dados.dados.descontoIRRF).toBe(0)
+      }
+    })
+
+    it('o INSS das férias bate com a tabela vigente, faixa a faixa', () => {
+      // Base de R$ 4.000 (30 dias de R$ 3.000 + terço): a conta tem de ser a
+      // mesma que a calculadora de INSS devolve para o mesmo valor.
+      const r = calcularFerias({ salarioBruto: 3000, diasFaltas: 0 })
+      expect(r.sucesso).toBe(true)
+      if (r.sucesso) {
+        expect(r.dados.dados.descontoINSS).toBe(
+          calcularINSSProgressivo(r.dados.dados.baseTributavel).valorINSS,
+        )
+      }
+    })
+  })
 })

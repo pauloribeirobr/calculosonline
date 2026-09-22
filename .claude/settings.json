@@ -84,7 +84,8 @@
       "Bash(grep -n -o \"Pendência para o Paulo\\\\|msnoticias\\\\` ainda vem\\\\|ainda vem\" MEMORY.md FEATURES.md)",
       "Bash(npx turbo *)",
       "Bash(curl -s http://localhost:3000/blog/salario-depois-das-ferias-por-que-vem-menor -o /tmp/claude-1000/-home-paulo-projects-next-calculosonline/2b252916-46f3-465e-82be-3a8db0958a4f/scratchpad/post.html -w \"%{http_code}\\\\n\")",
-      "Bash(grep -c \"R\\\\$ 1.233,33\\\\|R\\\\$ 122,45\" /tmp/claude-1000/-home-paulo-projects-next-calculosonline/2b252916-46f3-465e-82be-3a8db0958a4f/scratchpad/post.html)"
+      "Bash(grep -c \"R\\\\$ 1.233,33\\\\|R\\\\$ 122,45\" /tmp/claude-1000/-home-paulo-projects-next-calculosonline/2b252916-46f3-465e-82be-3a8db0958a4f/scratchpad/post.html)",
+      "Bash(grep -rn \"Até R\\\\$\\\\|toFixed\\(2\\)\" packages/core/src/tabelas/index.ts)"
     ],
     "additionalDirectories": [
       "/home/paulo/projects/next/calculosonline/apps/web/src/lib"

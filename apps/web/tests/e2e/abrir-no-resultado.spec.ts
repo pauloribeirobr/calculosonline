@@ -36,7 +36,13 @@ const ENTRADAS: Record<string, Record<string, unknown>> = {
     numeroDependentesIRRF: 0,
     feriasVencidas: 0,
   },
-  ferias: { salarioBruto: 3000, diasFaltas: 0, diasAbono: 0, emAtraso: 'nao' },
+  ferias: {
+    salarioBruto: 3000,
+    diasFaltas: 0,
+    diasAbono: 0,
+    numeroDependentes: 0,
+    emAtraso: 'nao',
+  },
   'decimo-terceiro': {
     salarioBruto: 3000,
     mesAdmissao: 0,
