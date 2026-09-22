@@ -131,13 +131,17 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     slug: 'ferias',
     titulo: 'Férias',
     tituloLongo: 'Calculadora de Férias',
-    descricaoCurta: 'Férias + 1/3 com INSS e IRRF.',
+    // A calculadora devolve o valor BRUTO (ver `calcularFerias`): salário dos
+    // dias gozados + 1/3 + abono. Dizer "com descontos de INSS e IRRF" era
+    // promessa que o resultado não cumpria — corrigido em 22/09 junto do F65,
+    // que é onde a conta com descontos está feita.
+    descricaoCurta: 'Férias + 1/3 e venda de dias, no bruto.',
     descricao:
-      'Calcule férias com 1/3 constitucional, abono pecuniário e descontos de INSS e IRRF. Base na CLT 2026.',
+      'Calcule o valor bruto das férias com 1/3 constitucional, abono pecuniário e desconto por faltas. Base na CLT 2026.',
     categoria: 'trabalhista',
     icone: 'ferias',
     fonteJuridica: 'CLT arts. 129–153 | CF/88 art. 7º, XVII',
-    dataAtualizacao: '2026-09-13',
+    dataAtualizacao: '2026-09-22',
     palavrasChave: [
       'calcular férias',
       'férias proporcional',
