@@ -1,5 +1,5 @@
 /**
- * Registry canônico das 20 calculadoras do MVP.
+ * Registry canônico das calculadoras (20 do MVP + a de férias + 13º, do F69).
  * Drive de Navigation, Footer, CalculatorTypes, RelatedCalculators, sitemap e schemas JSON-LD.
  */
 
@@ -152,7 +152,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'cálculo de férias 2026',
       'quanto vou receber de férias',
     ],
-    relacionadas: ['decimo-terceiro', 'fgts', 'hora-extra', 'rescisao-trabalhista'],
+    relacionadas: ['decimo-terceiro', 'ferias-e-decimo-terceiro', 'fgts', 'hora-extra', 'rescisao-trabalhista'],
   },
   {
     slug: 'decimo-terceiro',
@@ -189,12 +189,48 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'inss',
       'irrf',
       'ferias',
+      'ferias-e-decimo-terceiro',
       'rescisao-trabalhista',
       'fgts',
       // `hora-extra` fecha o cluster e sustenta a escultura de link do F43:
       // ela precisa receber mais links internos que `juros-compostos`.
       'hora-extra',
     ],
+  },
+  {
+    // F69 — a intenção combinada. O Semrush de 21/09 mostrou o concorrente
+    // `calculaonline` em **posição 1-3** numa família de ~18 keywords de KD
+    // 11-24 com esta página, o menor KD medido em qualquer análise do projeto:
+    // `calcular decimo terceiro e ferias` (390/mês, KD 15, pos. 1),
+    // `calculo de 13 e ferias` (110, KD 13, pos. 1), `calculadora de 13 e
+    // ferias` (90, KD 11, pos. 1). Nenhuma calculadora de item único atende a
+    // pergunta "vou tirar férias e receber o 13º, quanto dá no total".
+    slug: 'ferias-e-decimo-terceiro',
+    titulo: 'Férias + 13º',
+    tituloLongo: 'Calculadora de Férias e 13º Salário',
+    descricaoCurta: 'Férias e 13º na mesma conta, líquidos.',
+    descricao:
+      'Calcule férias e 13º salário juntos: recibo de férias líquido, as duas parcelas do 13º e o total que entra, com INSS e IRRF de 2026 calculados em separado.',
+    categoria: 'trabalhista',
+    icone: 'ferias',
+    fonteJuridica: 'CLT arts. 129–145 | Lei 4.090/1962 | Lei 4.749/1965',
+    dataAtualizacao: '2026-09-22',
+    palavrasChave: [
+      'férias e 13º salário',
+      'calcular férias e décimo terceiro',
+      'férias mais 13º',
+      '13º proporcional e férias',
+    ],
+    sinonimos: [
+      'calcular décimo terceiro e férias',
+      'cálculo de 13 e férias',
+      'calculadora de 13 e férias',
+      'calculadora de décimo e férias',
+      'como calcular décimo terceiro e férias',
+      'férias e 13º salário como calcular',
+      'cálculo de férias e décimo terceiro',
+    ],
+    relacionadas: ['ferias', 'decimo-terceiro', 'salario-liquido', 'rescisao-trabalhista'],
   },
   {
     slug: 'hora-extra',

@@ -3,6 +3,7 @@ import type { FormProps } from './types'
 import { RescisaoForm } from './RescisaoForm'
 import { FeriasForm } from './FeriasForm'
 import { DecimoTerceiroForm } from './DecimoTerceiroForm'
+import { FeriasDecimoTerceiroForm } from './FeriasDecimoTerceiroForm'
 import { HoraExtraForm } from './HoraExtraForm'
 import { FGTSForm } from './FGTSForm'
 import { SalarioLiquidoForm } from './SalarioLiquidoForm'
@@ -24,6 +25,7 @@ const FORMS: Record<string, ComponentType<FormProps>> = {
   'rescisao-trabalhista': RescisaoForm,
   ferias: FeriasForm,
   'decimo-terceiro': DecimoTerceiroForm,
+  'ferias-e-decimo-terceiro': FeriasDecimoTerceiroForm,
   'hora-extra': HoraExtraForm,
   fgts: FGTSForm,
   'salario-liquido': SalarioLiquidoForm,

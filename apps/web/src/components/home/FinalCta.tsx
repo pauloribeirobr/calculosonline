@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { CalculatorIcon, Squares2X2Icon } from '@heroicons/react/24/outline'
+import { calculatorRegistry } from '@/lib/calculators'
 
 export function FinalCta() {
   return (
@@ -10,8 +11,8 @@ export function FinalCta() {
           Comece a calcular agora — é grátis
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-base text-white/85 md:text-lg">
-          20 calculadoras com tabelas 2026, base legal verificada e detalhamento completo. Sem
-          cadastro, sem instalação, sem custo.
+          {calculatorRegistry.length} calculadoras com tabelas 2026, base legal verificada e
+          detalhamento completo. Sem cadastro, sem instalação, sem custo.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link

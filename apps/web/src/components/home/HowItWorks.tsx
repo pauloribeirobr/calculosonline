@@ -4,12 +4,13 @@ import {
   ChartBarIcon,
   ShareIcon,
 } from '@heroicons/react/24/outline'
+import { calculatorRegistry } from '@/lib/calculators'
 
 const steps = [
   {
     icon: CursorArrowRaysIcon,
     titulo: '1. Escolha a calculadora',
-    texto: 'Navegue pelas 20 calculadoras divididas em 6 categorias.',
+    texto: `Navegue pelas ${calculatorRegistry.length} calculadoras divididas em 6 categorias.`,
   },
   {
     icon: PencilSquareIcon,

@@ -43,6 +43,14 @@ const ENTRADAS: Record<string, Record<string, unknown>> = {
     numeroDependentes: 0,
     emAtraso: 'nao',
   },
+  'ferias-e-decimo-terceiro': {
+    salarioBruto: 3000,
+    mesAdmissao: 0,
+    diasFaltas: 0,
+    diasAbono: 0,
+    numeroDependentes: 0,
+    adiantarPrimeiraParcela: 'nao',
+  },
   'decimo-terceiro': {
     salarioBruto: 3000,
     mesAdmissao: 0,

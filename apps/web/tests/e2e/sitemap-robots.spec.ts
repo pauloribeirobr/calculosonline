@@ -8,7 +8,7 @@ import { calculatorRegistry, CATEGORIAS } from '../../src/lib/calculators'
 // (calc.dataAtualizacao) em vez de datas de build.
 
 test.describe('sitemap.xml', () => {
-  test('inclui todas as 20 calculadoras e as páginas de categoria', async ({ request }) => {
+  test('inclui todas as calculadoras e as páginas de categoria', async ({ request }) => {
     const res = await request.get('/sitemap.xml')
     expect(res.ok()).toBeTruthy()
     expect(res.headers()['content-type']).toContain('xml')

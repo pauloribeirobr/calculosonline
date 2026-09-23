@@ -9,7 +9,7 @@ export function CalculatorTypes() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <span className="inline-flex items-center rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand-700">
-            20 calculadoras disponíveis
+            {calculatorRegistry.length} calculadoras disponíveis
           </span>
           <h2 className="mt-4 text-3xl font-bold text-gray-900 md:text-4xl">
             Escolha a calculadora que você precisa
