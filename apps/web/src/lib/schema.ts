@@ -29,7 +29,11 @@ export function buildCalculatorSchemaData(calc: CalculadoraRegistro) {
     },
     {
       name: 'Veja o detalhamento',
-      text: `Abra "Ver detalhamento do cálculo" para conferir cada etapa com base em ${calc.fonteJuridica}.`,
+      // A calculadora de datas (F68) não tem base legal — citar uma fonte
+      // vazia deixaria "com base em ." no JSON-LD.
+      text: calc.fonteJuridica
+        ? `Abra "Ver detalhamento do cálculo" para conferir cada etapa com base em ${calc.fonteJuridica}.`
+        : 'Abra "Ver detalhamento do cálculo" para conferir cada etapa da conta.',
     },
   ]
 
@@ -41,7 +45,9 @@ export function buildCalculatorSchemaData(calc: CalculadoraRegistro) {
       : [
           {
             question: `A ${calc.tituloLongo} está atualizada para 2026?`,
-            answer: `Sim. As tabelas foram atualizadas em ${dataLabel} com base na legislação vigente: ${calc.fonteJuridica}.`,
+            answer: calc.fonteJuridica
+              ? `Sim. As tabelas foram atualizadas em ${dataLabel} com base na legislação vigente: ${calc.fonteJuridica}.`
+              : `Sim. A página foi revisada em ${dataLabel}. O cálculo é aritmético e não depende de tabela que mude de um ano para o outro.`,
           },
           {
             question: 'Os cálculos são gratuitos?',

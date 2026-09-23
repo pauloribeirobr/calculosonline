@@ -65,7 +65,9 @@ export function CalculatorLayout({
           </div>
         </div>
         <div className="mt-3 flex flex-wrap gap-2">
-          <LegalBadge fonteJuridica={fonteJuridica} />
+          {/* Vazio na calculadora que não tem base legal nenhuma (datas, F68) —
+              o selo some em vez de anunciar uma fonte que não existe. */}
+          {fonteJuridica && <LegalBadge fonteJuridica={fonteJuridica} />}
           <UpdatedBadge dataAtualizacao={dataAtualizacao} />
         </div>
       </header>

@@ -5,12 +5,13 @@ import {
   ShareIcon,
 } from '@heroicons/react/24/outline'
 import { calculatorRegistry } from '@/lib/calculators'
+import { CATEGORIAS_ORDEM } from '@/lib/identidadeVisual'
 
 const steps = [
   {
     icon: CursorArrowRaysIcon,
     titulo: '1. Escolha a calculadora',
-    texto: `Navegue pelas ${calculatorRegistry.length} calculadoras divididas em 6 categorias.`,
+    texto: `Navegue pelas ${calculatorRegistry.length} calculadoras divididas em ${CATEGORIAS_ORDEM.length} categorias.`,
   },
   {
     icon: PencilSquareIcon,

@@ -51,6 +51,20 @@ export const QUICK_ADD_DIAS: QuickAddButton[] = [
   { label: '+10', value: 10 },
 ]
 
+/**
+ * Dias em escala de **prazo**, não de falta (F68). O `QUICK_ADD_DIAS` acima
+ * nasceu para faltas e abono, onde o intervalo útil é 0-10; deslocar uma data
+ * trabalha na escala de prazo — 15, 30, 60 e 90 dias são o aviso prévio, o
+ * mês comercial, o trimestre e a garantia, que é o que se soma a uma data na
+ * prática.
+ */
+export const QUICK_ADD_DIAS_LONGO: QuickAddButton[] = [
+  { label: '+15', value: 15 },
+  { label: '+30', value: 30 },
+  { label: '+60', value: 60 },
+  { label: '+90', value: 90 },
+]
+
 export const QUICK_ADD_HORAS: QuickAddButton[] = [
   { label: '+1', value: 1 },
   { label: '+5', value: 5 },

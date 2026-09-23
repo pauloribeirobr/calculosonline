@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { CATEGORIAS_ORDEM, IDENTIDADE_CATEGORIA } from '@/lib/identidadeVisual'
 import { Logo } from './Logo'
 
 interface FooterLink {
@@ -41,14 +42,14 @@ const footerSections: FooterSection[] = [
   },
   {
     title: 'Categorias',
-    links: [
-      { name: 'Trabalhistas', href: '/categoria/trabalhista' },
-      { name: 'Impostos', href: '/categoria/impostos' },
-      { name: 'Financeiras', href: '/categoria/financeiro' },
-      { name: 'Investimentos', href: '/categoria/investimentos' },
-      { name: 'Saúde', href: '/categoria/saude' },
-      { name: 'Negócios', href: '/categoria/negocios' },
-    ],
+    // Derivado de `IDENTIDADE_CATEGORIA`, não escrito à mão: a lista literal
+    // ficou com 6 itens quando o F68 criou a sétima categoria (Tempo), e o
+    // rodapé aparece em **toda** página — uma categoria fora daqui nasce sem o
+    // link interno que é o único capital de autoridade do site.
+    links: CATEGORIAS_ORDEM.map((categoria) => ({
+      name: IDENTIDADE_CATEGORIA[categoria].label,
+      href: `/categoria/${categoria}`,
+    })),
   },
   {
     title: 'Institucional',

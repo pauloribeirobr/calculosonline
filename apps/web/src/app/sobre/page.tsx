@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import { buildMetadata } from '@/lib/seo'
+import { calculatorRegistry } from '@/lib/calculators'
 import { Breadcrumbs } from '@/components/common/Breadcrumbs'
 import { PageSeo } from '@/components/seo/PageSeo'
 
-const description =
-  'Conheça o Calculos Online: 21 calculadoras gratuitas para trabalhadores, autônomos, MEIs e empresas brasileiras.'
+// Derivado do registry, não escrito à mão: o número literal ficou em "20"
+// depois do F69 e em "21" depois do F68, e ninguém percebeu das duas vezes.
+const description = `Conheça o Calculos Online: ${calculatorRegistry.length} calculadoras gratuitas para trabalhadores, autônomos, MEIs e empresas brasileiras.`
 
 export const metadata: Metadata = buildMetadata({
   title: 'Sobre',

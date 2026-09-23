@@ -12,6 +12,7 @@ import {
   BriefcaseIcon,
   BuildingLibraryIcon,
   BuildingStorefrontIcon,
+  CalendarDaysIcon,
   ChartBarIcon,
   CircleStackIcon,
   ClockIcon,
@@ -57,6 +58,7 @@ export const calculatorIcons: Record<IconeCalculadora, HeroIcon> = {
   imc: ScaleIcon,
   calorias: FireIcon,
   margemLucro: TagIcon,
+  datas: CalendarDaysIcon,
 }
 
 export const categoryIcons: Record<CategoriaCalc, HeroIcon> = {
@@ -66,6 +68,9 @@ export const categoryIcons: Record<CategoriaCalc, HeroIcon> = {
   investimentos: ChartBarIcon,
   saude: HeartIcon,
   negocios: BuildingStorefrontIcon,
+  // Relógio na categoria, calendário na calculadora de datas — o par cobre as
+  // duas metades de "Tempo" sem repetir o mesmo glifo em dois níveis.
+  tempo: ClockIcon,
 }
 
 /**

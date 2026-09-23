@@ -111,7 +111,13 @@
       "Bash(pkill -f \"[n]ext start\")",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" --max-time 10 http://localhost:3000/calculadora/ferias)",
       "Bash(pkill -f \"[n]ext-server\")",
-      "Bash(curl -s -o /dev/null -w \"ferias:%{http_code}\\\\n\" --max-time 10 http://localhost:3000/calculadora/ferias)"
+      "Bash(curl -s -o /dev/null -w \"ferias:%{http_code}\\\\n\" --max-time 10 http://localhost:3000/calculadora/ferias)",
+      "Bash(awk 'NR>=100 && NR<=700 && \\(/^    slug: / || /^    relacionadas: \\\\[/\\)' apps/web/src/lib/calculators.ts)",
+      "Bash(grep -o '<h1[^>]*>.\\\\{0,120\\\\}' apps/web/.next/server/app/calculadora/datas.html)",
+      "Bash(pnpm --filter web test:e2e -- calculadora-datas.spec.ts)",
+      "Bash(awk 'NR>=142 && NR<=143 {print NR\": \"substr\\($0,1,150\\)}' FEATURES.md)",
+      "Bash(curl -s --max-time 20 \"http://localhost:3000/calculadora/datas\" -o /tmp/claude-1000/-home-paulo-projects-next-calculosonline/868a37dc-70f9-4fb5-be66-0f248725e733/scratchpad/datas.html)",
+      "Bash(pnpm build *)"
     ],
     "additionalDirectories": [
       "/home/paulo/projects/next/calculosonline/apps/web/src/lib"

@@ -16,6 +16,25 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **F68 (23/09) — a calculadora de datas está no ar, e é a 1ª fora do
+  trabalhista/fiscal.** Executa a decisão de 22/09. Alvo: a cauda **KD 16-25**
+  (`diferença entre datas` 4,4K/16, `calcular dias` 6,6K/24, `somar dias`
+  3,6K/25 — ~30K/mês somados), **não** `calculadora de datas` (KD 37, AS 20 em
+  1º). **Página única**, como o concorrente que faz 20,4K visitas/mês com uma
+  só. Categoria nova **Tempo**. **Por escolha do Paulo, só a frente de datas:
+  horas virou F73 e contagem regressiva F74.** Detalhe no Diário de 23/09.
+- **O que a F68 mudou no contrato do core, e vale para tudo que não é
+  dinheiro:** `ItemDetalhamento.valorTexto` e `ResultadoCalculo.resultadoTexto`
+  (a UI **assumia moeda** quando não reconhecia a linha, e o headline era
+  `number`), e **`fonteJuridica` vazia** esconde o selo de base legal em vez de
+  inventar fonte. **Datas rodam em UTC** — `new Date('2026-09-23')` lê como dia
+  22 no Brasil, a mesma classe de bug do `Utils.hojeISO`.
+- **F72 (feriados) está desbloqueada:** o motor de dias úteis já aceita a lista
+  pelo parâmetro `feriados`, testado. **Falta o dado, não o cálculo.**
+- **O checkpoint de ~27/10 agora decide duas coisas**, não uma: se os links 3 e
+  4 moveram o Google, e **se a cauda de datas responde no BWT**. Se não
+  responder, a tese de "sair do trabalhista" precisa ser revista antes de gastar
+  a F73 (horas, 165K/KD 19).
 - **F65 (22/09) — "Salário depois das férias", o post que responde a maior
   pergunta do relatório do Bing**, numa página em que o índice da Microsoft já
   nos põe na página 1. Junto vieram **7 correções de conteúdo**: a `ferias.mdx`
@@ -1154,6 +1173,105 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-09-23 — F68: o roadmap sai do trabalhista na prática, e a primeira calculadora sem lei
+
+Paulo mandou implementar a F68. Perguntei até onde ia o escopo — a feature
+estava cadastrada com três frentes — e a resposta foi **frente (a), datas, e as
+outras duas viram features próprias**. Cadastradas como **F73 (horas)** e
+**F74 (contagem regressiva)**.
+
+**A decisão de 22/09 saiu do papel.** Até ontem o roadmap inteiro era
+trabalhista/fiscal; esta é a primeira calculadora fora desse eixo, e a primeira
+sem legislação por trás. O alvo é o que a parte 14 definiu: **não**
+`calculadora de datas` (33,1K/mês, KD 37, com um AS 20 em 1º), e sim a cauda de
+**KD 16-25** — `diferença entre datas` 4,4K/16, `dias entre datas` 3,6K/21,
+`calculadora de meses` 5,4K/23, `calcular dias` 6,6K/24, `somar data` 1,3K/24,
+`somar dias` 3,6K/25, `contador de meses` 5,4K/25. O `tituloLongo` ficou
+**"Calculadora de Diferença entre Datas"**, liderando pela keyword de menor KD,
+e o resto do vocabulário foi para os H2 e a FAQ — a disciplina do F38/F67, de
+que `keywords` no `<head>` não ranqueia nada desde 2009.
+
+**Página única, e isso é escolha de arquitetura, não preguiça.** O
+`supercalendario` faz 20.416 visitas/mês com **uma** página que rankeia para 35
+keywords. Diferença, somar e subtrair são a mesma pergunta com o sinal trocado:
+viraram um campo `modo` no formulário, com os demais campos aparecendo por
+`showWhen`. Três páginas dividiriam os sinais em vez de somá-los.
+
+**Três coisas que o design existente não suportava, e que valem registro
+porque vão reaparecer em toda calculadora da categoria Tempo:**
+
+1. **A UI assumia moeda.** `inferirFormatoItem` chuta o formato de cada linha
+   do detalhamento pela descrição e **cai em `currency` quando não reconhece** —
+   regra que funcionou enquanto 21 calculadoras devolviam dinheiro e que faria
+   "Dias corridos: 265" sair como **"R$ 265,00"**. Resolvido com
+   `ItemDetalhamento.valorTexto`, opcional: quem sabe montar a frase é o
+   cálculo.
+2. **O headline é `number`, e "somar 90 dias" responde uma data.** Não existe
+   formatação de número que chegue em "1º de abril de 2026". Resolvido com
+   `ResultadoCalculo.resultadoTexto`, no mesmo espírito do `rotuloResultado`
+   que o FGTS pediu — `resultado` continua sendo o número que compartilhamento,
+   histórico e futura API leem.
+3. **Não há base legal, e inventar uma seria o oposto do que o selo faz.**
+   `fonteJuridica` vazia esconde o `LegalBadge`, a linha "Base legal" e o
+   rótulo "Tabelas:". É o mesmo princípio do F65, que tirou da calculadora de
+   férias a promessa de "descontos de INSS e IRRF" que ela não cumpria.
+
+**UTC em tudo, de propósito.** `new Date('2026-09-23')` é meia-noite *UTC* e
+lê como dia 22 no Brasil. É a mesma classe de bug que fez o FGTS exibir
+"Tabelas: 2026-09-09" numa tela de 08/09 e que obrigou a criar `Utils.hojeISO`
+— mas lá a data era um rótulo, e aqui **ela é o resultado**. Todo acesso usa
+`getUTC*`, toda construção passa por `Date.UTC`, e como UTC não tem horário de
+verão a diferença entre duas meia-noites é sempre múltiplo exato de 86.400.000.
+
+**A decisão de calendário que mais dá errado à mão: 31/01 + 1 mês.** Fica
+**28/02** (29/02 em bissexto), com clamp no último dia do mês. O detalhe que
+importa é que **a decomposição do intervalo usa a mesma primitiva da soma** —
+avança o máximo de meses que ainda não ultrapassa o fim e mede o resto em dias.
+Decompor componente a componente (ano−ano, mês−mês, dia−dia) produz resto
+negativo na borda: de 31/01 a 01/03 daria **"1 mês e −2 dias"**. Com a
+primitiva compartilhada, dá "1 mês e 1 dia", e somar e medir concordam por
+construção.
+
+**Dias úteis entram sem feriados, e a página declara isso.** Seg-sex apenas. O
+parâmetro `feriados` já existe, funciona e está testado (desconta os que caem
+em dia útil, e pula feriado ao contar prazo) — **o que falta é o dado, que é a
+F72**. Registrei na F72 que ela está desbloqueada e que o custo restante é a
+lista, incluindo os móveis que dependem da Páscoa. Enquanto não vier, o
+resultado avisa em vez de deixar quem calcula prazo supor que foram
+descontados. A contagem é O(1) (semanas inteiras × 5 + resto), conferida por
+teste contra uma varredura dia a dia.
+
+**O invariante do F57 continua valendo aqui:** dias úteis + fins de semana =
+dias corridos, travado em teste. É a mesma regra de "as linhas exibidas somam o
+total exibido" que o INSS obrigou a criar.
+
+**Achado lateral: quatro listas/contagens escritas à mão, e o pior era o
+rodapé.** `/sobre` dizia "21 calculadoras", o `SeoContent` da home dizia "20"
+(desatualizado desde o F69), o `HowItWorks` dizia "6 categorias" — e o
+**`Footer` listava as seis categorias em literal**. Esse último é o que
+importa: o rodapé aparece em **toda** página do site, e uma categoria fora dele
+nasce sem o link interno que, com AS 2, é o único capital de autoridade sob
+controle. O typecheck não pega nenhum dos quatro, porque são arrays e strings
+literais, não `Record<CategoriaCalc, …>` — só as três primeiras teriam
+aparecido numa revisão de texto, e a quarta, em nenhuma. Todos passaram a
+derivar de `calculatorRegistry.length`, `CATEGORIAS_ORDEM` e
+`IDENTIDADE_CATEGORIA`. **Regra que fica: categoria ou calculadora nova exige
+varrer `grep` por lista literal, porque o compilador não ajuda aqui.**
+
+**Categoria nova: Tempo**, em índigo — as seis famílias de cor anteriores já
+tomaram azul, âmbar, esmeralda, roxo, rosa e ciano, e as alternativas (violeta,
+laranja, rosé, teal) colidem de perto com as existentes. Ícone de calendário na
+calculadora, relógio na categoria.
+
+**Expectativa honesta, e o que medir.** Esta é uma aposta de tema, não uma
+entrega com retorno previsível: a cauda alvo soma ~30K de buscas/mês em KD que
+um AS 2 alcança, mas **quem ganha essas buscas são sites de calendário**, e
+20-30% do tráfego dos concorrentes vem de domínio de casamento exato, que não é
+replicável. A medição é **posição no BWT**, não no GSC, e o marco é o
+checkpoint de ~27/10 que já estava marcado. **Se a cauda de datas não se mover
+lá, a tese de "sair do trabalhista" precisa ser revista antes de gastar a F73
+(horas) — e é por isso que a F73 ficou registrada com essa condição explícita.**
 
 ### 2026-09-22 (parte 15) — F69: a primeira calculadora de intenção combinada, e a soma que desta vez pode ser feita
 

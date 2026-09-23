@@ -1,3 +1,5 @@
+import { calculatorRegistry } from '@/lib/calculators'
+
 /**
  * Bloco editorial de SEO no final da home: parágrafo introdutório,
  * lista de palavras-chave naturais e links âncora para categorias.
@@ -9,10 +11,10 @@ export function SeoContent() {
       <div className="prose prose-gray mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <h2>Calculadoras online grátis e atualizadas para 2026</h2>
         <p className="lead">
-          O <strong>calculosonline.com.br</strong> reúne as 20 calculadoras mais usadas no
-          cotidiano brasileiro — trabalhistas, fiscais, financeiras, de investimentos, saúde e
-          negócios — em uma única plataforma gratuita, com tabelas oficiais atualizadas e base
-          legal explícita em cada resultado.
+          O <strong>calculosonline.com.br</strong> reúne as {calculatorRegistry.length}{' '}
+          calculadoras mais usadas no cotidiano brasileiro — trabalhistas, fiscais, financeiras,
+          de investimentos, saúde, negócios e de datas e prazos — em uma única plataforma
+          gratuita, com tabelas oficiais atualizadas e base legal explícita em cada resultado.
         </p>
         <h3>Cálculos trabalhistas (CLT)</h3>
         <p>
