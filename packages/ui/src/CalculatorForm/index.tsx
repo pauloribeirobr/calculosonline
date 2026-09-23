@@ -96,6 +96,8 @@ export interface FieldMeta {
 export type DateShortcut =
   | { label: string; kind: 'hoje' }
   | { label: string; kind: 'fimDoMes' }
+  /** 31/12 do ano corrente — a ponta final mais pedida na calculadora de datas (F68). */
+  | { label: string; kind: 'fimDoAno' }
   | { label: string; kind: 'anosAtras'; anos: number }
 
 export interface CalculatorFormProps<T extends ZodRawShape> {
@@ -282,6 +284,8 @@ export function resolverAtalhoData(atalho: DateShortcut): string {
       return paraIsoLocal(hoje)
     case 'fimDoMes':
       return paraIsoLocal(new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0))
+    case 'fimDoAno':
+      return paraIsoLocal(new Date(hoje.getFullYear(), 11, 31))
     case 'anosAtras':
       return paraIsoLocal(
         new Date(hoje.getFullYear() - atalho.anos, hoje.getMonth(), hoje.getDate()),

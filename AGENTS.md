@@ -73,7 +73,8 @@ Turborepo + pnpm workspaces configurados. Pacotes `@calculosonline/core` e `@cal
 
 ### ✅ Sprint 0.2 — Core engine
 Funções de cálculo TypeScript puras em `packages/core/src/`. Cobertura de testes com Vitest.
-Módulos: `trabalhista/`, `impostos/`, `financeiro/`, `investimentos/`, `saude/`, `negocios/`.
+Módulos: `trabalhista/`, `impostos/`, `financeiro/`, `investimentos/`, `saude/`, `negocios/`
+e `tempo/` (F68 — aritmética de datas; único módulo sem legislação a manter).
 
 ### ✅ Sprint 1.1 — 20 calculadoras (forms + lógica)
 Formulários em `apps/web/src/components/calculadoras/forms/`. Registry canônico em
@@ -220,6 +221,37 @@ Componentes globais: `Header`, `Footer`, `PageSeo`, `JsonLd`.
   `HubContentLoader`): o `import()` do webpack agrupa por diretório literal, então um loader
   genérico com o diretório em variável juntaria os chunks e carregaria os 20 MDX de
   calculadora em toda página de post ou do hub.
+- **Datas rodam inteiramente em UTC** (`packages/core/src/tempo/datas.ts`, F68) —
+  `new Date('2026-09-23')` é meia-noite **UTC**, e lê como o dia anterior no
+  Brasil (UTC-3). É a mesma classe de bug que fez o FGTS exibir uma data no
+  futuro e que obrigou a criar `Utils.hojeISO` — só que ali a data era um
+  rótulo e na calculadora de datas **ela é o resultado**. Todo acesso usa
+  `getUTC*` e toda construção passa por `Date.UTC`; como UTC não tem horário de
+  verão, a diferença entre duas meia-noites é múltiplo exato de 86.400.000 ms.
+  **Somar meses faz clamp no fim do mês** (31/01 + 1 mês = 28/02) e a
+  decomposição de um intervalo em anos/meses/dias **usa a mesma primitiva** —
+  decompor componente a componente produz "1 mês e −2 dias" entre 31/01 e
+  01/03. **Dias úteis são seg-sex**, com feriados entrando pelo parâmetro
+  `feriados` (pronto e testado; falta o dado, que é a F72).
+- **Resultado que não é dinheiro usa `valorTexto`/`resultadoTexto`** (F68) — a
+  `CalculatorResult` infere o formato de cada linha pela descrição e **assume
+  moeda quando não reconhece**, então uma linha "Dias corridos: 265" sairia
+  como "R$ 265,00". `ItemDetalhamento.valorTexto` troca a apresentação da linha
+  e `ResultadoCalculo.resultadoTexto` a do headline (que é `number` e não
+  comporta uma data). Os dois são opcionais e aditivos: `valor`/`resultado`
+  continuam sendo o que histórico, compartilhamento e futura API leem.
+- **Categoria ou calculadora nova exige `grep` por lista literal** (F68) — o
+  typecheck garante os `Record<CategoriaCalc, …>`, mas **não** vê array nem
+  string literal. Ao acrescentar a categoria Tempo, ficaram para trás o
+  `Footer` (seis categorias em literal, e ele aparece em **toda** página, então
+  a nova nasceria sem link interno), o `SeoContent`, o `HowItWorks` e o
+  `/sobre`. Todos passaram a derivar de `CATEGORIAS_ORDEM`,
+  `IDENTIDADE_CATEGORIA` e `calculatorRegistry.length` — mas o padrão se
+  repete, então vale varrer antes de fechar.
+- **Calculadora sem base legal manda `fonteJuridica` vazia** (F68) — string
+  vazia esconde o `LegalBadge`, a linha "Base legal" do resultado e o rótulo
+  "Tabelas:", em vez de inventar uma fonte para aritmética de calendário. Vale
+  para a categoria Tempo inteira.
 - **Nem toda página de cálculo entra no `calculatorRegistry`** — o registry casa 1-para-1 com
   um formulário em `components/calculadoras/forms/` e um MDX em `content/calculadoras/`, e
   alimenta a contagem de calculadoras declarada em home, `/sobre`, FAQ e og-image — que desde o F69 sai de `calculatorRegistry.length`, e não mais de um literal.

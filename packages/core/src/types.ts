@@ -8,6 +8,20 @@ export interface ItemDetalhamento {
   valor: number
   tipo: 'credito' | 'debito' | 'neutro'
   formula?: string
+  /**
+   * Texto exibido no lugar do número formatado.
+   *
+   * A UI infere o formato de cada linha pela descrição e **assume moeda quando
+   * não reconhece** — o que serviu enquanto todas as calculadoras devolviam
+   * dinheiro, e passa a mentir na primeira que não devolve: "Dias corridos:
+   * 265" sairia como "R$ 265,00". Aqui a linha não tem um número com unidade
+   * implícita, ela tem uma frase ("265 dias", "quarta-feira, 23 de setembro de
+   * 2026"), e quem sabe montá-la é o cálculo.
+   *
+   * `valor` continua preenchido para quem consome os dados (API, planilha,
+   * histórico); o campo só troca a apresentação. Ver F68.
+   */
+  valorTexto?: string
 }
 
 /**
@@ -63,6 +77,19 @@ export interface ResultadoCalculo<T = unknown> {
    * Opcional e aditivo: quem não define continua com o rótulo da página.
    */
   rotuloResultado?: string
+  /**
+   * Texto exibido no headline no lugar do número formatado.
+   *
+   * `resultado` é um `number`, e isso cobre todas as calculadoras que devolvem
+   * uma quantidade. Não cobre a que devolve uma **data**: "somar 90 dias a
+   * 01/01/2026" responde "1º de abril de 2026", e não há formatação de número
+   * que chegue nisso. Também serve para carregar a unidade quando ela não é
+   * óbvia ("265 dias" em vez de "265").
+   *
+   * `resultado` continua sendo o número que o compartilhamento, o histórico e
+   * uma futura API leem — o campo só troca a apresentação. Ver F68.
+   */
+  resultadoTexto?: string
   /** Estrutura completa com todos os campos calculados */
   dados: T
   /** Detalhamento linha a linha do cálculo */

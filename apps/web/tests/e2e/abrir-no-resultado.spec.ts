@@ -10,7 +10,7 @@ import { encodeShareData } from '../../src/lib/shareLink'
 // pessoa pedia um número e recebia o formulário de novo, com o resultado
 // escondido abaixo da dobra.
 //
-// **Por que cobrir as 20 páginas** (mesmo critério do F56): o comportamento
+// **Por que cobrir todas as páginas do registry** (mesmo critério do F56): o comportamento
 // mora no `CalculadoraPageClient`, que é único para todas, mas a altura do
 // formulário varia muito — 2 campos no IMC, 11 na hora extra. Uma página curta
 // pode ter o resultado já visível sem rolagem nenhuma, e é justamente nas
@@ -145,6 +145,19 @@ const ENTRADAS: Record<string, Record<string, unknown>> = {
     precoVenda: 150,
     markupPercent: 0,
     margemDesejadaPercent: 0,
+  },
+  // F68 — datas em ISO, como o `DateField` guarda. `dias`/`meses`/`anos` ficam
+  // em 0 porque o modo `diferenca` não os usa; trocar o modo para `somar` com
+  // todos zerados seria erro de validação, não resultado.
+  datas: {
+    modo: 'diferenca',
+    dataInicial: '2026-01-01',
+    dataFinal: '2026-09-23',
+    dias: 0,
+    meses: 0,
+    anos: 0,
+    apenasDiasUteis: 'nao',
+    incluirDataInicial: 'nao',
   },
 }
 

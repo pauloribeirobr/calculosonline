@@ -27,7 +27,11 @@ import { siteConfig } from '@/lib/seo'
 // 2026-08-31: F58 (hub trabalhista) acrescentou um link novo ao rodapé de
 // todas as páginas e um CTA no fim das quatro calculadoras que ele encadeia —
 // muda a estrutura de links do site inteiro, que é o que o Google recrawleia.
-const seoRefreshDate = new Date('2026-09-13')
+// 2026-09-23: F68 (calculadora de datas). Acrescenta uma categoria nova ao
+// rodapé, à `/categorias` e à home, e um link interno novo em quatro
+// calculadoras trabalhistas — muda a estrutura de links do site, que é o que o
+// Google recrawleia.
+const seoRefreshDate = new Date('2026-09-23')
 const staticLastModified = new Date('2026-05-11')
 
 export default function sitemap(): MetadataRoute.Sitemap {

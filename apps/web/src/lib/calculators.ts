@@ -1,5 +1,6 @@
 /**
- * Registry canônico das calculadoras (20 do MVP + a de férias + 13º, do F69).
+ * Registry canônico das calculadoras (20 do MVP, a de férias + 13º do F69 e a
+ * de datas do F68 — a primeira fora do eixo trabalhista/fiscal).
  * Drive de Navigation, Footer, CalculatorTypes, RelatedCalculators, sitemap e schemas JSON-LD.
  */
 
@@ -124,7 +125,11 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'cálculo de desligamento',
       'direitos trabalhistas na saída da empresa',
     ],
-    relacionadas: ['ferias', 'fgts', 'decimo-terceiro', 'hora-extra'],
+    // `datas` entra aqui porque a dúvida vizinha real da rescisão é a contagem
+    // do aviso prévio — e porque a página nova do F68 nasce sem link nenhum,
+    // que num site de AS 2 é o mesmo que nascer invisível (escultura de link
+    // interno do F43).
+    relacionadas: ['ferias', 'fgts', 'decimo-terceiro', 'hora-extra', 'datas'],
     featured: true,
   },
   {
@@ -152,7 +157,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'cálculo de férias 2026',
       'quanto vou receber de férias',
     ],
-    relacionadas: ['decimo-terceiro', 'ferias-e-decimo-terceiro', 'fgts', 'hora-extra', 'rescisao-trabalhista'],
+    relacionadas: ['decimo-terceiro', 'ferias-e-decimo-terceiro', 'fgts', 'hora-extra', 'rescisao-trabalhista', 'datas'],
   },
   {
     slug: 'decimo-terceiro',
@@ -262,7 +267,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'calculadora de hora extra noturna',
       'simulador de hora extra',
     ],
-    relacionadas: ['salario-liquido', 'decimo-terceiro', 'fgts', 'ferias', 'rescisao-trabalhista'],
+    relacionadas: ['salario-liquido', 'decimo-terceiro', 'fgts', 'ferias', 'rescisao-trabalhista', 'datas'],
   },
   {
     slug: 'fgts',
@@ -637,6 +642,68 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     ],
     relacionadas: ['das-mei', 'porcentagem', 'financiamento'],
   },
+
+  // Tempo
+  {
+    /**
+     * F68 — a primeira calculadora do site sem legislação por trás, e a
+     * primeira fora do eixo trabalhista/fiscal.
+     *
+     * **O alvo não é `calculadora de datas`** (33,1K/mês, mas KD 37 e com um
+     * site de AS 20 em 1º). É a cauda de KD 16-25, onde as três medições de
+     * 22/09 concordam e que um AS 2 alcança: `diferença entre datas` 4,4K/16,
+     * `dias entre datas` 3,6K/21, `calculadora de meses` 5,4K/23, `calcular
+     * dias` 6,6K/24 (com o líder do nicho só em 9º), `somar data` 1,3K/24,
+     * `somar dias` 3,6K/25, `contador de meses` 5,4K/25 — ~30K de volume/mês
+     * somados. Por isso o `tituloLongo` lidera pela diferença entre datas, e
+     * o resto do vocabulário vai para os H2 e a FAQ do MDX, que é onde o
+     * Google lê (a lição do F38: `keywords` no `<head>` não ranqueia nada
+     * desde 2009).
+     *
+     * **Página única de propósito.** O concorrente que domina o mercado
+     * (`supercalendario.com.br`) tira 20.416 visitas/mês de **uma** página,
+     * `/calculadora-data`, que sozinha rankeia para 35 keywords. Quebrar isso
+     * em três páginas dividiria os sinais em vez de somá-los.
+     */
+    slug: 'datas',
+    titulo: 'Diferença entre Datas',
+    tituloLongo: 'Calculadora de Diferença entre Datas',
+    descricaoCurta: 'Dias, meses e anos entre duas datas.',
+    descricao:
+      'Calcule quantos dias, meses e anos há entre duas datas, quantos dias úteis o período tem, e some ou subtraia dias, meses e anos de uma data.',
+    categoria: 'tempo',
+    icone: 'datas',
+    // Sem base legal: aritmética de calendário não tem artigo de lei, e
+    // inventar um contraria o que o selo existe para sinalizar. A string
+    // vazia esconde o `LegalBadge` e a linha "Base legal" do resultado.
+    fonteJuridica: '',
+    dataAtualizacao: '2026-09-23',
+    palavrasChave: [
+      'diferença entre datas',
+      'dias entre datas',
+      'calcular dias',
+      'somar dias a uma data',
+      'contar dias',
+    ],
+    sinonimos: [
+      'diferença entre duas datas',
+      'contar dias entre datas',
+      'calculadora de meses',
+      'contador de meses',
+      'contador de dias',
+      'somar data',
+      'somar dias',
+      'subtrair dias de uma data',
+      'quantos dias entre duas datas',
+      'calcular dias úteis',
+      'calculadora de prazo em dias úteis',
+    ],
+    relacionadas: ['hora-extra', 'ferias', 'rescisao-trabalhista', 'juros-compostos'],
+    // Matemática pura: o resultado não muda de um ano para o outro, então o
+    // "2026" sai do title (mesmo critério de porcentagem e margem de lucro).
+    atemporal: true,
+    formatoResultado: 'integer',
+  },
 ]
 
 /** Subset usado no bloco "Mais buscadas" da home. */
@@ -650,6 +717,7 @@ export function getCalculatorsByCategory(): Record<CategoriaCalc, CalculadoraReg
     investimentos: [],
     saude: [],
     negocios: [],
+    tempo: [],
   }
   for (const calc of calculatorRegistry) grouped[calc.categoria].push(calc)
   return grouped

@@ -26,6 +26,7 @@ export type CategoriaCalc =
   | 'investimentos'
   | 'saude'
   | 'negocios'
+  | 'tempo'
 
 export type IconeCalculadora =
   | 'rescisao'
@@ -48,6 +49,7 @@ export type IconeCalculadora =
   | 'imc'
   | 'calorias'
   | 'margemLucro'
+  | 'datas'
 
 export interface IdentidadeCategoria {
   label: string
@@ -58,7 +60,7 @@ export interface IdentidadeCategoria {
    * exige string literal) e o gerador de og-image deriva os hexes dela via
    * `tailwindcss/colors`, em vez de manter uma segunda paleta em hexadecimal.
    */
-  familia: 'blue' | 'amber' | 'emerald' | 'purple' | 'pink' | 'cyan'
+  familia: 'blue' | 'amber' | 'emerald' | 'purple' | 'pink' | 'cyan' | 'indigo'
   /** Fundo da superfície clara da categoria. */
   fundo: string
   /** Anel de 1px sobre a superfície — o padrão do projeto para cards e ícones. */
@@ -147,6 +149,28 @@ export const IDENTIDADE_CATEGORIA: Record<CategoriaCalc, IdentidadeCategoria> = 
     icone: 'text-cyan-600',
     texto: 'text-cyan-700',
     hover: 'hover:border-cyan-300',
+  },
+  /**
+   * Categoria nova do F68 — a primeira sem legislação por trás.
+   *
+   * Índigo porque é a família que sobrou mais distinguível: as seis anteriores
+   * já tomaram azul, âmbar, esmeralda, roxo, rosa e ciano, e as alternativas
+   * (violeta, laranja, rosé, teal) colidem de perto com roxo, âmbar, rosa e
+   * esmeralda/ciano. A vizinha mais próxima é o azul de Trabalhistas, e as
+   * duas só aparecem lado a lado em `/categorias`. Contraste conferido no
+   * mesmo piso das outras: `indigo-600` sobre `indigo-50` para o glifo (≥3:1)
+   * e `indigo-700` para texto (≥4,5:1).
+   */
+  tempo: {
+    label: 'Tempo',
+    descricao: 'Datas, prazos e dias úteis',
+    familia: 'indigo',
+    fundo: 'bg-indigo-50',
+    anel: 'ring-indigo-100',
+    borda: 'border-indigo-100',
+    icone: 'text-indigo-600',
+    texto: 'text-indigo-700',
+    hover: 'hover:border-indigo-300',
   },
 }
 

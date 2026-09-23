@@ -120,6 +120,12 @@ function inferirFormatoItem(item: ItemDetalhamento): FormatoItem {
 }
 
 function formatarItem(item: ItemDetalhamento): string {
+  // Texto pronto do cálculo ganha da inferência. A inferência abaixo chuta
+  // pelo nome da linha e **assume moeda quando não reconhece** — regra que
+  // funcionou enquanto tudo aqui era dinheiro e que viraria "R$ 265,00" num
+  // "Dias corridos: 265". Ver `valorTexto` em `types.ts` (F68).
+  if (item.valorTexto !== undefined) return item.valorTexto
+
   const formato = inferirFormatoItem(item)
   if (formato === 'empty') return ''
   if (formato === 'percent') return `${item.valor.toLocaleString('pt-BR')}%`
@@ -215,12 +221,23 @@ export function CalculatorResult({
             {resultado.rotuloResultado ?? titulo}
           </p>
         )}
+        {/*
+          `resultadoTexto` cobre o headline que não é uma quantidade — uma data
+          ("1 de abril de 2026") ou um número que só faz sentido com a unidade
+          ("265 dias"). Ver `types.ts` (F68).
+        */}
         <p className="text-result-lg font-semibold tabular-nums tracking-normal" aria-live="polite">
-          {formatarValor(resultado.resultado, formato)}
+          {resultado.resultadoTexto ?? formatarValor(resultado.resultado, formato)}
         </p>
-        <div className="mt-2 flex flex-wrap gap-3 text-xs opacity-75">
-          <span>Tabelas: {resultado.dataReferencia}</span>
-        </div>
+        {/*
+          Calculadora sem tabela legislativa manda `dataReferencia` vazia (a de
+          datas, F68) — e aí o rótulo "Tabelas:" sozinho não significa nada.
+        */}
+        {resultado.dataReferencia && (
+          <div className="mt-2 flex flex-wrap gap-3 text-xs opacity-75">
+            <span>Tabelas: {resultado.dataReferencia}</span>
+          </div>
+        )}
       </div>
 
       {resultado.avisos && resultado.avisos.length > 0 && (
@@ -266,10 +283,19 @@ export function CalculatorResult({
       </div>
 
       <div className="border-t border-gray-100 bg-gray-50 px-4 py-3">
-        <p className="text-xs text-gray-500">
-          <strong>Base legal:</strong> {resultado.fonteJuridica}
+        {/*
+          Aritmética de data e de hora não tem base legal, e inventar uma seria
+          o oposto do que o selo existe para fazer. Quando `fonteJuridica` vem
+          vazia sobra só a `baseCalculo`, que continua explicando a conta.
+        */}
+        {resultado.fonteJuridica && (
+          <p className="text-xs text-gray-500">
+            <strong>Base legal:</strong> {resultado.fonteJuridica}
+          </p>
+        )}
+        <p className={cn('text-xs text-gray-400', resultado.fonteJuridica && 'mt-0.5')}>
+          {resultado.baseCalculo}
         </p>
-        <p className="mt-0.5 text-xs text-gray-400">{resultado.baseCalculo}</p>
       </div>
 
       {(shareUrl || onSalvarCalculo || onExcluirCalculo || onEditarCalculo) && (

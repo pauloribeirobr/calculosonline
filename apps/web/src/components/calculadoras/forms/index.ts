@@ -20,6 +20,7 @@ import { TesouroDiretoForm } from './TesouroDiretoForm'
 import { IMCForm } from './IMCForm'
 import { CaloriasForm } from './CaloriasForm'
 import { MargemLucroForm } from './MargemLucroForm'
+import { CalculadoraDatasForm } from './CalculadoraDatasForm'
 
 const FORMS: Record<string, ComponentType<FormProps>> = {
   'rescisao-trabalhista': RescisaoForm,
@@ -43,6 +44,7 @@ const FORMS: Record<string, ComponentType<FormProps>> = {
   imc: IMCForm,
   calorias: CaloriasForm,
   'margem-lucro': MargemLucroForm,
+  datas: CalculadoraDatasForm,
 }
 
 export function getCalculadoraForm(slug: string): ComponentType<FormProps> | undefined {

@@ -249,9 +249,12 @@ export function CalculadoraPageClient({ config, relacionadas }: Props) {
           <>
             <h2>Sobre esta calculadora</h2>
             <p>{config.descricao}</p>
-            <p>
-              <strong>Base legal:</strong> {config.fonteJuridica}
-            </p>
+            {/* Vazio na calculadora de datas (F68), que não tem base legal. */}
+            {config.fonteJuridica && (
+              <p>
+                <strong>Base legal:</strong> {config.fonteJuridica}
+              </p>
+            )}
             <p>
               <strong>Atualizado em:</strong>{' '}
               {new Date(config.dataAtualizacao + 'T12:00:00').toLocaleDateString('pt-BR')}

@@ -12,7 +12,7 @@ import { CalculatorIcon, CategoryIcon } from '@/components/common/CalculatorIcon
 import { PageSeo } from '@/components/seo/PageSeo'
 import { ItemListJsonLd } from '@/components/seo/JsonLd'
 
-const description = `Navegue pelas ${calculatorRegistry.length} calculadoras agrupadas por categoria: trabalhistas, impostos, financeiras, investimentos, saúde e negócios.`
+const description = `Navegue pelas ${calculatorRegistry.length} calculadoras agrupadas por categoria: trabalhistas, impostos, financeiras, investimentos, saúde, negócios e tempo.`
 
 export const metadata: Metadata = buildMetadata({
   title: 'Todas as Categorias de Calculadoras',

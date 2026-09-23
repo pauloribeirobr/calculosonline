@@ -1,0 +1,208 @@
+## Calculadora de diferença entre datas
+
+Esta página responde as duas perguntas que se fazem com um calendário na mão:
+**quantos dias há entre duas datas** e **em que dia cai uma data depois de somar
+ou subtrair um prazo**. Tudo de uma vez — dias corridos, dias úteis, meses,
+semanas e horas —, sem cadastro.
+
+**Resposta rápida.** De **1º de janeiro a 23 de setembro de 2026** são
+**265 dias corridos**, ou **189 dias úteis**, ou **8 meses e 22 dias**. O mesmo
+intervalo dá **37 semanas e 6 dias**, ou **6.360 horas**.
+
+## Quantos dias há entre duas datas
+
+É o cálculo mais pedido: você informa as duas pontas e a calculadora devolve a
+contagem de dias entre elas. Alguns intervalos de referência, todos terminando
+ou começando em **23/09/2026**:
+
+| De | Até | Dias corridos | Dias úteis | Fins de semana |
+|---|---|---|---|---|
+| 01/01/2026 | 23/09/2026 | 265 | 189 | 76 |
+| 23/09/2026 | 25/12/2026 | 93 | 67 | 26 |
+| 23/09/2026 | 31/12/2026 | 99 | 71 | 28 |
+| 01/09/2026 | 30/09/2026 | 29 | 21 | 8 |
+| 01/01/2026 | 31/12/2026 | 364 | 260 | 104 |
+
+Repare na última linha: **de 1º a 31 de dezembro do mesmo ano são 364 dias, não
+365**. O ano tem 365 dias, mas entre a primeira e a última data do ano há 364
+intervalos de um dia. A diferença some quando você marca a opção de **incluir o
+dia inicial**, explicada mais abaixo.
+
+## Somar e subtrair dias de uma data
+
+O modo inverso: em vez de comparar duas datas, você parte de uma e desloca um
+prazo. É o que resolve "meu contrato vence em quantos dias" ou "qual a data
+daqui a 90 dias". Partindo de **23/09/2026, uma quarta-feira**:
+
+| Deslocamento | Data final | Dia da semana |
+|---|---|---|
+| + 30 dias | 23/10/2026 | sexta-feira |
+| + 60 dias | 22/11/2026 | domingo |
+| + 90 dias | 22/12/2026 | terça-feira |
+| + 180 dias | 22/03/2027 | segunda-feira |
+| + 365 dias | 23/09/2027 | quinta-feira |
+| − 30 dias | 24/08/2026 | segunda-feira |
+
+**O dia da semana importa mais do que parece.** Um prazo de 60 dias que cai num
+domingo, como o da tabela, na prática vence na sexta anterior ou na segunda
+seguinte, dependendo do que foi combinado — e é por isso que a calculadora
+sempre mostra o dia da semana da data final, e não só a data.
+
+## Em meses e semanas: a calculadora de meses
+
+O mesmo intervalo aparece convertido em todas as unidades, porque "quantos
+meses" e "quantas semanas" são a mesma pergunta em outra escala. O contador de
+meses de **01/01/2026 a 23/09/2026** dá:
+
+- **8 meses e 22 dias** (a decomposição de calendário)
+- **37 semanas e 6 dias**
+- **265 dias**
+- **6.360 horas**
+
+**Mês não é uma unidade fixa**, e é aí que quase todo cálculo à mão se perde:
+janeiro tem 31 dias, fevereiro tem 28 ou 29. Dividir 265 por 30 daria "8,8
+meses", que não corresponde a nenhuma data real. A calculadora conta pelo
+calendário — de 1º de janeiro a 1º de setembro são 8 meses exatos, e o que
+sobra até o dia 23 são os 22 dias.
+
+## Dias úteis: o que entra e o que não entra
+
+O contador de dias úteis considera **segunda a sexta-feira**. De 1º de janeiro
+a 23 de setembro de 2026, dos 265 dias corridos, **189 são úteis e 76 são
+sábados e domingos** — as duas contas sempre fecham o total.
+
+**Feriados não são descontados.** Esta é uma limitação declarada, não um
+esquecimento: feriado nacional, estadual e municipal formam listas diferentes, e
+a data de alguns muda todo ano (Carnaval e Corpus Christi dependem da Páscoa).
+Enquanto a lista não estiver publicada aqui, o número de dias úteis é o de
+segunda a sexta, e prazo processual ou contratual precisa da conferência dos
+feriados aplicáveis ao seu caso.
+
+No modo de somar, marcar dias úteis muda o resultado: partindo de **23/09/2026**,
+somar 30 dias corridos cai em **23/10**, mas somar **30 dias úteis** cai em
+**04/11/2026**.
+
+## O dia inicial conta ou não?
+
+Depende de quem pergunta, e é por isso que a opção existe.
+
+- **Sem incluir o dia inicial** (padrão): de 1º a 2 de janeiro é **1 dia**. É
+  como se mede duração — quem faz aniversário no dia 1º tem 1 dia de vida no
+  dia 2.
+- **Incluindo o dia inicial**: o mesmo intervalo vira **2 dias**. É como se
+  conta diária de hotel, prazo "a partir de hoje, incluindo hoje" e período de
+  afastamento.
+
+Um erro de 1 dia parece pouco até virar um prazo perdido. Se o documento que
+você está seguindo diz "contados a partir de", marque a opção.
+
+## Por que 31/01 + 1 mês é 28/02
+
+Porque 31 de fevereiro não existe. Ao somar meses, a calculadora leva a data
+para o **último dia do mês de destino** quando o dia original não cabe lá:
+
+- **31/01/2026 + 1 mês = 28/02/2026**
+- **31/01/2024 + 1 mês = 29/02/2024** (2024 é bissexto)
+- **29/02/2024 + 1 ano = 28/02/2025**
+
+É a convenção de todo calendário e de toda folha de pagamento. A alternativa —
+deixar transbordar para 3 de março — faria "um mês depois" cair em outro mês,
+que é pior.
+
+Pelo mesmo motivo, **anos e meses são aplicados antes dos dias**. Somar "1 mês e
+1 dia" a 31/01/2026 dá 01/03/2026: primeiro o mês (28/02), depois o dia.
+
+## Exemplos resolvidos
+
+**Quanto tempo de casa tem quem entrou em 20/05/1990.** Até 23/09/2026 são
+**36 anos, 4 meses e 3 dias** — ou 13.275 dias corridos. A mesma conta serve
+para idade, tempo de contribuição e tempo de contrato.
+
+**Quantos dias faltam para o Natal, a partir de 23/09/2026.** São **93 dias**,
+ou 67 dias úteis, ou 13 semanas e 2 dias. O Natal de 2026 cai numa
+**sexta-feira**.
+
+**Fevereiro de ano bissexto.** De **29/02/2024 a 28/02/2025** dá exatamente
+**1 ano** na decomposição de calendário, e **365 dias** corridos — o aniversário
+de quem nasceu em 29 de fevereiro cai em 28 de fevereiro nos anos comuns.
+
+**A borda que quebra cálculo à mão.** De **31/01/2026 a 01/03/2026** são 29 dias
+corridos, que a calculadora decompõe como **1 mês e 1 dia**. Subtrair
+componente a componente (mês − mês, dia − dia) daria "1 mês e −2 dias", que não
+quer dizer nada.
+
+## Perguntas frequentes
+
+**Como calcular a diferença entre duas datas?**
+
+Informe a data inicial e a data final. A calculadora devolve de uma vez os dias
+corridos, os dias úteis, a decomposição em anos, meses e dias, além do total em
+semanas e horas. De 01/01/2026 a 23/09/2026, por exemplo, são 265 dias corridos
+e 189 dias úteis.
+
+**Quantos dias há entre duas datas?**
+
+É a diferença em dias corridos entre elas. Por padrão o dia inicial não é
+contado — de 1º a 2 de janeiro é 1 dia. Marcando a opção de incluir o dia
+inicial, o mesmo intervalo passa a 2 dias, que é como prazos costumam contar.
+
+**Como somar dias a uma data?**
+
+Escolha o modo "somar dias a uma data", informe a data de partida e quantos
+dias, meses ou anos deslocar. Também dá para subtrair, e para contar apenas
+dias úteis. De 23/09/2026, somar 90 dias leva a 22/12/2026.
+
+**A calculadora conta dias úteis com feriados?**
+
+Não. Os dias úteis consideram apenas segunda a sexta-feira; feriados nacionais,
+estaduais e municipais não são descontados. Para prazo processual ou
+contratual, confira os feriados aplicáveis ao seu caso.
+
+**Quantos meses há entre duas datas?**
+
+O contador de meses usa o calendário, não uma média de 30 dias. De 01/01/2026 a
+23/09/2026 são 8 meses e 22 dias: de 1º de janeiro a 1º de setembro são 8 meses
+exatos, e o resto até o dia 23 são os 22 dias.
+
+**Por que somar 1 mês a 31 de janeiro dá 28 de fevereiro?**
+
+Porque 31 de fevereiro não existe, e a convenção de calendário é levar a data
+para o último dia do mês de destino. Em ano bissexto o resultado é 29 de
+fevereiro.
+
+**O dia inicial entra na contagem?**
+
+Por padrão não, porque é assim que se mede duração. Quando o texto que você
+segue diz "contados a partir de tal data", marque a opção de incluir o dia
+inicial — a diferença é de exatamente 1 dia.
+
+**Dá para calcular idade com esta calculadora?**
+
+Dá. Informe a data de nascimento como data inicial e a data de hoje como final:
+a decomposição em anos, meses e dias é a idade exata. Quem nasceu em 20/05/1990
+tinha 36 anos, 4 meses e 3 dias em 23/09/2026.
+
+**Quantos dias úteis tem um ano?**
+
+Em 2026, de 1º de janeiro a 31 de dezembro, são 260 dias úteis e 104 dias de
+fim de semana, num total de 364 dias entre as duas datas. Descontando feriados
+nacionais, o número de dias efetivamente trabalhados fica abaixo disso.
+
+## Como este cálculo é feito
+
+Diferente das demais calculadoras do site, esta **não tem base legal** — não há
+artigo de lei nem tabela anual por trás de aritmética de calendário, e por isso
+nada aqui precisa ser revisado em janeiro. As convenções aplicadas são:
+
+- **Calendário gregoriano**, incluindo a regra de anos bissextos (divisíveis por
+  4, exceto os divisíveis por 100 que não são por 400).
+- **Dias úteis**: de segunda a sexta-feira, sem desconto de feriados.
+- **Soma de meses e anos**: ajuste para o último dia do mês quando o dia de
+  origem não existe no mês de destino, com anos e meses aplicados antes dos
+  dias.
+- **Dia inicial**: fora da contagem por padrão, opcional de incluir.
+
+Precisa contar dias dentro de um cálculo trabalhista? Veja a
+[calculadora de rescisão](/calculadora/rescisao-trabalhista) para o aviso
+prévio, a [calculadora de férias](/calculadora/ferias) para o período aquisitivo
+e a [calculadora de hora extra](/calculadora/hora-extra) para jornada.
