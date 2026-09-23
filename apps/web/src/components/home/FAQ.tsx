@@ -2,12 +2,13 @@
 
 import { Disclosure, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
+import { calculatorRegistry } from '@/lib/calculators'
 
 export const faqItems = [
   {
     question: 'As calculadoras são realmente gratuitas?',
     answer:
-      'Sim. Todas as 20 calculadoras são 100% gratuitas, sem cadastro, sem trial. Cobrimos os custos com publicidade discreta — nunca com seus dados pessoais.',
+      `Sim. Todas as ${calculatorRegistry.length} calculadoras são 100% gratuitas, sem cadastro, sem trial. Cobrimos os custos com publicidade discreta — nunca com seus dados pessoais.`,
   },
   {
     question: 'As tabelas (INSS, IRRF, salário mínimo) estão atualizadas?',

@@ -23,6 +23,13 @@ que não cabe em nenhum dos outros três.
   501, art. 138 citado fora de contexto, duas atribuições erradas), e a
   calculadora prometia **"descontos de INSS e IRRF" que ela não calcula**.
   Detalhe no Diário de 22/09 (parte 6).
+- **F69 (22/09) — calculadora de férias + 13º, a 21ª do site e a primeira de
+  intenção combinada.** Menor KD já medido aqui (11-24) e dentro da janela
+  sazonal. Compõe o motor do F66 com o do 13º, e **avisa o que não está
+  somando**: o salário do mês vem menor (F65), então ele fica fora do total.
+  R$ 3.000 → **R$ 6.382,80**. A hipótese que ela testa — se intenção combinada
+  funciona — vale para outros pares (rescisão + FGTS, salário líquido + INSS).
+  Detalhe no Diário de 22/09 (parte 15).
 - **F67 (22/09) — vocabulário da cauda média entregue** em `hora-extra`
   ("Online" no title, 7 sinônimos, 3 perguntas novas na FAQ) e `decimo-terceiro`
   (forma curta, sem o "terceiro"). **F68 (calculadora de datas), F69 (página
@@ -1147,6 +1154,221 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-09-22 (parte 15) — F69: a primeira calculadora de intenção combinada, e a soma que desta vez pode ser feita
+
+Paulo perguntou o que atacar e escolhi a F69 — não por ser a maior, mas por ser
+a única que **perde valor se esperar**. O 13º pica em nov/dez, o Bing responde
+em semanas e é ele quem dá clique. Em dezembro, isso vira conteúdo para 2027.
+
+**O alvo, de novo pelo número:** ~18 keywords de **KD 11-24** que nenhuma
+calculadora de item único atende. O concorrente ocupa posição 1-3 nelas com uma
+página só. É o menor KD medido em qualquer análise deste projeto.
+
+**A decisão de arquitetura: compor, não reescrever.**
+`calcularFeriasDecimoTerceiro` chama `calcularFerias` (com o líquido do F66) e
+`calcularDecimoTerceiro`, e o primeiro teste do arquivo trava exatamente isso —
+**a página combinada não pode divergir das individuais**. Se uma regra mudar, é
+esse teste que quebra antes de o site publicar dois números diferentes para a
+mesma conta.
+
+**O cuidado que definiu a página: aqui a soma é legítima, e isso não era óbvio.**
+O F58 e o post agregado do F60 nasceram do erro oposto — somar rescisão + 13º +
+férias + FGTS, que se contêm. Férias e 13º **não** se contêm: são pagamentos
+independentes, em datas diferentes. **Mas existe uma armadilha simétrica**, e
+ela é o salário do mês: quem sai de férias recebe o contracheque menor (F65),
+então somar o salário cheio ao total daria um número que ninguém recebe. **O
+resultado avisa explicitamente que não inclui o salário do mês, e um teste
+trava essa frase.** Segundo aviso: as duas contas são tributadas em separado —
+somar as bases inventaria imposto.
+
+**O detalhe que responde a metade da pergunta: *quando* o dinheiro cai.** São
+três pagamentos em semanas diferentes, e a página põe a linha do tempo antes da
+tabela — recibo até 2 dias antes das férias, 1ª parcela até 30/11, 2ª até 20/12,
+**que em 2026 cai num domingo e antecipa para sexta, 18/12** (conferido, não
+copiado do post do F22). E a opção de **adiantar a 1ª parcela junto das férias**
+(Lei 4.749/1965, art. 2º, §2º, se pedido em janeiro): num salário de R$ 3.000,
+o recibo sai de R$ 3.631,40 para **R$ 5.131,40** sem mudar o total do ano.
+
+**Números que ficam** (R$ 3.000, ano inteiro, 30 dias): férias líquidas
+R$ 3.631,40 + 1ª parcela R$ 1.500,00 + 2ª parcela R$ 1.251,40 = **R$ 6.382,80**.
+Vendendo 10 dias: **R$ 6.535,71**. Admitido em maio (8/12): **R$ 5.475,71**.
+
+**Uma observação de conteúdo que virou seção:** na tabela por salário, a 2ª
+parcela de quem ganha R$ 7.500 (R$ 1.978,89) sai **menor** que a de quem ganha
+R$ 5.000 (R$ 1.998,49) — os descontos do 13º inteiro caem todos ali e o IRRF é
+progressivo. É contraintuitivo o bastante para merecer destaque, e é o tipo de
+coisa que só aparece quando se publica a tabela inteira.
+
+**Expectativa honesta:** a página equivalente do concorrente rende ~350
+visitas/mês. **Não é isso que muda o projeto.** O que ela testa é a hipótese de
+**intenção combinada** — se funcionar, o mesmo molde serve para outros pares
+(rescisão + FGTS, salário líquido + INSS). A medição é no BWT, e o marco é o
+pico de nov/dez.
+
+### 2026-09-22 (parte 14) — `supercalendario.com.br`: o dono da busca por cálculo de data é um calendário, não uma calculadora
+
+Sexto Semrush do dia (21/09, BR, desktop), com planilha: **AS 20**, 509
+domínios referentes, 1.000 backlinks, **139,7K visitas/mês**, 24,1K keywords
+(+26%). **É o concorrente que realmente importa para a F68.**
+
+| Página | Tráfego (amostra) | % | Keywords | Melhor |
+|---|---|---|---|---|
+| HOME (calendário) | 89.298 | 79,8% | 57 | `calendário 2025` pos. 8 (**1,2M**) |
+| **`/calculadora-data`** | **20.416** | **18,2%** | **35** | `calculadora de datas` **pos. 1** (33,1K, KD 37) |
+| `/periodo-data` | 1.702 | 1,5% | 7 | `calculadora entre datas` pos. 4 (8,1K) |
+| `/feriados/2027` | 532 | 0,5% | 1 | `feriados 2027` pos. 5 (22,2K, **KD 16**) |
+
+**1. O achado de posicionamento: quem domina "cálculo de data" é um site de
+calendário.** Uma única página dele, `/calculadora-data`, faz **20.416
+visitas/mês** com 35 keywords — mais do que o site inteiro do `calculaonline`
+(13,9K). **O contexto mental da busca é o calendário, não a calculadora**, e
+isso explica por que o `calculadora.com.br` (AS 14) fica em 4º e o
+`calculaonline` em 10º-19º nas mesmas buscas.
+
+**2. Com AS 20 ele ganha na faixa KD 23-40 — e ainda deixa buracos.** Onde ele
+**não** está no topo, com volume grande:
+
+| Keyword | Volume | KD | Posição dele |
+|---|---|---|---|
+| `contador de dias` | **165K** | 35 | **20-21** |
+| `calculadora de dias` | 40,5K | 39 | 8 |
+| `contagem de dias` | 40,5K | 34 | 10 |
+| `calcular dias` | 6,6K | **24** | **9** |
+| `contar dias entre datas` | 6,6K | 35 | 6 |
+
+**`calcular dias` com KD 24 e o líder do nicho em 9º** é o tipo de brecha que
+some quando alguém olha só o volume.
+
+**3. O alvo de entrada da F68 fica definido por este export.** Não é
+`calculadora de datas` (KD 37, com um AS 20 em 1º). É a cauda de **KD 16-25**,
+onde as três medições do dia concordam: `diferença entre datas` 4,4K/**16**,
+`dias entre datas` 3,6K/21, `calculadora de meses` 5,4K/23, `calcular dias`
+6,6K/24, `somar data` 1,3K/24, `somar dias` 3,6K/25, `contador de meses`
+5,4K/25. **Essa cauda sozinha soma ~30K de volume/mês em KD que o AS 2
+alcança**, e é exatamente o que a lista de julho não enxergou.
+
+**4. Cluster novo que apareceu, e é o mais barato de produzir: feriados.**
+`feriados 2027` 22,2K com **KD 16** (ele em 5º), `feriados` 74K/KD 25 (em 10º),
+`hoje é feriado` 110K/KD 29 (em **22º**). **É dado estruturado**: a lista de
+feriados nacionais é pública, muda uma vez por ano e já precisaríamos dela para
+o cálculo de **dias úteis** da F68. Cadastrado como **F72**.
+
+**5. E o dado de IA mais alto do dia: AI Visibility 22, com 18 menções no AI
+Overview.** É a maior presença nas superfícies de IA do Google entre os seis
+sites analisados — e o tema é data/calendário. **A vizinhança que a F68 mira é
+justamente a mais citada pela IA do Google**, onde hoje temos zero. Some-se
+que o nosso canal já forte (Copilot/Bing) também pergunta isso em linguagem
+natural, e a F68 passa a ser a única aposta que ataca os dois índices ao mesmo
+tempo.
+
+**6. Onde ele se encaixa na régua da parte 13:** 139,7K ÷ 24,1K = **5,8
+visitas por keyword**. É **site de utilidade**, não de widget — o mesmo modelo
+que queremos, e a prova de que ele funciona com AS 20.
+
+### 2026-09-22 (parte 13) — `calculadora-online.xyz`: o espelho do anterior, e a métrica que separa os dois mercados
+
+Quinto Semrush do dia, **só a visão geral** (sem planilha de posições):
+`calculadora-online.xyz` — **3.000 keywords**, **532.200 visitas/mês (+32,23%)**,
+Traffic Cost US$ 31,1 mil, e presença em três países (BR 3K, ES 970, IT 347).
+
+**1. O movimento espelhado.** O `calculadoraonline.com.br` caiu **−30,65%** e
+este subiu **+32,23%**, no mesmo mês, no mesmo tamanho. Sem a planilha não dá
+para provar, mas a leitura óbvia é que **os dois disputam a mesma SERP de
+`calculadora`** e um pegou o que o outro perdeu. **A lição não depende da
+prova:** naquele mercado, uma mudança de SERP move meio milhão de visitas de um
+domínio para outro. **É o oposto de patrimônio acumulável.**
+
+**2. Um `.xyz` sem marca faz 532 mil visitas com 3.000 keywords.** Isso diz uma
+coisa importante sobre aquela vizinhança: **não é autoridade que decide** — é
+ser a ferramenta que o Google quer entregar. Mas o preço de entrada é o termo
+`calculadora` (6,1M, KD 61), onde já estão dois incumbentes com domínio de
+casamento exato.
+
+**3. A métrica que separa os dois mercados: visitas por keyword.**
+
+| Site | Keywords | Tráfego | Visitas/keyword |
+|---|---|---|---|
+| `calculadora-online.xyz` | 3.000 | 532.200 | **177** |
+| `calculadoraonline.com.br` | 13.900 | 666.500 | 48 |
+| `calculadora.com.br` | 2.800 | 21.700 | 7,8 |
+| `calculaonline.com.br` | 7.500 | 13.900 | 1,9 |
+| **`calculosonline`** | 240 | 1 | **0,004** |
+
+**Acima de ~40 visitas/keyword é site de widget**: vive de poucos termos
+gigantes, é volátil e não acumula. **Abaixo de ~10 é site de utilidade**: vive
+de muitos termos pequenos, cresce devagar e não desaba com uma mudança de SERP.
+**Nós somos — e vamos continuar sendo — do segundo tipo**, e o plano das partes
+9 a 12 é justamente encher a coluna da esquerda.
+
+**Nada muda no backlog por causa deste.** Se o Paulo quiser o detalhamento por
+página, falta o export de Positions; o overview sozinho não abre.
+
+### 2026-09-22 (parte 12) — `calculadoraonline.com.br`: 666K visitas, 93% numa página de widget, e dois buracos reais no meio disso
+
+Quarto Semrush do dia (21/09, BR, desktop): **`calculadoraonline.com.br`** —
+13,9K keywords, **666.500 visitas/mês** e Traffic Cost de US$ 33,1 mil. Duas
+planilhas, 197 linhas. **Dados colados na conversa.**
+
+**1. Antes de qualquer conclusão: este site não é concorrente nosso.** 93% do
+tráfego está em **uma página** — `/basica`, que é **o widget de calculadora na
+tela** — e 75% do total vem de **uma keyword**: `calculadora`, 6,1 milhões de
+buscas/mês, posição 2, com domínio de casamento exato. Quem busca "calculadora"
+quer *uma calculadora para usar*, não um cálculo trabalhista. **É outro
+mercado, com outra intenção, e KD 61.**
+
+| Página | Tráfego | % | Keywords |
+|---|---|---|---|
+| `/basica` (widget) | 585.587 | **92,8%** | 93 |
+| `/calculadoras` | 11.458 | 1,8% | 4 |
+| `/cientifica` | 8.062 | 1,3% | 6 |
+| `/tempo-restante` | 3.309 | 0,5% | 20 |
+| `/folha-pagamento` | 2.332 | 0,4% | 13 |
+| `/operacoes-com-datas` | 1.375 | 0,2% | 9 |
+
+**2. A cauda de erros de digitação é consequência, não estratégia.** São **61
+keywords** que são grafias erradas de "calculadora" (`calculkadora`,
+`calculadura`, `calciladora`, `calculadoira`…), **todas em posição 1-2**,
+somando 244.910 de volume e 27.391 visitas/mês — mais tráfego do que todas as
+páginas de datas do `calculaonline` juntas. **Só funciona para quem já é o
+primeiro no termo-raiz**: o Google mapeia o erro para a intenção principal.
+Não dá para "mirar typo" sem ter o termo.
+
+**3. O primeiro buraco real, e é grande: `calculadora de horas` tem 165 mil
+buscas/mês com KD 19 — e o líder do nicho está em 25º.** Ao lado dela,
+`contador de horas` (22,2K, KD 31, pos. 14) e `contar horas` (6,6K, KD 30,
+pos. 9). **KD 19 em 165 mil buscas é a melhor relação volume/dificuldade que
+apareceu em qualquer uma das quatro análises de hoje**, e ninguém está
+atendendo direito. Some-se que **já temos motor de hora** (F48: jornada,
+minutos, conversão 52min30s) — a soma/subtração de horas é aritmética vizinha.
+
+**4. O segundo buraco é sazonal e recorrente: a família "quanto tempo falta".**
+`quantos dias faltam para o natal` 90,5K (KD 31, ele em 15º),
+`contagem regressiva` 60,5K (37, em 17º), `quantos dias faltam para acabar o
+ano` 33,1K (33, em 6º), `contagem regressiva para 2026` 27,1K (23),
+`faltam quantos dias para o ano novo` 5,4K (31), `quantos dias faltam para o
+meu aniversário` 1,6K (**KD 18**). São páginas de uma linha de código que
+voltam todo ano, e o site inteiro dele tem só 20 keywords nesse grupo — pouca
+gente disputando.
+
+**5. E um terceiro, esse dentro do nosso território: folha de pagamento.** 13
+keywords, **posições 1-3**, KD **21-33**: `folha de pagamento como calcular`
+2,9K (KD 25, pos. 1), `calculadora folha de pagamento` 1,9K (28, pos. 1),
+`cálculo da folha de pagamento` 1,3K (**21**, pos. 2). Volume modesto, mas **KD
+mais baixo que `calculo salario liquido` (35)** e intenção de empregador/RH —
+público com CPC melhor para quando o AdSense entrar. **Temos INSS, IRRF, FGTS e
+salário líquido prontos**; falta a embalagem "folha de pagamento", que é a
+mesma conta vista do lado do empregador.
+
+**6. Risco que vale registrar: o tráfego dele caiu 30,65%.** Quem depende de um
+head term para 75% do tráfego oscila com uma mudança de SERP — e 2026 é o ano
+em que o AI Overview começou a comer a intenção de ferramenta. É um argumento
+contra montar a casa em cima de um único termo gigante, e a favor da cauda
+ampla que a F68 propõe.
+
+**O que isso muda no backlog:** a **F68 cresce de escopo** — datas **e horas**
+e **contagem regressiva**, tudo sobre o mesmo motor de aritmética de tempo — e
+entra uma **F71 (folha de pagamento)**. O resto da ordem não muda.
 
 ### 2026-09-22 (parte 11) — F67 entregue e F68-F70 cadastradas: o roadmap saiu do trabalhista
 

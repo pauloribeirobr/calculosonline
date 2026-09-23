@@ -7,7 +7,7 @@ import { IDENTIDADE_CATEGORIA } from '../../src/lib/identidadeVisual'
 // calculadora — onde cai todo o tráfego orgânico — não tinha ícone nenhum.
 
 test.describe('identidade visual por categoria', () => {
-  test('as 20 calculadoras têm ícone no header, com a cor da própria categoria', async ({
+  test('as calculadoras têm ícone no header, com a cor da própria categoria', async ({
     page,
   }) => {
     for (const calc of calculatorRegistry) {

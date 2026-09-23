@@ -36,7 +36,7 @@ calculosonline/
 ├── apps/desktop/       — Tauri
 ├── apps/sheets-plugin/ — Google Apps Script
 └── content/            — conteúdo editorial MDX
-    ├── calculadoras/   — corpo de cada uma das 20 calculadoras
+    ├── calculadoras/   — corpo de cada uma das 21 calculadoras
     ├── blog/           — posts do blog (F22); registry em `src/lib/blog.ts`
     └── hub/            — conteúdo do hub trabalhista (F58); registry em `src/lib/hubTrabalhista.ts`
 ```
@@ -222,7 +222,7 @@ Componentes globais: `Header`, `Footer`, `PageSeo`, `JsonLd`.
   calculadora em toda página de post ou do hub.
 - **Nem toda página de cálculo entra no `calculatorRegistry`** — o registry casa 1-para-1 com
   um formulário em `components/calculadoras/forms/` e um MDX em `content/calculadoras/`, e
-  alimenta a contagem de "20 calculadoras" declarada em home, `/sobre`, FAQ e og-image.
+  alimenta a contagem de calculadoras declarada em home, `/sobre`, FAQ e og-image — que desde o F69 sai de `calculatorRegistry.length`, e não mais de um literal.
   O hub trabalhista (F58) agrega quatro delas e por isso mora em `lib/hubTrabalhista.ts`,
   fora do registry.
 - **Sitemap via `app/sitemap.ts` nativo, não `next-sitemap`** — evita o problema de o config

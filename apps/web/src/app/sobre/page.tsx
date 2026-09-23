@@ -4,7 +4,7 @@ import { Breadcrumbs } from '@/components/common/Breadcrumbs'
 import { PageSeo } from '@/components/seo/PageSeo'
 
 const description =
-  'Conheça o Calculos Online: 20 calculadoras gratuitas para trabalhadores, autônomos, MEIs e empresas brasileiras.'
+  'Conheça o Calculos Online: 21 calculadoras gratuitas para trabalhadores, autônomos, MEIs e empresas brasileiras.'
 
 export const metadata: Metadata = buildMetadata({
   title: 'Sobre',

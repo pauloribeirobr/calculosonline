@@ -97,7 +97,21 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code} %{time_total}\\\\n\" --max-time 8 http://127.0.0.1:3000/)",
       "Bash(kill -9 703955 703956 703985 721268 721270)",
       "Bash(kill -9 721283 721313)",
-      "Bash(curl -s -o /dev/null -w \"home:%{http_code} %{time_total}s\\\\n\" --max-time 60 http://localhost:3000/)"
+      "Bash(curl -s -o /dev/null -w \"home:%{http_code} %{time_total}s\\\\n\" --max-time 60 http://localhost:3000/)",
+      "Bash(grep -E \"passed|failed\" /tmp/claude-1000/-home-paulo-projects-next-calculosonline/2b252916-46f3-465e-82be-3a8db0958a4f/scratchpad/resto.log 2>/dev/null | tail -2; tail -1 /tmp/claude-1000/-home-paulo-projects-next-calculosonline/2b252916-46f3-465e-82be-3a8db0958a4f/scratchpad/resto.log; ls /home/paulo/Downloads/semrush-export*.csv | tail -3)",
+      "Bash(curl -s -o /dev/null -w \"dev:%{http_code}\\\\n\" --max-time 5 http://localhost:3000/)",
+      "Bash(timeout 580 npx playwright test ferias-decimo-terceiro.spec.ts --project=chromium --reporter=line)",
+      "Bash(xargs -n1 basename)",
+      "Bash(pkill -f \"[n]ext dev\")",
+      "Bash(pkill -f \"[p]laywright test\")",
+      "Bash(timeout 580 npx turbo run build --filter=web)",
+      "Bash(nohup npx next start)",
+      "Bash(curl -s -o /dev/null -w \"home:%{http_code} nova:\" --max-time 10 http://localhost:3000/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{time_total}s\\\\n\" --max-time 10 http://localhost:3000/calculadora/ferias-e-decimo-terceiro)",
+      "Bash(pkill -f \"[n]ext start\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" --max-time 10 http://localhost:3000/calculadora/ferias)",
+      "Bash(pkill -f \"[n]ext-server\")",
+      "Bash(curl -s -o /dev/null -w \"ferias:%{http_code}\\\\n\" --max-time 10 http://localhost:3000/calculadora/ferias)"
     ],
     "additionalDirectories": [
       "/home/paulo/projects/next/calculosonline/apps/web/src/lib"
