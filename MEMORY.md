@@ -23,6 +23,15 @@ que não cabe em nenhum dos outros três.
   501, art. 138 citado fora de contexto, duas atribuições erradas), e a
   calculadora prometia **"descontos de INSS e IRRF" que ela não calcula**.
   Detalhe no Diário de 22/09 (parte 6).
+- **F67 (22/09) — vocabulário da cauda média entregue** em `hora-extra`
+  ("Online" no title, 7 sinônimos, 3 perguntas novas na FAQ) e `decimo-terceiro`
+  (forma curta, sem o "terceiro"). **F68 (calculadora de datas), F69 (página
+  "férias + 13º") e F70 (cliques mortos) cadastradas no P0, nessa ordem.**
+- **Decisão de fundo: o roadmap sai do trabalhista.** Três sites independentes
+  — dois com 7x e 12x a nossa autoridade — ficam em 26-58 na cabeça desse
+  cluster. O que vem depois do F67 é **datas** (sem lei para manter, KD de um
+  dígito em parte da cauda) e a **intenção combinada** de férias + 13º, que
+  ninguém cobre. Detalhe no Diário de 22/09 (parte 11).
 - **F66 (22/09) — a calculadora de férias devolve o líquido.** O recibo tem três
   regras próprias que o contracheque não tem: **IRRF em separado** do salário do
   mês, **abono fora da base** dos dois e **dobra do art. 137 sem tributo** (o
@@ -36,6 +45,35 @@ que não cabe em nenhum dos outros três.
   é a última hipótese barata (o IndexNow não fala com o Google); e **checkpoint
   em ~27/10** — se rescisão e 13º continuarem em 85-95 com o Bing em 7, vale a
   decisão de ordem de grandeza de 14/09. **Não comprar o link 5 antes disso.**
+- **`calculadora.com.br` (22/09) é o comparável que importa: 247 domínios
+  referentes e 653 backlinks — a nossa ordem de grandeza — e 21.700 visitas/mês
+  contra a nossa 1.** Duas páginas de **datas** fazem 66% disso, uma delas
+  rankeando para **49 keywords sozinha**. O trabalhista dele é 0,9% do tráfego,
+  com `calculo de ferias` em 36 e `calculo salario liquido` em 48 — **terceiro
+  site independente travado na mesma faixa**. Detalhe no Diário de 22/09
+  (parte 10).
+- **Datas vira a principal aposta de expansão** (não é mais "candidato"):
+  `contador de dias` 165K/KD 35, `calculadora de dias` 40,5K/39, **`diferença
+  entre datas` 4,4K/KD 16**, `somar dias` 3,6K/25. Sem legislação para manter,
+  KD alcançável e uma página cobrindo dezenas de sinônimos. A lista de julho
+  media a keyword errada.
+- **Hora extra é ganhável, com prova de terceiro:** o `calculadora.com.br`
+  está em **pos. 5** em `calcular hora extra online` (KD 25) **com AS 14**,
+  onde nós estamos em 58. É a única página trabalhista que rankeia para ele.
+- **Comparação com `calculaonline.com.br` (22/09): 72% do tráfego dele vem de
+  UMA keyword** (`calculadora online`, 368K/mês, KD 67, pos. 8, na home, casando
+  com o domínio dele). **E no nosso tema ele está travado como nós, com AS 24:**
+  `calculo de ferias` pos. 54, `calculo salario liquido` 58, `calculo decimo
+  terceiro` 41, `cálculo rescisão` 26. **Autoridade de 2 → 24 não ganha a cabeça
+  do cluster trabalhista** — o teto dele é KD ~25-30, o nosso é abaixo de 20.
+  Detalhe no Diário de 22/09 (parte 9).
+- **O alvo de menor KD que já apareceu neste projeto: uma página "férias + 13º"
+  juntos.** O `ferias-13` do concorrente ocupa **posição 1-3** em ~18 keywords
+  de **KD 11-24** (~350 visitas/mês), atendendo a intenção combinada que
+  calculadora de item único não atende. Temos as duas peças e o líquido do F66.
+- **A categoria Tempo estava subavaliada no backlog:** as keywords certas são
+  `contador de dias` (165K), `calculadora de dias` (40,5K) e `dias uteis`
+  (18,1K, **KD 4-21**), não as que ficaram registradas em julho (110-170/mês).
 - **Semrush de 21/09: +76 domínios referentes (122 → 198) e +104 backlinks, e o
   Authority Score continua 2.** Quarta fonte confirmando que os domínios que ele
   conta são scraper. **O AS é grosso demais para medir os links do F15** — a
@@ -1109,6 +1147,229 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-09-22 (parte 11) — F67 entregue e F68-F70 cadastradas: o roadmap saiu do trabalhista
+
+Paulo mandou cadastrar as features novas e implementar o F67. Feito.
+
+**F67 — vocabulário da cauda média (entregue).** É o molde do F38/F39/F53, mas
+o que muda é a qualidade do alvo: **três medições independentes apontando para
+a mesma faixa**. O nosso Semrush põe `calculo hora extra online` em 54 (KD 18)
+e `calcular hora extra online` em 58 (KD 25); o `calculadora.com.br`, com AS
+14, está em **pos. 5** na segunda — e é a **única página trabalhista que
+rankeia para ele**; e o GSC mostra `calculadora de horas extras`,
+`calculadora hora extra noturna` e `calculo exato horas extras` com impressão
+em 77-95. No 13º, o padrão é a **forma curta**: `calcular meu decimo` (52) e
+`calculo décimo` (57) omitem o "terceiro" — e **toda a copy do site escrevia
+"décimo terceiro"**.
+
+Entregue: `tituloLongo` da hora extra virou "Calculadora de Hora Extra
+**Online**", 7 sinônimos medidos no registry dela e 5 no 13º, e — porque a
+lição do F38 é que `keywords` no `<head>` não ranqueia nada desde 2009 — **o
+vocabulário entrou na copy**: parágrafo de abertura e três perguntas novas na
+FAQ da hora extra, mais "Como calcular meu décimo?" no 13º. A resposta da
+noturna documenta o campo do F48 que quase ninguém entende (hora de relógio do
+cartão de ponto × hora já convertida do holerite). Achei e corrigi um inglês
+vazado na copy: "com o adicional **due**".
+
+**F68, F69 e F70 cadastradas no backlog do P0.** A ordem reflete o que as
+partes 9 e 10 mostraram:
+
+1. **F68 — calculadora de datas.** A maior aposta, e a primeira feature sem
+   legislação para manter. Dois concorrentes tiram a maior parte do tráfego
+   disso, com KD 16-25 na cauda e uma única página rankeando para 49 keywords.
+2. **F69 — página "férias + 13º".** O menor KD já visto neste projeto (11-24),
+   com janela sazonal out-dez, e já temos todas as peças (F58, F64, F66).
+3. **F70 — cliques mortos.** A mais barata, e melhora o tráfego que já existe.
+
+**A mudança de fundo, que vale registrar como decisão:** até hoje o roadmap
+inteiro era trabalhista/fiscal, e as três medições de 22/09 mostram que **essa
+é a vizinhança errada para um site de AS 2** — três sites independentes,
+inclusive dois com 7x e 12x a nossa autoridade, ficam em 26-58 na cabeça desse
+cluster. **O que vem depois do F67 sai do cluster**: datas (F68) não tem
+concorrente grande, não tem lei para acompanhar e tem KD de um dígito em parte
+da cauda; e a única exceção trabalhista que continua na fila (F69) é a
+intenção combinada, que ninguém cobre.
+
+### 2026-09-22 (parte 10) — `calculadora.com.br`: autoridade parecida com a nossa, 21.700x o nosso tráfego, e duas páginas de datas explicam 66% disso
+
+Paulo mandou o terceiro Semrush: **`calculadora.com.br`** (21/09, BR, desktop),
+Domain Overview + 100 keywords. **Dados colados na conversa; números brutos
+aqui.** É o mais revelador dos três, e por um motivo específico: **o perfil de
+link dele é da nossa ordem de grandeza.**
+
+| Métrica | `calculosonline` | `calculadora.com.br` | `calculaonline` |
+|---|---|---|---|
+| Authority Score | 2 | **14** | 24 |
+| Domínios referentes | 198 | **247** | 621 |
+| Backlinks | 324 | **653** | 4.100 |
+| Keywords orgânicas | 240 | **2.800** | 7.500 |
+| Tráfego orgânico/mês | **1** | **21.700** | 13.900 |
+| AI Visibility | 0 | 16 | 15 |
+
+**1. O número que derruba a explicação fácil.** Ele tem **1,25x os nossos
+domínios referentes e 2x os nossos backlinks** — e **21.700 visitas contra 1**.
+Ele até tem mais tráfego que o `calculaonline`, que tem 6x mais backlinks. **A
+diferença entre nós e ele não é tamanho de perfil de link; é o que cada um
+escolheu rankear.** (Ressalva que não muda a conclusão: os 198 domínios nossos
+são scraper, por isso o AS 2 contra 14 — mas 12 pontos de AS não explicam
+21.700x.)
+
+**2. Duas páginas de datas fazem 66% do tráfego dele.**
+
+| Página | Tráfego (amostra) | % | Keywords | Melhor |
+|---|---|---|---|---|
+| `/data/operacao-datas` | 8.227 | **44,4%** | **49** | `calculadora de datas` pos. 4 (33,1K, KD 37) |
+| HOME | 5.668 | 30,6% | 6 | `calculadora` pos. 28 (**6,1M**, KD 61) |
+| `/data/diferenca-datas` | 4.054 | **21,9%** | **37** | `diferença entre datas` **pos. 1** (4,4K, KD 16) |
+| `/data/dia-semana` | 396 | 2,1% | 3 | `que dia da semana` pos. 8 |
+| `/trabalhista/*` (3 páginas) | 171 | **0,9%** | 5 | — |
+
+**Uma única página rankeia para 49 keywords.** É o oposto das nossas 20
+calculadoras de propósito único: `operacao-datas` é uma ferramenta flexível
+(somar, subtrair, contar) e a cauda inteira de sinônimos cai nela —
+`calculadora de datas`, `contador de datas`, `somar dias`, `calcular datas`,
+`calculo de datas`, `contagem de datas`, `soma dias`, `contar datas`... quase
+todas em **posição 3-5**, com KD 25-40.
+
+**3. E o trabalhista dele é 0,9% do tráfego, com as mesmas posições ruins de
+todo mundo:** `calculo de ferias` pos. **36**, `calculadora salario liquido`
+**37**, `calculo salario liquido` **48**. **Terceiro site independente na mesma
+faixa.** A cabeça do cluster trabalhista não é ganhável nem com AS 14, nem com
+24 — está decidido por três medições, não por opinião.
+
+**4. A exceção que valida o F67 (hora extra) com número de terceiro:** ele está
+em **posição 5** em `calcular hora extra online` (720/mês, KD 25) e **10** em
+`calculador hora extra` (1,3K, KD 24) — **com AS 14**. Nós estamos em **58** e
+**54** nessas mesmas buscas (parte 7). **Hora extra é ganhável na faixa de
+autoridade de um site pequeno**, e é a única página trabalhista dele que
+rankeia. Sobe a confiança no F67.
+
+**5. A categoria Tempo deixa de ser candidata e vira a principal aposta de
+expansão.** Dois sites independentes tiram a maior parte do tráfego de datas.
+Os números que interessam (volume/KD): `contador de dias` 165K/35,
+`calculadora de dias` 40,5K/39, `calculadora de datas` 33,1K/37,
+`contador de datas` 9,9K/33, `calculadora entre datas` 8,1K/34,
+**`diferença entre datas` 4,4K/16**, `somar dias` 3,6K/25,
+`dias entre datas` 3,6K/21, `diferença de datas` 880/22,
+`diferença entre duas datas` 170/**12**. A lista registrada em julho
+(`diferenca-entre-datas` "110/mês") estava medindo a keyword errada — o volume
+real do mesmo produto é **duas ordens de grandeza maior**.
+
+**Por que essa categoria é diferente de tudo que já tentamos aqui:**
+- **KD 16-25 existe de verdade** na cauda, que é a faixa que o AS 2 alcança —
+  contra KD 30-40 do trabalhista, onde três sites empacam.
+- **Não tem legislação para manter.** Data é aritmética: zero tabela anual,
+  zero risco de o motor "calcular 2025" como no F64.
+- **Uma página cobre dezenas de keywords**, se a copy carregar os sinônimos —
+  exatamente a disciplina que o F38/F39/F53 já aplicaram no vocabulário.
+- **Serve os dois índices.** O painel de SoA do Clarity já mostrou pergunta de
+  data em linguagem natural ("se o dia 20 cai no domingo em que dia eu tenho
+  que receber meu vale"), e o BWT trouxe prompts do mesmo tipo.
+
+**Ressalva antes de empolgar:** os dois concorrentes têm domínio de casamento
+exato (`calculadora`, 6,1M; `calcula online`), que sozinho explica 20-30% do
+tráfego deles e **não é replicável**. O que é replicável é a escolha de tema e
+o formato de página única com cauda ampla.
+
+### 2026-09-22 (parte 9) — `calculaonline.com.br`: 72% do tráfego dele é uma keyword, e no NOSSO tema ele está tão travado quanto nós
+
+Paulo mandou o Semrush de **`calculaonline.com.br`** (nome quase idêntico ao
+nosso) e pediu a comparação: Domain Overview + 194 keywords em dois CSVs.
+**Dados colados na conversa, então os números ficam aqui.** Mesma janela
+(21/09, BR, desktop) do nosso da parte 7.
+
+| Métrica | `calculosonline` | `calculaonline` |
+|---|---|---|
+| Authority Score | **2** | **24** |
+| Domínios referentes | 198 | **621** |
+| Backlinks | 324 | **4.100** |
+| Keywords orgânicas | 240 | **7.500** |
+| Tráfego orgânico/mês | **1** | **13.900** |
+| AI Visibility | 0 | **15** |
+| Páginas citadas por IA | 1 (só ChatGPT) | **28** (ChatGPT 18, AI Overview 9, AI Mode 7, Gemini 7) |
+
+**1. O número que explica quase tudo: 72% do tráfego dele vem de UMA keyword.**
+`calculadora online` — 368.000 buscas/mês, KD 67, **posição 8**, na home —
+rende **8.800 das 12.735 visitas** da amostra. O domínio dele é casamento
+quase exato com a busca (`calcula online`). **Isso não é replicável para nós**:
+a keyword tem KD 67, a posição 8 dele já é o teto de quem não é Google/Microsoft
+naquela SERP, e o nosso domínio casa com "cálculos online", que é outra ordem de
+grandeza de volume. **Comparar o total de tráfego dos dois sites é comparar uma
+sorte de domínio, não duas estratégias.**
+
+**2. O achado que mais muda a nossa cabeça: no NOSSO tema, ele está tão travado
+quanto nós — com 12x mais autoridade.**
+
+| Keyword | Volume | KD | Posição dele |
+|---|---|---|---|
+| `calculo salario liquido` | 90.5K | 35 | **58** |
+| `calculo de ferias` | 74K | 33 | **54** |
+| `calculo decimo terceiro` | 40.5K | 32 | **41** |
+| `calculadora de salario liquido` | 33.1K | 28 | **47** |
+| `cálculo rescisão` | 14.8K | 35 | **26** |
+| `calculadora trabalhista` | 8.1K | 15 | **28** |
+
+**AS 24, 621 domínios referentes e 4.100 backlinks não colocam ninguém na
+página 1 dessas buscas.** A leitura de 14/09 ("falta autoridade") estava certa
+no diagnóstico e errada na dose: **não é autoridade de 2 para 24, é muito mais
+que isso** — essas SERPs são de portal grande. Reforça, com número de terceiro,
+a decisão A da parte 6: **parar de perseguir a cabeça do cluster trabalhista**.
+
+**3. Onde ele ganha de verdade (tirando a home):**
+
+| Página | Tráfego | Melhor posição | KD |
+|---|---|---|---|
+| `hp-12c` (emulador da HP 12C) | 903 | 6 | 22-24 |
+| `juros-boletos` (juros e multa de boleto) | 797 | **2** | 24 |
+| `dias-entre-datas` | 762 | 10 | 21 |
+| `ferias-13` (férias **e** 13º juntos) | 348 | **1** | 13-16 |
+| `dias-uteis` | 143 | 17 | **4-21** |
+| `recibo-aluguel` (gerador) | 86 | **3** | 11 |
+| `nota-promissoria` (gerador) | 85 | 5 | 13 |
+| `prescricao` | 68 | **2** | 11 |
+| `cheque-especial` | 56 | **1** | 15 |
+
+**O padrão, medido:** o KD mediano das keywords dele em top 10 é **24**; o das
+que estão em 25+ é **33,5**. Com AS 24, o teto fica em KD ~25-30. **Com AS 2,
+o nosso teto é mais baixo ainda — KD abaixo de 20.** É exatamente a faixa da
+cauda média que a parte 7 apontou (`calculo hora extra online`, KD 18).
+
+**4. A oportunidade que está na nossa mão hoje: a página "férias + 13º".** O
+`ferias-13` dele é **uma página que junta os dois cálculos** e ocupa a posição
+**1-3** numa família de ~18 keywords de **KD 11-24**: `calcular decimo terceiro
+e ferias` (390/mês, KD 15, **pos. 1**), `calculo de 13 e ferias` (110, KD 13,
+pos. 1), `calculadora de 13 e ferias` (90, KD 11, pos. 1), `calculo ferias e
+decimo terceiro` (110, KD 28, pos. 2). São ~350 visitas/mês de uma intenção que
+**nenhuma calculadora de item único atende**: "vou tirar férias e receber o 13º,
+quanto dá no total". Nós temos as duas calculadoras, o hub do F58 (que junta
+quatro e mira "rescisão") e agora o líquido das férias (F66) — **falta a página
+da combinação**. É o alvo de menor KD que já apareceu em qualquer análise deste
+projeto.
+
+**5. Correção do backlog: a categoria Tempo estava subavaliada.** A lista de
+candidatos registrada em julho escolheu as keywords erradas —
+`diferenca-entre-datas` (110/mês), `dia-da-semana` (170), `idade` (40). O que o
+concorrente mostra é **`contador de dias` (165K), `calculadora de dias`
+(40.5K), `dias entre datas` (3.6K) e `dias uteis` (18.1K, KD 4-21)**. É o mesmo
+produto com outro nome — e KD de um dígito em parte da cauda. **Se a Fase 2 for
+retomada, é por aqui, não por mais calculadora trabalhista.**
+
+**6. E os geradores.** `recibo-aluguel` (pos. 3, KD 11) e `nota-promissoria`
+(pos. 5, KD 13) são **documentos, não cálculos** — e rankeiam fácil. É o
+território do projeto irmão [Recibo Fácil](../recibofacil/MEMORY.md); vale
+cruzar as duas análises antes de decidir quem ataca o quê.
+
+**7. IA: o nicho é citado no Google, e quem não está somos nós.** Ele tem
+presença em **AI Overview (5 menções, 9 páginas citadas), AI Mode (5/7) e
+Gemini (2/7)**; nós temos zero nas três e 1 página no ChatGPT. Some-se a isso
+que 100% das nossas citações medidas vêm do ecossistema Microsoft (parte 7):
+**a ausência nas superfícies de IA do Google é nossa, não do nicho.**
+
+**Ressalva de método:** tudo acima é estimativa do Semrush para **Google BR
+desktop**. Ele não mede Bing, que é de onde vem o nosso tráfego real — os 223
+usuários/mês do GA4 não aparecem em lugar nenhum dessa comparação. O que a
+comparação mede é o canal Google, e nele a diferença é real.
 
 ### 2026-09-22 (parte 8) — F66: a calculadora de férias passa a responder a pergunta que ela dizia responder
 
