@@ -173,6 +173,17 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'calcular 13 salario',
       'gratificação natalina',
     ],
+    // F67 — o vocabulário curto, que é onde o site está mais perto: o Semrush
+    // de 21/09 põe `calcular meu decimo` em 52 (110/mês, KD 24) e `calculo
+    // décimo` em 57 (480/mês, KD 20), contra 85-95 da cabeça do cluster. O
+    // padrão que se repete nas três medições é a forma sem "terceiro".
+    sinonimos: [
+      'calcular meu décimo',
+      'cálculo décimo',
+      'calcular décimo online',
+      'simulador de décimo terceiro',
+      'calculadora de 13 proporcional',
+    ],
     relacionadas: [
       'salario-liquido',
       'inss',
@@ -188,15 +199,33 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
   {
     slug: 'hora-extra',
     titulo: 'Hora Extra',
-    tituloLongo: 'Calculadora de Hora Extra',
-    descricaoCurta: 'Acréscimo de 50% / 100% sobre a hora.',
+    // "Online" entra no título pelo F67: o par de keywords em que o site está
+    // mais perto da página 1 do Google é `calculo hora extra online` (390/mês,
+    // KD 18, pos. 54) e `calcular hora extra online` (720/mês, KD 25, pos. 58),
+    // e o `buildCalculatorTitle` corta o "sem Cadastro" sozinho se não couber.
+    tituloLongo: 'Calculadora de Hora Extra Online',
+    descricaoCurta: 'Horas extras de 50%, 100% e noturnas.',
     descricao:
-      'Calcule horas extras com adicional de 50% (dia útil) ou 100% (domingo/feriado).',
+      'Calculadora de hora extra online e grátis: calcule horas extras com adicional de 50% (dia útil), 100% (domingo e feriado), hora noturna reduzida e DSR. Tabelas da CLT 2026.',
     categoria: 'trabalhista',
     icone: 'horaExtra',
     fonteJuridica: 'CLT art. 59 | CF/88 art. 7º, XVI',
-    dataAtualizacao: '2026-09-13',
+    dataAtualizacao: '2026-09-22',
     palavrasChave: ['hora extra', 'calcular hora extra', 'adicional hora extra'],
+    // F67 — a cauda média onde o AS 2 alcança. O `calculadora.com.br`, com
+    // AS 14, está em **pos. 5** em `calcular hora extra online` e 10 em
+    // `calculador hora extra`; é a única página trabalhista que rankeia para
+    // ele. O resto do vocabulário saiu do GSC (`calculadora de horas extras`,
+    // `calculadora hora extra noturna`, `calculo exato horas extras`).
+    sinonimos: [
+      'calcular hora extra online',
+      'cálculo de hora extra online',
+      'calculador de hora extra',
+      'calculadora de horas extras',
+      'cálculo exato de horas extras',
+      'calculadora de hora extra noturna',
+      'simulador de hora extra',
+    ],
     relacionadas: ['salario-liquido', 'decimo-terceiro', 'fgts', 'ferias', 'rescisao-trabalhista'],
   },
   {

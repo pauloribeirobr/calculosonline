@@ -85,7 +85,19 @@
       "Bash(npx turbo *)",
       "Bash(curl -s http://localhost:3000/blog/salario-depois-das-ferias-por-que-vem-menor -o /tmp/claude-1000/-home-paulo-projects-next-calculosonline/2b252916-46f3-465e-82be-3a8db0958a4f/scratchpad/post.html -w \"%{http_code}\\\\n\")",
       "Bash(grep -c \"R\\\\$ 1.233,33\\\\|R\\\\$ 122,45\" /tmp/claude-1000/-home-paulo-projects-next-calculosonline/2b252916-46f3-465e-82be-3a8db0958a4f/scratchpad/post.html)",
-      "Bash(grep -rn \"Até R\\\\$\\\\|toFixed\\(2\\)\" packages/core/src/tabelas/index.ts)"
+      "Bash(grep -rn \"Até R\\\\$\\\\|toFixed\\(2\\)\" packages/core/src/tabelas/index.ts)",
+      "Bash(cd /tmp/claude-1000/-home-paulo-projects-next-calculosonline/2b252916-46f3-465e-82be-3a8db0958a4f/scratchpad && ls ~/Downloads/semrush-export*.csv 2>/dev/null | head; ls *.csv 2>/dev/null | head)",
+      "Bash(awk '$0 > \"tabelas-referencia\"')",
+      "Bash(curl -s -o /dev/null -w \"hub:%{http_code}\\\\n\" http://localhost:3000/calculadora-trabalhista-completa)",
+      "Bash(pkill -f \"playwright test\")",
+      "Bash(sed -n '/slug: .hora-extra./,/^ },/p' apps/web/src/lib/calculators.ts)",
+      "Bash(curl -s -o /dev/null -w \"dev:%{http_code}\\\\n\" --max-time 5 http://localhost:3000/calculadora/hora-extra)",
+      "Bash(curl -s -o /dev/null --max-time 3 http://localhost:3000/calculadora/hora-extra)",
+      "Bash(curl -s http://localhost:3000/calculadora/hora-extra)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{time_total}\\\\n\" --max-time 8 http://127.0.0.1:3000/)",
+      "Bash(kill -9 703955 703956 703985 721268 721270)",
+      "Bash(kill -9 721283 721313)",
+      "Bash(curl -s -o /dev/null -w \"home:%{http_code} %{time_total}s\\\\n\" --max-time 60 http://localhost:3000/)"
     ],
     "additionalDirectories": [
       "/home/paulo/projects/next/calculosonline/apps/web/src/lib"
