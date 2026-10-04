@@ -62,9 +62,10 @@ test.describe('ErrorLogger — classificação de erro', () => {
 
     // Filtrado pelo recurso do teste, e não pela contagem total, porque a
     // página tem recursos de terceiro que podem falhar por conta própria — a
-    // primeira execução desta suíte pegou justamente o
-    // `va.vercel-scripts.com/v1/script.debug.js` caindo, que é exatamente o
-    // caso que o F62 existe para tirar de dentro de `exception`.
+    // primeira execução desta suíte pegou o
+    // `va.vercel-scripts.com/v1/script.debug.js` caindo. Lido na época como
+    // ruído de dev, era o mesmo defeito de produção: o F75 achou o
+    // `/_vercel/insights/script.js` em 404 em toda página.
     const recursos = (await eventos(page, 'resource_error')).filter((e) =>
       String(e.params.resource_url).includes('imagem-que-nao-existe-teste.png'),
     )
@@ -74,6 +75,16 @@ test.describe('ErrorLogger — classificação de erro', () => {
     // A invariante que importa: o relatório de exceção não é contaminado por
     // imagem quebrada nem por tracker bloqueado por adblock.
     expect(await eventos(page, 'exception')).toHaveLength(0)
+  })
+
+  test('a página não carrega o script do Vercel Analytics', async ({ page }) => {
+    // O Web Analytics nunca foi ligado no projeto da Vercel, então o script
+    // respondia 404 em produção e gerava um `resource_error` por pageview: 267
+    // em 292 sessões no GA4 de 05/09→02/10, o relatório de erro afogado de novo.
+    // Voltar a usar exige ligar o produto na Vercel antes, não só o componente.
+    await expect(
+      page.locator('script[src*="/_vercel/insights"], script[src*="vercel-scripts.com"]'),
+    ).toHaveCount(0)
   })
 
   test('o mesmo recurso quebrado é reportado uma vez só', async ({ page }) => {

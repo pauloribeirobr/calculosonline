@@ -16,6 +16,28 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **GA4 de 03/10: o `resource_error` (267 em 292 sessões) não é adblock. É o
+  `/_vercel/insights/script.js` em 404 em produção.** O `<Analytics />` do
+  layout injeta esse script em toda página, e o Web Analytics da Vercel não está
+  ligado. O `vercelTrack` também nunca entregou nada. **✅ Removido na mesma
+  sessão (F75, v0.37.1)**, por decisão do Paulo. Medir no próximo GA4: o
+  `resource_error` deve ir para perto de zero. Tráfego:
+  240 usuários (+8%), ChatGPT 28 → 37 sessões, **2 sessões de `google /
+  organic`** (as primeiras em duas janelas), Jornal de Brasília com zero
+  sessão. Detalhe no Diário de 03/10.
+- **BWT → Backlinks (24/09): os 4 links do F15 contados.** `jornaldebrasilia`,
+  `uai.com.br` (o `mercadohoje`, agrupado no domínio raiz), `acritica` e
+  `band`, com 1 link e âncora distinta cada. **O Jornal de Brasília entrou em
+  no máximo 3 dias**, apesar do sitemap congelado. Nenhum domínio orgânico.
+  Agora o que se mede é a posição no BWT, no checkpoint de ~27/10. Detalhe no
+  Diário de 24/09.
+- **O GSC → Links segue em 1 (`band`), e está mostrando o site de antes de
+  27/08:** o painel de links internos ainda dá 31 para `cdb`/`das-mei`/
+  `emprestimo`, que desde a F43 não estão no rodapé (conferido em produção:
+  zero links para elas). **Não é sinal. E é só o relatório que está atrasado:**
+  a Inspeção de URL mostra a `cdb` rastreada em **17/09**, com o canônico
+  aceito. O Google recrawleia; o GSC → Links é que fica semanas atrás do
+  próprio rastreio.
 - **F68 (23/09) — a calculadora de datas está no ar, e é a 1ª fora do
   trabalhista/fiscal.** Executa a decisão de 22/09. Alvo: a cauda **KD 16-25**
   (`diferença entre datas` 4,4K/16, `calcular dias` 6,6K/24, `somar dias`
@@ -1173,6 +1195,182 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-10-03 — Export só do GA4: o `resource_error` não é adblock, é o Vercel Analytics em 404 (F75)
+
+Paulo pediu "avalie a pasta gsc". **Vieram só os 5 relatórios do GA4**
+(05/09→02/10, 28 dias). Não vieram GSC, BWT nem Clarity. A janela se sobrepõe
+à de 22/09 (25/08→21/09) em 17 dias.
+
+**1. O achado da rodada: o `resource_error` é o site, não o leitor.** O export
+traz **267 `resource_error` para 392 `page_view` e 292 sessões**, contra 132 em
+22/09. Na janela anterior o F62 só cobria metade dos dias; agora cobre 23 de 28.
+O F62 tinha previsto: "se em outubro o `resource_error` dominar, é bloqueio de
+tracker e não há o que corrigir no site". **A previsão estava errada, e por um
+motivo lógico:** um `resource_error` que chega ao GA4 prova que o gtag carregou,
+então o recurso que falhou não é o gtag. E 0,91 por sessão, com dedupe por URL
+e teto de 10, é alto demais para adblock, porque adblock não está em 9 de cada
+10 sessões. É um recurso que falha em toda página.
+
+**Conferido em produção (03/10):** todos os `src`/`href` estáticos da home, do
+`irrf` e da `rescisao-trabalhista` respondem 200. Mas
+**`https://calculosonline.com.br/_vercel/insights/script.js` responde 404.** É o
+script que o `<Analytics />` do `@vercel/analytics` (`layout.tsx:96`, desde a
+Sprint 1.2, 10/05) injeta em toda página, e ele só existe quando o Web Analytics
+está ligado no projeto da Vercel. **Ele não está ligado.** Consequências:
+- todo carregamento de página gera 1 `resource_error` de `script`, e o
+  `ErrorLogger` faz exatamente o que foi desenhado para fazer;
+- **o `vercelTrack` de `analytics.ts:68` nunca entregou nada.** Todo evento
+  customizado vai para um destino que não existe desde maio;
+- o relatório de erro do site continua ilegível pelo mesmo motivo que o F62
+  quis resolver, só que agora em outro evento.
+
+**O `exception` caiu de 165 para 50** com a janela quase toda depois do F62. É o
+número que sobra para ler depois da correção. Hoje são 50 em 292 sessões, e o
+`description` segue fora da fila (regra de 22/09).
+
+Havia dois caminhos: ligar o Web Analytics na Vercel ou tirar o `<Analytics />`
+e o `vercelTrack`. Recomendei **tirar**, porque GA4 e Clarity já cobrem o mesmo
+e o painel da Vercel nunca foi lido em 5 meses. **✅ Paulo escolheu tirar, e
+saiu na mesma sessão como F75 (v0.37.1):** componente, chamada e dependência
+removidos, a política de privacidade deixou de citar o serviço, e o
+`error-logger.spec.ts` trava a ausência do script. **Lição de método:** a suíte
+e2e já tinha pego esse script caindo em 10/09 (`script.debug.js` em dev), e eu
+li como ruído de dev. Recurso que falha no teste merece um `curl` em produção
+antes de virar comentário.
+
+**2. Tráfego (05/09→02/10): 240 usuários (223 em 22/09, +8%), Brasil 177 (156,
++13%).** Sessões por origem:
+
+| Origem | 22/09 | 03/10 |
+|---|---|---|
+| `bing` | 89 | **109** |
+| direto | 111 | 101 |
+| **`chatgpt.com`** | 28 | **37** |
+| Yahoo (referral + organic) | 16 | 19 |
+| `mercadohoje.uai.com.br` | 3 | **7** |
+| `band.com.br` | 12 | 5 |
+| `qmix` | 5 | 5 |
+| Copilot | 5 | 3 |
+| **`google / organic`** | **0** | **2** |
+| `tiktok.com` | — | 2 |
+| DuckDuckGo | 2 | 1 |
+| `jornaldebrasilia.com.br` | — | **0** |
+
+- **O ecossistema Microsoft (Bing, Yahoo, DuckDuckGo, ChatGPT e Copilot) é 169 de
+  292 sessões (58%).** O Google tem 2. São as primeiras sessões do Google em
+  duas janelas; o acumulado de 27/08 era 4. É pouco para concluir, e só o GSC
+  diz se são cliques novos (em 22/09 eram 2 em 3 meses).
+- **O Jornal de Brasília não mandou nenhuma sessão em 11 dias.** O
+  `mercadohoje` mandou 7 em 28 e a Band ainda manda 5, com matéria de julho.
+  Isso confirma a ressalva de 22/09: a `/brasil-7/` não tem leitor. O valor
+  desse link é só de índice.
+- Bot no direto como antes: EUA 34 (Ashburn 10, New York 6), China 21.
+- **Série semanal limpa, com usuários novos na semana 0 da coorte:** 16/08 42 ·
+  23/08 42 · 30/08 49 · 06/09 52 · **13/09 60** · 20/09 54. A retenção na semana
+  1 fica em 0-2, o que é normal para calculadora.
+- **Queda sem explicação em 17-18/09 (qui-sex): 4 usuários por dia**, entre dias
+  de 14-15. Não houve deploy nessas datas. Em 22/09 o BWT mostrou que esses dias
+  úteis estavam fortes no Bing. Conferir no BWT diário se os cliques caíram
+  também; se não caíram, foi o rastreio que falhou.
+
+**3. Páginas e eventos.** Home 73 views, **IRRF 47 (41 usuários, igual a
+22/09)**, rescisão 41, hub 35, férias 26, hora extra 16, salário líquido 12,
+Tesouro 12 (21 antes). **Entregas de 22-23/09:** datas (F68) 6 views e 5
+usuários, rejeição 60%; férias + 13º (F69) 3; o post do F65 1. São 9-10 dias, e
+o Bing leva semanas. **Ainda não é leitura.** `calculator_calculated` 281 (271),
+e **"Eventos principais" 281**, agora igual, porque o F45 cobre a janela
+inteira. Tempo médio de engajamento: 85,7s por usuário.
+
+**O que checar no próximo export:**
+- **Depois da F75, o `resource_error` deve cair para perto de zero.** O que
+  sobrar é o adblock de verdade (Clarity). A janela do GA4 só fica inteira
+  depois da F75 a partir do deploy + 28 dias.
+- O GSC, o BWT e o Clarity desta janela, que não vieram. O mais útil é o **GSC
+  com filtro de data, 7 dias × 7 anteriores**, para ver se F65-F69 aparecem e se
+  as 2 sessões do Google viraram clique. O Clarity → Share of Authority é para
+  ver se férias subiu depois do F66/F69. E o BWT por página, com `datas` na lista.
+- O checkpoint de ~27/10 continua sem mudança.
+
+### 2026-09-24 — BWT conta os 4 links do F15; o GSC segue em 1, com o site de antes de 27/08
+
+Paulo mandou um print do BWT → Backlinks e pediu para registrar. **4 domínios
+referentes, 4 páginas, 4 textos âncora, 1 backlink em cada domínio:**
+
+| Domínio no BWT | Placement | Destino | Publicado |
+|---|---|---|---|
+| `jornaldebrasilia.com.br` | link 3 | `rescisao-trabalhista` | 21/09 |
+| `uai.com.br` | link 4 (`mercadohoje.uai.com.br`) | `decimo-terceiro` | 15/09 |
+| `acritica.com` | link 2 | `decimo-terceiro` | 12/08 |
+| `band.com.br` | link 1 | `salario-liquido` | 27/07 |
+
+**O que isso fecha:**
+
+1. **O risco de descoberta do Jornal de Brasília não se confirmou no Bing.** Na
+   parte 1 de 22/09 eu tinha registrado que, com os sitemaps do jornal
+   congelados desde 18/03, o único caminho de rastreio era a página 1 da
+   `/brasil-7/`, e que a espera era de até 4 semanas. **Entrou em no máximo 3
+   dias.** Isso vale para o Bing. No Google a descoberta continua sem
+   confirmação, e o `GSC → Links` não prova ausência (regra de 14/09).
+2. **Previsão errada no checklist de 14/09:** o `mercadohoje` **não** entra como
+   domínio próprio. O BWT agrupa pelo domínio raiz e mostra `uai.com.br`.
+   Corrigido no item 4 do checklist.
+3. **Os 4 textos âncora são distintos**, e é assim que o Bing os vê. A regra de
+   variação de 11/08 se manteve, inclusive nos dois links para o 13º.
+4. **Não apareceu nenhum domínio orgânico.** Os 4 referentes são os 4
+   placements pagos. O site continua sem nenhum link espontâneo, enquanto o
+   Semrush de 21/09 contava **198** domínios. A diferença, que era 122 contra 2,
+   agora é ~50:1. **O BWT segue sendo o placar.**
+
+**Consequência para a medição:** o plano de 14/09 está inteiro no índice que
+manda tráfego. De agora em diante, o que falta é o efeito, e ele se lê pela
+**posição no BWT**: `rescisao-trabalhista` com base **7,29** e `decimo-terceiro`
+com base **8,39** (parte 4 de 22/09), no checkpoint de ~27/10. **O BWT →
+Backlinks sai da agenda até a compra do próximo link**, o que também respeita o
+"não pedir a cada rodada" de 22/09.
+
+**No mesmo dia, o GSC → Links (print do Paulo: "gsc não muda").** Links
+externos: **total de 1**, só `band.com.br` → `salario-liquido`. É o mesmo
+quadro de 14/09. O `acritica` já tem **43 dias** e continua ausente. Pela regra
+de 14/09, isso não diz nada sobre o link.
+
+**O próprio print mostra por quê.** No painel de links internos (total de 665),
+**`cdb`, `das-mei`, `decimo-terceiro`, `emprestimo`, `ferias`, `fgts` e
+`financiamento` aparecem com 31 cada**. São os "31 idênticos para todas as
+páginas" de 27/08, que a F43 desfez no mesmo dia ao cortar o rodapé de 20
+calculadoras para 8 destaques. **Conferi em produção:** a `/sobre` tem 1 link
+para `financiamento` (que está no rodapé) e **zero** para `cdb`, `das-mei` e
+`emprestimo`, que não estão. No site atual essas três não podem ter 31 links.
+**O relatório descreve o site de antes de 27/08.** O painel de externos, parado
+em 1, tem o mesmo atraso, e nenhum dos dois serve como sinal.
+
+| Fonte, 24/09 | Domínios referentes |
+|---|---|
+| GSC → Links | 1 |
+| **BWT → Backlinks** | **4** |
+| Semrush (21/09) | 198 |
+
+**Duas leituras possíveis, e uma checagem barata separa as duas:** ou o
+relatório de links do GSC atualiza devagar (é o mais comum), ou **o Google não
+recrawleou as páginas desde antes de 27/08**. A segunda seria a pior: nesse
+caso, o Google também não viu as tabelas de 2026 da F64, nem nada da F65 à F69.
+**Inspeção de URL em `/calculadora/cdb` → "Último rastreamento":** se a data
+for depois de 27/08, é só o relatório atrasado. Se for antes, o problema é
+rastreio, e o pedido de indexação manual de 22/09 fica mais urgente.
+
+**✅ Resolvido na mesma sessão (print do Paulo): é o relatório.** Inspeção de
+`/calculadora/cdb`: **último rastreamento em 17/09/2026, 03:30**, pelo
+Googlebot Smartphone. Busca "Com êxito", rastreamento e indexação permitidos,
+e **o canônico escolhido pelo Google é o declarado**. O Google viu o rodapé
+novo 3 semanas depois da F43, e **uma semana depois disso** o relatório de
+links ainda mostrava os 31 de antes. **O GSC → Links atrasa semanas em relação
+ao próprio rastreio do Google.** Isso reforça a regra de 14/09: o relatório
+não serve nem como prova de ausência de link nem como leitura do site atual.
+A "página de referência" da inspeção é a `/politica-de-privacidade`, o que
+condiz com o rodapé antigo, que listava a `cdb` em toda página. **Ressalva:**
+é uma URL só, e é anterior a tudo da F65 à F69 (22-23/09). O rastreio do site
+está funcionando, mas isso não quer dizer que o Google já viu o que mudou esta
+semana.
 
 ### 2026-09-23 — F68: o roadmap sai do trabalhista na prática, e a primeira calculadora sem lei
 
@@ -2450,8 +2648,9 @@ cai numa editoria ou num balde.
 **Agenda deste link:**
 1. ~~Paulo confirmar se o `msnoticias` ainda vem~~ ✅ não vem, foi substituído.
 2. Reconferir o HTML bruto em ~30 dias (~21/10).
-3. BWT → Vínculos regressivos: `jornaldebrasilia.com.br` deve entrar. Se não
-   entrar em ~4 semanas, o suspeito é a descoberta (sitemap congelado).
+3. ~~BWT → Vínculos regressivos: `jornaldebrasilia.com.br` deve entrar. Se não
+   entrar em ~4 semanas, o suspeito é a descoberta (sitemap congelado).~~ ✅
+   entrou em até 3 dias (BWT de 24/09).
 4. Posição de `rescisao-trabalhista` no **BWT**. No Google, qualquer leitura
    deste link sai com a ressalva da seção.
 
@@ -2959,6 +3158,9 @@ gastando cota de evento.
 export dizer sozinho qual é. Se em outubro o `resource_error` dominar, é
 bloqueio de tracker e não há o que corrigir no site; se sobrarem `exception`
 não-fatais com `description` real, aí sim há bug de JavaScript para caçar.
+*(03/10: dominou, mas a conclusão estava errada. Era o
+`/_vercel/insights/script.js` em 404 em toda página, e não o adblock. Diário de
+03/10.)*
 
 **E a suíte e2e deu o primeiro exemplo real antes mesmo do deploy:** a execução
 completa quebrou o teste novo porque apareceu um `resource_error` a mais —
@@ -4770,7 +4972,8 @@ coisa antes):
 4. **Conferir no BWT → Vínculos regressivos** (não no GSC), que é o placar
    correto deste projeto. O esperado é a contagem ir de **2 para 4** domínios —
    e o `mercadohoje.uai.com.br` deve entrar como domínio próprio, por ser
-   subdomínio.
+   subdomínio. *(24/09: foi para 4, mas o BWT agrupa pelo domínio raiz e
+   mostra `uai.com.br`. Subdomínio não aparece em linha própria.)*
 5. Posição no **BWT**, não no GSC — o Bing responde em semanas.
 6. *(acrescentado 22/09)* **Seção e vizinhos:** abrir a categoria da matéria e
    2-3 posts vizinhos. Se cada um tem um link comercial de saída, é balde de
@@ -4826,6 +5029,9 @@ certa:
 | Semrush (20/08) | **122** (247 links) | inclui scraper/agregador |
 | GSC → Links (14/09) | **1** (só `band.com.br`) | amostra e atrasa |
 | **BWT (14/09)** | **2** — `acritica` + `band` | **exatamente os 2 links editoriais reais** |
+| Semrush (21/09) | **198** | idem, +76 sem mover o AS |
+| **BWT (24/09)** | **4** — os 2 acima + `uai.com.br` + `jornaldebrasilia` | **exatamente os 4 placements do F15** |
+| GSC → Links (24/09) | **1** (só `band.com.br`) | o site de antes de 27/08 (os links internos ainda são pré-F43) |
 
 **A hipótese de 09/08 ("os 122 domínios do Semrush são lixo que o Google não
 conta") está confirmada por uma terceira fonte independente.** Um buscador de

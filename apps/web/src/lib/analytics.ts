@@ -1,5 +1,3 @@
-import { track as vercelTrack } from '@vercel/analytics'
-
 declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void
@@ -64,8 +62,6 @@ function track(eventName: string, params?: AnalyticsParams): void {
   if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
     window.gtag('event', eventName, eventParams)
   }
-
-  vercelTrack(eventName, eventParams)
 }
 
 export const analytics = {

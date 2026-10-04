@@ -4,7 +4,7 @@ import { Breadcrumbs } from '@/components/common/Breadcrumbs'
 import { PageSeo } from '@/components/seo/PageSeo'
 
 const description =
-  'Saiba como o Calculos Online coleta, usa e protege seus dados. Política de cookies, Google AdSense, Google Analytics, Vercel Analytics e Microsoft Clarity.'
+  'Saiba como o Calculos Online coleta, usa e protege seus dados. Política de cookies, Google AdSense, Google Analytics e Microsoft Clarity.'
 
 export const metadata: Metadata = buildMetadata({
   title: 'Política de Privacidade',
@@ -13,10 +13,13 @@ export const metadata: Metadata = buildMetadata({
 })
 
 export default function PoliticaPrivacidadePage() {
-  const dataAtualizacao = new Date('2026-01-01').toLocaleDateString('pt-BR', {
+  // `new Date('AAAA-MM-DD')` é meia-noite UTC; sem `timeZone`, quem renderiza
+  // em horário de Brasília vê o dia anterior.
+  const dataAtualizacao = new Date('2026-10-03').toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
+    timeZone: 'UTC',
   })
 
   return (
@@ -54,8 +57,7 @@ export default function PoliticaPrivacidadePage() {
         <p>
           Coletamos automaticamente, de forma anônima e agregada, dados de uso do site
           (páginas visitadas, tempo de sessão, país/região, erros técnicos e uso das
-          calculadoras) por meio do Google Analytics 4, Vercel Analytics e Microsoft
-          Clarity. Os valores digitados nos formulários não são enviados como eventos de
+          calculadoras) por meio do Google Analytics 4 e do Microsoft Clarity. Os valores digitados nos formulários não são enviados como eventos de
           analytics.
         </p>
 
@@ -64,7 +66,7 @@ export default function PoliticaPrivacidadePage() {
         <ul>
           <li>
             <strong>Cookies de análise</strong> — Google Analytics 4, para medir a audiência de
-            forma agregada. Também usamos Vercel Analytics e Microsoft Clarity para entender
+            forma agregada. Também usamos o Microsoft Clarity para entender
             desempenho, navegação e erros de uso. Você pode optar por sair do Google Analytics em{' '}
             <a
               href="https://tools.google.com/dlpage/gaoptout"

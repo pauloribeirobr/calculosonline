@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Suspense } from 'react'
 import '@fontsource-variable/inter'
-import { Analytics } from '@vercel/analytics/react'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { Header } from '@/components/common/Header'
 import { Footer } from '@/components/common/Footer'
@@ -93,7 +92,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Suspense fallback={null}>
           <RouteTracker />
         </Suspense>
-        <Analytics />
         {process.env.NEXT_PUBLIC_GA_ID && (
           <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
         )}
