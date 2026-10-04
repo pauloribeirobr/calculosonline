@@ -59,6 +59,9 @@ const footerSections: FooterSection[] = [
       // entra em "Mais buscadas" de propósito: aquela lista é ordenada por
       // impressão medida no GSC, e o hub ainda não tem impressão nenhuma.
       { name: 'Cálculo trabalhista completo', href: '/calculadora-trabalhista-completa' },
+      // Feriados (F72): página de dado, não calculadora, então entra aqui com
+      // o hub e não em "Mais buscadas". É o link interno de toda página do site.
+      { name: 'Feriados nacionais', href: '/feriados' },
       // O F44 removeu daqui um link para `/blog`, que era uma rota inexistente
       // servida em 100% das páginas — um 404 interno que o Google rastreava a
       // cada crawl. O F22 criou a rota; agora o link é real.

@@ -1,6 +1,6 @@
 # Calculos Online
 
-> Calculadoras online gratuitas e atualizadas para 2026 para o mercado brasileiro — trabalhistas, impostos, financeiras, investimentos, saúde e negócios. 100% gratuito, sem cadastro, cálculo feito no navegador do usuário.
+> Calculadoras online gratuitas e atualizadas para 2026 para o mercado brasileiro — trabalhistas, impostos, financeiras, investimentos, saúde, negócios e tempo (datas e feriados). 100% gratuito, sem cadastro, cálculo feito no navegador do usuário.
 
 ## Trabalhistas
 
@@ -41,9 +41,14 @@
 
 - [Margem de Lucro](https://calculosonline.com.br/calculadora/margem-lucro): Preço de venda, markup e margem sobre o custo de um produto ou serviço.
 
+## Tempo
+
+- [Datas](https://calculosonline.com.br/calculadora/datas): Diferença entre duas datas (dias corridos, dias úteis, anos/meses/dias, semanas) e soma ou subtração de dias, meses e anos a uma data. Os dias úteis descontam os feriados nacionais; Carnaval e Corpus Christi são opcionais, por serem ponto facultativo.
+- [Feriados nacionais](https://calculosonline.com.br/feriados): se hoje é feriado e qual é o próximo. Calendários de [2026](https://calculosonline.com.br/feriados/2026) e [2027](https://calculosonline.com.br/feriados/2027), com a lei de cada data e os dias úteis por mês (2026: 252; 2027: 254). Fontes: Lei 662/1949, Lei 6.802/1980, Lei 9.093/1995, Lei 14.759/2023 e Portaria MGI nº 11.460/2025.
+
 ## Modelo de negócio
 
-- **100% gratuito, sem cadastro:** todas as 21 calculadoras acima são de uso ilimitado e gratuito, sem necessidade de conta.
+- **100% gratuito, sem cadastro:** todas as 22 calculadoras acima são de uso ilimitado e gratuito, sem necessidade de conta.
 - **Sem anúncios intrusivos:** o site ainda não monetiza por anúncios (AdSense em avaliação).
 
 ## Diferenciais

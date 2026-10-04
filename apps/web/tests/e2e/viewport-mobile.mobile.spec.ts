@@ -46,6 +46,9 @@ test.describe('render no celular — sem rolagem horizontal', () => {
     '/blog',
     '/blog/decimo-terceiro-2026-quando-cai-e-quanto-voce-recebe',
     '/calculadora-trabalhista-completa',
+    // F72: duas tabelas largas (a lista com a coluna da lei e os dias úteis
+    // por mês), fora do pipeline de MDX.
+    '/feriados/2026',
   ]) {
     test(`${rota} cabe na viewport`, async ({ page }) => {
       await page.goto(rota)
