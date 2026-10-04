@@ -670,14 +670,15 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     tituloLongo: 'Calculadora de Diferença entre Datas',
     descricaoCurta: 'Dias, meses e anos entre duas datas.',
     descricao:
-      'Calcule quantos dias, meses e anos há entre duas datas, quantos dias úteis o período tem, e some ou subtraia dias, meses e anos de uma data.',
+      'Calcule quantos dias, meses e anos há entre duas datas e quantos dias úteis o período tem, já sem os feriados nacionais. Some ou subtraia dias, meses e anos de uma data.',
     categoria: 'tempo',
     icone: 'datas',
     // Sem base legal: aritmética de calendário não tem artigo de lei, e
     // inventar um contraria o que o selo existe para sinalizar. A string
     // vazia esconde o `LegalBadge` e a linha "Base legal" do resultado.
     fonteJuridica: '',
-    dataAtualizacao: '2026-09-23',
+    // F72: dias úteis passaram a descontar os feriados nacionais.
+    dataAtualizacao: '2026-10-04',
     palavrasChave: [
       'diferença entre datas',
       'dias entre datas',
@@ -697,6 +698,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'quantos dias entre duas datas',
       'calcular dias úteis',
       'calculadora de prazo em dias úteis',
+      'dias úteis com feriados',
     ],
     relacionadas: ['hora-extra', 'ferias', 'rescisao-trabalhista', 'juros-compostos'],
     // Matemática pura: o resultado não muda de um ano para o outro, então o

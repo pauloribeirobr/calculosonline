@@ -15,6 +15,9 @@ import type { FormProps } from './types'
  * "subtrair dias" são a mesma pergunta com o sinal trocado, e separá-las
  * dividiria os sinais de SEO em vez de somá-los — por isso o modo é um campo,
  * e os campos de cada modo aparecem via `showWhen`.
+ *
+ * **Feriados (F72):** os dias úteis descontam os feriados nacionais por
+ * padrão, com a lista de `@calculosonline/core/tempo`.
  */
 
 const schema = z.object({
@@ -26,6 +29,12 @@ const schema = z.object({
   anos: z.number().int('Use um número inteiro de anos').default(0),
   apenasDiasUteis: z.enum(['nao', 'sim']).default('nao'),
   incluirDataInicial: z.enum(['nao', 'sim']).default('nao'),
+  // F72. Padrão `nacionais`: é o que a lei diz que é feriado. Cálculo salvo
+  // ou compartilhado antes da F72 não tem o campo e passa a descontar os
+  // nacionais — mais certo que o número antigo, que não descontava nada.
+  calendarioFeriados: z
+    .enum(['nacionais', 'nacionais-facultativos', 'nenhum'])
+    .default('nacionais'),
 })
 
 export function CalculadoraDatasForm({
@@ -45,6 +54,7 @@ export function CalculadoraDatasForm({
       anos: data.anos,
       apenasDiasUteis: data.apenasDiasUteis === 'sim',
       incluirDataInicial: data.incluirDataInicial === 'sim',
+      calendarioFeriados: data.calendarioFeriados,
     })
     if (r.sucesso) onResult(r.dados, data)
     else onError?.(r.erros)
@@ -113,7 +123,6 @@ export function CalculadoraDatasForm({
             { value: 'nao', label: 'Não — dias corridos' },
             { value: 'sim', label: 'Sim — só de segunda a sexta' },
           ],
-          hint: 'Feriados não são descontados.',
         },
         incluirDataInicial: {
           label: 'Incluir o dia inicial na contagem?',
@@ -124,6 +133,19 @@ export function CalculadoraDatasForm({
           ],
           showWhen: (v) => v.modo === 'diferenca',
           hint: 'Prazos costumam incluir o dia inicial.',
+        },
+        calendarioFeriados: {
+          label: 'Quais feriados descontar dos dias úteis?',
+          type: 'select',
+          options: [
+            { value: 'nacionais', label: 'Feriados nacionais' },
+            { value: 'nacionais-facultativos', label: 'Nacionais + Carnaval e Corpus Christi' },
+            { value: 'nenhum', label: 'Nenhum — só sábado e domingo' },
+          ],
+          // Na diferença os dias úteis sempre aparecem no resultado; ao
+          // deslocar, só importam quando a contagem é em dias úteis.
+          showWhen: (v) => v.modo === 'diferenca' || v.apenasDiasUteis === 'sim',
+          hint: 'Carnaval e Corpus Christi são ponto facultativo, não feriado. Estaduais e municipais não entram.',
         },
       }}
       onSubmit={handleSubmit}

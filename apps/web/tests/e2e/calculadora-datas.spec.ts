@@ -28,6 +28,7 @@ async function calcular(
     meses?: number
     diasUteis?: boolean
     incluirInicial?: boolean
+    feriados?: 'nacionais' | 'nacionais-facultativos' | 'nenhum'
   },
 ) {
   await page.goto(`/calculadora/${SLUG}`)
@@ -39,7 +40,8 @@ async function calcular(
 
   await page.getByLabel('Data inicial').fill(campos.inicial)
   if (campos.final) await page.getByLabel('Data final').fill(campos.final)
-  if (campos.dias !== undefined) await page.getByLabel('Dias', { exact: true }).fill(String(campos.dias))
+  if (campos.dias !== undefined)
+    await page.getByLabel('Dias', { exact: true }).fill(String(campos.dias))
   if (campos.meses !== undefined) {
     await page.getByLabel('Meses', { exact: true }).fill(String(campos.meses))
   }
@@ -48,6 +50,9 @@ async function calcular(
   }
   if (campos.incluirInicial) {
     await page.getByLabel('Incluir o dia inicial na contagem?').selectOption('sim')
+  }
+  if (campos.feriados) {
+    await page.getByLabel('Quais feriados descontar dos dias úteis?').selectOption(campos.feriados)
   }
 
   await page.getByRole('button', { name: 'Calcular', exact: true }).click()
@@ -118,10 +123,7 @@ test.describe('F68 — rota, SEO e links', () => {
     // Num site de AS 2 o PageRank interno é o único capital de autoridade.
     for (const origem of ['rescisao-trabalhista', 'ferias', 'hora-extra']) {
       await page.goto(`/calculadora/${origem}`)
-      await expect(
-        page.locator(`a[href="/calculadora/${SLUG}"]`).first(),
-        origem,
-      ).toBeVisible()
+      await expect(page.locator(`a[href="/calculadora/${SLUG}"]`).first(), origem).toBeVisible()
     }
   })
 })
@@ -134,10 +136,12 @@ test.describe('F68 — diferença entre datas', () => {
     })
 
     await expect(resultado).toContainText('265 dias')
-    await expect(detalhamento).toContainText('189 dias') // úteis
+    // F72: o padrão desconta os feriados nacionais — 4 caem em dia útil.
+    await expect(detalhamento).toContainText('185 dias') // úteis
     await expect(detalhamento).toContainText('76 dias') // sábados e domingos
+    await expect(detalhamento).toContainText('Feriados em dia útil')
     // O invariante do F57: as linhas exibidas somam o total exibido.
-    expect(189 + 76).toBe(265)
+    expect(185 + 76 + 4).toBe(265)
   })
 
   test('decompõe em anos, meses, semanas e horas', async ({ page }) => {
@@ -169,7 +173,7 @@ test.describe('F68 — diferença entre datas', () => {
       diasUteis: true,
     })
     await expect(resultado).toContainText('Dias úteis entre as datas')
-    await expect(resultado).toContainText('189 dias')
+    await expect(resultado).toContainText('185 dias')
   })
 
   test('a borda de fim de mês não produz dias negativos', async ({ page }) => {
@@ -215,7 +219,8 @@ test.describe('F68 — somar e subtrair', () => {
       dias: 30,
       diasUteis: true,
     })
-    await expect(uteis.resultado).toContainText('4 de novembro de 2026')
+    // F72: 12/10 e 02/11 caem em segunda e empurram o prazo de 04/11 para 06/11.
+    await expect(uteis.resultado).toContainText('6 de novembro de 2026')
   })
 
   test('somar 1 mês a 31/01 cai no último dia de fevereiro', async ({ page }) => {
@@ -240,9 +245,7 @@ test.describe('F68 — somar e subtrair', () => {
 })
 
 test.describe('F68 — o que a página não finge ser', () => {
-  test('não exibe base legal nem rótulo de tabelas — não tem nenhum dos dois', async ({
-    page,
-  }) => {
+  test('não exibe base legal nem rótulo de tabelas — não tem nenhum dos dois', async ({ page }) => {
     const { resultado } = await calcular(page, {
       inicial: '01/01/2026',
       final: '23/09/2026',
@@ -253,12 +256,23 @@ test.describe('F68 — o que a página não finge ser', () => {
     await expect(page.getByTitle(/^Base legal:/)).toHaveCount(0)
   })
 
-  test('declara que feriados não entram nos dias úteis', async ({ page }) => {
+  test('diz quais feriados descontou, e que os locais não entram', async ({ page }) => {
     const { resultado } = await calcular(page, {
       inicial: '01/01/2026',
       final: '23/09/2026',
     })
-    await expect(resultado).toContainText('feriados')
+    await expect(resultado).toContainText('Tiradentes (21/04/2026)')
+    await expect(resultado).toContainText('estaduais e municipais não entram')
+  })
+
+  test('sem feriados, volta a declarar que não descontou nenhum', async ({ page }) => {
+    const { resultado, detalhamento } = await calcular(page, {
+      inicial: '01/01/2026',
+      final: '23/09/2026',
+      feriados: 'nenhum',
+    })
+    await expect(detalhamento).toContainText('189 dias')
+    await expect(resultado).toContainText('não são descontados')
   })
 
   test('nenhuma linha do detalhamento sai formatada como dinheiro', async ({ page }) => {
@@ -274,7 +288,7 @@ test.describe('F68 — o que a página não finge ser', () => {
   test('a tabela do conteúdo bate com a calculadora', async ({ page }) => {
     await page.goto(`/calculadora/${SLUG}`)
     const artigo = page.locator('article')
-    for (const valor of ['265', '189', '8 meses e 22 dias', '28/02/2026', '04/11/2026']) {
+    for (const valor of ['265', '185', '8 meses e 22 dias', '28/02/2026', '06/11/2026']) {
       await expect(artigo.getByText(valor, { exact: false }).first(), valor).toBeVisible()
     }
   })

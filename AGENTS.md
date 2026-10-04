@@ -36,7 +36,7 @@ calculosonline/
 ├── apps/desktop/       — Tauri
 ├── apps/sheets-plugin/ — Google Apps Script
 └── content/            — conteúdo editorial MDX
-    ├── calculadoras/   — corpo de cada uma das 21 calculadoras
+    ├── calculadoras/   — corpo de cada uma das 22 calculadoras
     ├── blog/           — posts do blog (F22); registry em `src/lib/blog.ts`
     └── hub/            — conteúdo do hub trabalhista (F58); registry em `src/lib/hubTrabalhista.ts`
 ```
@@ -231,8 +231,18 @@ Componentes globais: `Header`, `Footer`, `PageSeo`, `JsonLd`.
   **Somar meses faz clamp no fim do mês** (31/01 + 1 mês = 28/02) e a
   decomposição de um intervalo em anos/meses/dias **usa a mesma primitiva** —
   decompor componente a componente produz "1 mês e −2 dias" entre 31/01 e
-  01/03. **Dias úteis são seg-sex**, com feriados entrando pelo parâmetro
-  `feriados` (pronto e testado; falta o dado, que é a F72).
+  01/03. **Dias úteis são seg-sex menos os feriados** de `calendarioFeriados`
+  (F72: `nenhum` no motor, `nacionais` no formulário) e da lista avulsa
+  `feriados`. As primitivas UTC moram em `tempo/calendario.ts`, compartilhadas
+  por `datas.ts` e `feriados.ts`.
+- **Feriados seguem a lei, e a lei tem fonte** (F72). `tempo/feriados.ts`
+  separa feriado nacional (lei federal) de ponto facultativo (Carnaval e
+  Corpus Christi, portaria anual), e cada feriado carrega `fundamento` e
+  `fonteUrl` para o texto oficial. **Lei nova de feriado, ou a portaria do ano
+  seguinte (sai no fim de dezembro), obriga a revisar `feriados.ts` e
+  `PORTARIAS_ANUAIS`**; o teste de 2026 compara a lista com a Portaria MGI nº
+  11.460/2025 transcrita do DOU. Ano novo com busca entra em `ANOS_FERIADOS`
+  (`apps/web/src/lib/feriados.ts`).
 - **Resultado que não é dinheiro usa `valorTexto`/`resultadoTexto`** (F68) — a
   `CalculatorResult` infere o formato de cada linha pela descrição e **assume
   moeda quando não reconhece**, então uma linha "Dias corridos: 265" sairia

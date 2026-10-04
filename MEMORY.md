@@ -16,6 +16,25 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **F72 (04/10, v0.38.0) — feriados nacionais no ar:** `/feriados` ("hoje é
+  feriado?", no navegador, pela data de Brasília), `/feriados/2026` e
+  `/feriados/2027`, e a calculadora de datas desconta os nacionais por padrão
+  (Carnaval e Corpus Christi por opção, por serem ponto facultativo). **Fontes
+  conferidas no Planalto e no DOU e linkadas linha a linha**, a pedido do
+  Paulo. **Em dezembro sai a portaria de 2027**: acrescentar em
+  `PORTARIAS_ANUAIS`. Medir no BWT junto com a F68 no checkpoint de ~27/10.
+  Detalhe no Diário de 04/10 (parte 2).
+- **BWT de 04/10 (08→30/09): a hora extra virou o 1º tema de citação de IA
+  depois da F67, sem aparecer na busca.** 8.362 citações em 23 dias, e por dia
+  útil 153 → 277 → 553 → **978** (dobrando por semana); páginas citadas 8 →
+  19. Hora extra é **37%** das citações (2.384) e tem **9 impressões** na
+  busca. No Clarity de 16-22/09, que lê a mesma fonte, ela não aparecia: entrou
+  depois da F67 (22/09), com o vocabulário que a F67 pôs na copy ("hora extra
+  online", "cálculo exato"). **Férias ficou parada** (`cálculo de férias 2026`
+  75 nas duas leituras). Busca: 91 cliques, 357 impressões/dia útil (+92% em 3
+  semanas). **Clarity do mesmo dia:** 20 cliques no "+" do abono (máx. 10) em 2
+  pageviews da `ferias`, que não tem campo de dias a gozar — hipótese de
+  férias fracionadas, a confirmar em replay. Detalhe no Diário de 04/10.
 - **GA4 de 03/10: o `resource_error` (267 em 292 sessões) não é adblock. É o
   `/_vercel/insights/script.js` em 404 em produção.** O `<Analytics />` do
   layout injeta esse script em toda página, e o Web Analytics da Vercel não está
@@ -51,8 +70,6 @@ que não cabe em nenhum dos outros três.
   `number`), e **`fonteJuridica` vazia** esconde o selo de base legal em vez de
   inventar fonte. **Datas rodam em UTC** — `new Date('2026-09-23')` lê como dia
   22 no Brasil, a mesma classe de bug do `Utils.hojeISO`.
-- **F72 (feriados) está desbloqueada:** o motor de dias úteis já aceita a lista
-  pelo parâmetro `feriados`, testado. **Falta o dado, não o cálculo.**
 - **O checkpoint de ~27/10 agora decide duas coisas**, não uma: se os links 3 e
   4 moveram o Google, e **se a cauda de datas responde no BWT**. Se não
   responder, a tese de "sair do trabalhista" precisa ser revista antes de gastar
@@ -1195,6 +1212,159 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-10-04 (parte 2) — F72: feriados com fonte, e a lição de conferir antes de publicar
+
+Paulo mandou seguir com a F72 e escolheu o escopo: `/feriados` + 2026 + 2027,
+e Carnaval/Corpus Christi como **opção** no formulário (o padrão segue a lei).
+
+**A pergunta que mudou a entrega: "de onde você pegou os feriados?"** A
+resposta honesta era "da memória". As leis estavam certas, mas uma página que
+publica data com base legal não pode depender disso. Conferi no texto oficial:
+- **Planalto:** Lei 662/1949, art. 1º (redação da Lei 10.607/2002), com os sete
+  fixos; Lei 6.802/1980 (12/10); Lei 9.093/1995, art. 2º ("até quatro feriados
+  religiosos municipais, neste incluída a Sexta-Feira da Paixão"); Lei
+  14.759/2023 (20/11, publicada em 21/12/2023, então vale de 2024 em diante).
+- **DOU:** Portaria MGI nº 11.460/2025 (DOU de 30/12/2025, seção 1, p. 59), com
+  os 10 feriados nacionais de 2026 e 9 pontos facultativos.
+
+A conferência pegou **três erros que iam ao ar**: (1) o nome oficial é "Dia
+Mundial do Trabalho", não "Dia do Trabalho"; (2) a portaria tem facultativos
+que nenhuma fórmula prevê (20/04 e 05/06 de ponte, Quarta de Cinzas até 14h,
+28/10, vésperas a partir das 13h), por isso eles viraram dado em
+`PORTARIAS_ANUAIS` e 2027 diz que a portaria ainda não saiu; (3) eu tinha
+escrito que a cidade pode ter feriado no aniversário. **A Lei 9.093 só dá o
+centenário de fundação.** Corrigido antes do commit. **Regra: dado legal se
+confere no texto oficial antes de virar página, e a página cita a fonte.**
+(Paulo pediu as duas coisas na mesma sessão.)
+
+**Números do motor, para a próxima comparação:** 2026 tem **252** dias úteis
+com os nacionais (261 só seg-sex; 249 com Carnaval e Corpus Christi); 2027 tem
+**254** (três feriados no sábado). 01/01→23/09/2026: 189 → **185**. 30 dias
+úteis a partir de 23/09/2026: 04/11 → **06/11**.
+
+**Achado de passagem:** o `llms.txt` não tinha a calculadora de datas desde a
+F68 (21 entradas para 22 calculadoras). Entrou com a seção Tempo.
+
+**O que medir:** no BWT, impressões de `feriados 2027`, `hoje é feriado` e
+`dias úteis 2026` nas três URLs novas, e se a calculadora de datas começa a
+aparecer (zero até 30/09). Depois do deploy, **disparar o IndexNow** (as três
+URLs são novas).
+
+### 2026-10-04 — BWT com o painel de IA: a F67 aparece na citação, não na busca
+
+Paulo pôs na `gsc/bing/` 8 relatórios do BWT (08→30/09, 23 dias). **Dois são
+novos no projeto: AI Performance (citações por dia) e AI Search Queries.**
+Também vieram desempenho de busca diário, keywords, domínios referentes,
+IndexNow, Site Explorer e SEO Analysis. Ainda faltam o GSC e o Clarity.
+
+**1. A mesma fonte do Clarity, agora com série diária.** Os números batem
+query a query com o Share of Authority de 22/09: `cálculo de férias 2026` 75
+citações com 14,53% nas duas leituras, `calcule net ir` 35,00%, `calcular
+decimo` 45,69% (46,2% no Clarity). **O BWT → AI Performance é o mesmo dado,
+com janela maior e série por dia.** Passa a ser a fonte de leitura de IA.
+
+| Semana (seg) | Dias úteis | Citações | Citações/dia útil | Páginas citadas (máx.) |
+|---|---|---|---|---|
+| 07/09 | 4 | 660 | 153 | 10 |
+| 14/09 | 5 | 1.559 | 277 | 13 |
+| 21/09 | 5 | 3.209 | 553 | 16 |
+| 28/09 (seg-qua) | 3 | 2.934 | **978** | **19** |
+
+**As citações dobram a cada semana desde 14/09**, com o mesmo padrão de dia
+útil da busca (fim de semana ~3-4x menor).
+
+**2. O achado: hora extra é 37% das citações e quase zero na busca.** Por tema
+(6.445 citações nas 93 queries listadas):
+
+| Tema | Citações | % | Impressões na busca (keywords) |
+|---|---|---|---|
+| **Hora extra** | **2.384** | **37,0%** | **9** |
+| INSS | 1.708 | 26,5% | 189 |
+| IRRF/IR | 1.179 | 18,3% | 233 |
+| 13º | 287 | 4,5% | 2 |
+| CDB | 235 | 3,6% | 37 |
+| Férias | 158 | 2,5% | 126 |
+| Salário líquido | 111 | 1,7% | 2 |
+
+No Clarity de 16-22/09, **nenhuma query de hora extra** estava na lista (963
+de 994 citações). **Ela entrou depois de 22/09, que é o dia da F67**, e com o
+vocabulário que a F67 pôs na copy: `hora extra online` (30), `calculo exato
+hora extra` (7, sinônimo "cálculo exato de horas extras" da F67), `calcular
+horas extras simulador` (21). As maiores: `calcular hora extra` 356 (21,9%),
+`calculo hora extra` 316, `calculadora hora extra` 286, `calculadora de hora
+extra` 285. **É a primeira feature de vocabulário com efeito medido**, em
+menos de 8 dias e num canal de ciclo semanal. **Ressalva:** o export não tem
+data por query; a inferência depende do retrato do Clarity de 22/09.
+
+**Férias não se mexeu na IA** apesar de F65, F66 e F69: `cálculo de férias
+2026` tem as mesmas 75 citações de 16-22/09, e as variantes curtas têm share
+baixo (`calcular ferias` 35 @ **3,98%**, `cálculo de férias` 6 @ 3,75%).
+Também com share baixo: `calculadora de horas extras` 3,41%, `calculo de
+horas extras` 4,69% e `calculadora de salário líquido` 8,70%. **É onde o molde
+da F67 tem espaço.**
+
+**3. Busca: cresce, com CTR caindo.** 5.315 impressões e **91 cliques** em 23
+dias.
+
+| Semana (seg) | Cliques | Impr/dia útil | CTR |
+|---|---|---|---|
+| 07/09 (4 úteis) | 16 | 186 | 1,96% |
+| 14/09 | 27 | 275 | 1,80% |
+| 21/09 | 33 | **357** | 1,64% |
+| 28/09 (seg-qua) | 15 | 328 | 1,52% |
+
+Fim de semana também subiu (75 → 129 → 223 impressões). As keywords nomeadas
+são 1.017 das 5.315 impressões (19%).
+- **IRRF lidera a busca:** `calculadora irrf 2026` 150 @ 5,6 com 8 cliques.
+- **`calculadora inss` 121 @ 9,2 com zero clique:** fundo da página 1.
+- **Empréstimo apareceu:** 135 impressões e 12 cliques, em posição 2-6
+  (`como faço para simular empréstimo` 13 @ 2,2, 4 cliques). Não estava entre
+  as páginas de 22/09.
+- **Primeiro sinal da F69:** `ferias decimo terceiro juntos` @ 1 (1 clique) e
+  `vou tirar ferias em outubrro o 13 vem junto` @ 2 (1 clique).
+- A pergunta que gerou a F65 subiu para 28 impressões @ 6,75, ainda sem clique.
+- **F68 (datas): zero** em busca e em IA, uma semana depois do IndexNow de
+  23/09 (43 URLs, `datas` incluída). O checkpoint de ~27/10 segue.
+
+**4. Resto do export.**
+- Domínios referentes: **4**, os mesmos de 24/09.
+- Site Explorer veio só com a raiz (7 URLs): home 209 impressões e 2 cliques,
+  rastreada em 27/09; hub 29 e 1 clique (no Google, zero). **Para o checkpoint
+  falta o BWT por página** (rescisão base 7,29 e 13º base 8,39).
+- **SEO Analysis: "title too long" em 6 páginas e "meta description curta" em
+  8.** Conferido em produção: o **title do hub tem 86 caracteres**, acima do
+  teto de 78 do próprio projeto (`seo.ts`), porque o hub não passa por
+  `buildCalculatorTitle`; outras 7 páginas têm 76-78. As descrições curtas são
+  `imc` (75), `fgts` (89), `salario-liquido` (97) e as categorias (84-99),
+  que repetem "com tabelas 2026 atualizadas" até em Tempo e Saúde, que não têm
+  tabela.
+
+**5. Clarity (02→04/10, chegou na mesma sessão): 4 mapas de clique com 2-3
+pageviews cada.** É amostra mínima, e a janela começa no dia anterior ao deploy
+da F75, então pode haver teste do Paulo (regra de leitura de 09/08). Não veio
+o Share of Authority, que o BWT → AI Performance agora substitui.
+- **`ferias` (PC, 2 pageviews, 42 cliques): 20 cliques (48%) no "+" do campo
+  "Dias vendidos (abono)"**, que tem máximo 10, e 7 de "+" e 7 de "−" em
+  faltas. Passar de 10 cliques no "+" é clicar em botão desabilitado. **A
+  calculadora não tem campo para "quantos dias de férias vou tirar"**:
+  `FeriasParams` só tem faltas e abono, e `diasGozados` é derivado. A busca do
+  BWT que gerou a F65 é exatamente essa pergunta (`vou tirar 10 dias de férias
+  somente, quanto receberia…`, 28 impressões @ 6,75, zero clique). **Hipótese:
+  quem quer calcular férias fracionadas (CLT art. 134, §1º) usa o campo de
+  abono porque não há outro.** Duas pageviews não provam isso; ver replay antes
+  de abrir feature. Se confirmar, explica parte da férias parada na IA.
+- `calculadora-trabalhista-completa` (PC 2 pv; celular 3 pv): `#feriasVencidas`
+  6 de 13 cliques no PC; no celular, o `SUMMARY` do card recebe 2 toques
+  (o alvo que a F70 quer ampliar).
+- `das-mei` (celular, 2 pv, 27 toques): `#atividadePrincipal` 10 toques (37%),
+  e os chips de faturamento 8. Parece comparação entre atividades, não erro.
+
+**O que checar no próximo export:**
+- **BWT → AI Performance semanal:** se a hora extra sustenta, e se uma F67 de
+  férias/salário líquido move o share em 1 semana.
+- **BWT → Search Performance → Pages**, para o checkpoint de ~27/10.
+- GSC e Clarity, que faltaram de novo.
 
 ### 2026-10-03 — Export só do GA4: o `resource_error` não é adblock, é o Vercel Analytics em 404 (F75)
 

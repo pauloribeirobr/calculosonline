@@ -6,7 +6,8 @@ ou subtrair um prazo**. Tudo de uma vez — dias corridos, dias úteis, meses,
 semanas e horas —, sem cadastro.
 
 **Resposta rápida.** De **1º de janeiro a 23 de setembro de 2026** são
-**265 dias corridos**, ou **189 dias úteis**, ou **8 meses e 22 dias**. O mesmo
+**265 dias corridos**, ou **185 dias úteis** já sem os feriados nacionais, ou
+**8 meses e 22 dias**. O mesmo
 intervalo dá **37 semanas e 6 dias**, ou **6.360 horas**.
 
 ## Quantos dias há entre duas datas
@@ -15,13 +16,13 @@ intervalo dá **37 semanas e 6 dias**, ou **6.360 horas**.
 contagem de dias entre elas. Alguns intervalos de referência, todos terminando
 ou começando em **23/09/2026**:
 
-| De | Até | Dias corridos | Dias úteis | Fins de semana |
-|---|---|---|---|---|
-| 01/01/2026 | 23/09/2026 | 265 | 189 | 76 |
-| 23/09/2026 | 25/12/2026 | 93 | 67 | 26 |
-| 23/09/2026 | 31/12/2026 | 99 | 71 | 28 |
-| 01/09/2026 | 30/09/2026 | 29 | 21 | 8 |
-| 01/01/2026 | 31/12/2026 | 364 | 260 | 104 |
+| De | Até | Dias corridos | Seg. a sex. | Dias úteis sem feriados | Fins de semana |
+|---|---|---|---|---|---|
+| 01/01/2026 | 23/09/2026 | 265 | 189 | 185 | 76 |
+| 23/09/2026 | 25/12/2026 | 93 | 67 | 63 | 26 |
+| 23/09/2026 | 31/12/2026 | 99 | 71 | 67 | 28 |
+| 01/09/2026 | 30/09/2026 | 29 | 21 | 20 | 8 |
+| 01/01/2026 | 31/12/2026 | 364 | 260 | 252 | 104 |
 
 Repare na última linha: **de 1º a 31 de dezembro do mesmo ano são 364 dias, não
 365**. O ano tem 365 dias, mas entre a primeira e a última data do ano há 364
@@ -67,20 +68,31 @@ sobra até o dia 23 são os 22 dias.
 
 ## Dias úteis: o que entra e o que não entra
 
-O contador de dias úteis considera **segunda a sexta-feira**. De 1º de janeiro
-a 23 de setembro de 2026, dos 265 dias corridos, **189 são úteis e 76 são
-sábados e domingos** — as duas contas sempre fecham o total.
+O contador de dias úteis parte de **segunda a sexta-feira** e desconta os
+**feriados nacionais**. De 1º de janeiro a 23 de setembro de 2026, dos 265 dias
+corridos, 189 caem de segunda a sexta e 76 em sábados e domingos. Quatro
+feriados caem em dia útil nesse intervalo (Paixão de Cristo, Tiradentes, Dia
+Mundial do Trabalho e Independência), e sobram **185 dias úteis**. O resultado
+diz quais feriados saíram da conta, para você conferir se valem para o seu
+caso.
 
-**Feriados não são descontados.** Esta é uma limitação declarada, não um
-esquecimento: feriado nacional, estadual e municipal formam listas diferentes, e
-a data de alguns muda todo ano (Carnaval e Corpus Christi dependem da Páscoa).
-Enquanto a lista não estiver publicada aqui, o número de dias úteis é o de
-segunda a sexta, e prazo processual ou contratual precisa da conferência dos
-feriados aplicáveis ao seu caso.
+**O que dá para escolher:**
+
+- **Feriados nacionais** (padrão): os 10 da lei federal. A lista completa, com
+  a lei de cada data, está em [feriados de 2026](/feriados/2026) e
+  [feriados de 2027](/feriados/2027).
+- **Nacionais + Carnaval e Corpus Christi:** os dois são **ponto facultativo**,
+  não feriado. Quem trabalha em banco ou no serviço público costuma folgar
+  neles; a empresa privada não é obrigada a dar folga.
+- **Nenhum:** só sábado e domingo saem da conta.
+
+**Feriados estaduais e municipais não entram.** Cada estado e cada cidade tem a
+sua lista, e prazo processual ou contratual precisa dessa conferência.
 
 No modo de somar, marcar dias úteis muda o resultado: partindo de **23/09/2026**,
-somar 30 dias corridos cai em **23/10**, mas somar **30 dias úteis** cai em
-**04/11/2026**.
+somar 30 dias corridos cai em **23/10**. Somar **30 dias úteis** cai em
+**06/11/2026**, porque 12/10 e 02/11 caem em segunda-feira e empurram o prazo
+dois dias. Sem descontar feriado, cairia em 04/11.
 
 ## O dia inicial conta ou não?
 
@@ -119,7 +131,7 @@ Pelo mesmo motivo, **anos e meses são aplicados antes dos dias**. Somar "1 mês
 para idade, tempo de contribuição e tempo de contrato.
 
 **Quantos dias faltam para o Natal, a partir de 23/09/2026.** São **93 dias**,
-ou 67 dias úteis, ou 13 semanas e 2 dias. O Natal de 2026 cai numa
+ou 63 dias úteis já sem os feriados, ou 13 semanas e 2 dias. O Natal de 2026 cai numa
 **sexta-feira**.
 
 **Fevereiro de ano bissexto.** De **29/02/2024 a 28/02/2025** dá exatamente
@@ -138,7 +150,7 @@ quer dizer nada.
 Informe a data inicial e a data final. A calculadora devolve de uma vez os dias
 corridos, os dias úteis, a decomposição em anos, meses e dias, além do total em
 semanas e horas. De 01/01/2026 a 23/09/2026, por exemplo, são 265 dias corridos
-e 189 dias úteis.
+e 185 dias úteis, descontados os feriados nacionais.
 
 **Quantos dias há entre duas datas?**
 
@@ -154,9 +166,10 @@ dias úteis. De 23/09/2026, somar 90 dias leva a 22/12/2026.
 
 **A calculadora conta dias úteis com feriados?**
 
-Não. Os dias úteis consideram apenas segunda a sexta-feira; feriados nacionais,
-estaduais e municipais não são descontados. Para prazo processual ou
-contratual, confira os feriados aplicáveis ao seu caso.
+Sim, os feriados nacionais. É o padrão, e você pode incluir o Carnaval e o
+Corpus Christi, que são ponto facultativo, ou não descontar feriado nenhum.
+Feriados estaduais e municipais não entram: para prazo processual ou
+contratual, confira os da sua cidade.
 
 **Quantos meses há entre duas datas?**
 
@@ -184,19 +197,25 @@ tinha 36 anos, 4 meses e 3 dias em 23/09/2026.
 
 **Quantos dias úteis tem um ano?**
 
-Em 2026, de 1º de janeiro a 31 de dezembro, são 260 dias úteis e 104 dias de
-fim de semana, num total de 364 dias entre as duas datas. Descontando feriados
-nacionais, o número de dias efetivamente trabalhados fica abaixo disso.
+2026 tem **252 dias úteis** descontando os feriados nacionais, e 261 contando
+só de segunda a sexta. Medindo de 1º de janeiro a 31 de dezembro sem incluir o
+dia inicial, são 260 de segunda a sexta e 252 sem os feriados. 2027 tem 254,
+porque três feriados caem no sábado. O mês a mês está nas páginas de
+[feriados de 2026](/feriados/2026) e [2027](/feriados/2027).
 
 ## Como este cálculo é feito
 
-Diferente das demais calculadoras do site, esta **não tem base legal** — não há
-artigo de lei nem tabela anual por trás de aritmética de calendário, e por isso
-nada aqui precisa ser revisado em janeiro. As convenções aplicadas são:
+Diferente das demais calculadoras do site, a aritmética de calendário **não
+tem base legal**: não há artigo de lei nem tabela anual por trás dela. A
+exceção são os feriados, que vêm de lei federal (Lei 662/1949, Lei 6.802/1980,
+Lei 9.093/1995 e Lei 14.759/2023). As convenções aplicadas são:
 
 - **Calendário gregoriano**, incluindo a regra de anos bissextos (divisíveis por
   4, exceto os divisíveis por 100 que não são por 400).
-- **Dias úteis**: de segunda a sexta-feira, sem desconto de feriados.
+- **Dias úteis**: de segunda a sexta-feira, menos os feriados nacionais
+  (padrão). Carnaval e Corpus Christi entram só se você escolher.
+- **Feriados móveis**: calculados a partir da Páscoa — Paixão de Cristo 2 dias
+  antes, Carnaval 47 e 48 dias antes, Corpus Christi 60 dias depois.
 - **Soma de meses e anos**: ajuste para o último dia do mês quando o dia de
   origem não existe no mês de destino, com anos e meses aplicados antes dos
   dias.

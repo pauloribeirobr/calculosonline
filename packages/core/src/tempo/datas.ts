@@ -15,50 +15,32 @@
  * *UTC*, e ler `.getFullYear()` disso no Brasil (UTC-3) devolve o dia
  * anterior. É a mesma classe de bug que fez a calculadora de FGTS exibir uma
  * data no futuro e que obrigou a criação de `Utils.hojeISO` — aqui ela seria
- * pior, porque a data não é um rótulo, é o resultado. Todo acesso a
- * componentes de data usa os getters `getUTC*`, e toda data construída passa
- * por `Date.UTC`. Como UTC não tem horário de verão, a diferença entre duas
- * meia-noites é sempre múltiplo exato de 86.400.000 ms.
+ * pior, porque a data não é um rótulo, é o resultado. As primitivas ficam em
+ * `calendario.ts`, compartilhadas com os feriados (F72).
  *
- * **Dias úteis são segunda a sexta.** Feriados entram pelo parâmetro
- * `feriados` (lista ISO), que existe porque a F72 — calendário de feriados —
- * é quem vai ter o dado. O motor já desconta; o que falta é a lista. Enquanto
- * ela não existe, o resultado declara em aviso que feriados não foram
- * descontados, em vez de deixar quem calcula prazo achar que foram.
+ * **Dias úteis são segunda a sexta, menos os feriados escolhidos.** A F72
+ * trouxe o dado: `calendarioFeriados` desconta os feriados nacionais (e, por
+ * opção, Carnaval e Corpus Christi), e `feriados` aceita uma lista ISO avulsa
+ * — a de um tribunal ou de uma cidade. Sem nenhum dos dois, o resultado
+ * declara em aviso que feriados não foram descontados, em vez de deixar quem
+ * calcula prazo achar que foram.
  */
 
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
-
-const MS_DIA = 86_400_000
-
-/** Limites de sanidade: fora disso o pedido é erro de digitação, não cálculo. */
-const ANO_MIN = 1000
-const ANO_MAX = 3000
-
-const DIAS_SEMANA = [
-  'domingo',
-  'segunda-feira',
-  'terça-feira',
-  'quarta-feira',
-  'quinta-feira',
-  'sexta-feira',
-  'sábado',
-] as const
-
-const MESES_NOME = [
-  'janeiro',
-  'fevereiro',
-  'março',
-  'abril',
-  'maio',
-  'junho',
-  'julho',
-  'agosto',
-  'setembro',
-  'outubro',
-  'novembro',
-  'dezembro',
-] as const
+import {
+  ANO_MAX,
+  ANO_MIN,
+  MESES_NOME,
+  diaDaSemana,
+  diasEntre,
+  diasNoMes,
+  ehFimDeSemana,
+  nomeDiaSemana,
+  paraIso,
+  parseIso,
+  somarDias,
+} from './calendario'
+import { feriadosDoCalendario, type CalendarioFeriados } from './feriados'
 
 export type ModoCalculoData = 'diferenca' | 'somar' | 'subtrair'
 
@@ -85,10 +67,22 @@ export interface CalculoDatasParams {
    */
   incluirDataInicial?: boolean
   /**
-   * Feriados em ISO "AAAA-MM-DD" a descontar dos dias úteis (F72). Fora da
-   * lista, o motor considera só sábado e domingo.
+   * Feriados avulsos em ISO "AAAA-MM-DD" a descontar dos dias úteis, somados
+   * aos do `calendarioFeriados`.
    */
   feriados?: string[]
+  /**
+   * Calendário de feriados nacionais da F72. Padrão `nenhum` no motor, para
+   * quem chama sem saber dele continuar recebendo o comportamento da F68; o
+   * formulário do site usa `nacionais` como padrão.
+   */
+  calendarioFeriados?: CalendarioFeriados
+}
+
+/** Um feriado que caiu em dia útil e saiu da contagem. */
+export interface FeriadoDescontado {
+  data: string
+  nome: string
 }
 
 export interface CalculoDatasResultado {
@@ -103,8 +97,10 @@ export interface CalculoDatasResultado {
   diasCorridos: number
   diasUteis: number
   diasFimDeSemana: number
-  /** Feriados que caíram em dia útil dentro do intervalo (0 sem a lista da F72). */
+  /** Feriados que caíram em dia útil dentro do intervalo. */
   feriadosEmDiaUtil: number
+  /** Os mesmos, com nome, em ordem de data. */
+  feriadosDescontados: FeriadoDescontado[]
   /** Decomposição de calendário: X anos, Y meses e Z dias. */
   anos: number
   meses: number
@@ -119,49 +115,8 @@ export interface CalculoDatasResultado {
 }
 
 /* -------------------------------------------------------------------------
- * Primitivas de data — todas em UTC (ver o cabeçalho do arquivo)
+ * Aritmética de calendário — em UTC, como as primitivas de `calendario.ts`
  * ---------------------------------------------------------------------- */
-
-/** "AAAA-MM-DD" → timestamp UTC da meia-noite. `null` se a data não existe. */
-function parseIso(iso: string): number | null {
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso.trim())
-  if (!m) return null
-  const ano = Number(m[1])
-  const mes = Number(m[2])
-  const dia = Number(m[3])
-  if (ano < ANO_MIN || ano > ANO_MAX || mes < 1 || mes > 12 || dia < 1 || dia > 31) return null
-
-  const ts = Date.UTC(ano, mes - 1, dia)
-  const d = new Date(ts)
-  // Rejeita 31/02 e afins, que o `Date.UTC` normalizaria em silêncio para 03/03.
-  if (d.getUTCFullYear() !== ano || d.getUTCMonth() !== mes - 1 || d.getUTCDate() !== dia) {
-    return null
-  }
-  return ts
-}
-
-/** Timestamp UTC → "AAAA-MM-DD". */
-function paraIso(ts: number): string {
-  const d = new Date(ts)
-  const mes = String(d.getUTCMonth() + 1).padStart(2, '0')
-  const dia = String(d.getUTCDate()).padStart(2, '0')
-  return `${d.getUTCFullYear()}-${mes}-${dia}`
-}
-
-/** Dias no mês (mês 1-12). */
-function diasNoMes(ano: number, mes: number): number {
-  return new Date(Date.UTC(ano, mes, 0)).getUTCDate()
-}
-
-/** 0 = domingo … 6 = sábado. */
-function diaDaSemana(ts: number): number {
-  return new Date(ts).getUTCDay()
-}
-
-function ehFimDeSemana(ts: number): boolean {
-  const d = diaDaSemana(ts)
-  return d === 0 || d === 6
-}
 
 /**
  * Soma `n` meses preservando o dia, com **clamp no fim do mês**: 31/01 + 1 mês
@@ -180,15 +135,6 @@ function somarMeses(ts: number, n: number): number {
   const mesAlvo = ((totalMeses % 12) + 12) % 12
 
   return Date.UTC(anoAlvo, mesAlvo, Math.min(dia, diasNoMes(anoAlvo, mesAlvo + 1)))
-}
-
-function somarDias(ts: number, n: number): number {
-  return ts + n * MS_DIA
-}
-
-/** Dias corridos entre duas meia-noites UTC (fim − início). */
-function diasEntre(inicio: number, fim: number): number {
-  return Math.round((fim - inicio) / MS_DIA)
 }
 
 /**
@@ -214,23 +160,58 @@ function diasUteisNoIntervalo(inicio: number, fim: number): number {
   return uteis
 }
 
-/** Feriados da lista que caem em dia útil dentro do intervalo fechado. */
-function feriadosEmDiaUtilNoIntervalo(
-  inicio: number,
-  fim: number,
-  feriados: readonly string[],
-): number {
-  if (fim < inicio) return 0
-  let total = 0
-  const vistos = new Set<number>()
-  for (const iso of feriados) {
+/**
+ * Os feriados que valem para um cálculo: a lista avulsa somada ao calendário
+ * da F72, montado ano a ano conforme a contagem pede. Um prazo de 30 dias
+ * úteis que cruza o ano novo precisa dos feriados dos dois anos, e no modo de
+ * somar a data final só se conhece contando — por isso o cache é preguiçoso.
+ */
+function criarFeriados(avulsos: readonly string[], calendario: CalendarioFeriados) {
+  const porAno = new Map<number, Map<number, string>>()
+  const avulsosPorTs = new Map<number, string>()
+  for (const iso of avulsos) {
     const ts = parseIso(iso)
-    if (ts === null || ts < inicio || ts > fim || ehFimDeSemana(ts)) continue
-    if (vistos.has(ts)) continue
-    vistos.add(ts)
-    total++
+    if (ts !== null) avulsosPorTs.set(ts, 'Feriado informado')
   }
-  return total
+
+  function doAno(ano: number): Map<number, string> {
+    let mapa = porAno.get(ano)
+    if (!mapa) {
+      mapa = new Map(
+        feriadosDoCalendario(ano, calendario).map((f) => [parseIso(f.data) as number, f.nome]),
+      )
+      porAno.set(ano, mapa)
+    }
+    return mapa
+  }
+
+  function nome(ts: number): string | undefined {
+    return doAno(new Date(ts).getUTCFullYear()).get(ts) ?? avulsosPorTs.get(ts)
+  }
+
+  return {
+    ehFeriado: (ts: number) => nome(ts) !== undefined,
+
+    /** Feriados em dia útil dentro do intervalo fechado, sem repetição. */
+    emDiaUtil(inicio: number, fim: number): FeriadoDescontado[] {
+      if (fim < inicio) return []
+      const achados = new Map<number, string>()
+      const anoFim = new Date(fim).getUTCFullYear()
+      for (let ano = new Date(inicio).getUTCFullYear(); ano <= anoFim; ano++) {
+        for (const [ts, n] of doAno(ano)) {
+          if (ts >= inicio && ts <= fim && !ehFimDeSemana(ts)) achados.set(ts, n)
+        }
+      }
+      for (const [ts, n] of avulsosPorTs) {
+        if (ts >= inicio && ts <= fim && !ehFimDeSemana(ts) && !achados.has(ts)) {
+          achados.set(ts, n)
+        }
+      }
+      return [...achados.entries()]
+        .sort(([x], [y]) => x - y)
+        .map(([ts, n]) => ({ data: paraIso(ts), nome: n }))
+    },
+  }
 }
 
 /**
@@ -238,13 +219,13 @@ function feriadosEmDiaUtilNoIntervalo(
  * semana e feriados. É o cálculo de prazo: o 5º dia útil a partir de uma
  * sexta-feira é a sexta seguinte, não a quarta.
  */
-function somarDiasUteis(ts: number, n: number, feriados: ReadonlySet<number>): number {
+function somarDiasUteis(ts: number, n: number, ehFeriado: (ts: number) => boolean): number {
   const passo = n >= 0 ? 1 : -1
   let restantes = Math.abs(n)
   let atual = ts
   while (restantes > 0) {
     atual = somarDias(atual, passo)
-    if (!ehFimDeSemana(atual) && !feriados.has(atual)) restantes--
+    if (!ehFimDeSemana(atual) && !ehFeriado(atual)) restantes--
   }
   return atual
 }
@@ -257,11 +238,6 @@ function somarDiasUteis(ts: number, n: number, feriados: ReadonlySet<number>): n
  * o locale silenciosamente vira inglês. O resultado é texto para o usuário:
  * "Wednesday" num site brasileiro é bug, não detalhe.
  * ---------------------------------------------------------------------- */
-
-/** Nome do dia da semana de um timestamp UTC. */
-function nomeDiaSemana(ts: number): string {
-  return DIAS_SEMANA[diaDaSemana(ts)] ?? ''
-}
 
 /** "23/09/2026". */
 export function formatarDataBR(iso: string): string {
@@ -280,6 +256,31 @@ export function formatarDataExtenso(iso: string): string {
   const d = new Date(ts)
   const mes = MESES_NOME[d.getUTCMonth()] ?? ''
   return `${nomeDiaSemana(ts)}, ${d.getUTCDate()} de ${mes} de ${d.getUTCFullYear()}`
+}
+
+/** Acima disso, o aviso dá a contagem em vez de listar os nomes. */
+const MAX_FERIADOS_NOMEADOS = 6
+
+/**
+ * Diz quais feriados saíram da conta, e o que não entrou. O nome importa:
+ * quem calcula prazo precisa conferir se o feriado descontado vale para o
+ * caso, e "2 feriados" sem dizer quais não deixa conferir nada.
+ */
+function avisoFeriados(
+  calendario: Exclude<CalendarioFeriados, 'nenhum'>,
+  descontados: readonly FeriadoDescontado[],
+): string {
+  const quais =
+    calendario === 'nacionais'
+      ? 'os feriados nacionais'
+      : 'os feriados nacionais, o Carnaval e o Corpus Christi'
+  const detalhe =
+    descontados.length === 0
+      ? ' (nenhum cai em dia útil neste período)'
+      : descontados.length <= MAX_FERIADOS_NOMEADOS
+        ? `: ${descontados.map((f) => `${f.nome} (${formatarDataBR(f.data)})`).join(', ')}`
+        : ` (${descontados.length} em dia útil neste período)`
+  return `Os dias úteis descontam ${quais}${detalhe}. Feriados estaduais e municipais não entram.`
 }
 
 function plural(n: number, singular: string, plural_: string): string {
@@ -345,9 +346,7 @@ function validar(params: CalculoDatasParams): ErroValidacao[] {
   return erros
 }
 
-export function calcularDatas(
-  params: CalculoDatasParams,
-): ResultadoOuErro<CalculoDatasResultado> {
+export function calcularDatas(params: CalculoDatasParams): ResultadoOuErro<CalculoDatasResultado> {
   const erros = validar(params)
   if (erros.length > 0) return { sucesso: false, erros }
 
@@ -358,6 +357,8 @@ export function calcularDatas(
   const incluiDataInicial = params.modo === 'diferenca' && params.incluirDataInicial === true
   const apenasDiasUteis = params.apenasDiasUteis === true
   const listaFeriados = params.feriados ?? []
+  const calendario = params.calendarioFeriados ?? 'nenhum'
+  const feriados = criarFeriados(listaFeriados, calendario)
 
   let inicio = base
   let fim: number
@@ -386,15 +387,7 @@ export function calcularDatas(
     let destino = somarMeses(base, anos * 12 + meses)
     if (dias !== 0) {
       destino = apenasDiasUteis
-        ? somarDiasUteis(
-            destino,
-            dias,
-            new Set(
-              listaFeriados
-                .map((f) => parseIso(f))
-                .filter((t): t is number => t !== null),
-            ),
-          )
+        ? somarDiasUteis(destino, dias, feriados.ehFeriado)
         : somarDias(destino, dias)
     }
 
@@ -426,7 +419,8 @@ export function calcularDatas(
   const inicioContagem = incluiDataInicial ? inicio : somarDias(inicio, 1)
   const diasCorridos = diasEntre(inicio, fim) + (incluiDataInicial ? 1 : 0)
   const diasUteisBrutos = diasUteisNoIntervalo(inicioContagem, fim)
-  const feriadosEmDiaUtil = feriadosEmDiaUtilNoIntervalo(inicioContagem, fim, listaFeriados)
+  const feriadosDescontados = feriados.emDiaUtil(inicioContagem, fim)
+  const feriadosEmDiaUtil = feriadosDescontados.length
   const diasUteis = diasUteisBrutos - feriadosEmDiaUtil
   const diasFimDeSemana = diasCorridos - diasUteisBrutos
 
@@ -458,6 +452,7 @@ export function calcularDatas(
     diasUteis,
     diasFimDeSemana,
     feriadosEmDiaUtil,
+    feriadosDescontados,
     anos,
     meses,
     dias: restoDias,
@@ -489,7 +484,10 @@ export function calcularDatas(
       valorTexto: plural(diasCorridos, 'dia', 'dias'),
     },
     {
-      descricao: 'Dias úteis (segunda a sexta)',
+      descricao:
+        calendario !== 'nenhum' || listaFeriados.length > 0
+          ? 'Dias úteis (segunda a sexta, sem feriados)'
+          : 'Dias úteis (segunda a sexta)',
       valor: diasUteis,
       tipo: 'neutro',
       valorTexto: plural(diasUteis, 'dia', 'dias'),
@@ -548,7 +546,9 @@ export function calcularDatas(
       'A data final informada era anterior à inicial — as duas foram trocadas para contar o intervalo.',
     )
   }
-  if (listaFeriados.length === 0) {
+  if (calendario !== 'nenhum') {
+    avisos.push(avisoFeriados(calendario, feriadosDescontados))
+  } else if (listaFeriados.length === 0) {
     avisos.push(
       'Os dias úteis consideram apenas segunda a sexta: feriados nacionais, estaduais e municipais não são descontados.',
     )
@@ -582,7 +582,7 @@ export function calcularDatas(
         ? // A menção a dias úteis só entra quando houve deslocamento em dias:
           // com `dias: 0` e `meses: 3`, nenhuma lógica de dia útil rodou.
           `Calendário gregoriano — anos e meses aplicados antes dos dias, com ajuste para o último dia do mês${apenasDiasUteis && (params.dias ?? 0) !== 0 ? '; deslocamento contado em dias úteis' : ''}`
-        : 'Calendário gregoriano — diferença entre duas datas em dias corridos, dias úteis, meses e semanas',
+        : `Calendário gregoriano — diferença entre duas datas em dias corridos, dias úteis, meses e semanas${calendario === 'nenhum' ? '' : '; dias úteis sem os feriados nacionais'}`,
       // Não há base legal nem tabela: esta é a primeira calculadora do site
       // que não depende de legislação. Strings vazias escondem o selo "Base
       // legal" e o rótulo "Tabelas" em vez de inventar uma fonte.
@@ -591,4 +591,41 @@ export function calcularDatas(
       dados: dadosResultado,
     },
   }
+}
+
+export interface DiasUteisDoMes {
+  /** 1-12. */
+  mes: number
+  nomeMes: string
+  diasCorridos: number
+  diasUteis: number
+  feriados: FeriadoDescontado[]
+}
+
+/**
+ * Dias úteis de cada mês do ano (F72), para a tabela das páginas de
+ * feriados. Sai de `calcularDatas`, e não de uma conta paralela, para a
+ * página e a calculadora nunca discordarem.
+ */
+export function diasUteisPorMes(ano: number, calendario: CalendarioFeriados): DiasUteisDoMes[] {
+  const meses: DiasUteisDoMes[] = []
+  for (let mes = 1; mes <= 12; mes++) {
+    const mm = String(mes).padStart(2, '0')
+    const r = calcularDatas({
+      modo: 'diferenca',
+      dataInicial: `${ano}-${mm}-01`,
+      dataFinal: `${ano}-${mm}-${String(diasNoMes(ano, mes)).padStart(2, '0')}`,
+      incluirDataInicial: true,
+      calendarioFeriados: calendario,
+    })
+    if (!r.sucesso) return []
+    meses.push({
+      mes,
+      nomeMes: MESES_NOME[mes - 1] ?? '',
+      diasCorridos: r.dados.dados.diasCorridos,
+      diasUteis: r.dados.dados.diasUteis,
+      feriados: r.dados.dados.feriadosDescontados,
+    })
+  }
+  return meses
 }

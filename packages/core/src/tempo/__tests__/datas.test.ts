@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { calcularDatas, formatarDataBR, formatarDataExtenso } from '../datas'
+import { calcularDatas, diasUteisPorMes, formatarDataBR, formatarDataExtenso } from '../datas'
 
 /** Atalho: só os dados, falhando o teste se o cálculo tiver dado erro. */
 function dados(r: ReturnType<typeof calcularDatas>) {
@@ -411,5 +411,118 @@ describe('formatação', () => {
 
   it('devolve a entrada intacta quando a data é inválida', () => {
     expect(formatarDataBR('nao-e-data')).toBe('nao-e-data')
+  })
+})
+
+describe('calcularDatas — calendário de feriados nacionais (F72)', () => {
+  it('desconta os nacionais que caem em dia útil e diz quais foram', () => {
+    // 01/01 a 23/09/2026: 189 dias úteis de segunda a sexta (F68); em dia útil
+    // caem Paixão de Cristo, Tiradentes, Dia Mundial do Trabalho e 07/09.
+    const r = calcularDatas({
+      modo: 'diferenca',
+      dataInicial: '2026-01-01',
+      dataFinal: '2026-09-23',
+      calendarioFeriados: 'nacionais',
+    })
+    if (!r.sucesso) throw new Error('esperava sucesso')
+    const d = r.dados.dados
+    expect(d.diasUteis).toBe(185)
+    expect(d.feriadosDescontados.map((f) => f.data)).toEqual([
+      '2026-04-03',
+      '2026-04-21',
+      '2026-05-01',
+      '2026-09-07',
+    ])
+    const aviso = r.dados.avisos?.find((a) => a.includes('descontam'))
+    expect(aviso).toContain('Tiradentes (21/04/2026)')
+    expect(aviso).toContain('estaduais e municipais não entram')
+    // O aviso de "feriados não são descontados" da F68 não pode sair junto.
+    expect(r.dados.avisos?.some((a) => a.includes('não são descontados'))).toBe(false)
+  })
+
+  it('o Carnaval e o Corpus Christi só saem com os facultativos', () => {
+    const base = { modo: 'diferenca' as const, dataInicial: '2026-02-01', dataFinal: '2026-06-30' }
+    const nacionais = dados(calcularDatas({ ...base, calendarioFeriados: 'nacionais' }))
+    const comFacultativos = dados(
+      calcularDatas({ ...base, calendarioFeriados: 'nacionais-facultativos' }),
+    )
+    expect(comFacultativos.diasUteis).toBe(nacionais.diasUteis - 3)
+  })
+
+  it('prazo em dias úteis pula o feriado do ano seguinte', () => {
+    // 30/12/2026 é quarta. 2 dias úteis: 31/12 (quinta) e — pulando o 01/01
+    // de sexta e o fim de semana — segunda 04/01/2027.
+    const d = dados(
+      calcularDatas({
+        modo: 'somar',
+        dataInicial: '2026-12-30',
+        dias: 2,
+        apenasDiasUteis: true,
+        calendarioFeriados: 'nacionais',
+      }),
+    )
+    expect(d.dataFinal).toBe('2027-01-04')
+  })
+
+  it('30 dias úteis a partir de 23/09/2026 caem em 06/11, não em 04/11', () => {
+    // 12/10 e 02/11 caem em segunda-feira e empurram o prazo dois dias.
+    const semFeriados = dados(
+      calcularDatas({ modo: 'somar', dataInicial: '2026-09-23', dias: 30, apenasDiasUteis: true }),
+    )
+    const comFeriados = dados(
+      calcularDatas({
+        modo: 'somar',
+        dataInicial: '2026-09-23',
+        dias: 30,
+        apenasDiasUteis: true,
+        calendarioFeriados: 'nacionais',
+      }),
+    )
+    expect(semFeriados.dataFinal).toBe('2026-11-04')
+    expect(comFeriados.dataFinal).toBe('2026-11-06')
+  })
+
+  it('lista avulsa e calendário não contam o mesmo dia duas vezes', () => {
+    const d = dados(
+      calcularDatas({
+        modo: 'diferenca',
+        dataInicial: '2026-09-01',
+        dataFinal: '2026-09-30',
+        feriados: ['2026-09-07', '2026-09-08'],
+        calendarioFeriados: 'nacionais',
+      }),
+    )
+    expect(d.feriadosDescontados).toEqual([
+      { data: '2026-09-07', nome: 'Independência do Brasil' },
+      { data: '2026-09-08', nome: 'Feriado informado' },
+    ])
+  })
+
+  it('sem calendário, o motor se comporta como na F68', () => {
+    const d = dados(
+      calcularDatas({ modo: 'diferenca', dataInicial: '2026-01-01', dataFinal: '2026-09-23' }),
+    )
+    expect(d.diasUteis).toBe(189)
+    expect(d.feriadosDescontados).toEqual([])
+  })
+})
+
+describe('diasUteisPorMes', () => {
+  it('2026 tem 252 dias úteis descontando os feriados nacionais', () => {
+    const meses = diasUteisPorMes(2026, 'nacionais')
+    expect(meses.map((m) => m.diasUteis)).toEqual([21, 20, 22, 20, 20, 22, 23, 21, 21, 21, 19, 22])
+    expect(meses.reduce((t, m) => t + m.diasUteis, 0)).toBe(252)
+    expect(diasUteisPorMes(2026, 'nenhum').reduce((t, m) => t + m.diasUteis, 0)).toBe(261)
+  })
+
+  it('2027 tem 254, porque três feriados caem no sábado', () => {
+    expect(diasUteisPorMes(2027, 'nacionais').reduce((t, m) => t + m.diasUteis, 0)).toBe(254)
+  })
+
+  it('o mês traz os feriados que descontou', () => {
+    const novembro = diasUteisPorMes(2026, 'nacionais')[10]
+    expect(novembro?.nomeMes).toBe('novembro')
+    // 15/11/2026 é domingo: não desconta, e por isso não aparece.
+    expect(novembro?.feriados.map((f) => f.data)).toEqual(['2026-11-02', '2026-11-20'])
   })
 })

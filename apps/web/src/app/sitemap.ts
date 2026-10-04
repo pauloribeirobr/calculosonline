@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next'
 import { CATEGORIAS, calculatorRegistry, type CategoriaCalc } from '@/lib/calculators'
 import { blogRegistry, ultimaAtualizacaoDoBlog } from '@/lib/blog'
 import { HUB_TRABALHISTA } from '@/lib/hubTrabalhista'
+import { ANOS_FERIADOS, FERIADOS_DATA_ATUALIZACAO, FERIADOS_PATH, pathDoAno } from '@/lib/feriados'
 import { siteConfig } from '@/lib/seo'
 
 // <lastmod> é sinal de freshness para o Google recrawlear. `dataAtualizacao` do
@@ -31,16 +32,16 @@ import { siteConfig } from '@/lib/seo'
 // rodapé, à `/categorias` e à home, e um link interno novo em quatro
 // calculadoras trabalhistas — muda a estrutura de links do site, que é o que o
 // Google recrawleia.
-const seoRefreshDate = new Date('2026-09-23')
+// 2026-10-04: F72 (feriados). Acrescenta `/feriados` ao rodapé de todas as
+// páginas e muda os dias úteis da calculadora de datas, que passam a descontar
+// os feriados nacionais.
+const seoRefreshDate = new Date('2026-10-04')
 const staticLastModified = new Date('2026-05-11')
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.url
   const hubLastModified = new Date(
-    Math.max(
-      new Date(HUB_TRABALHISTA.dataAtualizacao).getTime(),
-      seoRefreshDate.getTime(),
-    ),
+    Math.max(new Date(HUB_TRABALHISTA.dataAtualizacao).getTime(), seoRefreshDate.getTime()),
   )
 
   const mainPages: MetadataRoute.Sitemap = [
@@ -75,6 +76,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ]
 
+  // Feriados (F72). A entrada muda de resposta todo dia ("hoje é feriado?",
+  // calculado no navegador), por isso 'daily'; as páginas de ano só mudam
+  // quando sai a portaria do ano seguinte.
+  const feriadosPages: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}${FERIADOS_PATH}`,
+      lastModified: new Date(FERIADOS_DATA_ATUALIZACAO),
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    ...ANOS_FERIADOS.map((ano) => ({
+      url: `${baseUrl}${pathDoAno(ano)}`,
+      lastModified: new Date(FERIADOS_DATA_ATUALIZACAO),
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    })),
+  ]
+
   // Posts do blog (F22). Prioridade 0.7: abaixo das calculadoras, que são o
   // produto, e no mesmo patamar das categorias. `changeFrequency: 'yearly'`
   // seria mentira para conteúdo sazonal — o post do 13º é revisado todo ano
@@ -88,7 +107,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const calculatorPages: MetadataRoute.Sitemap = calculatorRegistry.map((calc) => ({
     url: `${baseUrl}/calculadora/${calc.slug}`,
-    lastModified: new Date(Math.max(new Date(calc.dataAtualizacao).getTime(), seoRefreshDate.getTime())),
+    lastModified: new Date(
+      Math.max(new Date(calc.dataAtualizacao).getTime(), seoRefreshDate.getTime()),
+    ),
     changeFrequency: 'monthly',
     priority: calc.featured ? 0.95 : 0.9,
   }))
@@ -130,5 +151,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ]
 
-  return [...mainPages, ...calculatorPages, ...blogPages, ...categoryPages, ...institutionalPages]
+  return [
+    ...mainPages,
+    ...calculatorPages,
+    ...feriadosPages,
+    ...blogPages,
+    ...categoryPages,
+    ...institutionalPages,
+  ]
 }
