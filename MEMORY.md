@@ -16,6 +16,14 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **F76 (04/10, v0.39.0) — o molde da F67 em férias e salário líquido, e
+  férias fracionadas.** "Online" no title/H1, sinônimos do BWT, FAQ com números
+  do motor. O campo de fracionamento entrou **por decisão do Paulo, sem o
+  replay do Clarity** (direito previsto no art. 134, §1º, e pedido pela busca do
+  Bing): 10 dias de R$ 3.000 = **R$ 1.233,33**. **Medir em ~1 semana no BWT →
+  AI Performance:** share de `calcular ferias` (3,98%), `cálculo de férias`
+  (3,75%) e `calculadora de salário líquido` (8,70%), e se a pergunta dos 10
+  dias (28 @ 6,75) passa a ter clique. Detalhe no Diário de 04/10 (parte 3).
 - **F72 (04/10, v0.38.0) — feriados nacionais no ar:** `/feriados` ("hoje é
   feriado?", no navegador, pela data de Brasília), `/feriados/2026` e
   `/feriados/2027`, e a calculadora de datas desconta os nacionais por padrão
@@ -1213,6 +1221,52 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
 
 ## Diário
 
+### 2026-10-04 (parte 3) — F76: o molde da F67 em férias e salário líquido, e férias fracionadas
+
+Paulo escolheu a F76 e a F77 da lista da análise do BWT. Perguntei se ele tinha
+visto o replay do Clarity que decidiria o campo de férias fracionadas; ele
+respondeu "não vi, só vocabulário" e, minutos depois, mudou: **"faça o campo
+mesmo sem replay — férias fracionadas são direito previsto em lei e a busca do
+Bing já pede isso"**. A F76 saiu com as duas coisas.
+
+**Base de medição (BWT → AI Performance, 08→30/09), para comparar em ~1 semana:**
+
+| Query | Citações | Share |
+|---|---|---|
+| `calcular ferias` | 35 | **3,98%** |
+| `cálculo de férias` | 6 | 3,75% |
+| `cálculo de férias 2026` | 75 | 14,53% |
+| `calculo de ferias online` | 37 | 21,26% |
+| `calculadora de salário líquido` | 63 | **8,70%** |
+| `calculadora online salário líquido` | 12 | 13,64% |
+| `calculo de salario liquido online` | 36 | 27,27% |
+
+E na busca: `vou tirar 10 dias de férias somente, quanto receberia…` 28 @ 6,75
+com zero clique; `calculadora de férias 2026` 40 @ 8,6.
+
+**Fonte conferida antes de codificar (regra de 04/10):** CLT art. 134 no
+Planalto. §1º na redação da Lei 13.467/2017 (até 3 períodos, um ≥ 14 dias e os
+demais ≥ 5); §2º **revogado** (a vedação para menores de 18 e maiores de 50 não
+existe mais, e o MDX agora diz isso); §3º veda começar nos 2 dias antes de
+feriado ou DSR. Art. 143: abono de 1/3.
+
+**Decisão de desenho:** 5 dias mínimos e sobra entre 1 e 4 são **erro** (nenhuma
+combinação de períodos salva); os 14 dias são **aviso**, porque o período longo
+pode ter sido um anterior deste mesmo período aquisitivo, que a função não
+conhece. O aviso diz qual período cumpre a regra, ou que nenhum cumpre.
+
+**Achados na FAQ do salário líquido, corrigidos:** "alíquota efetiva ~10,2%" em
+R$ 5.000 contradizia a tabela da própria página (10,0%), e a resposta sobre o
+IRRF parava na faixa de R$ 2.428,80 sem citar o redutor de 2026. **A
+`fonteJuridica` do salário líquido ainda cita "Decreto 11.936/2024 (INSS)"**,
+enquanto o F64 trocou a tabela pela Portaria MPS/MF 13/2026. Não mexi (fora do
+escopo); vale conferir em outra feature.
+
+**O que medir:** o share das queries acima no BWT → AI Performance, e se a
+pergunta dos 10 dias passa a ter clique. Se férias subir como a hora extra
+subiu, o molde está confirmado duas vezes e vale para INSS e IRRF, que já são
+fortes, só em query de share baixo.
+
 ### 2026-10-04 (parte 2) — F72: feriados com fonte, e a lição de conferir antes de publicar
 
 Paulo mandou seguir com a F72 e escolheu o escopo: `/feriados` + 2026 + 2027,
@@ -1248,8 +1302,9 @@ F68 (21 entradas para 22 calculadoras). Entrou com a seção Tempo.
 
 **O que medir:** no BWT, impressões de `feriados 2027`, `hoje é feriado` e
 `dias úteis 2026` nas três URLs novas, e se a calculadora de datas começa a
-aparecer (zero até 30/09). Depois do deploy, **disparar o IndexNow** (as três
-URLs são novas).
+aparecer (zero até 30/09). ✅ **Deploy em 04/10 (PR #36) e IndexNow disparado
+pelo Paulo no mesmo dia.** Conferido em produção: as três rotas respondem 200,
+estão no sitemap, e o rodapé e o `llms.txt` já as linkam.
 
 ### 2026-10-04 — BWT com o painel de IA: a F67 aparece na citação, não na busca
 

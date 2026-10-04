@@ -6,6 +6,8 @@
  *  - CLT art. 130: dias por faltas no período aquisitivo
  *  - CF/88 art. 7º, XVII: terço constitucional
  *  - CLT art. 143: abono pecuniário (até 1/3 vendido)
+ *  - CLT art. 134, §1º (Lei 13.467/2017): férias em até 3 períodos, um com
+ *    no mínimo 14 dias corridos e os demais com no mínimo 5
  *  - CLT art. 137: férias em atraso pagas em dobro
  *  - Lei 8.212/1991 art. 28, §9º: abono pecuniário fora do salário de contribuição
  *  - Lei 15.270/2025: redutor do IRRF vigente em 2026
@@ -29,6 +31,15 @@
  * já foi retido é abatido. O total do mês não muda; a divisão entre os dois
  * pagamentos, sim. Está explicado em `/blog/salario-depois-das-ferias-por-que-vem-menor`
  * e sai como aviso no resultado.
+ *
+ * **Férias fracionadas (F76).** `diasGozo` calcula o recibo de **um** período:
+ * quem tira só 10 dias agora recebe 10 dias + 1/3. É a maior pergunta em
+ * linguagem natural do relatório de consultas do Bing ("vou tirar 10 dias de
+ * férias somente, quanto receberia…"). Texto do art. 134 conferido no Planalto
+ * em 04/10/2026. Duas regras viram erro, porque nenhuma combinação de períodos
+ * as salva: o período tem no mínimo 5 dias, e o que sobra também (ou zero). A
+ * regra dos 14 dias vira **aviso**, não erro: o período de 14 pode ter sido um
+ * anterior, que esta função não conhece.
  */
 
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
@@ -45,7 +56,17 @@ export interface FeriasParams {
   emAtraso?: boolean
   /** Dependentes para o IRRF do recibo de férias (tributação em separado). */
   numeroDependentes?: number
+  /**
+   * Dias de férias deste período, quando as férias são fracionadas (CLT art.
+   * 134, §1º). Ausente: o período inteiro (direito menos os dias vendidos).
+   */
+  diasGozo?: number
 }
+
+/** Mínimo de cada período fracionado — CLT art. 134, §1º. */
+export const MIN_DIAS_PERIODO_FRACIONADO = 5
+/** Um dos períodos fracionados precisa ter pelo menos isso — CLT art. 134, §1º. */
+export const MIN_DIAS_PERIODO_PRINCIPAL = 14
 
 export interface FeriasResultado {
   diasDireito: number
@@ -75,6 +96,10 @@ export interface FeriasResultado {
   /** true quando o desconto simplificado venceu as deduções legais. */
   usouDescontoSimplificado: boolean
   perdeuDireito: boolean
+  /** O recibo é de um período só, e sobram dias para os próximos (F76). */
+  fracionado: boolean
+  /** Dias de férias que ficam para os próximos períodos (0 sem fracionar). */
+  diasRestantes: number
 }
 
 /**
@@ -87,6 +112,22 @@ function diasFeriasPorFaltas(faltas: number): number {
   if (faltas <= 23) return 18
   if (faltas <= 32) return 12
   return 0
+}
+
+/**
+ * O que a pessoa precisa saber ao fracionar: quantos dias sobram e a regra dos
+ * 14 dias, que esta função não tem como checar sozinha.
+ */
+function avisoFracionamento(diasAgora: number, diasRestantes: number, diasAbono: number): string {
+  const regra14 =
+    diasAgora >= MIN_DIAS_PERIODO_PRINCIPAL
+      ? `Este período já cumpre a regra de que um deles tenha pelo menos ${MIN_DIAS_PERIODO_PRINCIPAL} dias.`
+      : diasRestantes >= MIN_DIAS_PERIODO_PRINCIPAL
+        ? `Um dos próximos períodos precisa ter pelo menos ${MIN_DIAS_PERIODO_PRINCIPAL} dias.`
+        : `Nenhum período fica com ${MIN_DIAS_PERIODO_PRINCIPAL} dias: isso só vale se você já tirou um período de ${MIN_DIAS_PERIODO_PRINCIPAL} dias ou mais neste mesmo período aquisitivo.`
+  const abono =
+    diasAbono > 0 ? ' O abono dos dias vendidos costuma ser pago junto com o primeiro período.' : ''
+  return `Férias fracionadas (CLT art. 134, §1º): este recibo paga ${diasAgora} dias + 1/3 e ficam ${diasRestantes} dias para os próximos períodos, com no mínimo ${MIN_DIAS_PERIODO_FRACIONADO} dias cada. ${regra14} O fracionamento depende da sua concordância, e as férias não podem começar nos 2 dias antes de feriado ou do descanso semanal.${abono}`
 }
 
 export function calcularFerias(params: FeriasParams): ResultadoOuErro<FeriasResultado> {
@@ -143,6 +184,8 @@ export function calcularFerias(params: FeriasParams): ResultadoOuErro<FeriasResu
           redutorIRRF: 0,
           usouDescontoSimplificado: false,
           perdeuDireito: true,
+          fracionado: false,
+          diasRestantes: 0,
         },
       },
     }
@@ -150,7 +193,44 @@ export function calcularFerias(params: FeriasParams): ResultadoOuErro<FeriasResu
 
   const maxAbono = Math.floor(diasDireito / 3)
   const diasAbono = Math.min(params.diasAbono ?? 0, maxAbono)
-  const diasGozados = diasDireito - diasAbono
+  const saldo = diasDireito - diasAbono
+
+  // Fracionamento (F76). Só valida quando o pedido é menor que o saldo: pedir
+  // o saldo inteiro é tirar as férias de uma vez, como sem o parâmetro.
+  const diasGozo = params.diasGozo ?? saldo
+  const errosFracionamento: ErroValidacao[] = []
+  if (!Number.isInteger(diasGozo) || diasGozo < 1) {
+    errosFracionamento.push({
+      campo: 'diasGozo',
+      mensagem: 'Informe um número inteiro de dias de férias',
+    })
+  } else if (diasGozo > saldo) {
+    errosFracionamento.push({
+      campo: 'diasGozo',
+      mensagem:
+        diasAbono > 0
+          ? `Você tem ${saldo} dias para tirar (${diasDireito} de direito menos ${diasAbono} vendidos)`
+          : `Você tem ${saldo} dias de férias de direito`,
+    })
+  } else if (diasGozo < saldo) {
+    const resto = saldo - diasGozo
+    if (diasGozo < MIN_DIAS_PERIODO_FRACIONADO) {
+      errosFracionamento.push({
+        campo: 'diasGozo',
+        mensagem: `Cada período de férias fracionadas tem no mínimo ${MIN_DIAS_PERIODO_FRACIONADO} dias corridos (CLT art. 134, §1º)`,
+      })
+    } else if (resto < MIN_DIAS_PERIODO_FRACIONADO) {
+      errosFracionamento.push({
+        campo: 'diasGozo',
+        mensagem: `Sobrariam ${resto} ${resto === 1 ? 'dia' : 'dias'}, abaixo do mínimo de ${MIN_DIAS_PERIODO_FRACIONADO} de um período (CLT art. 134, §1º). Tire ${saldo} dias de uma vez ou no máximo ${saldo - MIN_DIAS_PERIODO_FRACIONADO} agora.`,
+      })
+    }
+  }
+  if (errosFracionamento.length > 0) return { sucesso: false, erros: errosFracionamento }
+
+  const diasGozados = diasGozo
+  const diasRestantes = saldo - diasGozados
+  const fracionado = diasRestantes > 0
 
   // `valorDiario` é arredondado só para APARECER na fórmula do detalhamento.
   // O cálculo usa a divisão exata e arredonda uma única vez, no fim.
@@ -172,8 +252,7 @@ export function calcularFerias(params: FeriasParams): ResultadoOuErro<FeriasResu
   // Só a remuneração de férias gozadas + terço é tributável: o abono é isento
   // por lei e a dobra do art. 137 é indenização (ver cabeçalho).
   const baseTributavel = arredondar(salarioFerias + adicionalTerco)
-  const { valorINSS: descontoINSS, detalhamento: detINSS } =
-    calcularINSSProgressivo(baseTributavel)
+  const { valorINSS: descontoINSS, detalhamento: detINSS } = calcularINSSProgressivo(baseTributavel)
   const {
     valorIRRF: descontoIRRF,
     baseCalculo: baseIRRF,
@@ -267,6 +346,7 @@ export function calcularFerias(params: FeriasParams): ResultadoOuErro<FeriasResu
           'A dobra do art. 137 entra sem INSS e sem IRRF: ela indeniza o atraso na concessão, não remunera trabalho. Sistemas de folha divergem neste ponto — confira o seu recibo.',
         ]
       : []),
+    ...(fracionado ? [avisoFracionamento(diasGozados, diasRestantes, diasAbono)] : []),
   ]
 
   return {
@@ -296,6 +376,8 @@ export function calcularFerias(params: FeriasParams): ResultadoOuErro<FeriasResu
         redutorIRRF: redutor,
         usouDescontoSimplificado,
         perdeuDireito: false,
+        fracionado,
+        diasRestantes,
       },
     },
   }

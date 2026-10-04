@@ -135,27 +135,42 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
   {
     slug: 'ferias',
     titulo: 'Férias',
-    tituloLongo: 'Calculadora de Férias',
+    // "Online" no título pelo F76, o mesmo molde do F67 (hora extra), que foi a
+    // primeira feature de vocabulário com efeito medido: no BWT de 04/10, hora
+    // extra virou 37% das citações de IA do Bing em 8 dias. Férias ficou
+    // parada no mesmo período, com share baixo nas formas curtas.
+    tituloLongo: 'Calculadora de Férias Online',
     // O F65 tirou daqui a promessa de "descontos de INSS e IRRF", que
     // `calcularFerias` não cumpria; o F66 fez a função cumprir, e a promessa
     // voltou — agora com o líquido sendo o headline do resultado.
     descricaoCurta: 'Férias + 1/3 líquidas, com INSS e IRRF.',
     descricao:
-      'Calcule quanto você recebe de férias: 1/3 constitucional, venda de dias e descontos de INSS e IRRF com as tabelas de 2026.',
+      'Calculadora de férias online e grátis: calcule quanto você recebe de férias, com 1/3 constitucional, venda de dias e descontos de INSS e IRRF pelas tabelas de 2026.',
     categoria: 'trabalhista',
     icone: 'ferias',
     fonteJuridica: 'CLT arts. 129–153 | CF/88 art. 7º, XVII',
-    dataAtualizacao: '2026-09-22',
+    dataAtualizacao: '2026-10-04',
     palavrasChave: [
       'calcular férias',
       'férias proporcional',
       'abono pecuniário',
       '1/3 constitucional',
     ],
+    // F76 — o vocabulário saiu do BWT de 04/10 (08→30/09). Na IA do Bing, as
+    // formas curtas têm o menor share do site: `calcular ferias` 3,98% e
+    // `cálculo de férias` 3,75%, contra 21-25% das formas com "online". Na
+    // busca, `calculadora de férias 2026` 40 impressões @ 8,6 e `calcular
+    // férias online 2026` @ 7,5. A pergunta de férias de 10 dias é a maior em
+    // linguagem natural do relatório (28 impressões @ 6,75, zero clique).
     sinonimos: [
       'calcular férias 2026',
       'cálculo de férias 2026',
       'quanto vou receber de férias',
+      'calcular férias online',
+      'cálculo de férias online',
+      'calculadora de férias 2026',
+      'cálculo de férias',
+      'férias de 10 dias',
     ],
     relacionadas: ['decimo-terceiro', 'ferias-e-decimo-terceiro', 'fgts', 'hora-extra', 'rescisao-trabalhista', 'datas'],
   },
@@ -286,14 +301,18 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
   {
     slug: 'salario-liquido',
     titulo: 'Salário Líquido',
-    tituloLongo: 'Calculadora de Salário Líquido',
+    // F76 — "Online" pelo mesmo molde do F67. O `buildCalculatorTitle` corta o
+    // "sem Cadastro" sozinho, porque o título completo passaria de 78.
+    tituloLongo: 'Calculadora de Salário Líquido Online',
     descricaoCurta: 'Bruto menos INSS, IRRF e VT.',
+    // A descrição anterior tinha 97 caracteres, e o SEO Analysis do BWT de
+    // 04/10 apontou meta description curta em 8 páginas (esta entre elas).
     descricao:
-      'Descubra seu salário líquido após INSS e IRRF. Tabela progressiva 2026 com detalhamento completo.',
+      'Calculadora de salário líquido online e grátis: veja quanto sobra do salário bruto depois do INSS, do IRRF com o redutor de 2026 e do vale-transporte, desconto por desconto.',
     categoria: 'trabalhista',
     icone: 'salarioLiquido',
     fonteJuridica: 'Decreto 11.936/2024 (INSS) | RIR/2018 (IRRF)',
-    dataAtualizacao: '2026-09-13',
+    dataAtualizacao: '2026-10-04',
     palavrasChave: [
       'salário líquido',
       'calcular salário líquido',
@@ -301,6 +320,17 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'cálculo de salário líquido',
       'como calcular salário líquido',
       'desconto INSS IRRF',
+    ],
+    // F76 — BWT de 04/10: `calculadora de salário líquido` é a query de
+    // salário líquido com mais citação de IA (63) e share de só 8,70%;
+    // `calculadora online salário líquido` 13,64%; `calculo de salario liquido
+    // online` 27,27%. No Google (Semrush de 21/09), `calculo salario liquido`
+    // tem KD 35 e o site está em 58.
+    sinonimos: [
+      'calculadora de salário líquido',
+      'calculadora online de salário líquido',
+      'cálculo de salário líquido online',
+      'calculadora salário líquido 2026',
     ],
     relacionadas: ['irrf', 'decimo-terceiro', 'hora-extra', 'fgts', 'rescisao-trabalhista'],
     featured: true,
