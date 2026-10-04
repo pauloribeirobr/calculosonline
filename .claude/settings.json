@@ -117,7 +117,8 @@
       "Bash(pnpm --filter web test:e2e -- calculadora-datas.spec.ts)",
       "Bash(awk 'NR>=142 && NR<=143 {print NR\": \"substr\\($0,1,150\\)}' FEATURES.md)",
       "Bash(curl -s --max-time 20 \"http://localhost:3000/calculadora/datas\" -o /tmp/claude-1000/-home-paulo-projects-next-calculosonline/868a37dc-70f9-4fb5-be66-0f248725e733/scratchpad/datas.html)",
-      "Bash(pnpm build *)"
+      "Bash(pnpm build *)",
+      "Bash(grep -n -E \"^#{1,4} \" MEMORY.md)"
     ],
     "additionalDirectories": [
       "/home/paulo/projects/next/calculosonline/apps/web/src/lib"

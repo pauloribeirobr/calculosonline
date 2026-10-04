@@ -15,7 +15,7 @@ O Recibo Fácil já está em produção (`recibofacil.com.br`) com um sistema vi
 - Hero com badge, CTAs, indicadores de confiança e mockup ilustrativo (DocumentStack)
 - Componentes home prontos: HowItWorks, Features, Stats, Testimonials, FAQ, FinalCta, SeoContent
 - SEO estruturado: PageSeo wrapper + JsonLd (Website, Organization, FAQ, WebApplication, ItemList)
-- Stack analytics: GA4 + Vercel Analytics + Microsoft Clarity + ErrorLogger
+- Stack analytics: GA4 + Microsoft Clarity + ErrorLogger
 
 Reaproveitar significa:
 - **Menos esforço:** copiar e adaptar em vez de desenhar do zero (estimativa: -3 a -4 dias de Sprint 1.2)
@@ -119,7 +119,6 @@ Adicionar ao `apps/web/package.json` (alinhado ao Recibo Fácil):
     "@next/third-parties": "^16.2.5",
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/typography": "^0.5.19",
-    "@vercel/analytics": "^1.6.1",
     "clsx": "^2.0.0",
     "tailwind-merge": "^2.0.0"
   }
