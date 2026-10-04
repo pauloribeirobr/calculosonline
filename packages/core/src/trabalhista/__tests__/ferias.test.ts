@@ -214,9 +214,7 @@ describe('calcularFerias', () => {
         if (r.sucesso) {
           const linhas = r.dados.detalhamento
           const iBruto = linhas.findIndex((l) => l.descricao === 'Total Bruto')
-          const creditos = arredondar(
-            linhas.slice(0, iBruto).reduce((acc, l) => acc + l.valor, 0),
-          )
+          const creditos = arredondar(linhas.slice(0, iBruto).reduce((acc, l) => acc + l.valor, 0))
           expect(creditos, JSON.stringify(caso)).toBe(r.dados.dados.totalBruto)
 
           const descontos = arredondar(
@@ -269,9 +267,7 @@ describe('calcularFerias', () => {
         expect(vendido.dados.dados.baseTributavel).toBe(3555.56)
         expect(trinta.dados.dados.descontoIRRF).toBe(122.45)
         expect(vendido.dados.dados.descontoIRRF).toBe(0)
-        expect(vendido.dados.dados.totalLiquido).toBeGreaterThan(
-          trinta.dados.dados.totalLiquido,
-        )
+        expect(vendido.dados.dados.totalLiquido).toBeGreaterThan(trinta.dados.dados.totalLiquido)
       }
     })
 
@@ -327,5 +323,82 @@ describe('calcularFerias', () => {
         )
       }
     })
+  })
+})
+
+describe('calcularFerias — férias fracionadas (F76, CLT art. 134, §1º)', () => {
+  function ok(params: Parameters<typeof calcularFerias>[0]) {
+    const r = calcularFerias(params)
+    if (!r.sucesso) throw new Error(JSON.stringify(r.erros))
+    return r.dados
+  }
+
+  it('10 dias de R$ 3.000 dão R$ 1.233,33 — o mesmo número do post da F65', () => {
+    const d = ok({ salarioBruto: 3000, diasFaltas: 0, diasGozo: 10 })
+    expect(d.dados.salarioFerias).toBe(1000)
+    expect(d.dados.adicionalTerco).toBe(333.33)
+    expect(d.dados.descontoINSS).toBe(100)
+    expect(d.dados.totalLiquido).toBe(1233.33)
+    expect(d.dados.fracionado).toBe(true)
+    expect(d.dados.diasRestantes).toBe(20)
+  })
+
+  it('sem o parâmetro, ou pedindo o saldo inteiro, não fraciona', () => {
+    const semParametro = ok({ salarioBruto: 3000, diasFaltas: 0 })
+    const saldoInteiro = ok({ salarioBruto: 3000, diasFaltas: 0, diasGozo: 30 })
+    expect(semParametro.dados.totalLiquido).toBe(3631.4)
+    expect(saldoInteiro.dados.totalLiquido).toBe(3631.4)
+    expect(saldoInteiro.dados.fracionado).toBe(false)
+    expect(saldoInteiro.avisos?.some((a) => a.includes('fracionadas'))).toBe(false)
+  })
+
+  it('período abaixo de 5 dias é erro', () => {
+    const r = calcularFerias({ salarioBruto: 3000, diasFaltas: 0, diasGozo: 4 })
+    expect(r.sucesso).toBe(false)
+    if (!r.sucesso) expect(r.erros[0]?.mensagem).toContain('mínimo 5 dias')
+  })
+
+  it('sobra abaixo de 5 dias é erro, e a mensagem diz o máximo possível', () => {
+    const r = calcularFerias({ salarioBruto: 3000, diasFaltas: 0, diasGozo: 27 })
+    expect(r.sucesso).toBe(false)
+    if (!r.sucesso) {
+      expect(r.erros[0]?.mensagem).toContain('Sobrariam 3 dias')
+      expect(r.erros[0]?.mensagem).toContain('no máximo 25 agora')
+    }
+  })
+
+  it('pedir mais que o saldo é erro, contando os dias vendidos', () => {
+    const r = calcularFerias({ salarioBruto: 3000, diasFaltas: 0, diasAbono: 10, diasGozo: 25 })
+    expect(r.sucesso).toBe(false)
+    if (!r.sucesso)
+      expect(r.erros[0]?.mensagem).toBe(
+        'Você tem 20 dias para tirar (30 de direito menos 10 vendidos)',
+      )
+  })
+
+  it('a regra dos 14 dias é aviso, não erro — o período longo pode ter sido antes', () => {
+    // 20 de saldo (10 vendidos), 10 agora e 10 depois: nenhum dos dois tem 14.
+    const d = ok({ salarioBruto: 3000, diasFaltas: 0, diasAbono: 10, diasGozo: 10 })
+    const aviso = d.avisos?.find((a) => a.includes('fracionadas'))
+    expect(aviso).toContain('Nenhum período fica com 14 dias')
+    expect(aviso).toContain('abono dos dias vendidos')
+  })
+
+  it('o aviso diz quem cumpre os 14 dias', () => {
+    const agora = ok({ salarioBruto: 3000, diasFaltas: 0, diasGozo: 15 })
+    expect(agora.avisos?.find((a) => a.includes('fracionadas'))).toContain('Este período já cumpre')
+    const depois = ok({ salarioBruto: 3000, diasFaltas: 0, diasGozo: 10 })
+    expect(depois.avisos?.find((a) => a.includes('fracionadas'))).toContain(
+      'Um dos próximos períodos precisa ter pelo menos 14 dias',
+    )
+  })
+
+  it('a base do imposto é só o período deste recibo', () => {
+    // R$ 6.000 em 30 dias: base R$ 8.000. Em 10 dias: base R$ 2.666,67.
+    const inteiro = ok({ salarioBruto: 6000, diasFaltas: 0 })
+    const dez = ok({ salarioBruto: 6000, diasFaltas: 0, diasGozo: 10 })
+    expect(inteiro.dados.baseTributavel).toBe(8000)
+    expect(dez.dados.baseTributavel).toBe(2666.67)
+    expect(dez.dados.descontoIRRF).toBe(0)
   })
 })
