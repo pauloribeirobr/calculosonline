@@ -289,8 +289,9 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     titulo: 'FGTS',
     tituloLongo: 'Calculadora de FGTS',
     descricaoCurta: 'Depósito, saldo, multa e saque-aniversário.',
+    // F77: tinha 89 caracteres (meta description curta no BWT de 04/10).
     descricao:
-      'Calcule depósitos mensais (8%), multa rescisória (40% e 20%) e saque-aniversário do FGTS.',
+      'Calculadora de FGTS grátis: calcule o depósito mensal de 8%, o saldo projetado, a multa rescisória de 40% (ou 20% no acordo) e o valor do saque-aniversário.',
     categoria: 'trabalhista',
     icone: 'fgts',
     fonteJuridica: 'Lei 8.036/1990 | Lei 13.932/2019',
@@ -615,8 +616,9 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     titulo: 'IMC',
     tituloLongo: 'Calculadora de IMC',
     descricaoCurta: 'Índice de massa corporal e classificação.',
+    // F77: tinha 75 caracteres, a menor meta description do site (BWT de 04/10).
     descricao:
-      'Calcule seu Índice de Massa Corporal e descubra o peso ideal segundo a OMS.',
+      'Calculadora de IMC grátis: calcule seu Índice de Massa Corporal e veja a classificação da OMS e a faixa de peso ideal para a sua altura.',
     categoria: 'saude',
     icone: 'imc',
     fonteJuridica: 'OMS — World Health Organization (1997)',
