@@ -16,6 +16,13 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **F77 (04/10, v0.39.1) — os alertas do SEO Analysis do BWT resolvidos.**
+  Title do hub 86 → 72 (`... 2026 — Rescisão e 13º`); IMC, FGTS e as 7
+  categorias com descrição de 100+ (a da categoria agora lista as calculadoras
+  do registry). `seo-limites.spec.ts` trava title ≤ 78 e description ≥ 100 em
+  **toda** URL do sitemap. **Conferir no próximo BWT se os dois alertas
+  sumiram.** Fora do escopo, de propósito: 14 descrições acima de 165
+  (inclusive a da hora extra), que o Bing não apontou.
 - **F76 (04/10, v0.39.0) — o molde da F67 em férias e salário líquido, e
   férias fracionadas.** "Online" no title/H1, sinônimos do BWT, FAQ com números
   do motor. O campo de fracionamento entrou **por decisão do Paulo, sem o

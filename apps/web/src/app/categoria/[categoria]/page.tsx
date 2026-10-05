@@ -26,6 +26,37 @@ function isCategoria(value: string): value is CategoriaCalc {
   return value in CATEGORIAS
 }
 
+/** Acima disso o snippet é cortado na SERP. */
+const DESCRICAO_MAX = 160
+
+/**
+ * Meta description da categoria (F77). O template anterior ("Todas as
+ * calculadoras tempo com tabelas 2026 atualizadas") ficava em 84-99
+ * caracteres — o SEO Analysis do BWT de 04/10 apontou "meta description curta"
+ * em 8 páginas, 7 delas categorias — e prometia tabela onde não há nenhuma
+ * (Tempo, Saúde, Negócios). Agora lista as calculadoras do registry, que se
+ * atualiza sozinho quando uma entra (a lição do rodapé na F68), e fica com a
+ * variante mais completa que cabe em 160 caracteres.
+ */
+function descricaoDaCategoria(categoria: CategoriaCalc): string {
+  const cat = CATEGORIAS[categoria]
+  const titulos = getCalculatorsByCategory()[categoria].map((c) => c.titulo)
+  const lista =
+    titulos.length > 1
+      ? `${titulos.slice(0, -1).join(', ')} e ${titulos[titulos.length - 1]}`
+      : (titulos[0] ?? '')
+  const quantas =
+    titulos.length === 1 ? 'Calculadora grátis' : `${titulos.length} calculadoras grátis`
+  const nucleo = `${quantas} e sem cadastro: ${lista}`
+  const candidatas = [
+    `${cat.descricao}. ${nucleo}, com o cálculo feito no seu navegador.`,
+    `${nucleo}, com o cálculo feito no seu navegador.`,
+    `${cat.descricao}. ${nucleo}.`,
+    `${nucleo}.`,
+  ]
+  return candidatas.find((d) => d.length <= DESCRICAO_MAX) ?? `${nucleo}.`
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -36,7 +67,7 @@ export async function generateMetadata({
   const cat = CATEGORIAS[categoria]
   return buildMetadata({
     title: `Calculadoras ${cat.label} Online e Grátis 2026`,
-    description: `${cat.descricao}. Todas as calculadoras ${cat.label.toLowerCase()} com tabelas 2026 atualizadas.`,
+    description: descricaoDaCategoria(categoria),
     path: `/categoria/${categoria}`,
   })
 }

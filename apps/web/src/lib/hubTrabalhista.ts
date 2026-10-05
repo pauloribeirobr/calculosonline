@@ -24,12 +24,15 @@ export const HUB_TRABALHISTA = {
   slug: 'calculadora-trabalhista-completa',
   path: '/calculadora-trabalhista-completa',
   titulo: 'Calculadora Trabalhista Completa',
-  tituloSeo: 'Calculadora Trabalhista Completa 2026 — Rescisão, 13º, Férias e FGTS',
+  // F77: eram 86 caracteres com o " | Calculos Online", acima do teto de 78 do
+  // `seo.ts` — o hub não passa por `buildCalculatorTitle`, e o SEO Analysis do
+  // BWT de 04/10 apontou "title too long". Férias e FGTS seguem na descrição;
+  // o 13º fica no title por causa da sazonalidade de nov/dez.
+  tituloSeo: 'Calculadora Trabalhista Completa 2026 — Rescisão e 13º',
   h1: 'Calculadora Trabalhista Completa',
   descricao:
     'Preencha seus dados uma vez e veja de uma só vez a rescisão, o 13º salário, as férias e o FGTS. Cálculo trabalhista completo pela CLT 2026, grátis e sem cadastro.',
-  descricaoCurta:
-    'Rescisão, 13º, férias e FGTS a partir dos mesmos dados, num fluxo só.',
+  descricaoCurta: 'Rescisão, 13º, férias e FGTS a partir dos mesmos dados, num fluxo só.',
   categoria: 'trabalhista' as CategoriaCalc,
   fonteJuridica:
     'CLT arts. 129–153 e 477–487 | Lei 4.090/1962 | Lei 4.749/1965 | Lei 8.036/1990 | Lei 12.506/2011',
@@ -62,12 +65,7 @@ export const HUB_TRABALHISTA = {
    * nasceria órfão, recebendo link só do rodapé, que é o erro que o F43
    * corrigiu no sentido oposto.
    */
-  calculadorasEncadeadas: [
-    'rescisao-trabalhista',
-    'decimo-terceiro',
-    'ferias',
-    'fgts',
-  ] as const,
+  calculadorasEncadeadas: ['rescisao-trabalhista', 'decimo-terceiro', 'ferias', 'fgts'] as const,
 } as const
 
 /** `true` nas calculadoras que o hub agrega — decide o CTA recíproco. */
