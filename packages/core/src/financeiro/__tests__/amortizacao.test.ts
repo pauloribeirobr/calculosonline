@@ -1,9 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import {
-  calcularAmortizacao,
-  calcularEmprestimo,
-  calcularFinanciamento,
-} from '../amortizacao'
+import { calcularAmortizacao, calcularEmprestimo, calcularFinanciamento } from '../amortizacao'
 
 describe('calcularAmortizacao', () => {
   describe('validação', () => {
@@ -58,10 +54,7 @@ describe('calcularAmortizacao', () => {
         sistema: 'price',
       })
       if (r.sucesso) {
-        expect(r.dados.dados.primeiraParcela).toBeCloseTo(
-          r.dados.dados.ultimaParcela,
-          1,
-        )
+        expect(r.dados.dados.primeiraParcela).toBeCloseTo(r.dados.dados.ultimaParcela, 1)
         expect(r.dados.dados.primeiraParcela).toBeGreaterThan(490)
         expect(r.dados.dados.primeiraParcela).toBeLessThan(510)
       }
@@ -115,9 +108,7 @@ describe('calcularAmortizacao', () => {
       })
       if (semSeg.sucesso && comSeg.sucesso) {
         expect(comSeg.dados.dados.totalSeguro).toBeGreaterThan(0)
-        expect(comSeg.dados.dados.totalPago).toBeGreaterThan(
-          semSeg.dados.dados.totalPago,
-        )
+        expect(comSeg.dados.dados.totalPago).toBeGreaterThan(semSeg.dados.dados.totalPago)
       }
     })
 
@@ -129,9 +120,7 @@ describe('calcularAmortizacao', () => {
         sistema: 'price',
       })
       if (semSeg.sucesso) {
-        const linha = semSeg.dados.detalhamento.find((d) =>
-          d.descricao.includes('Seguros'),
-        )
+        const linha = semSeg.dados.detalhamento.find((d) => d.descricao.includes('Seguros'))
         expect(linha).toBeUndefined()
       }
     })
@@ -160,4 +149,46 @@ describe('calcularAmortizacao', () => {
       expect(calcularFinanciamento).toBe(calcularAmortizacao)
     })
   })
+})
+
+describe('tabela de parcelas na evolução (F86)', () => {
+  it('expõe uma linha por parcela, e as parcelas somam o total pago', () => {
+    const r = calcularAmortizacao({
+      valorFinanciado: 100000,
+      taxaMensalJuros: 0.01,
+      prazoMeses: 120,
+      sistema: 'sac',
+    })
+    if (!r.sucesso) throw new Error('cálculo falhou')
+    const { evolucao } = r.dados
+    expect(evolucao?.linhas).toHaveLength(120)
+    const soma = evolucao!.linhas.reduce((t, l) => t + l.parcela!, 0)
+    expect(soma).toBeCloseTo(r.dados.resultado, 2)
+    expect(evolucao!.colunas.map((c) => c.chave)).not.toContain('seguro')
+  })
+})
+
+describe('última parcela quita o saldo (F86)', () => {
+  // Antes a última parcela repetia a PMT (Price) ou a amortização fixa (SAC),
+  // e o arredondamento deixava dívida (SAC: R$ 0,40 em R$ 100 mil / 120) ou
+  // amortizava a mais (Price: R$ 300.011,72 em R$ 300 mil / 360).
+  const casos = [
+    [100000, 0.01, 120],
+    [10000, 0.02, 24],
+    [300000, 0.009, 360],
+    [5000, 0.035, 12],
+  ] as const
+  for (const sistema of ['price', 'sac'] as const) {
+    for (const [valorFinanciado, taxaMensalJuros, prazoMeses] of casos) {
+      it(`${sistema}: R$ ${valorFinanciado} em ${prazoMeses} meses amortiza exatamente o valor financiado`, () => {
+        const r = calcularAmortizacao({ valorFinanciado, taxaMensalJuros, prazoMeses, sistema })
+        if (!r.sucesso) throw new Error('cálculo falhou')
+        const { tabela } = r.dados.dados
+        expect(tabela.at(-1)!.saldoDevedor).toBe(0)
+        const amortizado = tabela.reduce((t, p) => t + p.amortizacao, 0)
+        expect(amortizado).toBeCloseTo(valorFinanciado, 2)
+        expect(tabela.every((p) => p.saldoDevedor >= 0)).toBe(true)
+      })
+    }
+  }
 })

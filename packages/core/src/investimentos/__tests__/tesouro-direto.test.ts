@@ -211,3 +211,34 @@ describe('calcularTesouroDireto', () => {
     })
   })
 })
+
+describe('evolução mês a mês (F86)', () => {
+  it('a última linha bate com o detalhamento, inclusive a custódia', () => {
+    const r = calcularTesouroDireto({
+      valorInicial: 20000,
+      tipo: 'selic',
+      taxaAnual: 0,
+      prazoMeses: 18,
+    })
+    if (!r.sucesso) throw new Error('cálculo falhou')
+    const { dados, evolucao } = r.dados
+    expect(evolucao?.linhas).toHaveLength(18)
+    const ultima = evolucao!.linhas.at(-1)!
+    expect(ultima.montanteBruto).toBe(dados.montanteBruto)
+    expect(ultima.custodia).toBe(dados.custodia)
+    expect(ultima.ir).toBe(dados.ir)
+    expect(ultima.montanteLiquido).toBe(r.dados.resultado)
+    expect(evolucao!.colunas.map((c) => c.chave)).toContain('custodia')
+  })
+
+  it('esconde a coluna de custódia quando ela é isenta', () => {
+    const r = calcularTesouroDireto({
+      valorInicial: 5000,
+      tipo: 'selic',
+      taxaAnual: 0,
+      prazoMeses: 12,
+    })
+    if (!r.sucesso) throw new Error('cálculo falhou')
+    expect(r.dados.evolucao!.colunas.map((c) => c.chave)).not.toContain('custodia')
+  })
+})

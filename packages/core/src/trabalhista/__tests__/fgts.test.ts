@@ -274,3 +274,17 @@ describe('calcularFGTS', () => {
     })
   })
 })
+
+describe('depósitos mês a mês (F86)', () => {
+  it('o saldo da última linha é o saldo acumulado do detalhamento', () => {
+    const r = calcularFGTS({
+      salarioBruto: 3000,
+      mesesTrabalhados: 12,
+      modalidade: 'contribuicao_mensal',
+      saldoAtual: 1000,
+    })
+    if (!r.sucesso) throw new Error('cálculo falhou')
+    expect(r.dados.evolucao?.linhas).toHaveLength(12)
+    expect(r.dados.evolucao!.linhas.at(-1)!.saldo).toBe(r.dados.dados.saldoProjetado)
+  })
+})

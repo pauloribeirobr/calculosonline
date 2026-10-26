@@ -39,6 +39,30 @@ export function somarItens(itens: ItemValor[] | undefined): number {
   return (itens ?? []).reduce((total, item) => total + item.valor, 0)
 }
 
+export interface ColunaEvolucao {
+  /** Chave da coluna em cada linha de `TabelaEvolucao.linhas` */
+  chave: string
+  rotulo: string
+  /** `currency` por padrão; `integer` para o número do mês ou da parcela. */
+  formato?: 'currency' | 'integer'
+}
+
+/**
+ * Evolução do cálculo período a período (F86): saldo do investimento mês a
+ * mês, parcelas do financiamento, depósitos do FGTS.
+ *
+ * O detalhamento responde "quanto dá no fim"; a tabela responde "como chega
+ * lá", que é a pergunta de quem compara prazos ("e se eu resgatar no mês 8?").
+ * A **última linha bate com o detalhamento** (mesmos arredondamentos), e as
+ * colunas "do mês" somam o total exibido — os testes de cada motor travam
+ * isso.
+ */
+export interface TabelaEvolucao {
+  titulo: string
+  colunas: ColunaEvolucao[]
+  linhas: Array<Record<string, number>>
+}
+
 export type TipoPassoCalculo = 'entrada' | 'calculo' | 'resultado' | 'aviso'
 
 export interface PassoCalculo {
@@ -94,6 +118,8 @@ export interface ResultadoCalculo<T = unknown> {
   dados: T
   /** Detalhamento linha a linha do cálculo */
   detalhamento: ItemDetalhamento[]
+  /** Evolução período a período, nas calculadoras com prazo (F86) */
+  evolucao?: TabelaEvolucao
   /** Memória de cálculo pronta para UI, auditoria e futura API pública */
   memoriaCalculo?: MemoriaCalculo
   /** Fórmula ou base de cálculo aplicada */

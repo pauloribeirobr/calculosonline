@@ -26,6 +26,11 @@ que não cabe em nenhum dos outros três.
   nas páginas, conteúdo educativo. Entregas: F81 (IRPF da declaração 2027) e
   F82 (CDB com CDI de 10,65% → 13,65%, IR de 12 meses 20% → 17,5%, custódia do
   Tesouro Selic). **Sempre linkar a origem da informação na página.**
+  **Próxima entrega: F83, simulador do Tesouro Reserva** (`tesouro reserva`
+  49.500/mês, KD 36, SERP imatura), depois F84 (taxa em % nos formulários de
+  investimento) e F85 (Renda+/Educa+). F81 e F82 no ar, com IndexNow (26/10).
+  F86 (tabela mês a mês nas calculadoras com prazo + fix da última parcela da
+  amortização) feita em 26/10, fora da fila, a pedido do Paulo.
 - **▶ PROJETO RETOMADO em 25/10/2026** ("quero retomar o projeto… deixar
   funcionando ok"). Check-up da retomada: produção 200 em todas as rotas
   testadas, typecheck limpo, 533/533 no core, `feature/main` igual ao `main`.
@@ -1340,6 +1345,30 @@ assinar. **Próximos passos do foco:**
 - A taxa no formulário de CDB e Tesouro ainda é pedida "em decimal" (`0.12 =
   12%`): é o próximo atrito de UX do cluster.
 
+**Semrush de investimentos (fim da sessão, BR, bulk de 6 keywords).** Índice
+volume ÷ KD e cliques estimados na posição ~5 (CTR ~5%):
+
+| Keyword | Volume | KD | Vol ÷ KD | Cliques/mês na pos. ~5 |
+|---|---|---|---|---|
+| `tesouro reserva` | 49.500 | 36 | **1.375** | ~2.475 |
+| `simulador tesouro direto` | 14.800 | 60 | 247 | ~740 |
+| `calculadora cdb` | 8.100 | 51 | 159 | ~405 |
+| `tesouro renda+` | 1.300 | 37 | 35 | ~65 |
+| `cdb ou tesouro` | 70 | — | — | — |
+| `lci lca calculadora` | 0 | — | — | — |
+
+O Tesouro Reserva domina: produto novo, tendência em alta, 186 resultados
+contados pelo Semrush (SERP imatura) e uma página que ainda não temos. Viraram
+**F83** (Tesouro Reserva), **F84** (taxa em % e CDI/Selic editáveis, para
+`simulador tesouro direto` e `calculadora cdb`) e **F85** (Renda+/Educa+).
+**Descartados com número:** o comparador CDB × Tesouro (70/mês) e a
+calculadora de LCI/LCA nessa grafia (0). Vale testar outras grafias (`lci ou
+cdb`, `calculadora lci`) antes de fechar a porta. Ressalva: com AS 6, KD 36 é
+o teto do que já tentamos (a F68 entrou com KD 16-25), então a F83 também
+testa se a autoridade nova sustenta esse degrau. **IndexNow de `irpf`, `cdb`,
+`tesouro-direto` e `poupanca` disparado depois de conferir F81/F82 em produção
+(200).**
+
 **Fila da revisão de textos (premissa 2), por prioridade:** poupança (falta a
 revisão completa; nesta sessão só saíram os nomes de banco e uma frase
 quebrada), juros compostos, empréstimo e financiamento (fecham o cluster
@@ -1347,6 +1376,24 @@ financeiro) → 13º e o post do 13º (sazonal: 1ª parcela até 30/11) → sal�
 líquido, férias, hora extra, IRRF, INSS, rescisão → o resto. **Pendente da F80:**
 o FAQ dos dois empregos do INSS ("restituição na declaração do IRPF") segue
 sem fonte conferida.
+
+**F86 — tabela mês a mês (pedido do Paulo, mesma sessão).** Olhando o
+resultado do CDB, Paulo notou que as calculadoras financeiras deveriam ter
+uma tabela de progressão mês a mês, "em todas as calculadoras que mexem com
+tempo". Entrou em CDB, Tesouro, poupança, juros compostos, empréstimo,
+financiamento e FGTS. **Ficaram de fora de propósito** férias, 13º e rescisão
+(os meses ali são fração de direito, não uma série no tempo) e a calculadora de
+datas. **O porquê do formato:** no CDB e no Tesouro cada linha é "quanto eu
+levo se resgatar neste mês", e não só o saldo, porque a pergunta de quem
+investe é "e se eu precisar sair antes?"; a tabela mostra o IR caindo de faixa
+(mês 12 paga menos IR que o mês 11). **Duas lições:** (1) o motor de
+amortização já gerava a tabela de parcelas desde a Sprint 1.1 e ela nunca
+apareceu na tela; (2) expor a tabela revelou que a última parcela não quitava
+a dívida (resíduo de centavos a R$ 11,72), e que o exemplo do texto de
+empréstimo nunca tinha saído do motor. A fila de revisão de textos acima
+ganha um motivo para conferir empréstimo e financiamento pelo motor, e não
+só acrescentar exemplos. **Próximos passos possíveis** (não cadastrados):
+exportar a tabela em CSV e um gráfico de saldo no tempo.
 
 ### 2026-10-25 — Export com o projeto parado: o Bing perdeu os termos genéricos, e o checkpoint da F68 confirma o 10/10
 

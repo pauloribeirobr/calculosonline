@@ -4,6 +4,7 @@ import { useEffect, useState, type Ref } from 'react'
 import {
   ArrowUpTrayIcon,
   BookmarkIcon,
+  ChevronDownIcon,
   ExclamationTriangleIcon,
   PencilSquareIcon,
   TrashIcon,
@@ -202,6 +203,8 @@ export function CalculatorResult({
     }
   }
 
+  const evolucao = resultado.evolucao
+
   return (
     <div
       ref={ref}
@@ -281,6 +284,65 @@ export function CalculatorResult({
           })}
         </ul>
       </div>
+
+      {/*
+        Fechada por padrão: um financiamento de 35 anos tem 420 linhas, e o
+        detalhamento acima já responde quem só quer o total. Rola dentro da
+        própria caixa (cabeçalho fixo), para não empurrar a página nem estourar
+        a largura no celular (F86).
+      */}
+      {evolucao && evolucao.linhas.length > 0 && (
+        <details className="group border-t border-gray-100">
+          <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-sm font-medium text-brand-700 hover:bg-gray-50 [&::-webkit-details-marker]:hidden">
+            <span>
+              {evolucao.titulo}
+              <span className="ml-1 font-normal text-gray-500">
+                ({evolucao.linhas.length}{' '}
+                {evolucao.linhas.length === 1 ? 'linha' : 'linhas'})
+              </span>
+            </span>
+            <ChevronDownIcon
+              className="h-4 w-4 shrink-0 transition-transform group-open:rotate-180"
+              aria-hidden
+            />
+          </summary>
+          <div className="max-h-96 overflow-auto border-t border-gray-100">
+            <table className="w-full border-separate border-spacing-0 text-xs tabular-nums sm:text-sm">
+              <thead className="sticky top-0 bg-gray-50 text-gray-600">
+                <tr>
+                  {evolucao.colunas.map((coluna) => (
+                    <th
+                      key={coluna.chave}
+                      scope="col"
+                      className="whitespace-nowrap bg-gray-50 px-2 py-2 text-right font-medium first:sticky first:-left-px first:z-10 first:text-left sm:px-3"
+                    >
+                      {coluna.rotulo}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="text-gray-700">
+                {evolucao.linhas.map((linha, i) => (
+                  <tr key={i}>
+                    {evolucao.colunas.map((coluna) => (
+                      <td
+                        key={coluna.chave}
+                        // Mês/parcela fixo à esquerda: no celular a tabela
+                        // rola para o lado e a linha perderia a referência.
+                        // `border-separate` na tabela: com `collapse`, a célula
+                        // fixa deixa vazar o texto que passa por baixo dela.
+                        className="whitespace-nowrap border-b border-gray-100 px-2 py-1.5 text-right first:sticky first:-left-px first:bg-white first:text-left sm:px-3"
+                      >
+                        {formatarValor(linha[coluna.chave] ?? 0, coluna.formato ?? 'currency')}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </details>
+      )}
 
       <div className="border-t border-gray-100 bg-gray-50 px-4 py-3">
         {/*

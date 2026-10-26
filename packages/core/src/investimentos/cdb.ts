@@ -106,18 +106,37 @@ export function calcularCDB(params: CDBParams): ResultadoOuErro<CDBResultado> {
   }
 
   const taxaMensal = Math.pow(1 + taxaAnualEfetiva, 1 / 12) - 1
-  const montanteBruto = arredondar(
-    params.valorInicial * Math.pow(1 + taxaMensal, params.prazoMeses),
-  )
-  const rendimentoBruto = arredondar(montanteBruto - params.valorInicial)
-  const dias = diasDoPrazo(params.prazoMeses)
 
   // Como o parâmetro mínimo é 1 mês (30 dias), o IOF — que incide apenas
   // nos primeiros 30 dias — não se aplica no domínio coberto pelo calculador.
-  const prazoIR = getPrazoIR(dias)
-  const aliquotaIR = ALIQUOTAS_IR_REGRESSIVO[prazoIR]
-  const ir = arredondar(rendimentoBruto * aliquotaIR)
-  const montanteLiquido = arredondar(params.valorInicial + rendimentoBruto - ir)
+  const resgateNoMes = (mes: number) => {
+    const montanteBruto = arredondar(params.valorInicial * Math.pow(1 + taxaMensal, mes))
+    const rendimentoBruto = arredondar(montanteBruto - params.valorInicial)
+    const prazoIR = getPrazoIR(diasDoPrazo(mes))
+    const aliquotaIR = ALIQUOTAS_IR_REGRESSIVO[prazoIR]
+    const ir = arredondar(rendimentoBruto * aliquotaIR)
+    const montanteLiquido = arredondar(params.valorInicial + rendimentoBruto - ir)
+    return { montanteBruto, rendimentoBruto, prazoIR, aliquotaIR, ir, montanteLiquido }
+  }
+
+  // Cada linha é o resgate naquele mês, com a faixa de IR daquele prazo — o
+  // líquido dá um salto quando o prazo cruza 180, 360 e 720 dias.
+  const linhas: Array<Record<string, number>> = []
+  let brutoAnterior = params.valorInicial
+  for (let mes = 1; mes <= params.prazoMeses; mes++) {
+    const r = resgateNoMes(mes)
+    linhas.push({
+      mes,
+      rendimentoMes: arredondar(r.montanteBruto - brutoAnterior),
+      montanteBruto: r.montanteBruto,
+      ir: r.ir,
+      montanteLiquido: r.montanteLiquido,
+    })
+    brutoAnterior = r.montanteBruto
+  }
+
+  const { montanteBruto, rendimentoBruto, prazoIR, aliquotaIR, ir, montanteLiquido } =
+    resgateNoMes(params.prazoMeses)
   const rentabilidadeLiquida = arredondar((montanteLiquido / params.valorInicial - 1) * 100)
 
   const detalhamento: ItemDetalhamento[] = [
@@ -143,6 +162,17 @@ export function calcularCDB(params: CDBParams): ResultadoOuErro<CDBResultado> {
     dados: {
       resultado: montanteLiquido,
       detalhamento,
+      evolucao: {
+        titulo: 'Evolução mês a mês (resgate em cada mês)',
+        colunas: [
+          { chave: 'mes', rotulo: 'Mês', formato: 'integer' },
+          { chave: 'rendimentoMes', rotulo: 'Rendimento no mês' },
+          { chave: 'montanteBruto', rotulo: 'Saldo bruto' },
+          { chave: 'ir', rotulo: 'IR no resgate' },
+          { chave: 'montanteLiquido', rotulo: 'Líquido no resgate' },
+        ],
+        linhas,
+      },
       baseCalculo: `Taxa efetiva anual: ${(taxaAnualEfetiva * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}% a.a.`,
       fonteJuridica: 'Lei 11.033/2004 (IR regressivo) | Decreto 6.306/2007 (IOF)',
       dataReferencia: hojeISO(),
