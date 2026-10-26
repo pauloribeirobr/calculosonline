@@ -165,3 +165,14 @@ export function buildCalculatorTitle(calc: CalculadoraRegistro): string {
   const completo = `${nome} — Grátis, sem Cadastro`
   return completo.length + TITLE_TEMPLATE_LEN <= TITLE_MAX ? completo : `${nome} — Grátis`
 }
+
+/**
+ * H1 da página de calculadora. Desde a F67/F76 alguns `tituloLongo` já trazem
+ * "Online" (hora extra, férias, salário líquido), e o sufixo fixo
+ * " Online e Gratuita" produzia "Hora Extra Online Online e Gratuita" (F79).
+ */
+export function buildCalculatorH1(calc: CalculadoraRegistro): string {
+  return /\bOnline$/.test(calc.tituloLongo)
+    ? `${calc.tituloLongo} e Gratuita`
+    : `${calc.tituloLongo} Online e Gratuita`
+}

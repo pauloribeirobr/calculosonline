@@ -9,7 +9,7 @@ import { CalculatorIcon } from '@/components/common/CalculatorIcon'
 import { analytics } from '@/lib/analytics'
 import { buildShareUrl, readShareParam } from '@/lib/shareLink'
 import { salvarCalculo, removerCalculo } from '@/lib/calculationHistory'
-import { siteConfig } from '@/lib/seo'
+import { buildCalculatorH1, siteConfig } from '@/lib/seo'
 import { Breadcrumbs } from '@/components/common/Breadcrumbs'
 import { getCalculadoraForm } from './forms'
 
@@ -111,7 +111,7 @@ export function CalculadoraPageClient({ config, relacionadas }: Props) {
         <SharedDataReader onData={setSharedData} onCalcId={setPendingCalcId} />
       </Suspense>
       <CalculatorLayout
-        titulo={`${config.tituloLongo} Online e Gratuita`}
+        titulo={buildCalculatorH1(config)}
         descricao={config.descricao}
         icone={<CalculatorIcon icon={config.icone} categoria={config.categoria} size="xl" />}
         fonteJuridica={config.fonteJuridica}

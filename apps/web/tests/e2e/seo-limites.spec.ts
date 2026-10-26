@@ -39,6 +39,10 @@ test('toda página do sitemap respeita os limites de title e description', async
     if (descricao.length < DESCRICAO_MIN) {
       problemas.push(`${path}: description com ${descricao.length} — ${descricao}`)
     }
+    // F79: "Hora Extra Online Online e Gratuita" ficou no ar de 22/09 a 25/10.
+    const h1 = (await page.locator('h1').first().textContent()) ?? ''
+    const repetida = h1.match(/\b(\p{L}+)\s+\1\b/iu)
+    if (repetida) problemas.push(`${path}: H1 repete "${repetida[1]}" — ${h1}`)
   }
   expect(problemas, problemas.join('\n')).toEqual([])
 })

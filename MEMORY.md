@@ -34,11 +34,11 @@ que não cabe em nenhum dos outros três.
   este site passa a calcular com a de 2026 — decidir entre atualizar só as
   tabelas ou pôr aviso de "valores de 2026". Os itens abaixo são o estado em
   que o projeto parou.
-- **Export de 25/10 (projeto já parado): o Bing caiu 34% desde o pico**
-  (357 → 233 impressões/dia útil). Os termos genéricos curtos
-  (`calculadora inss`, `calcular férias`, `calculo de ferias`) não ganharam
-  nenhuma impressão depois de 08/10, enquanto as variantes com "2026" seguem
-  crescendo. No Google, `datas` tem 2.442 impressões @ 9,0 e 2 cliques. É o
+- **Export de 25/10: o Bing caiu 34% desde o pico**
+  (357 → 233 impressões/dia útil). ~~Os genéricos curtos não ganharam nenhuma
+  impressão depois de 08/10~~: **errado, desmentido na mesma sessão** pelo
+  export por página (Diário de 25/10, item 8). A página do INSS segue no fundo
+  da página 1 do Bing (305 impressões @ 8,1, `calculadora inss` 15 @ 9,9). No Google, `datas` tem 2.442 impressões @ 9,0 e 2 cliques. É o
   checkpoint da F68, e o veredito é o mesmo de 10/10. A novidade é o
   `tesouro-direto` (`simulador tesouro direto grátis` 108 @ 11,1, 4 cliques na
   página). A F75 funcionou: `resource_error` 267 → 81 e `exception` 50 → 3.
@@ -1289,7 +1289,8 @@ quais termos saíram.**
 | 19/10 (seg-sex) | 1.166 | 19 | **233** | 1,63% |
 
 Total 08/09→23/10: **10.764 impressões e 176 cliques**. As semanas até 05/10
-batem com o export de 10/10. Como o export das keywords começa no mesmo 08/09
+batem com o export de 10/10. **⚠️ A leitura a seguir (zero impressão depois de
+08/10) foi desmentida no item 8 e fica como erro de método.** Como o export das keywords começa no mesmo 08/09
 nas duas rodadas, **keyword com o mesmo número nos dois exports teve zero
 impressão de 09/10 a 23/10.** É o caso dos três genéricos que estavam no fundo
 da página 1: `calculadora inss` 121 @ 9,2, `calculo de ferias` 73 @ 9,1 e
@@ -1432,7 +1433,70 @@ mandar pouco tráfego** (a posição 60-90 do trabalhista é autoridade, parte 9
 de 22/09), mas era um defeito real em toda página, e o mais barato de
 corrigir.
 
+**7. Investigação da queda de INSS e hora extra (mesma sessão): a causa não
+está no código.** O INSS não é tocado desde 13/09 (F64: `inss.mdx`, form, core
+e registry). A hora extra não é tocada desde 22/09 (F67). As duas páginas,
+vistas como `bingbot` em produção, respondem 200, sem `noindex` nem
+`X-Robots-Tag`, com canonical correto e JSON-LD válido. A única mudança
+sitewide perto de 08/10 é o `seoRefreshDate` do sitemap, que foi para 04/10 em
+todas as URLs com a F77, sem mudar conteúdo no INSS. Isso não explica uma
+queda de 88%. **O que a investigação achou foi outro defeito, a F79:** o H1 de
+hora extra, férias e salário líquido dizia "… Online Online e Gratuita". Mas a
+hora extra chegou ao pico de 161 citações já com ele, então ele não é a causa.
+Também há dois `BreadcrumbList` por página (`JsonLd.tsx` e `Breadcrumbs.tsx`).
+São consistentes entre si, e ficaram como estão. **Hipótese que sobra:** a
+perda foi do lado do Bing (concorrente novo ou reavaliação). Com o padrão do
+item 5, a candidata natural é uma página de "calculadora X" mais forte que a
+nossa. **Para fechar, precisa de dado externo:** o BWT diário filtrado pelas
+páginas `inss` e `hora-extra` (para datar a queda) e a SERP de `calculadora
+inss` no Semrush (para ver quem entrou).
+
+**8. `gsc/pasta-02/` + Semrush (mesma sessão): a página do INSS não saiu do
+Bing, e o item 1 estava errado.** Vieram dois relatórios de keywords do BWT
+filtrados por página. O período não vem no arquivo, mas é recente.
+- **INSS: 42 keywords, 305 impressões @ 8,1, 4 cliques.** `calcular inss` 41
+  @ 9,0, `calculadora inss 2026` 41 @ 9,1, `calcular inss 2026` 34 @ 7,8 (2),
+  `calculo inss autônomo` 18 @ 6,1, `simulador contribuicao inss` 17 @ 6,2 (1),
+  **`calculadora inss` 15 @ 9,9**. Ou seja, `calculadora inss` **teve**
+  impressão depois de 08/10, e a conclusão do item 1 está errada. **Erro de
+  método:** número idêntico no export geral de keywords do BWT entre duas
+  rodadas **não** prova zero impressão no intervalo. Esse export não se comporta
+  como série acumulada. Para datar, só serve o filtro por página ou por data.
+- **Hora extra: 54 keywords, 137 impressões @ 7,7, 8 cliques**, todas de
+  cauda (`hora de fechar extra` 17 @ 6,3, `calculadora hora extra` 8 @ 7,1).
+- **Leitura revisada:** no Bing, a página do INSS está onde estava, no fundo da
+  página 1 e quase sem clique. **A queda é na citação de IA (103 → 12), não na
+  busca.** A queda de impressões do Bing no site (item 1) segue sem causa
+  identificada.
+- **SERP do Google para `calculadora inss` (Semrush, BR): não estamos no top
+  40, e metade da SERP é simulação de aposentadoria.** gov.br "simular
+  aposentadoria" (2º), escritórios de advocacia previdenciária (6º, 7º, 9º,
+  16º), notícias da calculadora do Meu INSS (SBT, Veja, Bem Paraná) e o app
+  na Play Store. Quem calcula contribuição: `coalize` (1º, AS 39), `ecalculos`
+  (3º, AS 26), `calcule.net` (4º, AS 36), `calculojuridico` (5º, alíquota
+  efetiva). **Há domínios de AS 7-13 no top 30** (`galvaoadvprevidenciaria`
+  AS 11 em 7º, `seroassessoria` 13 em 10º, `11calculadoras` 9 em 28º,
+  `calculadoraexata` 7 em 29º), então a cabeça do INSS não é inalcançável por
+  autoridade. O AI Overview aparece no topo. Do 31º em diante há páginas de spam
+  em domínios de prefeitura hackeados.
+- **A SERP achou a F80:** ao conferir o que a página diz sobre aposentadoria,
+  o `inss.mdx` afirmava "100 pontos em 2026" (o certo é 93/103). Corrigido com
+  a EC 103/2019 conferida no Planalto. **Método que funcionou:** o `WebFetch`
+  no Planalto dá ECONNRESET e o gov.br (INSS, Previdência) devolve "Conteúdo
+  Restrito", mas **`curl -A 'Mozilla/5.0'` no Planalto responde 200**. Fica
+  como o caminho para conferir lei daqui em diante.
+- **Semrush Domain Overview (BR, desktop, 24/10):** **Authority Score 2 → 6**
+  (primeira vez que sai do 2), domínios referentes 198 → 246, backlinks 417,
+  keywords orgânicas 240 → 249 (já com algumas no top 3), **tráfego estimado
+  70/mês** (+1.650%, o salto é do fim de setembro, que é a F68). A estimativa é
+  otimista: o GSC real dá ~8 cliques por mês. AI Visibility 0 (1 página citada
+  no ChatGPT), igual a 21/09: a IA do Google segue zero, e a nossa IA continua
+  sendo o Bing/Copilot.
+
 **O que pedir no próximo export:**
+- **BWT → Desempenho da pesquisa filtrado por página (`/calculadora/inss` e
+  `/calculadora/hora-extra`), diário, desde 08/09**, e a SERP de
+  `calculadora inss` no Semrush (item 7).
 - **BWT → AI Performance (desde 01/10)**: segue pendente desde 10/10. Agora
   serve para conferir no BWT a queda de hora extra e INSS do item 5.
 - **BWT → keywords por página de `ferias` e `inss`**, para ver se os genéricos
