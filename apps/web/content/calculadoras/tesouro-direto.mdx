@@ -2,170 +2,202 @@
 
 Esta página funciona como **simulador de Tesouro Direto**: você informa o valor, o
 prazo e a taxa, e a simulação devolve o rendimento bruto, o IR regressivo, a taxa de
-custódia da B3 e o valor líquido no resgate. É a mesma conta do simulador oficial do
-Tesouro Nacional, com o passo a passo aberto para você conferir cada linha.
+custódia da B3 e o valor líquido no resgate, com o passo a passo aberto para você
+conferir cada linha.
 
+**Exemplo rápido:** R$ 1.000 no Tesouro Selic por 12 meses, com a Selic a 13,75% ao ano,
+rendem R$ 137,50 brutos. Saem R$ 24,06 de IR (17,5%, porque 12 meses passam de 360 dias) e
+nada de custódia (o Tesouro Selic é isento até R$ 10.000). Você resgata **R$ 1.113,44**.
+
+A simulação usa a meta Selic do Copom em 26/10/2026, 13,75% ao ano
+([Banco Central](https://www.bcb.gov.br/controleinflacao/historicotaxasjuros)). Ela muda a
+cada reunião do Copom, e o resultado muda junto.
 
 O **Tesouro Direto** é o programa do governo federal para venda de títulos públicos a
-pessoas físicas via internet, criado em 2002. É considerado o investimento de menor risco
-do Brasil — pois o emissor é o próprio Tesouro Nacional.
+pessoas físicas pela internet. Quem paga é o Tesouro Nacional, por isso é considerado o
+investimento de menor risco de crédito do país.
 
 ## Tipos de títulos do Tesouro Direto
 
 ### Tesouro Selic (LFT)
 
-- **Rentabilidade:** Taxa Selic + pequena sobretaxa (~0,01% a.a.)
-- **Liquidez:** Diária (resgate a qualquer dia útil)
-- **Risco de mercado:** Mínimo — não perde marcação a mercado
-- **Indicado para:** Reserva de emergência, prazo curto/indefinido
-- **Imposto:** Tabela regressiva de IR
+- **Rende:** a Selic do período, mais uma pequena taxa que muda a cada dia
+- **Resgate:** em qualquer dia útil
+- **Oscilação de preço:** muito pequena, por isso serve para dinheiro que pode ser
+  usado a qualquer hora
+- **Serve para:** reserva de emergência e objetivos sem data certa
 
-O Tesouro Selic é o título mais seguro e líquido. Mesmo resgatado antes do vencimento,
-rende próximo da Selic acumulada, sem perdas por marcação a mercado.
+**Exemplo:** R$ 1.000 resgatados depois de 6 meses viram R$ 1.053,23 líquidos. O IR é
+maior (20%) porque o prazo foi curto, mas o valor não caiu por ter saído antes.
+
+### Tesouro Reserva
+
+Título lançado para a reserva de emergência: **aplicação e resgate a partir de R$ 1,00**,
+com resgate imediato. Tem a mesma isenção de custódia até R$ 10.000, IR regressivo e IOF
+só se o resgate for nos primeiros 30 dias. Fonte:
+[Tesouro Reserva no site do Tesouro Direto](https://www.tesourodireto.com.br/en/tesouro-reserva).
 
 ### Tesouro Prefixado (LTN)
 
-- **Rentabilidade:** Taxa fixa definida no momento da compra — ex.: 12,5% a.a.
-- **Liquidez:** Diária, mas com marcação a mercado
-- **Risco de mercado:** Alto — se a Selic subir, o preço do título cai
-- **Indicado para:** Quem acredita em queda da Selic e pode carregar até o vencimento
+- **Rende:** uma taxa fixa, combinada no dia da compra (ex.: 13% ao ano)
+- **Resgate:** em qualquer dia útil, mas pelo preço do dia (veja "marcação a mercado")
+- **Serve para:** meta com data certa, levando o título até o vencimento
 - **Versão com juros semestrais:** Tesouro Prefixado com Juros Semestrais (NTN-F)
 
-**Atenção ao resgate antecipado:** se você comprar Tesouro Prefixado a 12% e a Selic subir
-para 14%, seu título valerá menos no mercado secundário — você pode ter rentabilidade
-negativa se vender antes do vencimento.
+**Exemplo:** R$ 5.000 a 13% ao ano por 3 anos viram R$ 7.214,49 brutos. Saem R$ 332,17 de
+IR (15%) e R$ 30,00 de custódia: você recebe **R$ 6.852,32** no vencimento.
 
 ### Tesouro IPCA+ (NTN-B Principal)
 
-- **Rentabilidade:** IPCA + taxa fixa — ex.: IPCA + 6,5% a.a.
-- **Liquidez:** Diária, com marcação a mercado
-- **Risco de mercado:** Médio — o IPCA protege da inflação, mas a marcação a mercado oscila
-- **Indicado para:** Objetivos de longo prazo (aposentadoria, compra de imóvel em 10+ anos)
-- **Versão com juros semestrais:** Tesouro IPCA+ com Juros Semestrais (NTN-B) — paga cupons a cada 6 meses
+- **Rende:** a inflação (IPCA) mais uma taxa fixa (ex.: IPCA + 6% ao ano)
+- **Resgate:** em qualquer dia útil, pelo preço do dia
+- **Serve para:** objetivos longos, como aposentadoria, protegendo o poder de compra
+- **Versão com juros semestrais:** Tesouro IPCA+ com Juros Semestrais (NTN-B)
+
+### Tesouro Educa+ e Tesouro Renda+
+
+Versões do IPCA+ que, em vez de pagar tudo de uma vez, pagam uma **renda mensal**: o
+Educa+ por 5 anos (para a faculdade de um filho, por exemplo) e o Renda+ por 20 anos
+(complemento de aposentadoria). A custódia é diferente dos demais: **zero** para quem
+leva até o vencimento, e isenção nas rendas de até 4 salários mínimos (Educa+) ou 6
+(Renda+). Fonte: [tarifas do Tesouro Direto na B3](https://www.b3.com.br/pt_br/produtos-e-servicos/tarifas/tarifas-de-tesouro-direto/).
 
 ## Tabela regressiva de IR no Tesouro Direto
 
-Igual à de outros títulos de renda fixa:
+A mesma de toda renda fixa: quanto mais tempo o dinheiro fica, menor o imposto.
 
-| Prazo de investimento | Alíquota IR |
-|---|:---:|
-| Até 180 dias | 22,5% |
-| 181 a 360 dias | 20% |
-| 361 a 720 dias | 17,5% |
-| Acima de 720 dias | 15% |
+| Prazo de investimento | Alíquota IR | Sobre R$ 100 de rendimento |
+|---|:---:|:---:|
+| Até 180 dias (até 5 meses) | 22,5% | R$ 22,50 |
+| 181 a 360 dias (6 a 11 meses) | 20% | R$ 20,00 |
+| 361 a 720 dias (12 a 23 meses) | 17,5% | R$ 17,50 |
+| Acima de 720 dias (24 meses ou mais) | 15% | R$ 15,00 |
 
-Além do IR, incide **IOF para resgates em menos de 30 dias** (mesma tabela do CDB).
+O imposto incide só sobre o **rendimento**, nunca sobre o valor aplicado. E há **IOF**
+se o resgate for nos primeiros 30 dias. Fonte: Lei 11.033/2004, art. 1º
+([Planalto](https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2004/lei/l11033.htm)).
 
 ## Taxa de custódia da B3
 
-A B3 (bolsa de valores) cobra uma **taxa de custódia de 0,20% ao ano** sobre o valor dos
-títulos do Tesouro Direto. A taxa é cobrada semestralmente (jan e jul) e sobre o Tesouro Selic.
+A B3 cobra **0,20% ao ano** sobre o valor dos títulos. A taxa é calculada todo dia, mas
+só é descontada quando você **vende, quando o título vence ou quando ele paga juros**.
 
-Existem isenções de taxa de custódia para:
-- Investidores com até R$ 10.000 em Tesouro Selic (isenção criada em 2023)
-- Alguns bancos e corretoras que subsidiam a taxa (XP, BTG, Rico, Easynvest/Toro, etc.)
+- **Tesouro Selic:** isento até **R$ 10.000 por CPF**. Acima disso, a taxa vale só sobre
+  o que passar de R$ 10.000.
+- **Tesouro Reserva:** mesma isenção de R$ 10.000.
+- **Educa+ e Renda+:** regras próprias, descritas acima.
 
-**Dica:** prefira corretoras que não cobram taxa de custódia adicional além da B3.
+**Exemplo:** R$ 20.000 no Tesouro Selic por 2 anos. Os primeiros R$ 10.000 não pagam
+nada; os outros R$ 10.000 pagam 0,20% ao ano: **R$ 40,00** no total.
+
+Fonte: [tarifas do Tesouro Direto na B3](https://www.b3.com.br/pt_br/produtos-e-servicos/tarifas/tarifas-de-tesouro-direto/).
 
 ## Como investir no Tesouro Direto
 
-1. Abra conta em uma corretora ou banco cadastrado no Tesouro Direto (acesse: tesouro.fazenda.gov.br)
-2. Transfira recursos para a corretora
-3. Escolha o título conforme seu objetivo e prazo
-4. Compre no valor mínimo (fração do título — geralmente R$ 30 a R$ 100)
-5. Acompanhe pelo site do Tesouro ou pelo app da corretora
+1. Abra conta em um banco ou corretora habilitado no Tesouro Direto (a lista fica no
+   [site do Tesouro Direto](https://www.tesourodireto.com.br))
+2. Transfira o dinheiro para essa conta
+3. Escolha o título conforme o objetivo e o prazo
+4. Compre a partir de cerca de R$ 30 (1% do preço do título), ou R$ 1 no Tesouro Reserva
+5. Acompanhe pelo app da instituição ou pelo site do Tesouro
 
-Não é necessário aplicar o valor inteiro do título — vende-se frações.
+Não é preciso comprar um título inteiro: dá para comprar frações.
 
 ## Tesouro Direto vs. CDB: comparativo
 
-| | Tesouro Selic | CDB 100% CDI | CDB 110% CDI |
-|---|:---:|:---:|:---:|
-| Segurança | Máxima (governo federal) | Alta (FGC até R$ 250k) | Alta (FGC até R$ 250k) |
-| Liquidez | Diária | Diária (depende) | Depende do prazo |
-| IR (2+ anos) | 15% | 15% | 15% |
-| Taxa extra | Custódia B3 0,20% a.a. | Nenhuma | Nenhuma |
-| Rendimento líquido est. | ~Selic − 0,20% − IR | ~Selic − IR | ~1,1 × Selic − IR |
+| | Tesouro Selic | CDB 100% do CDI |
+|---|:---:|:---:|
+| Quem garante | Tesouro Nacional | FGC, até R$ 250 mil por CPF e instituição |
+| Liquidez | Diária | Depende do CDB |
+| IR | Tabela regressiva | Tabela regressiva |
+| Custódia B3 | 0,20% a.a. sobre o que passa de R$ 10 mil | Não tem |
 
-Para valores acima de R$ 250.000, o Tesouro Selic é mais seguro que um único CDB.
-Para valores menores, o CDB 110%+ CDI tende a render mais no longo prazo.
+Selic e CDI andam quase juntos: em 26/10/2026, 13,75% e 13,65% ao ano
+([Banco Central](https://www.bcb.gov.br/controleinflacao/historicotaxasjuros)).
+Com R$ 10.000 por 12 meses, o Tesouro Selic devolve R$ 11.134,37 e um CDB de 100% do CDI,
+R$ 11.126,12. Na prática, a comparação é: o CDB paga mais ou menos que
+100% do CDI, e você vai ter mais ou menos de R$ 10 mil no Tesouro Selic? Simule os dois
+com o mesmo valor e prazo, aqui e na [calculadora de CDB](/calculadora/cdb).
 
 ## O que é marcação a mercado?
 
-O preço dos títulos prefixados e IPCA+ varia diariamente conforme as expectativas de juros
-futuros. Se os juros sobem, o preço dos títulos cai (e vice-versa). Isso é a **marcação
-a mercado**.
+É o preço do título mudando todo dia conforme os juros do mercado. Afeta principalmente o
+Prefixado e o IPCA+.
 
-Se você mantiver o título até o vencimento, receberá exatamente a taxa contratada — sem
-perdas. Mas se precisar vender antes, o preço de mercado pode ser menor (ou maior) que o
-que você pagou.
+**Exemplo:** um Tesouro Prefixado paga R$ 1.000 no vencimento, daqui a 2 anos. Comprado a
+12% ao ano, ele custa hoje cerca de R$ 797. Um ano depois:
+- se os juros continuarem em 12%, ele vale cerca de R$ 893;
+- se os juros subirem para 14%, ele vale cerca de R$ 877.
+
+Quem vende nessa hora recebe menos do que esperava. **Quem segura até o vencimento recebe
+os R$ 1.000 combinados**, não importa o que os juros fizeram no caminho.
 
 ## Vale a pena investir no Tesouro Direto?
 
-Como qualquer investimento, depende do prazo e do objetivo — e a resposta muda
-por título, não pelo Tesouro Direto como um todo:
+Depende do prazo e do objetivo, e a resposta muda por título:
 
-| Objetivo | Título indicado | Por quê |
+| Objetivo | Título que costuma servir | Por quê |
 |---|---|---|
-| Reserva de emergência | Tesouro Selic | Não perde valor no resgate antecipado |
+| Reserva de emergência | Tesouro Selic ou Reserva | O valor quase não oscila no resgate |
 | Meta com data certa (curso, viagem) | Tesouro Prefixado | Você sabe hoje quanto terá no vencimento |
-| Aposentadoria, longo prazo | Tesouro IPCA+ | Protege o poder de compra da inflação |
+| Aposentadoria, longo prazo | Tesouro IPCA+ ou Renda+ | Protege o poder de compra da inflação |
 
-Três pontos que costumam decidir a comparação com outros investimentos: o risco
-é o menor do mercado (garantia do Tesouro Nacional, acima até do FGC), o
-aporte mínimo é de cerca de R$ 30, e a liquidez é diária — o Tesouro recompra
-qualquer título em D+1.
+A favor: risco de crédito do governo federal, aplicação a partir de poucos reais e
+recompra pelo Tesouro todo dia útil. Contra: IR regressivo e custódia (os dois já entram
+na simulação), e a marcação a mercado de quem vende Prefixado ou IPCA+ antes do vencimento.
 
-O que pesa contra: há taxa de custódia da B3 e Imposto de Renda regressivo, os
-dois já considerados na simulação acima. E título prefixado ou IPCA+ resgatado
-antes do vencimento sofre marcação a mercado, que pode devolver menos do que se
-esperava — o assunto da seção anterior.
+Esta página é educativa e não recomenda investimento: compare custos e prazos antes de
+aplicar.
 
 ## Perguntas frequentes sobre Tesouro Direto
 
 **Qual o melhor título para investir no Tesouro Direto?**
 
-Depende do prazo, não do rendimento anunciado. Para reserva de emergência, Tesouro Selic —
-é o único que não perde valor no resgate antecipado. Para meta com data certa, Prefixado,
-porque você sabe hoje quanto terá no vencimento. Para longo prazo e aposentadoria, IPCA+,
-que protege o poder de compra.
+Depende de quando você vai usar o dinheiro. Se for a reserva para imprevistos, o Tesouro
+Selic: R$ 1.000 resgatados em 6 meses viram R$ 1.053,23, sem perda por sair antes. Se
+for uma viagem daqui a 3 anos, o Prefixado: R$ 5.000 a 13% ao ano viram R$ 6.852,32
+líquidos no vencimento, e você sabe disso no dia da compra. Para a aposentadoria, o
+IPCA+, que acompanha a inflação.
 
 **Quanto preciso para começar a investir no Tesouro Direto?**
 
-Cerca de R$ 30 — é possível comprar frações de 1% de um título. É o menor aporte inicial
-entre os investimentos de renda fixa com garantia soberana.
+Cerca de R$ 30 na maioria dos títulos, porque dá para comprar 1% de um título. No
+Tesouro Reserva, R$ 1. Com R$ 100 no Tesouro Selic por um ano, você resgata R$ 111,34
+líquidos.
 
 **O Tesouro Direto pode quebrar?**
 
-O Tesouro Direto é emitido pelo governo federal. Para o Tesouro "quebrar", o governo
-federal precisaria dar um calote na dívida interna — um evento raro mas não impossível
-historicamente. No Brasil, isso nunca ocorreu com dívida interna em reais. É considerado
-o investimento mais seguro do país.
-
-**Qual o valor mínimo para investir?**
-
-O investimento mínimo é de R$ 30,00 (ou 1% do valor de face do título, o que for maior).
-Não há valor máximo por CPF, mas há limites mensais de compra (R$ 1.000.000 por mês).
+O risco é o do governo federal deixar de pagar a própria dívida. Por isso o Tesouro é
+considerado o investimento de menor risco de crédito do país, e serve de referência para
+todos os outros. Ele não tem garantia do FGC porque não precisa: o FGC cobre bancos, e
+quem paga o Tesouro é o próprio governo.
 
 **Tesouro Direto paga mensalmente?**
 
-Apenas os títulos com juros semestrais (NTN-B e NTN-F) pagam cupons periódicos. O Tesouro
-Selic, Prefixado simples e IPCA+ Principal pagam tudo no vencimento (ou no resgate).
+O Educa+ e o Renda+ pagam uma renda mensal na fase de recebimento. Os títulos "com juros
+semestrais" pagam a cada 6 meses: no IPCA+ com Juros Semestrais, a taxa é de 6% ao ano,
+cerca de 2,96% por semestre. Com R$ 10.000 aplicados, dá uns R$ 296 brutos por semestre,
+mais a correção pela inflação. Os demais pagam tudo no vencimento ou na venda.
+
+**Quanto de imposto eu pago no Tesouro Direto?**
+
+Depende de quanto tempo o dinheiro fica. Em R$ 137,50 de rendimento em 12 meses, saem
+R$ 24,06 (17,5%). Se o dinheiro ficasse mais de 2 anos, a alíquota cairia para 15%. O imposto é
+descontado automaticamente no resgate, e não precisa de DARF.
 
 **Posso usar Tesouro Direto como garantia?**
 
-Sim. Alguns brokers permitem usar Tesouro Selic como margem para operações de day trade ou
-outras operações. Verifique com sua corretora as condições específicas.
+Algumas corretoras aceitam o Tesouro Selic como garantia de outras operações na bolsa.
+As regras e o percentual aceito variam por instituição.
 
 **Como declarar Tesouro Direto no IRPF?**
 
-Declare na ficha "Bens e Direitos" como "Títulos públicos". Os rendimentos (IR retido)
-aparecem no informe de rendimentos da corretora e devem ser lançados em "Rendimentos
-Sujeitos à Tributação Exclusiva na Fonte".
+Em "Bens e Direitos", pelo valor que você pagou, não pelo valor atual. Quem aplicou
+R$ 5.000 e viu o saldo chegar a R$ 5.400 declara R$ 5.000. Os rendimentos já
+tributados no resgate vão em "Rendimentos Sujeitos à Tributação Exclusiva", com os
+números do informe de rendimentos da instituição.
 
 **Qual a diferença entre esta calculadora e o simulador do Tesouro Direto oficial?**
 
-A conta é a mesma. A diferença é que aqui a simulação mostra a memória de cálculo aberta
-— quanto saiu de IR em cada faixa da tabela regressiva e quanto foi de taxa de custódia
-da B3 —, enquanto o simulador oficial devolve só o valor final. Nenhum dos dois exige
-cadastro para simular.
+A conta é a mesma. Aqui a simulação mostra cada linha aberta: quanto saiu de IR, em qual
+faixa da tabela, e quanto foi de custódia. Nenhum dos dois exige cadastro para simular.

@@ -124,10 +124,71 @@ describe('calcularIRPF', () => {
         numeroDependentes: 0,
       })
       if (r.sucesso) {
-        // base simpl = 300000 - cap = 300000 - 16754.34 ≈ 283245.66
-        // faixa max: aliquota 0.275, dedução anual 908.73*12
+        // base simpl = 300000 - 17640 = 282360 → 27,5% − 10.904,66
         expect(r.dados.dados.impostoDevidoSimplificado).toBeGreaterThan(50000)
       }
+    })
+  })
+
+  // F81: valores conferidos à mão contra a tabela anual do exercício 2027
+  // publicada pela Receita e o art. 11-A da Lei 9.250/1995 (Lei 15.270/2025).
+  describe('declaração 2027 (ano-calendário 2026)', () => {
+    const simplificado = (rendimentosTributaveis: number) => {
+      const r = calcularIRPF({ rendimentosTributaveis, irrfRetidoFonte: 0, numeroDependentes: 0 })
+      if (!r.sucesso) throw new Error('falhou')
+      return r.dados.dados
+    }
+
+    it('desconto simplificado limitado a R$ 17.640,00', () => {
+      expect(DEDUCAO_SIMPLIFICADA_MAX_2026).toBe(17640)
+      expect(simplificado(100000).deducaoSimplificada).toBe(17640)
+    })
+
+    it('R$ 60.000: a tabela dá exatamente R$ 2.694,15, e a redução zera', () => {
+      const d = simplificado(60000)
+      expect(d.baseSimplificada).toBe(48000)
+      expect(d.reducaoSimplificado).toBe(2694.15)
+      expect(d.impostoDevidoSimplificado).toBe(0)
+    })
+
+    it('abaixo de R$ 60.000 a redução fica limitada ao imposto apurado', () => {
+      // base 40.000 × 15% − 4.729,91 = 1.270,09
+      const d = simplificado(50000)
+      expect(d.reducaoSimplificado).toBe(1270.09)
+      expect(d.impostoDevidoSimplificado).toBe(0)
+    })
+
+    it('entre R$ 60.000 e R$ 88.200 a redução é 8.429,73 − 0,095575 × rendimentos', () => {
+      // base 64.000 × 27,5% − 10.904,66 = 6.695,34; redução 8.429,73 − 7.646,00 = 783,73
+      const d = simplificado(80000)
+      expect(d.reducaoSimplificado).toBe(783.73)
+      expect(d.impostoDevidoSimplificado).toBe(5911.61)
+    })
+
+    it('acima de R$ 88.200 não há redução', () => {
+      // base 82.360 × 27,5% − 10.904,66 = 11.744,34
+      const d = simplificado(100000)
+      expect(d.reducaoSimplificado).toBe(0)
+      expect(d.impostoDevidoSimplificado).toBe(11744.34)
+    })
+
+    it('a redução usa o rendimento bruto também no modelo completo', () => {
+      // deduções 7.000 + 2.275,08 = 9.275,08; base 60.724,92 × 27,5% − 10.904,66 = 5.794,69
+      // redução 8.429,73 − 0,095575 × 70.000 = 1.739,48
+      const r = calcularIRPF({
+        rendimentosTributaveis: 70000,
+        irrfRetidoFonte: 5000,
+        numeroDependentes: 1,
+        contribuicaoINSS: 7000,
+      })
+      if (!r.sucesso) throw new Error('falhou')
+      expect(r.dados.dados.reducaoCompleto).toBe(1739.48)
+      expect(r.dados.dados.impostoDevidoCompleto).toBe(4055.21)
+      expect(r.dados.dados.impostoDevidoSimplificado).toBe(2755.86)
+      expect(r.dados.dados.modeloIndicado).toBe('simplificado')
+      expect(r.dados.detalhamento.map((i) => i.descricao)).toContain(
+        'Completo — Redução da Lei 15.270/2025',
+      )
     })
   })
 

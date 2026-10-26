@@ -11,15 +11,16 @@
 
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
 import { arredondar, hojeISO } from '../utils'
+import { REFERENCIAS_MERCADO } from './referencias'
 
-export const SELIC_REFERENCIA_2026 = 0.1325
+export const SELIC_REFERENCIA_2026 = REFERENCIAS_MERCADO.selicAnual
 export const LIMITE_REGRA_NOVA = 0.085
 
 export interface PoupancaParams {
   valorInicial: number
   prazoMeses: number
   aporteMensal?: number
-  /** SELIC anual atual (default: 13,25% — referência 2026) */
+  /** SELIC anual atual (default: a de `referencias.ts`) */
   selicAnual?: number
   /** TR (Taxa Referencial) mensal — default: 0 */
   trMensal?: number
@@ -98,7 +99,7 @@ export function calcularPoupanca(params: PoupancaParams): ResultadoOuErro<Poupan
     dados: {
       resultado: montanteFinal,
       detalhamento,
-      baseCalculo: `Taxa mensal efetiva: ${(taxaMensal * 100).toFixed(4)}% (isenta de IR)`,
+      baseCalculo: `Taxa mensal efetiva: ${(taxaMensal * 100).toLocaleString('pt-BR', { maximumFractionDigits: 4 })}% (isenta de IR)`,
       fonteJuridica: 'Lei 12.703/2012 | Lei 11.033/2004 art. 3º, V (isenção IR PF)',
       dataReferencia: hojeISO(),
       dados: {

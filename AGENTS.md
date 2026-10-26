@@ -64,6 +64,100 @@ calculosonline/
   explicitamente em 2026-08-13.
 - **Código:** identificadores e comentários em inglês quando técnicos; comentários de domínio (regras CLT, INSS, IRRF) podem ficar em pt-BR.
 
+## Regras de trabalho para assistentes (memória de IA)
+
+> **Nenhum registro de IA fica fora do repositório** (decisão do Paulo, 26/10/2026).
+> Toda regra, preferência ou aprendizado sobre como trabalhar neste projeto vai
+> **aqui**; fatos e diagnósticos de growth vão no `MEMORY.md`. Nada em memória
+> pessoal do assistente (`~/.claude/...`, memórias do Codex/Cursor etc.). O que
+> existia lá foi trazido para esta seção em 26/10/2026 e apagado.
+
+**Projeto base.** O Recibo Fácil (`../recibofacil`) é o projeto base deste:
+antes de implementar qualquer coisa (UI, fluxo, SEO, analytics, processo),
+ver como já foi feito lá e replicar o padrão. "Como fiz no Recibo Fácil" é
+instrução literal de ir ler o código de lá. Onde procurar: `frontend/src/lib/seo.ts`
+(`buildMetadata`), `frontend/src/components/seo/JsonLd.tsx`,
+`frontend/src/app/sitemap.ts`, `frontend/public/llms.txt`,
+`frontend/src/lib/faq.ts` e o `MEMORY.md` de lá. **Não copiar** o billing
+(Mercado Pago): lá é freemium pago, aqui é gratuito com AdSense.
+
+**Controles de processo.** `FEATURES.md` (o quê), `CHANGELOG.md` (como),
+`MEMORY.md` (porquê), no mesmo formato do Recibo Fácil. Em projeto irmão novo,
+oferecer o mesmo trio sem esperar pedido.
+
+**Commits.** Quem commita é o Paulo. Sugerir **um commit por feature**
+(`feat: F<n> - <descrição>`); o agregado F38-F42 (20/08) foi exceção. O
+`FEATURES.md` é montado cruzando `git log` com o `CHANGELOG.md`, e commit
+agregado estraga essa fonte e impede reverter só uma entrega de motor.
+
+**Toda informação factual se confere na fonte, e a página sempre linka a
+origem** (pedido do Paulo, reforçado em 26/10/2026: "sempre linkar nas páginas a
+origem da informação"). Vale para lei, tabela, prazo e feriado, e também para
+taxa de mercado (Selic, CDI, IPCA → Banco Central), regra de produto (custódia →
+B3, Tesouro Reserva → Tesouro Direto, garantia → FGC) e calendário da Receita.
+Fonte de segunda mão (blog, notícia, banco) não serve. Antes de escrever,
+ler o texto oficial e publicar o link. Origem:
+na F72 os feriados escritos de memória tinham três erros; na F80 o INSS dizia
+"100 pontos em 2026" (são 93/103); na F81 a tabela do IRPF não existia. Como
+acessar daqui: o `WebFetch` no Planalto dá ECONNRESET e o gov.br (INSS,
+Previdência, Fazenda) pede login, mas **`curl -A 'Mozilla/5.0'` funciona no
+`planalto.gov.br` e no `gov.br/receitafederal`**, inclusive nos PDFs de
+Perguntas e Respostas do IRPF (`pdftotext -layout`). Dizer ao Paulo de onde veio
+o dado, sem esperar ele perguntar.
+
+**Textos e FAQs com exemplo simples** (premissa de 26/10/2026). Toda resposta
+que envolve valor leva um exemplo com número saído do motor ("R$ 1.000 por 12
+meses viram R$ 1.113,44"), em frases curtas e sem jargão. Em 26/10 eram 205
+perguntas, 109 sem exemplo (revisão em andamento, ver `MEMORY.md`).
+
+**Foco em investimentos, com uma restrição** (26/10/2026). Paulo trabalha no
+Bradesco, na área de investimentos, e por ora **não pode aparecer** no site
+(planeja aparecer depois, como autor). Por isso: nenhuma página cita banco,
+corretora ou fintech pelo nome em contexto de comparação ou recomendação (um
+e2e trava isso nas páginas de investimento; "Caixa" na FAQ da poupança fica
+porque é o termo da busca, não recomendação); o conteúdo é educativo, com o
+aviso de que não recomenda produto; nada de autoria, foto ou cargo dele até ele
+decidir.
+
+**Referências de mercado** (Selic, CDI, IPCA) moram só em
+`packages/core/src/investimentos/referencias.ts`, com a data da consulta. Para
+atualizar: `curl "https://api.bcb.gov.br/dados/serie/bcdata.sgs.<432|4389|13522>/dados/ultimos/1?formato=json"`,
+trocar valores e data, e regerar pelo motor os exemplos dos MDX de CDB, poupança
+e Tesouro (os e2e de `investimentos-referencias.spec.ts` comparam texto e
+calculadora). Fazer depois de cada reunião do Copom em que a Selic mudar.
+
+**IndexNow.** `pnpm --filter web indexnow [slugs...]` (script
+`apps/web/scripts/indexnow.mjs`, segredo em `apps/web/.env.local`). Nada dispara
+sozinho, e só se roda **depois do deploy** (conferir em produção antes), senão
+o Bing relê o conteúdo antigo. Atende Bing/Yandex, **não o Google**. A chave é
+constante em `route.ts` de propósito (é pública por protocolo); o segredo é
+`INTERNAL_API_KEY` na Vercel.
+
+**Ciclo "avalie / leia a pasta gsc".** Paulo põe exports de GSC, GA4, Clarity,
+BWT e Semrush em `gsc/` (no `.gitignore`, sobrescrita a cada rodada; às vezes
+em partes, em subpastas como `gsc/pasta-01/`, no meio da conversa). Ele espera:
+diagnóstico cruzando as fontes, comparação com o estado anterior do
+`MEMORY.md`, recomendações priorizadas (ele escolhe itens e manda executar) e
+registro no Diário do `MEMORY.md` **com os números brutos**, porque o export
+anterior não existe mais na rodada seguinte. Se faltar fonte, analisar o que
+veio e pedir o resto numa linha. Cuidados de leitura:
+- A janela de datas muda entre exports sem aviso: ler o cabeçalho
+  `# Data de início` de cada CSV e preferir séries semanais.
+- Posição média do GSC é média da janela (3 meses); para medir feature recente,
+  pedir GSC filtrado por data.
+- Clarity: datas vêm em **MM/DD** mesmo com rótulo em português; export logo
+  depois de deploy costuma ser o Paulo testando; o painel Share of Authority
+  (queries citadas por IA, ciclo de 7 dias) é keyword research real, ler sempre;
+  o resumo de sessões do Copilot é qualitativo (números no fim são IDs).
+- BWT → AI Performance é a mesma fonte do Share of Authority do Clarity, com
+  série diária: preferir para medir IA.
+- **Número idêntico no export geral de keywords do BWT em duas rodadas não prova
+  zero impressão no intervalo** (erro de 25/10): para datar, só o relatório
+  filtrado por página ou por data.
+- Paulo não domina o BWT: ao pedir export, dar o passo a passo (menu → aba →
+  período → Exportar). No Semrush ele se vira sozinho (Domain Overview, SERP,
+  volume/KD) e manda print ou colagem.
+
 ---
 
 ## Estado atual das sprints (atualizado em 2026-07-19)

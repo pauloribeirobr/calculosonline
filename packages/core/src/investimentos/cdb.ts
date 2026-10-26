@@ -13,6 +13,7 @@
 
 import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
 import { arredondar, hojeISO } from '../utils'
+import { REFERENCIAS_MERCADO } from './referencias'
 
 export type TipoCDB = 'cdi' | 'prefixado' | 'ipca_mais'
 export type PrazoIR = 'ate180' | '181_360' | '361_720' | 'acima720'
@@ -24,9 +25,32 @@ export const ALIQUOTAS_IR_REGRESSIVO: Record<PrazoIR, number> = {
   acima720: 0.15,
 }
 
-/** Valores de referência 2026 (atualizáveis quando portaria/SELIC mudar). */
-export const CDI_REFERENCIA_2026 = 0.1065
-export const IPCA_REFERENCIA_2026 = 0.045
+/** Referências do Banco Central — ver `referencias.ts`. */
+export const CDI_REFERENCIA_2026 = REFERENCIAS_MERCADO.cdiAnual
+export const IPCA_REFERENCIA_2026 = REFERENCIAS_MERCADO.ipcaAnual
+
+/** Rótulo da faixa para o detalhamento ("IR 17,5% (de 361 a 720 dias)"). */
+export const ROTULO_PRAZO_IR: Record<PrazoIR, string> = {
+  ate180: 'até 180 dias',
+  '181_360': 'de 181 a 360 dias',
+  '361_720': 'de 361 a 720 dias',
+  acima720: 'acima de 720 dias',
+}
+
+export function rotuloIR(aliquota: number, prazo: PrazoIR): string {
+  return `(-) IR ${(aliquota * 100).toLocaleString('pt-BR')}% (${ROTULO_PRAZO_IR[prazo]})`
+}
+
+/**
+ * Dias corridos de um prazo em meses, para escolher a faixa do IR. Até a F82
+ * cada mês valia 30 dias, e 12 meses (360 dias) caíam na faixa de 20%, quando
+ * um ano real tem 365 e paga 17,5%. Seis meses de calendário têm no mínimo 181
+ * dias, doze têm 365 e vinte e quatro têm 730, então a média de 365,25/12 põe
+ * os prazos redondos na faixa certa.
+ */
+export function diasDoPrazo(prazoMeses: number): number {
+  return Math.round((prazoMeses * 365.25) / 12)
+}
 
 export function getPrazoIR(dias: number): PrazoIR {
   if (dias <= 180) return 'ate180'
@@ -86,7 +110,7 @@ export function calcularCDB(params: CDBParams): ResultadoOuErro<CDBResultado> {
     params.valorInicial * Math.pow(1 + taxaMensal, params.prazoMeses),
   )
   const rendimentoBruto = arredondar(montanteBruto - params.valorInicial)
-  const dias = params.prazoMeses * 30
+  const dias = diasDoPrazo(params.prazoMeses)
 
   // Como o parâmetro mínimo é 1 mês (30 dias), o IOF — que incide apenas
   // nos primeiros 30 dias — não se aplica no domínio coberto pelo calculador.
@@ -101,7 +125,7 @@ export function calcularCDB(params: CDBParams): ResultadoOuErro<CDBResultado> {
     { descricao: 'Montante Bruto', valor: montanteBruto, tipo: 'credito' },
     { descricao: 'Rendimento Bruto', valor: rendimentoBruto, tipo: 'credito' },
     {
-      descricao: `(-) IR ${(aliquotaIR * 100).toFixed(1)}% (${prazoIR})`,
+      descricao: rotuloIR(aliquotaIR, prazoIR),
       valor: ir,
       tipo: 'debito',
     },
@@ -110,7 +134,7 @@ export function calcularCDB(params: CDBParams): ResultadoOuErro<CDBResultado> {
       descricao: 'Rentabilidade Líquida',
       valor: rentabilidadeLiquida,
       tipo: 'neutro',
-      formula: `${rentabilidadeLiquida.toFixed(2)}%`,
+      formula: `${rentabilidadeLiquida.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`,
     },
   ]
 
@@ -119,7 +143,7 @@ export function calcularCDB(params: CDBParams): ResultadoOuErro<CDBResultado> {
     dados: {
       resultado: montanteLiquido,
       detalhamento,
-      baseCalculo: `Taxa efetiva anual: ${(taxaAnualEfetiva * 100).toFixed(2)}% a.a.`,
+      baseCalculo: `Taxa efetiva anual: ${(taxaAnualEfetiva * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}% a.a.`,
       fonteJuridica: 'Lei 11.033/2004 (IR regressivo) | Decreto 6.306/2007 (IOF)',
       dataReferencia: hojeISO(),
       dados: {

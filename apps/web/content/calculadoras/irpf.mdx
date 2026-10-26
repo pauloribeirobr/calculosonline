@@ -1,26 +1,64 @@
-## Calculadora de IRPF 2026
+## Calculadora de IRPF 2026: simule a declaração 2027
 
-O **Imposto de Renda Pessoa Física (IRPF)** é apurado anualmente na declaração entregue à
-Receita Federal. A declaração 2026 (ano-base 2025) deve ser entregue de **março a maio de 2026**.
-Nossa calculadora ajuda a simular se você terá restituição ou imposto a pagar.
+O **Imposto de Renda Pessoa Física (IRPF)** é acertado uma vez por ano, na declaração
+entregue à Receita Federal. Esta calculadora simula a **declaração 2027, sobre os rendimentos
+de 2026**, já com as duas mudanças da
+[Lei 15.270/2025](https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2025/lei/L15270.htm)
+para esse ano: o **desconto simplificado sobe para R$ 17.640,00** e entra a **redução anual**
+que zera o imposto de quem teve até R$ 60.000 de rendimentos tributáveis. Ela compara o
+modelo simplificado com o completo e mostra se sobra restituição ou imposto a pagar.
 
-## Quem é obrigado a declarar IRPF em 2026?
+## Quanto muda na declaração 2027
 
-É obrigado a declarar quem, no ano-base 2025:
+Simulação pelo modelo simplificado, sem dependentes e sem outras deduções:
 
-- Recebeu rendimentos tributáveis acima de **R$ 33.888,00** (R$ 2.824/mês × 12)
-- Recebeu rendimentos isentos, não tributáveis ou tributados exclusivamente na fonte acima de **R$ 200.000**
-- Obteve ganho de capital na alienação de bens
-- Realizou operações em Bolsa de Valores acima de **R$ 40.000** ou com ganho de capital
-- Tinha posse de bens ou direitos acima de **R$ 800.000** em 31/12/2025
-- Passou à condição de residente no Brasil em 2025
-- Optou pela isenção do IRPF sobre ganho de capital na venda de imóvel (quando aplica a regra dos 180 dias)
+| Rendimentos tributáveis em 2026 | Imposto na declaração 2027 | Mesma renda na declaração 2026 |
+|---|---|---|
+| R$ 60.000 | **R$ 0,00** | R$ 2.745,03 |
+| R$ 80.000 | **R$ 5.911,61** | R$ 6.746,22 |
+| R$ 100.000 | **R$ 11.744,34** | R$ 12.038,78 |
+
+Até R$ 60.000 a redução zera o imposto. Entre R$ 60.000,01 e R$ 88.200 ela diminui aos
+poucos, pela fórmula `R$ 8.429,73 − 0,095575 × rendimentos tributáveis`. Acima de R$ 88.200
+não há redução, e a diferença que sobra vem só do desconto simplificado maior.
+
+## A redução anual da Lei 15.270/2025
+
+É o equivalente anual do redutor que já vale no desconto mensal desde janeiro de 2026
+(veja a [calculadora de IRRF](/calculadora/irrf)). Ela é calculada sobre os **rendimentos
+tributáveis brutos**, não sobre a base depois das deduções, e fica limitada ao imposto
+apurado na tabela:
+
+| Rendimentos tributáveis no ano | Redução do imposto |
+|---|---|
+| Até R$ 60.000,00 | Até R$ 2.694,15 (o imposto fica zero) |
+| De R$ 60.000,01 a R$ 88.200,00 | R$ 8.429,73 − (0,095575 × rendimentos) |
+| Acima de R$ 88.200,00 | Nenhuma |
+
+Base legal: art. 11-A da Lei 9.250/1995, incluído pela Lei 15.270/2025.
+
+## Quem é obrigado a declarar?
+
+As regras da declaração 2027 saem numa Instrução Normativa da Receita no início de 2027.
+Na **declaração 2026** (ano-base 2025), era obrigado quem, entre outros casos:
+
+- recebeu rendimentos tributáveis acima de **R$ 35.584,00**;
+- recebeu rendimentos isentos, não tributáveis ou tributados exclusivamente na fonte acima
+  de **R$ 200.000,00**;
+- teve ganho de capital tributável na venda de bens ou direitos;
+- vendeu mais de **R$ 40.000,00** em bolsa, ou teve ganho líquido tributável nela;
+- teve receita bruta de atividade rural acima de **R$ 177.920,00**;
+- tinha bens e direitos acima de **R$ 800.000,00** em 31 de dezembro;
+- passou a morar no Brasil durante o ano;
+- usou a isenção da venda de imóvel residencial com compra de outro em até 180 dias.
+
+Fonte: Perguntas e Respostas IRPF 2026 da Receita Federal, pergunta 001.
 
 ## Simplificado vs. completo: quando cada um vale?
 
 | Modelo | O que faz | Quando usar |
 |---|---|---|
-| **Simplificado** | Desconto padrão de 20% sobre os rendimentos tributáveis (limite R$ 16.754,34) | Poucos dependentes, poucas despesas médicas, sem educação particular cara |
+| **Simplificado** | Desconto padrão de 20% sobre os rendimentos tributáveis, limitado a **R$ 17.640,00** (era R$ 16.754,34 até a declaração 2026) | Poucos dependentes, poucas despesas médicas, sem educação particular cara |
 | **Completo** | Deduz despesas reais (médico, educação, dependentes, previdência etc.) | Despesas médicas altas, muitos dependentes, PGBL |
 
 O **programa da Receita** calcula automaticamente qual modelo é mais vantajoso — basta
@@ -38,15 +76,18 @@ preencher tudo e ele indica a melhor opção.
 | Pensão alimentícia (judicial) | Valor total pago |
 | Livro-caixa (autônomo) | Despesas necessárias à atividade |
 
-## Tabela IRPF anual 2026 (base 2025)
+## Tabela IRPF anual da declaração 2027 (ano-base 2026)
 
 | Base de cálculo anual | Alíquota | Parcela a deduzir |
 |---|:---:|---|
-| Até R$ 33.888,00 | Isento | — |
-| R$ 33.888,01 a R$ 45.012,60 | 7,5% | R$ 2.541,60 |
-| R$ 45.012,61 a R$ 55.976,16 | 15% | R$ 5.926,55 |
-| R$ 55.976,17 a R$ 73.839,60 | 22,5% | R$ 10.121,13 |
-| Acima de R$ 73.839,60 | 27,5% | R$ 13.813,11 |
+| Até R$ 29.145,60 | Isento | — |
+| R$ 29.145,61 a R$ 33.919,80 | 7,5% | R$ 2.185,92 |
+| R$ 33.919,81 a R$ 45.012,60 | 15% | R$ 4.729,91 |
+| R$ 45.012,61 a R$ 55.976,16 | 22,5% | R$ 8.105,85 |
+| Acima de R$ 55.976,16 | 27,5% | R$ 10.904,66 |
+
+Fonte: [tabelas de 2026 da Receita Federal](https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/2026).
+A redução anual é aplicada depois da tabela.
 
 ## Restituição: por que uns recebem mais?
 
@@ -56,14 +97,15 @@ na declaração. Isso acontece quando:
 - O contribuinte tem muitas deduções (médico, dependentes) que não foram consideradas na
   fonte ao longo do ano
 - O salário variou ao longo do ano (admissão no meio do ano gera IRRF menor que o proporcional)
-- Houve rendimentos isentos (PLR, venda de imóvel único até R$ 440.000 etc.)
+- O desconto mensal não levou em conta a redução anual, que só aparece no acerto
 
-A restituição é paga em lotes de junho a dezembro do mesmo ano de entrega. Quem entrega
-antes recebe no 1º lote e ganha atualização pela Selic.
+Em 2026 a restituição foi paga em **4 lotes, de 29 de maio a 28 de agosto**. A ordem segue
+as prioridades legais e, depois, a data de entrega.
 
 ## Prazo e multa por atraso
 
-- **Prazo:** geralmente de **1º de março a 31 de maio** (verifique o calendário da Receita).
+- **Prazo:** em 2026 foi de **23 de março a 29 de maio**. O calendário de 2027 sai junto
+  com as regras da declaração.
 - **Multa por atraso:** 1% ao mês sobre o imposto devido, com mínimo de R$ 165,74 e
   máximo de 20% do imposto.
 - **Declaração em atraso mas sem imposto a pagar:** multa mínima de R$ 165,74.
@@ -73,7 +115,8 @@ antes recebe no 1º lote e ganha atualização pela Selic.
 - Filhos e enteados até 21 anos (ou qualquer idade se incapacitados)
 - Filhos e enteados de 21 a 24 anos se cursando ensino superior ou técnico
 - Cônjuge ou companheiro
-- Pais, avós, bisavós com rendimentos de até R$ 24.751,74/ano
+- Pais, avós e bisavós com rendimentos, tributáveis ou não, até o limite de isenção da tabela
+  anual (R$ 28.467,20 na declaração 2026)
 - Menor pobre de até 21 anos do qual o contribuinte detém guarda judicial
 
 ## Ganho de capital na venda de imóvel
@@ -100,8 +143,8 @@ retido na fonte a restituir ou precisa comprovar renda (ex.: para financiamento 
 **O que acontece se eu entregar a declaração com erros?**
 
 Pode-se retificar a declaração enviando uma declaração retificadora dentro do prazo de
-5 anos. Não há multa pela retificação espontânea — a multa só ocorre se a Receita autuar
-antes da retificação.
+5 anos. A retificadora não paga multa por atraso na entrega; o que gera multa é a Receita
+autuar antes de você corrigir.
 
 **IR sobre rendimentos de investimentos é declarado no IRPF?**
 
