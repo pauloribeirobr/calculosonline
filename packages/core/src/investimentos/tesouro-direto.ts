@@ -10,7 +10,7 @@
  *
  * Custos:
  *  - Taxa de custódia B3: 0,20% a.a. sobre o valor investido
- *    (isenta para Tesouro SELIC até R$ 10.000)
+ *    (no Tesouro SELIC, só sobre o que passa de R$ 10.000 por CPF)
  *  - IR regressivo (Lei 11.033/2004) — mesma tabela do CDB
  *  - IOF nos primeiros 30 dias
  */
@@ -19,9 +19,12 @@ import type { ErroValidacao, ItemDetalhamento, ResultadoOuErro } from '../types'
 import { arredondar, hojeISO } from '../utils'
 import {
   ALIQUOTAS_IR_REGRESSIVO,
+  diasDoPrazo,
+  rotuloIR,
   IPCA_REFERENCIA_2026,
   getPrazoIR,
 } from './cdb'
+import { REFERENCIAS_MERCADO } from './referencias'
 
 export type TipoTesouroDireto =
   | 'prefixado'
@@ -32,7 +35,7 @@ export type TipoTesouroDireto =
 
 export const TAXA_CUSTODIA_B3 = 0.002
 export const LIMITE_ISENCAO_SELIC = 10000
-export const SELIC_REFERENCIA_2026 = 0.1325
+export const SELIC_REFERENCIA_2026 = REFERENCIAS_MERCADO.selicAnual
 
 export interface TesouroDiretoParams {
   valorInicial: number
@@ -87,14 +90,20 @@ export function calcularTesouroDireto(
     params.valorInicial * Math.pow(1 + taxaMensal, params.prazoMeses),
   )
   const rendimentoBruto = arredondar(montanteBruto - params.valorInicial)
-  const dias = params.prazoMeses * 30
+  const dias = diasDoPrazo(params.prazoMeses)
   const anos = params.prazoMeses / 12
 
-  // Custódia B3: cobrada anualmente sobre o valor médio investido (simplificação: sobre o valor inicial)
+  // Custódia B3: provisionada diariamente e cobrada na venda, no vencimento ou no
+  // pagamento de juros (simplificação: sobre o valor inicial). No Tesouro Selic,
+  // os primeiros R$ 10.000 por CPF são isentos e a taxa incide só sobre o
+  // excedente (B3, "Tarifas de Tesouro Direto"). Até a F82 o motor cobrava
+  // sobre o valor inteiro de quem passava dos R$ 10.000.
   const custodiaIsenta = params.tipo === 'selic' && params.valorInicial <= LIMITE_ISENCAO_SELIC
-  const custodia = custodiaIsenta
-    ? 0
-    : arredondar(params.valorInicial * TAXA_CUSTODIA_B3 * anos)
+  const baseCustodia =
+    params.tipo === 'selic'
+      ? Math.max(0, params.valorInicial - LIMITE_ISENCAO_SELIC)
+      : params.valorInicial
+  const custodia = arredondar(baseCustodia * TAXA_CUSTODIA_B3 * anos)
 
   // Como o parâmetro mínimo é 1 mês (30 dias), o IOF não se aplica.
   const prazoIR = getPrazoIR(dias)
@@ -113,12 +122,14 @@ export function calcularTesouroDireto(
     {
       descricao: custodiaIsenta
         ? '(-) Custódia B3 (isenta)'
-        : `(-) Custódia B3 (${(TAXA_CUSTODIA_B3 * 100).toFixed(2)}% a.a.)`,
+        : params.tipo === 'selic'
+          ? `(-) Custódia B3 (${(TAXA_CUSTODIA_B3 * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}% a.a. sobre o que passa de R$ 10.000)`
+          : `(-) Custódia B3 (${(TAXA_CUSTODIA_B3 * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}% a.a.)`,
       valor: custodia,
       tipo: 'debito',
     },
     {
-      descricao: `(-) IR ${(aliquotaIR * 100).toFixed(1)}% (${prazoIR})`,
+      descricao: rotuloIR(aliquotaIR, prazoIR),
       valor: ir,
       tipo: 'debito',
     },
@@ -127,7 +138,7 @@ export function calcularTesouroDireto(
       descricao: 'Rentabilidade Líquida',
       valor: rentabilidadeLiquida,
       tipo: 'neutro',
-      formula: `${rentabilidadeLiquida.toFixed(2)}%`,
+      formula: `${rentabilidadeLiquida.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`,
     },
   ]
 
@@ -136,7 +147,7 @@ export function calcularTesouroDireto(
     dados: {
       resultado: montanteLiquido,
       detalhamento,
-      baseCalculo: `Taxa efetiva anual: ${(taxaAnualEfetiva * 100).toFixed(2)}% a.a.`,
+      baseCalculo: `Taxa efetiva anual: ${(taxaAnualEfetiva * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}% a.a.`,
       fonteJuridica:
         'Lei 11.033/2004 (IR regressivo) | Decreto 6.306/2007 (IOF) | Resolução B3 (custódia)',
       dataReferencia: hojeISO(),

@@ -4,6 +4,7 @@
  */
 export * from './cdb'
 export * from './poupanca'
+export * from './referencias'
 // Renomeamos a constante SELIC_REFERENCIA_2026 para evitar colisão de export com cdb.ts (não tem)
 // e mantemos o re-export simples do tesouro-direto.
 export {

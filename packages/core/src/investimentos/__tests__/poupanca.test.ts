@@ -24,7 +24,7 @@ describe('calcularPoupanca', () => {
   })
 
   describe('regra antiga (SELIC > 8,5%)', () => {
-    it('aplica 0,5%/mês quando SELIC = 13,25% (default)', () => {
+    it('aplica 0,5%/mês com a Selic de referência (default, acima de 8,5%)', () => {
       const r = calcularPoupanca({ valorInicial: 10000, prazoMeses: 12 })
       if (r.sucesso) {
         expect(r.dados.dados.regraAplicada).toBe('antiga')

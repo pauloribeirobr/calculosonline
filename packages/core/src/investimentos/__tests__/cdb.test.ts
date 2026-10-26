@@ -48,7 +48,7 @@ describe('calcularCDB', () => {
       }
     })
 
-    it('cdi: 110% × CDI default (10,65%) = ~11,72% a.a.', () => {
+    it('cdi: 110% × CDI de referência (13,65%) = 15,015% a.a.', () => {
       const r = calcularCDB({
         valorInicial: 10000,
         taxaAnual: 1.1,
@@ -56,7 +56,7 @@ describe('calcularCDB', () => {
         prazoMeses: 12,
       })
       if (r.sucesso) {
-        expect(r.dados.dados.taxaAnualEfetiva).toBeCloseTo(0.1172, 4)
+        expect(r.dados.dados.taxaAnualEfetiva).toBeCloseTo(0.15015, 5)
       }
     })
 
@@ -101,45 +101,21 @@ describe('calcularCDB', () => {
   })
 
   describe('IR regressivo', () => {
-    it('até 180 dias: 22,5%', () => {
-      const r = calcularCDB({
-        valorInicial: 10000,
-        taxaAnual: 0.12,
-        tipo: 'prefixado',
-        prazoMeses: 6,
-      })
-      if (r.sucesso) expect(r.dados.dados.aliquotaIR).toBe(0.225)
-    })
+    // F82: o prazo em meses vira dias de calendário (365,25/12 por mês). Antes,
+    // 6 meses viravam 180 dias (22,5%) e 12 meses 360 dias (20%), um degrau
+    // acima do que o banco retém de verdade.
+    const aliquota = (prazoMeses: number) => {
+      const r = calcularCDB({ valorInicial: 10000, taxaAnual: 0.12, tipo: 'prefixado', prazoMeses })
+      if (!r.sucesso) throw new Error('falhou')
+      return r.dados.dados.aliquotaIR
+    }
 
-    it('181 a 360 dias: 20%', () => {
-      const r = calcularCDB({
-        valorInicial: 10000,
-        taxaAnual: 0.12,
-        tipo: 'prefixado',
-        prazoMeses: 12,
-      })
-      if (r.sucesso) expect(r.dados.dados.aliquotaIR).toBe(0.2)
-    })
-
-    it('361 a 720 dias: 17,5%', () => {
-      const r = calcularCDB({
-        valorInicial: 10000,
-        taxaAnual: 0.12,
-        tipo: 'prefixado',
-        prazoMeses: 18,
-      })
-      if (r.sucesso) expect(r.dados.dados.aliquotaIR).toBe(0.175)
-    })
-
-    it('acima de 720 dias: 15%', () => {
-      const r = calcularCDB({
-        valorInicial: 10000,
-        taxaAnual: 0.12,
-        tipo: 'prefixado',
-        prazoMeses: 36,
-      })
-      if (r.sucesso) expect(r.dados.dados.aliquotaIR).toBe(0.15)
-    })
+    it('5 meses (152 dias): 22,5%', () => expect(aliquota(5)).toBe(0.225))
+    it('6 meses (183 dias): 20%', () => expect(aliquota(6)).toBe(0.2))
+    it('11 meses (335 dias): 20%', () => expect(aliquota(11)).toBe(0.2))
+    it('12 meses (365 dias): 17,5%', () => expect(aliquota(12)).toBe(0.175))
+    it('23 meses (700 dias): 17,5%', () => expect(aliquota(23)).toBe(0.175))
+    it('24 meses (731 dias): 15%', () => expect(aliquota(24)).toBe(0.15))
 
     it('helper getPrazoIR cobre todas as faixas', () => {
       expect(getPrazoIR(30)).toBe('ate180')

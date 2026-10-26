@@ -410,16 +410,16 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     tituloLongo: 'Calculadora de IRPF 2026',
     descricaoCurta: 'Declaração anual: simplificado × completo.',
     descricao:
-      'Simule sua declaração do Imposto de Renda 2026: simplificado vs. completo, restituição ou imposto a pagar.',
+      'Simule a declaração do Imposto de Renda 2027 sobre os rendimentos de 2026, já com a redução da Lei 15.270: simplificado vs. completo, restituição ou imposto a pagar.',
     categoria: 'impostos',
     icone: 'irpf',
-    fonteJuridica: 'Lei 9.250/1995 | IN RFB 2.178/2024',
-    dataAtualizacao: '2026-01-01',
-    palavrasChave: ['IRPF 2026', 'declaração imposto de renda', 'restituição IR'],
+    fonteJuridica: 'Lei 9.250/1995 | Lei 15.270/2025',
+    dataAtualizacao: '2026-10-25',
+    palavrasChave: ['IRPF 2026', 'IRPF 2027', 'declaração imposto de renda', 'restituição IR'],
     dataset: {
-      nome: 'Tabela do Imposto de Renda Pessoa Física 2026',
+      nome: 'Tabela do Imposto de Renda Pessoa Física 2026 (declaração 2027)',
       descricao:
-        'Faixas anuais, alíquotas e parcelas a deduzir do IRPF vigentes no Brasil em 2026, com os limites do desconto simplificado e das deduções legais.',
+        'Faixas anuais, alíquotas e parcelas a deduzir do IRPF do ano-calendário 2026, com o desconto simplificado de R$ 17.640,00 e a tabela de redução anual da Lei 15.270/2025.',
       vigenciaInicio: '2026-01-01',
       variaveis: [
         'Faixa de base de cálculo anual (R$)',
@@ -431,6 +431,8 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     sinonimos: [
       'calcular IRPF 2026',
       'calcular IR 2026',
+      'simulador IRPF 2027',
+      'imposto de renda 2027',
       'calculadora do imposto de renda anual',
       'declaração de IR simplificada ou completa',
     ],
@@ -549,7 +551,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'investimentos',
     icone: 'cdb',
     fonteJuridica: 'Lei 11.033/2004 | Decreto 6.306/2007',
-    dataAtualizacao: '2026-01-01',
+    dataAtualizacao: '2026-10-26',
     palavrasChave: ['calcular CDB', 'rendimento CDB', 'CDB CDI', 'CDB prefixado'],
     sinonimos: [
       'simulador de CDB',
@@ -574,7 +576,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'investimentos',
     icone: 'poupanca',
     fonteJuridica: 'Lei 8.177/1991 | Lei 12.703/2012',
-    dataAtualizacao: '2026-01-01',
+    dataAtualizacao: '2026-10-26',
     palavrasChave: ['calcular poupança', 'rendimento poupança 2026', 'quanto rende poupança'],
     sinonimos: [
       'simulador de poupança',
@@ -594,7 +596,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'investimentos',
     icone: 'tesouroDireto',
     fonteJuridica: 'Lei 11.033/2004 | Resolução B3 — taxa de custódia',
-    dataAtualizacao: '2026-01-01',
+    dataAtualizacao: '2026-10-26',
     palavrasChave: ['tesouro direto', 'tesouro selic', 'tesouro prefixado', 'tesouro IPCA'],
     sinonimos: [
       'simulador de tesouro direto',

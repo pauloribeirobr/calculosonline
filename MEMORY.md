@@ -16,6 +16,16 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **26/10/2026 — três premissas do Paulo, que valem daqui em diante** (detalhe no
+  Diário de 26/10 e regras no `AGENTS.md`): (1) **nenhuma memória de IA fora do
+  repo**, e tudo foi migrado para o `AGENTS.md`; (2) **revisar todos os textos e
+  FAQs com exemplos simples**: 205 perguntas, 109 sem exemplo, em andamento
+  (CDB e Tesouro feitos); (3) **foco do site em investimentos**, porque o
+  Tesouro Direto é a página que ganha cliques no Google. Paulo trabalha no
+  Bradesco (investimentos) e não pode aparecer por ora: sem nome de instituição
+  nas páginas, conteúdo educativo. Entregas: F81 (IRPF da declaração 2027) e
+  F82 (CDB com CDI de 10,65% → 13,65%, IR de 12 meses 20% → 17,5%, custódia do
+  Tesouro Selic). **Sempre linkar a origem da informação na página.**
 - **▶ PROJETO RETOMADO em 25/10/2026** ("quero retomar o projeto… deixar
   funcionando ok"). Check-up da retomada: produção 200 em todas as rotas
   testadas, typecheck limpo, 533/533 no core, `feature/main` igual ao `main`.
@@ -1264,6 +1274,79 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-10-26 — Premissas novas, IRPF 2027 e o primeiro bloco do foco em investimentos
+
+Na sequência da retomada de 25/10, Paulo pediu foco nas correções ("o que tem
+que mudar para melhorar ainda mais o site") e, no meio da sessão, fixou três
+premissas e uma regra:
+
+1. **"TUDO que vc tiver de registro de IA fora do projeto, traga para dentro.
+   Nada fora."** As 8 memórias pessoais do Claude Code (ciclo da pasta gsc,
+   projeto base, citar fonte, commits, IndexNow, controles de processo) viraram
+   a seção "Regras de trabalho para assistentes" do `AGENTS.md` e foram
+   apagadas de `~/.claude/`. Codex, Cursor e Gemini não tinham nada fora.
+2. **"Revise TODOS os textos e FAQs do site, foco é ter exemplos simples."**
+   O inventário deu **205 perguntas em 29 MDX, 109 sem exemplo com número**.
+   As piores: tesouro-direto 6/8 (feito), irrf 6/9, acerto-trabalhista 6/7,
+   13º-2026 (blog) 6/8, rescisão 8/14, 13º 7/14, IMC 5/5, empréstimo 5/6.
+   Nem toda pergunta precisa de número ("Água tem calorias?").
+3. **Foco em investimentos.** "Trabalho no Bradesco com área de investimentos,
+   não posso aparecer agora mas em um segundo momento pretendo. Se o foco do
+   site for pra esse lado ok." Ver as regras no `AGENTS.md`.
+4. **"Não se esqueça de sempre linkar nas páginas a origem da informação."**
+
+**Entregas da sessão:**
+- **IndexNow** das 4 páginas de 25/10, depois de conferir em produção que
+  F78-F80 estavam no ar (resposta 200).
+- **Varredura técnica das 46 URLs em produção:** todas 200, um H1 cada,
+  canonical certo, JSON-LD válido, zero imagem sem `alt`, zero palavra repetida
+  dentro do mesmo texto, 61 links com só 2 falhas que são bloqueio de robô
+  (DOU 403, aboutads 429). A parte técnica está sã; os erros estão no
+  **conteúdo e no motor**.
+- **F81 (v0.40.0): IRPF na declaração 2027.** A tabela anual publicada não
+  existia, o motor fazia a mensal × 12 sem o desconto simplificado de
+  R$ 17.640 nem a redução anual da Lei 15.270, e a obrigatoriedade, os lotes e
+  o prazo eram de anos anteriores. **Revisar em ~fev/2027**, quando sair a IN da
+  declaração 2027.
+- **F82 (v0.41.0): investimentos.** CDI de 10,65% fixo no CDB (real 13,65%),
+  IR de 12 meses na faixa de 20% (contagem de 30 dias por mês), custódia do
+  Tesouro Selic sobre o valor inteiro, IOF errado em duas linhas, "Banco
+  Master" entre as recomendações do CDB, custódia "semestral", isenção "de
+  2023". Todos conferidos e corrigidos com fonte (Banco Central, B3, Tesouro
+  Direto, FGC, Decreto 6.306/2007).
+
+**Método que funcionou nesta sessão:** para lei, `curl -A 'Mozilla/5.0'` no
+Planalto (instável: respondeu de manhã e deu timeout à noite) e no
+`gov.br/receitafederal`, incluindo o PDF de Perguntas e Respostas do IRPF
+(`pdftotext`); para taxa de mercado, a API SGS do Banco Central; para regra de
+produto, as páginas da B3, do Tesouro Direto e do FGC. Quando o Planalto cai,
+o ANTTlegis tem cópia de decretos com anexo. **Pendente:** conferir o link da
+Lei 11.033/2004 na página do Tesouro quando o Planalto voltar.
+
+**Decisão sobre o foco em investimentos:** os dados sustentam. `tesouro-direto`
+é a única página com consulta de volume perto da página 1 do Google que não é
+aritmética (`simulador tesouro direto grátis` 108 @ 11,1), o CDB é a 2ª página
+mais citada por IA (95 em 19-25/10), e o cluster trabalhista está travado por
+autoridade (posição 60-90). A experiência do Paulo vira E-E-A-T quando ele puder
+assinar. **Próximos passos do foco:**
+- Semrush: volume e KD de `simulador tesouro direto`, `tesouro reserva`,
+  `tesouro renda+`, `calculadora cdb`, `lci lca calculadora`, `cdb ou tesouro`
+  e `quanto rende 10 mil`.
+- Candidatas a calculadora nova, a validar com esses dados: comparador CDB ×
+  LCI/LCA × Tesouro × poupança no mesmo prazo, LCI/LCA (isenta, com
+  equivalência para CDB) e Tesouro Renda+/Educa+ (quanto aplicar para ter
+  R$ X por mês).
+- A taxa no formulário de CDB e Tesouro ainda é pedida "em decimal" (`0.12 =
+  12%`): é o próximo atrito de UX do cluster.
+
+**Fila da revisão de textos (premissa 2), por prioridade:** poupança (falta a
+revisão completa; nesta sessão só saíram os nomes de banco e uma frase
+quebrada), juros compostos, empréstimo e financiamento (fecham o cluster
+financeiro) → 13º e o post do 13º (sazonal: 1ª parcela até 30/11) → salário
+líquido, férias, hora extra, IRRF, INSS, rescisão → o resto. **Pendente da F80:**
+o FAQ dos dois empregos do INSS ("restituição na declaração do IRPF") segue
+sem fonte conferida.
 
 ### 2026-10-25 — Export com o projeto parado: o Bing perdeu os termos genéricos, e o checkpoint da F68 confirma o 10/10
 

@@ -169,7 +169,7 @@ export const QUICK_ADD_TAXA_ANUAL: QuickAddButton[] = [
   { label: '6%', value: 0.06, modo: 'definir', titulo: '6% ao ano (juro real típico de IPCA+)' },
   { label: '10%', value: 0.1, modo: 'definir', titulo: '10% ao ano' },
   { label: '12%', value: 0.12, modo: 'definir', titulo: '12% ao ano' },
-  { label: '13,25%', value: 0.1325, modo: 'definir', titulo: 'Selic de referência 2026' },
+  { label: '13,75%', value: 0.1375, modo: 'definir', titulo: 'Meta Selic em 26/10/2026' },
 ]
 
 /**

@@ -71,7 +71,7 @@ describe('calcularTesouroDireto', () => {
         prazoMeses: 12,
       })
       if (r.sucesso) {
-        expect(r.dados.dados.taxaAnualEfetiva).toBeCloseTo(0.1325, 4)
+        expect(r.dados.dados.taxaAnualEfetiva).toBeCloseTo(0.1375, 4)
       }
     })
 
@@ -138,7 +138,8 @@ describe('calcularTesouroDireto', () => {
       })
       if (r.sucesso) {
         expect(r.dados.dados.custodiaIsenta).toBe(false)
-        expect(r.dados.dados.custodia).toBeGreaterThan(0)
+        // F82: só os R$ 10.000 excedentes pagam — 10.000 × 0,20% × 1 ano = 20 (antes: 40)
+        expect(r.dados.dados.custodia).toBe(20)
       }
     })
 
@@ -163,14 +164,25 @@ describe('calcularTesouroDireto', () => {
   })
 
   describe('IR regressivo', () => {
-    it('prazo de 6 meses → 22,5%', () => {
+    // F82: 6 meses de calendário têm no mínimo 181 dias, então caem nos 20%.
+    it('prazo de 6 meses → 20%', () => {
       const r = calcularTesouroDireto({
         valorInicial: 10000,
         tipo: 'prefixado',
         taxaAnual: 0.12,
         prazoMeses: 6,
       })
-      if (r.sucesso) expect(r.dados.dados.aliquotaIR).toBe(0.225)
+      if (r.sucesso) expect(r.dados.dados.aliquotaIR).toBe(0.2)
+    })
+
+    it('prazo de 12 meses → 17,5%', () => {
+      const r = calcularTesouroDireto({
+        valorInicial: 10000,
+        tipo: 'prefixado',
+        taxaAnual: 0.12,
+        prazoMeses: 12,
+      })
+      if (r.sucesso) expect(r.dados.dados.aliquotaIR).toBe(0.175)
     })
 
     it('prazo longo (>720d) → 15%', () => {

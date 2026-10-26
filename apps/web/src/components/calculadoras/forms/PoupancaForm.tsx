@@ -2,7 +2,7 @@
 
 import { z } from 'zod'
 import { CalculatorForm } from '@calculosonline/ui'
-import { calcularPoupanca } from '@calculosonline/core/investimentos'
+import { calcularPoupanca, REFERENCIAS_MERCADO } from '@calculosonline/core/investimentos'
 import {
   QUICK_ADD_APORTE,
   QUICK_ADD_INVESTIMENTO,
@@ -15,7 +15,7 @@ const schema = z.object({
   valorInicial: z.number().min(0, 'Valor não pode ser negativo').default(0),
   prazoMeses: z.number().positive('Prazo deve ser positivo').default(0),
   aporteMensal: z.number().min(0).default(0),
-  selicAnual: z.number().min(0).default(0.1325),
+  selicAnual: z.number().min(0).default(REFERENCIAS_MERCADO.selicAnual),
 })
 
 export function PoupancaForm({ onResult, onError, isLoading, sharedData, autoSubmit }: FormProps) {
@@ -51,7 +51,7 @@ export function PoupancaForm({ onResult, onError, isLoading, sharedData, autoSub
         },
         selicAnual: {
           label: 'SELIC anual (decimal)',
-          hint: 'Default 0,1325 (13,25% — referência 2026)',
+          hint: `Meta Selic do Banco Central em ${REFERENCIAS_MERCADO.dataConsulta.split('-').reverse().join('/')}: ${(REFERENCIAS_MERCADO.selicAnual * 100).toLocaleString('pt-BR')}%`,
           quickAdd: QUICK_ADD_TAXA_ANUAL,
         },
       }}

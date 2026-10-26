@@ -16,7 +16,7 @@
 
 - [INSS](https://calculosonline.com.br/calculadora/inss): Contribuição para CLT, autônomo, contribuinte facultativo e MEI.
 - [IRRF](https://calculosonline.com.br/calculadora/irrf): Imposto de Renda Retido na Fonte sobre o salário mensal.
-- [IRPF](https://calculosonline.com.br/calculadora/irpf): Declaração anual do Imposto de Renda, comparando modelo simplificado × completo.
+- [IRPF](https://calculosonline.com.br/calculadora/irpf): Simula a declaração 2027 (rendimentos de 2026), comparando modelo simplificado × completo, com o desconto simplificado de R$ 17.640 e a redução anual da Lei 15.270/2025.
 - [DAS MEI](https://calculosonline.com.br/calculadora/das-mei): Guia mensal do MEI (INSS + ICMS/ISS fixos conforme a atividade).
 
 ## Financeiras
