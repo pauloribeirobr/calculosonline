@@ -59,4 +59,11 @@ test.describe('robots.txt', () => {
     expect(body).toContain('Disallow: /api/')
     expect(body).toContain('Sitemap: https://calculosonline.com.br/sitemap.xml')
   })
+
+  // F78: de 19/07 a 25/10 o robots bloqueou `/_next/`, e o Googlebot
+  // renderizava todas as páginas sem CSS e sem JS.
+  test('não bloqueia os assets do Next', async ({ request }) => {
+    const body = await (await request.get('/robots.txt')).text()
+    expect(body).not.toContain('/_next')
+  })
 })

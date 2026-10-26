@@ -16,12 +16,49 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **▶ PROJETO RETOMADO em 25/10/2026** ("quero retomar o projeto… deixar
+  funcionando ok"). Check-up da retomada: produção 200 em todas as rotas
+  testadas, typecheck limpo, 533/533 no core, `feature/main` igual ao `main`.
+  **Primeira entrega: F78 (v0.39.2), o `robots.txt` bloqueava `/_next/` desde
+  19/07**, então o Googlebot renderizava o site sem CSS e sem JS. Depois do
+  deploy: GSC → Inspeção de URL → "Testar URL ativa" numa calculadora, para
+  conferir a captura com estilo e 0 recursos bloqueados, e reenviar o sitemap.
+  O bloco abaixo é o estado da pausa e vale como histórico.
+- **⏸ (Histórico) PROJETO PARADO de 14/10 a 25/10/2026 — decisão do Paulo,
+  para não perder foco.** O site fica no ar como está: sem feature nova, sem
+  API pública, sem 301 para o Recibo Fácil. O RF **copia** do `packages/core` só as
+  calculadoras que preenchem documento (margem → orçamento; INSS + IRRF →
+  recibo de salário; juros → promissória; reajuste → aluguel) e as evolui por
+  lá (F230 do `../recibofacil/FEATURES.md`). A cópia daqui **não** é mais a
+  fonte. ⚠️ **Pendência ≈jan/2027:** quando sair a tabela de INSS/IRRF de 2027,
+  este site passa a calcular com a de 2026 — decidir entre atualizar só as
+  tabelas ou pôr aviso de "valores de 2026". Os itens abaixo são o estado em
+  que o projeto parou.
+- **Export de 25/10 (projeto já parado): o Bing caiu 34% desde o pico**
+  (357 → 233 impressões/dia útil). Os termos genéricos curtos
+  (`calculadora inss`, `calcular férias`, `calculo de ferias`) não ganharam
+  nenhuma impressão depois de 08/10, enquanto as variantes com "2026" seguem
+  crescendo. No Google, `datas` tem 2.442 impressões @ 9,0 e 2 cliques. É o
+  checkpoint da F68, e o veredito é o mesmo de 10/10. A novidade é o
+  `tesouro-direto` (`simulador tesouro direto grátis` 108 @ 11,1, 4 cliques na
+  página). A F75 funcionou: `resource_error` 267 → 81 e `exception` 50 → 3.
+  Detalhe no Diário de 25/10.
+- **Export de 10/10: a F68 (`datas`) é a maior página do Google (1.079 impr
+  @ 8,9 em ~13 dias), mas com CTR de aritmética (0,09%).** Filtrada pela
+  página: 99,4% das consultas são anonimizadas (datas específicas), e nenhum
+  termo-alvo da F68 aparece. Não é ranqueamento no alvo. No Bing a busca
+  parou em ~350 impressões/dia útil, e férias saltou para o 1º tema das
+  keywords (126 → 438, 21 cliques), provavelmente pela F76. **Alerta: o
+  Clarity mede citações de IA em 670 @ 19,3% (04-10/10) contra 994 @ 21,5%
+  (16-22/09), uma queda de 33%.** Confirmar no BWT → AI Performance antes de
+  agir. Detalhe no Diário de 10/10.
 - **F77 (04/10, v0.39.1) — os alertas do SEO Analysis do BWT resolvidos.**
   Title do hub 86 → 72 (`... 2026 — Rescisão e 13º`); IMC, FGTS e as 7
   categorias com descrição de 100+ (a da categoria agora lista as calculadoras
   do registry). `seo-limites.spec.ts` trava title ≤ 78 e description ≥ 100 em
-  **toda** URL do sitemap. **Conferir no próximo BWT se os dois alertas
-  sumiram.** Fora do escopo, de propósito: 14 descrições acima de 165
+  **toda** URL do sitemap. **No ar em 04/10:** F76 pelo PR #37, F77 pelo
+  PR #38 (conferido em produção). **Conferir no próximo BWT se os dois
+  alertas sumiram.** Fora do escopo, de propósito: 14 descrições acima de 165
   (inclusive a da hora extra), que o Bing não apontou.
 - **F76 (04/10, v0.39.0) — o molde da F67 em férias e salário líquido, e
   férias fracionadas.** "Online" no title/H1, sinônimos do BWT, FAQ com números
@@ -1227,6 +1264,307 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-10-25 — Export com o projeto parado: o Bing perdeu os termos genéricos, e o checkpoint da F68 confirma o 10/10
+
+Paulo pediu "leia o conteúdo da pasta gsc", 11 dias depois de parar o projeto.
+Vieram: GSC (zip, "últimos 3 meses", série até **23/10**), BWT desempenho
+diário + keywords (**08/09→23/10**, 46 dias, **mesmo início do export de
+10/10**), GA4 (5 relatórios, **27/09→24/10**, 28 dias) e 7 mapas de clique do
+Clarity (**01→25/10**, datas em MM/DD). Não vieram o painel de IA do Clarity
+nem o BWT → AI Performance, então **a queda de citações do item 4 de 10/10
+segue sem confirmação.**
+
+**1. Bing: a busca caiu 34% desde o pico, e o export das keywords mostra
+quais termos saíram.**
+
+| Semana (seg) | Impr | Cliq | Impr/dia útil | CTR |
+|---|---|---|---|---|
+| 07/09 (4 úteis) | 818 | 16 | 186 | 1,96% |
+| 14/09 | 1.504 | 27 | 275 | 1,80% |
+| 21/09 | 2.009 | 33 | **357** | 1,64% |
+| 28/09 | 1.783 | 30 | 320 | 1,68% |
+| 05/10 | 1.953 | 28 | 352 | 1,43% |
+| 12/10 (seg 12 feriado) | 1.531 | 23 | 295 (sem o feriado) | 1,50% |
+| 19/10 (seg-sex) | 1.166 | 19 | **233** | 1,63% |
+
+Total 08/09→23/10: **10.764 impressões e 176 cliques**. As semanas até 05/10
+batem com o export de 10/10. Como o export das keywords começa no mesmo 08/09
+nas duas rodadas, **keyword com o mesmo número nos dois exports teve zero
+impressão de 09/10 a 23/10.** É o caso dos três genéricos que estavam no fundo
+da página 1: `calculadora inss` 121 @ 9,2, `calculo de ferias` 73 @ 9,1 e
+`calcular férias` 62 @ 9,2. Os três estão idênticos até a posição. Já as
+variantes com ano continuaram ganhando: `calcular férias 2026` 37 → 56 (6 → 7
+cliques), `cálculo férias 2026` 20 → 65 (2 → 6), `cálculo de férias 2026`
+25 → 40 (3 → 4), e `calculadora irrf 2026` 167 → 239 @ 6,0 (8 → 10). **Leitura
+provável: o Bing tirou o site dos genéricos de cabeça (que não clicavam), e a
+queda de impressões vem daí. Os cliques caíram menos (33 → 19 por semana).**
+Sem dados de concorrente, não dá para dizer se foi rebaixamento nosso ou se
+alguém entrou na frente.
+
+Temas nomeados (2.044 impressões e 142 cliques em ~300 keywords): férias ~570
+/31, IRRF 361/23, INSS 236/8, empréstimo 201/17, poupança 128/11, rescisão
+124/15, **feriados ~104/0** (`hoje é feriado nacional ?` 42 @ 6,6, `hoje é
+feriado nacional` 36 @ 8,8: a F72 entrou no Bing por volta do feriado de 12/10,
+mas sem clique). Várias keywords longas parecem consultas geradas pelo Copilot
+(`cálculo verbas rescisórias sem justa causa brasil 2026` 44 @ 3,5,
+`inss cálculo contribuições cnis salário contribuição benefício brasil 2026`),
+o que reforça a parte 4 de 22/09 (Bing e IA são o mesmo público).
+
+**2. Google: platô em ~150 impressões/dia, e o checkpoint da F68.**
+
+| Semana (seg) | Impr | Cliq | Pos |
+|---|---|---|---|
+| 14/09 | 400 | 0 | 27,1 |
+| 21/09 | 713 | 1 | 17,3 |
+| 28/09 | 957 | 3 | 13,6 |
+| 05/10 | 1.047 | 1 | 15,1 |
+| 12/10 | 1.052 | 1 | 17,8 |
+| 19/10 (seg-sex) | 685 | 2 | 18,2 |
+
+3 meses: **10 cliques, 6.307 impressões**. Por página: **`datas` 2.442 @ 9,0
+com 2 cliques** (1.079 em 10/10, o mesmo ritmo de ~80/dia), `margem-lucro`
+819 @ 9,6, `porcentagem` 758 @ 9,2, `rescisao-trabalhista` 506 @ 84,7,
+`financiamento` 358 @ 64,2, `decimo-terceiro` 277 @ 84,8 (1), **`tesouro-direto`
+243 @ 22,5 com 4 cliques** (109 @ 32,7 e 1 clique em 10/10), `poupanca` 198 @
+34,5, `hora-extra` 180 @ 74,6 (1), **post `salario-depois-das-ferias` 78 @
+7,8**, `cdb` 56 (1), home 11 @ 4,1 (1).
+- **Checkpoint da F68 (~27/10): o mesmo veredito de 10/10.** Dois cliques em
+  ~2.400 impressões, posição parada em 9, e o GA4 dá 9 views à página em 28
+  dias. É a cauda de datas específicas que o Google responde na SERP. Não veio
+  o GSC filtrado pela página, então não dá para conferir se algum termo-alvo
+  apareceu. Com o projeto parado, fica registrado e não há ação.
+- **O único sinal novo no Google é o Tesouro Direto:** `simulador tesouro
+  direto grátis` **108 @ 11,1 com 2 cliques**, `… gratis` 17 @ 10,9. É a
+  primeira consulta com volume perto da página 1 no Google que não é
+  aritmética. Ela clica pouco, mas clica.
+- Celular 3.270 @ 19,1, computador 3.001 @ 37,6. Brasil 5.945 das 6.307.
+
+**3. GA4 (27/09→24/10) contra o de 03/10 (05/09→02/10).** As janelas se
+sobrepõem em 6 dias.
+
+| | 03/10 | 25/10 |
+|---|---|---|
+| Usuários ativos | 240 | **216** |
+| Sessões `bing` | 109 | 107 |
+| Sessões direto | 101 | 81 |
+| Sessões `chatgpt.com` | 37 | **30** |
+| Sessões Yahoo (Bing) | 19 | 13 |
+| Sessões `google / organic` | 2 | **8** |
+| `mercadohoje` / Band | 7 / 5 | 1 / 0 |
+| `calculator_calculated` | 281 | 215 |
+| `resource_error` | 267 | **81** |
+| `exception` | 50 | **3** |
+| Engajamento por usuário | 85,7s | 77,0s |
+
+- **A F75 funcionou.** Os 6 dias antes do deploy (27/09-02/10) respondem por
+  ~57 dos 81 `resource_error`, no ritmo antigo de ~9,5/dia. Sobram ~24 em 22
+  dias, ~1/dia, que é o piso de adblock. O `exception` caiu para 3.
+- As 8 sessões do Google batem com os ~8 cliques do GSC na janela.
+- Bot como antes: EUA 30 (Ashburn 18, Moses Lake, Manassas), China 12, Índia
+  4. Brasil 164.
+- Pico em 19/10 (seg): 27 usuários, todos novos, contra 8-13 nos dias úteis. O
+  Bing teve 8 cliques nesse dia, o que não explica 27. Sem a origem por dia,
+  fica sem explicação.
+- Usuários novos por semana de coorte: 13/09 60 · 20/09 54 · 27/09 63 · 04/10
+  48 · 11/10 40 · 18/10 57.
+- Páginas: home 43, trabalhista completa 23+7 (os dois titles, antes e depois
+  da F77), hora extra 23, rescisão 22, IRRF 20 (47 em 03/10), férias + 13º 16,
+  férias 15+10 (antes e depois da F76), 13º 12, CDB 11, empréstimo 10, datas 9.
+
+**4. Mapas de clique do Clarity (01→25/10).**
+- **`hora-extra` (PC, 19 pageviews, 197 cliques): 76 cliques no botão
+  "Diminuir" do stepper `quantidadeHoras`** (é o `button:nth-of-type(1)` do
+  `StepperField` em `packages/ui/src/CalculatorForm/index.tsx`), mais 31 no
+  input. É o mesmo padrão que levou ao F50 no CDB (64 de 133 cliques num
+  stepper). A hipótese é que o chip +10 ou +20 passa do valor e o usuário volta
+  de 1 em 1. Com 4 cliques por pageview, também pode ser 1 ou 2 sessões, ou
+  teste do Paulo. **Não vale abrir feature com o projeto parado. Fica
+  registrado para quando voltar.**
+- `ferias` (PC, 21 pageviews, 216 cliques): `#diasAbono` 28, calcular 23,
+  `#fracionar` 21, "Aumentar" de um stepper 20, `#emAtraso` 19. O campo da F76
+  segue sendo usado.
+- `calculadora-trabalhista-completa`: PC 16 pageviews e 92 cliques, celular
+  15 e 74. O form inteiro é preenchido (salário, datas, motivo, férias
+  vencidas) e há cliques nos `<details>` do resultado. É uso real.
+- `rescisao-trabalhista` PC 14/60, celular 4/4. Home no celular 8/3.
+
+**5. Painel de IA do Clarity (`gsc/pasta-01/`, 19→25/10, veio na mesma
+sessão): as citações voltaram a subir, mas o Share of Authority segue
+caindo.**
+
+| Janela (7 dias) | Citações | SoA |
+|---|---|---|
+| 16-22/09 | 994 | 21,48% |
+| 04-10/10 | 670 | 19,34% |
+| **19-25/10** | **847** | **16,99%** |
+
+O export traz o regex da `rescisao-trabalhista` no cabeçalho, mas a lista por
+página tem o site inteiro (e não tem a rescisão), então o filtro não se aplica
+a este painel. **A queda de 10/10 não continuou: 670 → 847 (+26%).** Mas o
+SoA cai pela terceira janela seguida, o que quer dizer que outras fontes estão
+sendo citadas mais rápido que nós nas mesmas perguntas.
+
+Por página, 04-10/10 → 19-25/10: **`salario-liquido` 111 → 402** (47% das
+citações), `cdb` 56 → 95, `decimo-terceiro` 66 → 63, `ferias` 61 → 54,
+**`hora-extra` 161 → 54**, `irrf` 36 → 50, `margem-lucro` 44 (não estava na
+lista), blog do 13º 23 → 20, `ferias-e-decimo-terceiro` 14, `emprestimo` 7 →
+14, `calorias` 12, **`inss` 103 → 12**, `poupanca` 6, `das-mei` 12 → 4, post do
+13º proporcional 3.
+- **Salário líquido é o efeito da F76 na IA:** `calculadora salário líquido`
+  276 @ 11,18% e `calculadora de salário líquido` 120 @ 13,64%. O SoA de
+  `calculadora de salário líquido` era 8,70% antes da F76. Mas é volume com
+  share baixo: a IA cita o site, e cita outros bem mais.
+- **Hora extra (161 → 54) e INSS (103 → 12) despencaram na IA.** O INSS bate
+  com o item 1, em que `calculadora inss` saiu do Bing depois de 08/10. Como
+  IA e Bing são o mesmo índice, é a mesma perda vista de dois lados.
+- **Os SoA altos são as perguntas, não as calculadoras:** `como calcular 13
+  proporcional` 63 @ 63,64%, `calcular horas extras simulador` 14 @ 53,85%,
+  `como calcular a margem de lucro` 28 @ 50%, `simular irrf` 30 @ 47,62%.
+  Onde a consulta é "como calcular", o site vence. Onde é "calculadora X", ele
+  perde.
+
+**6. Retomada do projeto e F78 (mesma sessão).** Paulo decidiu retomar ("notei
+pequenos acessos no gsc, quero deixar funcionando ok"). O check-up achou o
+`Disallow: /_next/` no robots, presente desde 19/07: o Googlebot não baixava
+nenhum CSS ou JS. Corrigido na F78. **Não é a explicação para o Google
+mandar pouco tráfego** (a posição 60-90 do trabalhista é autoridade, parte 9-13
+de 22/09), mas era um defeito real em toda página, e o mais barato de
+corrigir.
+
+**O que pedir no próximo export:**
+- **BWT → AI Performance (desde 01/10)**: segue pendente desde 10/10. Agora
+  serve para conferir no BWT a queda de hora extra e INSS do item 5.
+- **BWT → keywords por página de `ferias` e `inss`**, para ver se os genéricos
+  voltaram ou se saíram de vez.
+- Conferir no BWT → SEO Analysis se os dois alertas da F77 sumiram (também
+  pendente).
+
+### 2026-10-10 — Export novo: a F68 é a maior página do site no Google, e as citações de IA caíram no Clarity
+
+Paulo pôs na `gsc/`: GSC (zip, "últimos 3 meses", série até **06/10**), BWT
+desempenho diário + keywords (**08/09→08/10**, 31 dias), Clarity → painel de
+IA (**04→10/10**, 7 dias) e 3 mapas de clique (**08→10/10**). Antes, colou o
+resumo de sessões do Copilot do Clarity (qualitativo, ~15 sessões). **As datas
+do Clarity vêm em MM/DD** apesar do rótulo em português ("10/04/2026" é 4 de
+outubro). Não vieram BWT → AI Performance nem GA4.
+
+**1. Google: a calculadora de datas virou a página com mais impressões.**
+
+| Semana (seg) | Impr | Cliq | Pos |
+|---|---|---|---|
+| 07/09 | 218 | 0 | 61,3 |
+| 14/09 | 400 | 0 | 27,1 |
+| 21/09 | 713 | 1 | 17,3 |
+| 28/09 | **957** | **3** | 13,6 |
+| 05/10 (seg-ter) | 328 | 0 | 12,0 |
+
+Por página (92 dias): **`datas` 1.079 @ 8,9 com 1 clique**, `margem-lucro`
+639 @ 10,0, `porcentagem` 566 @ 9,2, `rescisao-trabalhista` 432 @ 88,3,
+`financiamento` 317 @ 73,1, `decimo-terceiro` 279 @ 87,0 (1 clique),
+`hora-extra` 242 @ 82,3 (1), `fgts` 185, `ferias` 147 @ 82,3, `poupanca` 143
+@ 40,6, `tesouro-direto` 109 @ 32,7 (1), `cdb` 40 (1), home 8 @ 3,9 (1). As
+1.079 da `datas` vieram em ~13 dias desde o IndexNow de 23/09 (o salto diário é
+de 82 para 200 nesse dia), então **a F68 é ~metade das impressões do Google
+desde então**. **Mas o CTR (0,09% em posição 9) é o mesmo padrão de
+`porcentagem`/`margem-lucro`:** as consultas nomeadas são só 1.848 das 4.466
+impressões, e as da `datas` que aparecem são aritmética ("2026 menos 2001" 2 @
+12). O Google responde a conta na própria SERP, e o dono dessas buscas é um
+calendário (parte 14 de 22/09). Cliques no Google: 6 em 3 meses, 4 deles
+desde 24/09.
+
+**1b. GSC filtrado pela `datas` (`gsc/novo1/`, mesma sessão): a F68 não
+ranqueia no alvo dela.** A série é limpa. Zero até 22/09, e de 23/09 a 06/10
+(14 dias) **~77 impressões/dia, sempre em posição 7,4-10,5**, desde o
+primeiro dia, sem tendência. Dias úteis 81-143, fins de semana 28-54. **1
+clique** (04/10). **Só 6 das 1.079 impressões (0,6%) têm consulta nomeada**
+(`2026 menos 2001` 2 @ 12, `separação de dias` 2 @ 92, `calculadora entre
+datas` 1 @ 88). Com o filtro de página, as tabelas de dispositivo e país
+também só contam essas 6, então não há corte por dispositivo. **Leitura:**
+`diferença entre datas` (4,4K/mês), `calcular dias` (6,6K) e `somar dias`
+(3,6K) têm volume demais para serem anonimizadas. Se a página estivesse em
+posição 9 nelas, apareceriam nomeadas. **O que a página pega é a cauda de
+datas específicas** ("quantos dias de 12/03 até hoje"), em que cada consulta é
+única e o Google responde na SERP. **Não é sinal de ranqueamento nos termos
+da F68. Sem ação: o checkpoint de ~27/10 continua sendo a medida, no BWT e no
+GSC.**
+
+**2. Bing: a busca estabilizou e o CTR continua caindo.**
+
+| Semana (seg) | Cliq | Impr | Impr/dia útil | CTR |
+|---|---|---|---|---|
+| 07/09 (4 úteis) | 16 | 818 | 186 | 1,96% |
+| 14/09 | 27 | 1.504 | 275 | 1,80% |
+| 21/09 | 33 | 2.009 | 357 | 1,64% |
+| 28/09 | 30 | 1.783 | 320 | 1,68% |
+| 05/10 (seg-qui) | 20 | 1.408 | 352 | 1,42% |
+
+As três primeiras semanas batem com o export de 04/10. **Total: 7.522
+impressões e 126 cliques.** O crescimento parou em ~350/dia útil desde 21/09.
+
+**3. No Bing, férias virou o 1º tema das keywords nomeadas: 126 → 438
+impressões, com 21 cliques.** (O export de 04/10 cobria 08→30/09. Os 8 dias a
+mais não explicam +312 sozinhos: IRRF foi 233 → 285 e INSS 189 → 224.) As
+variantes curtas apareceram no fundo da página 1 e quase não clicam:
+`calcular ferias` 121 @ 7,4 (1 clique), `calculo de ferias` 73 @ 9,1 (0),
+`calcular férias` 62 @ 9,2 (0). As com "2026" clicam: `calcular férias 2026`
+37 @ 6,1 (**6**), `cálculo de férias 2026` 25 @ 6,7 (3), `cálculo férias 2026`
+20 @ 8,2 (2). **A F76 (04/10) é a candidata natural, mas sem série por dia não
+há como datar.** A pergunta dos 10 dias segue igual (28 @ 6,8, zero clique).
+Outros temas: IRRF 285/19 (`calculadora irrf 2026` 167 @ 5,6, 8 cliques), INSS
+224/6 (`calculadora inss` 121 @ 9,2, zero), empréstimo 159/14, rescisão
+112/10, poupança 102/9 (`simulador poupança anual` 25 @ 2,8, 7 cliques). Total
+nomeado: 1.512 impressões e 101 cliques em 204 keywords. **Primeiro sinal da
+F72:** `hoje é feriado nacional ?`, `… em` e `feriado hoje nacional`, 1
+impressão cada @ 5-10. A `datas` segue com zero no Bing.
+
+**4. Clarity → IA (04→10/10): 670 citações, SoA 19,34%.** Em 16-22/09 foram
+**994 @ 21,48%**, com o mesmo número de dias úteis (5): **−33%**. Isso contradiz
+o BWT de 04/10, em que as citações dobravam por semana até 30/09 (978/dia útil).
+As duas fontes não somam igual (o Clarity de 16-22/09 era ~40% do BWT no
+período), então a comparação válida é Clarity com Clarity, e ela diz queda.
+**Só o BWT → AI Performance de 01→10/10 confirma.** Por página: `hora-extra`
+**161** (1ª, o que confirma a F67), `salario-liquido` 111, `inss` 103,
+`decimo-terceiro` 66, `ferias` 61, `cdb` 56, `irrf` 36, home 24, blog do 13º 23,
+`das-mei` 12, `rescisao-trabalhista` 10, `emprestimo` 7. AI referral: 5. A
+lista de queries veio vazia neste export.
+
+**5. Mapas de clique (08→10/10, 2 pageviews cada, amostra mínima).**
+- `ferias` (PC, 34 cliques): `#diasAbono` 11 (32%), **`#fracionar` 6**,
+  `#emAtraso` 4, botão calcular 2. **O campo da F76 está sendo achado.** Os
+  20 cliques no "+" do abono de 02-04/10 sumiram do topo; agora são 11 cliques
+  **no próprio input** (`type="number"`, sem `min`/`max` no HTML). As setas
+  nativas do navegador no desktop contam como clique no input, e acima de 10 o
+  `clamp` ignora o valor, então pode ser o mesmo clique morto de antes, por
+  outro caminho. Com 17 cliques por pageview, também pode ser teste do Paulo.
+- `irrf` (PC, 16 cliques): `#origemRendimento` 4 (25%). É o mesmo campo que
+  liderou em 22/09 (16 de 34). 2 cliques no 2º parágrafo do artigo.
+- `cdb` (celular): 1 toque, no CTA do header.
+
+**6. Resumo de sessões do Clarity (Copilot), sem janela informada.** Uso real
+de margem de lucro, férias, IRRF, INSS e da trabalhista completa (com
+resultado). Saídas sem interação (3 sessões), "dead clicks" em **juros
+compostos** e **férias**, e uma sessão alternando de aba sem calcular. O de
+férias é coerente com o item 5. **Juros compostos: resumo da sessão colado
+na mesma rodada, e não é bug.** Uma sessão de ~16 s, com entrada direta na
+página. O "dead click" foi **no H1** ("Calculadora de Juros Comp…"), seguido
+de seleção de texto, e houve 1 entrada mascarada aos 6 s. "Campo sensível" é
+só o nosso `data-clarity-mask` em todo input, não dado sensível. O form pede
+4 campos (todos com default 0) e um clique em "Calcular Montante", então, em
+10 s depois da 1ª digitação, quase certamente saiu sem resultado. Uma sessão
+não sustenta mexer no form. **Sem ação.** Detalhe que não fecha: a página tem
+5 impressões no Google em 3 meses, então uma entrada direta nela é mais
+provável que seja IA, favorito ou teste do que busca.
+
+**O que pedir no próximo export:**
+- **BWT → AI Performance (01→10/10):** confirma ou derruba a queda do item 4.
+  É o canal que crescia.
+- ~~**GSC filtrado por página `/calculadora/datas`**~~ ✅ veio na mesma
+  sessão (item 1b). 99,4% anonimizado, e nenhum termo-alvo da F68.
+- **BWT → keywords dos últimos 7 dias** (ou da página `ferias`), para datar o
+  salto de férias contra a F76.
+- ~~Replay do dead click de juros compostos~~ ✅ veio na mesma sessão
+  (item 6): clique no H1, sem ação.
 
 ### 2026-10-04 (parte 3) — F76: o molde da F67 em férias e salário líquido, e férias fracionadas
 
