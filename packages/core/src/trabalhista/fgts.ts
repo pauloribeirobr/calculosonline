@@ -199,6 +199,25 @@ export function calcularFGTS(params: FGTSParams): ResultadoOuErro<FGTSResultado>
       rotuloResultado,
       avisos,
       detalhamento,
+      // Mesma conta do "Saldo acumulado (sem rendimento)": sem TR + 3% a.a.,
+      // então a tabela não promete um saldo que o motor não calcula.
+      ...(Number.isInteger(params.mesesTrabalhados) && params.mesesTrabalhados > 0
+        ? {
+            evolucao: {
+              titulo: 'Depósitos mês a mês (sem rendimento)',
+              colunas: [
+                { chave: 'mes', rotulo: 'Mês', formato: 'integer' as const },
+                { chave: 'deposito', rotulo: 'Depósito (8%)' },
+                { chave: 'saldo', rotulo: 'Saldo acumulado' },
+              ],
+              linhas: Array.from({ length: params.mesesTrabalhados }, (_, i) => ({
+                mes: i + 1,
+                deposito: depositoMensal,
+                saldo: arredondar(saldoAtual + depositoMensal * (i + 1)),
+              })),
+            },
+          }
+        : {}),
       baseCalculo: '8% sobre salário bruto por competência (não incide sobre INSS/IRRF)',
       fonteJuridica: 'Lei 8.036/1990 | Lei 13.932/2019 (Saque-Aniversário)',
       dataReferencia: VIGENCIA_REGRAS_FGTS,

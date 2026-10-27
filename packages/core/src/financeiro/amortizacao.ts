@@ -86,10 +86,15 @@ export function calcularAmortizacao(
 
     for (let k = 1; k <= n; k++) {
       const juros = arredondar(saldo * i)
-      const amortizacao = arredondar(pmt - juros)
+      // A última parcela quita o saldo que sobrou. Com a PMT arredondada, a
+      // soma das amortizações escorregava alguns centavos (ou reais, em 360
+      // meses) do valor financiado, e o `Math.max(0, …)` escondia o saldo
+      // negativo: R$ 300 mil em 360 meses a 0,9% amortizavam R$ 300.011,72
+      // (F86, visto na tabela de parcelas).
+      const amortizacao = k === n ? saldo : arredondar(pmt - juros)
       const seguro = arredondar(saldo * segTaxa)
       saldo = arredondar(saldo - amortizacao)
-      const parcela = arredondar(pmt + seguro)
+      const parcela = arredondar(amortizacao + juros + seguro)
 
       tabela.push({
         numero: k,
@@ -97,7 +102,7 @@ export function calcularAmortizacao(
         amortizacao,
         juros,
         seguro,
-        saldoDevedor: Math.max(0, saldo),
+        saldoDevedor: saldo,
       })
       totalPago += parcela
       totalJuros += juros
@@ -110,16 +115,19 @@ export function calcularAmortizacao(
     for (let k = 1; k <= n; k++) {
       const juros = arredondar(saldo * i)
       const seguro = arredondar(saldo * segTaxa)
-      const parcela = arredondar(amortizacaoFixa + juros + seguro)
-      saldo = arredondar(saldo - amortizacaoFixa)
+      // Mesmo ajuste do Price: R$ 100 mil / 120 = R$ 833,33 por mês deixava
+      // R$ 0,40 de dívida depois da última parcela.
+      const amortizacao = k === n ? saldo : amortizacaoFixa
+      const parcela = arredondar(amortizacao + juros + seguro)
+      saldo = arredondar(saldo - amortizacao)
 
       tabela.push({
         numero: k,
         parcela,
-        amortizacao: amortizacaoFixa,
+        amortizacao,
         juros,
         seguro,
-        saldoDevedor: Math.max(0, saldo),
+        saldoDevedor: saldo,
       })
       totalPago += parcela
       totalJuros += juros
@@ -162,6 +170,18 @@ export function calcularAmortizacao(
     dados: {
       resultado: arredondar(totalPago),
       detalhamento,
+      evolucao: {
+        titulo: `Tabela de parcelas (${params.sistema === 'price' ? 'Price' : 'SAC'})`,
+        colunas: [
+          { chave: 'numero', rotulo: 'Parcela', formato: 'integer' },
+          { chave: 'parcela', rotulo: 'Valor da parcela' },
+          { chave: 'juros', rotulo: 'Juros' },
+          { chave: 'amortizacao', rotulo: 'Amortização' },
+          ...(totalSeguro > 0 ? [{ chave: 'seguro', rotulo: 'Seguro' }] : []),
+          { chave: 'saldoDevedor', rotulo: 'Saldo devedor' },
+        ],
+        linhas: tabela.map((p) => ({ ...p })),
+      },
       baseCalculo:
         params.sistema === 'price'
           ? 'PMT = PV × i × (1+i)^n / ((1+i)^n − 1)'

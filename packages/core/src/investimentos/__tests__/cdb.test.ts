@@ -150,3 +150,36 @@ describe('calcularCDB', () => {
     })
   })
 })
+
+describe('evolução mês a mês (F86)', () => {
+  const r = calcularCDB({ valorInicial: 10000, taxaAnual: 1, tipo: 'cdi', prazoMeses: 24 })
+  if (!r.sucesso) throw new Error('cálculo falhou')
+  const { dados, evolucao } = r.dados
+
+  it('tem uma linha por mês e a última bate com o detalhamento', () => {
+    expect(evolucao?.linhas).toHaveLength(24)
+    const ultima = evolucao!.linhas.at(-1)!
+    expect(ultima.montanteBruto).toBe(dados.montanteBruto)
+    expect(ultima.ir).toBe(dados.ir)
+    expect(ultima.montanteLiquido).toBe(r.dados.resultado)
+  })
+
+  it('o rendimento de cada mês soma o rendimento bruto', () => {
+    const soma = evolucao!.linhas.reduce((t, l) => t + l.rendimentoMes!, 0)
+    expect(soma).toBeCloseTo(dados.rendimentoBruto, 2)
+  })
+
+  it('a faixa de IR muda conforme o mês do resgate', () => {
+    // 5 meses = 152 dias; 6 = 183; 12 = 365; 24 = 730 (ver `diasDoPrazo`).
+    const aliquotas: Array<[number, number]> = [
+      [5, 0.225],
+      [6, 0.2],
+      [12, 0.175],
+      [24, 0.15],
+    ]
+    for (const [mes, aliquota] of aliquotas) {
+      const linha = evolucao!.linhas[mes - 1]!
+      expect(linha.ir).toBeCloseTo((linha.montanteBruto! - 10000) * aliquota, 1)
+    }
+  })
+})

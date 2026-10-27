@@ -71,10 +71,23 @@ export function calcularJurosCompostos(
   let saldo = params.principal
   let totalAportado = params.principal
   const evolucaoAnual: EvolucaoAnual[] = []
+  const linhas: Array<Record<string, number>> = []
+  let saldoAnterior = arredondar(params.principal)
 
   for (let mes = 1; mes <= params.prazoMeses; mes++) {
     saldo = saldo * (1 + taxaMensal) + aporte
     totalAportado += aporte
+    // Juros do mês pela diferença de saldos já arredondados, para a coluna
+    // somar os "Juros Acumulados" do detalhamento.
+    const saldoMes = arredondar(saldo)
+    linhas.push({
+      mes,
+      aporte,
+      jurosMes: arredondar(saldoMes - saldoAnterior - aporte),
+      jurosAcumulados: arredondar(saldoMes - arredondar(totalAportado)),
+      saldo: saldoMes,
+    })
+    saldoAnterior = saldoMes
     if (mes % 12 === 0 || mes === params.prazoMeses) {
       const saldoArred = arredondar(saldo)
       const aportesArred = arredondar(totalAportado)
@@ -112,6 +125,17 @@ export function calcularJurosCompostos(
     dados: {
       resultado: montanteFinal,
       detalhamento,
+      evolucao: {
+        titulo: 'Evolução mês a mês',
+        colunas: [
+          { chave: 'mes', rotulo: 'Mês', formato: 'integer' },
+          ...(aporte > 0 ? [{ chave: 'aporte', rotulo: 'Aporte' }] : []),
+          { chave: 'jurosMes', rotulo: 'Juros no mês' },
+          { chave: 'jurosAcumulados', rotulo: 'Juros acumulados' },
+          { chave: 'saldo', rotulo: 'Saldo' },
+        ],
+        linhas,
+      },
       baseCalculo: `M = P(1+i)^n + PMT × ((1+i)^n − 1) / i | i ≈ ${(taxaMensal * 100).toFixed(4)}%/mês`,
       fonteJuridica: 'Matemática financeira',
       dataReferencia: hojeISO(),

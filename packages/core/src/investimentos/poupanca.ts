@@ -59,15 +59,27 @@ export function calcularPoupanca(params: PoupancaParams): ResultadoOuErro<Poupan
   let saldo = params.valorInicial
   let totalAportado = params.valorInicial
   const evolucao: Array<{ mes: number; saldo: number; rendimento: number }> = []
+  const linhas: Array<Record<string, number>> = []
+  let saldoAnterior = arredondar(params.valorInicial)
 
   for (let mes = 1; mes <= params.prazoMeses; mes++) {
     saldo = saldo * (1 + taxaMensal) + aporte
     totalAportado += aporte
+    const saldoArred = arredondar(saldo)
     evolucao.push({
       mes,
-      saldo: arredondar(saldo),
+      saldo: saldoArred,
       rendimento: arredondar(saldo - totalAportado),
     })
+    // Rendimento do mês pela diferença de saldos já arredondados, para a
+    // coluna somar o "Rendimento Total" do detalhamento.
+    linhas.push({
+      mes,
+      aporte,
+      rendimentoMes: arredondar(saldoArred - saldoAnterior - aporte),
+      saldo: saldoArred,
+    })
+    saldoAnterior = saldoArred
   }
 
   const montanteFinal = arredondar(saldo)
@@ -99,6 +111,16 @@ export function calcularPoupanca(params: PoupancaParams): ResultadoOuErro<Poupan
     dados: {
       resultado: montanteFinal,
       detalhamento,
+      evolucao: {
+        titulo: 'Evolução mês a mês',
+        colunas: [
+          { chave: 'mes', rotulo: 'Mês', formato: 'integer' },
+          ...(aporte > 0 ? [{ chave: 'aporte', rotulo: 'Aporte' }] : []),
+          { chave: 'rendimentoMes', rotulo: 'Rendimento no mês' },
+          { chave: 'saldo', rotulo: 'Saldo' },
+        ],
+        linhas,
+      },
       baseCalculo: `Taxa mensal efetiva: ${(taxaMensal * 100).toLocaleString('pt-BR', { maximumFractionDigits: 4 })}% (isenta de IR)`,
       fonteJuridica: 'Lei 12.703/2012 | Lei 11.033/2004 art. 3º, V (isenção IR PF)',
       dataReferencia: hojeISO(),

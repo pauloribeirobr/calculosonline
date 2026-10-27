@@ -146,3 +146,23 @@ describe('calcularJurosCompostos', () => {
     })
   })
 })
+
+describe('evolução mês a mês (F86)', () => {
+  it('os juros de cada mês somam os juros acumulados e o saldo final bate', () => {
+    const r = calcularJurosCompostos({
+      principal: 1000,
+      taxaJuros: 0.01,
+      periodoTaxa: 'mensal',
+      prazoMeses: 60,
+      aporteMensal: 100,
+    })
+    if (!r.sucesso) throw new Error('cálculo falhou')
+    const { dados, evolucao } = r.dados
+    expect(evolucao?.linhas).toHaveLength(60)
+    const ultima = evolucao!.linhas.at(-1)!
+    expect(ultima.saldo).toBe(dados.montanteFinal)
+    expect(ultima.jurosAcumulados).toBe(dados.jurosAcumulados)
+    const soma = evolucao!.linhas.reduce((t, l) => t + l.jurosMes!, 0)
+    expect(soma).toBeCloseTo(dados.jurosAcumulados, 2)
+  })
+})

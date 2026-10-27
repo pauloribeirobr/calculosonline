@@ -86,12 +86,6 @@ export function calcularTesouroDireto(
   }
 
   const taxaMensal = Math.pow(1 + taxaAnualEfetiva, 1 / 12) - 1
-  const montanteBruto = arredondar(
-    params.valorInicial * Math.pow(1 + taxaMensal, params.prazoMeses),
-  )
-  const rendimentoBruto = arredondar(montanteBruto - params.valorInicial)
-  const dias = diasDoPrazo(params.prazoMeses)
-  const anos = params.prazoMeses / 12
 
   // Custódia B3: provisionada diariamente e cobrada na venda, no vencimento ou no
   // pagamento de juros (simplificação: sobre o valor inicial). No Tesouro Selic,
@@ -103,16 +97,38 @@ export function calcularTesouroDireto(
     params.tipo === 'selic'
       ? Math.max(0, params.valorInicial - LIMITE_ISENCAO_SELIC)
       : params.valorInicial
-  const custodia = arredondar(baseCustodia * TAXA_CUSTODIA_B3 * anos)
 
   // Como o parâmetro mínimo é 1 mês (30 dias), o IOF não se aplica.
-  const prazoIR = getPrazoIR(dias)
-  const aliquotaIR = ALIQUOTAS_IR_REGRESSIVO[prazoIR]
-  const ir = arredondar(rendimentoBruto * aliquotaIR)
+  const resgateNoMes = (mes: number) => {
+    const montanteBruto = arredondar(params.valorInicial * Math.pow(1 + taxaMensal, mes))
+    const rendimentoBruto = arredondar(montanteBruto - params.valorInicial)
+    const custodia = arredondar(baseCustodia * TAXA_CUSTODIA_B3 * (mes / 12))
+    const prazoIR = getPrazoIR(diasDoPrazo(mes))
+    const aliquotaIR = ALIQUOTAS_IR_REGRESSIVO[prazoIR]
+    const ir = arredondar(rendimentoBruto * aliquotaIR)
+    const montanteLiquido = arredondar(params.valorInicial + rendimentoBruto - ir - custodia)
+    return { montanteBruto, rendimentoBruto, custodia, prazoIR, aliquotaIR, ir, montanteLiquido }
+  }
 
-  const montanteLiquido = arredondar(
-    params.valorInicial + rendimentoBruto - ir - custodia,
-  )
+  // Mesma leitura do CDB: cada linha é a venda naquele mês, com a faixa de IR
+  // e a custódia acumulada até ali.
+  const linhas: Array<Record<string, number>> = []
+  let brutoAnterior = params.valorInicial
+  for (let mes = 1; mes <= params.prazoMeses; mes++) {
+    const r = resgateNoMes(mes)
+    linhas.push({
+      mes,
+      rendimentoMes: arredondar(r.montanteBruto - brutoAnterior),
+      montanteBruto: r.montanteBruto,
+      custodia: r.custodia,
+      ir: r.ir,
+      montanteLiquido: r.montanteLiquido,
+    })
+    brutoAnterior = r.montanteBruto
+  }
+
+  const { montanteBruto, rendimentoBruto, custodia, prazoIR, aliquotaIR, ir, montanteLiquido } =
+    resgateNoMes(params.prazoMeses)
   const rentabilidadeLiquida = arredondar((montanteLiquido / params.valorInicial - 1) * 100)
 
   const detalhamento: ItemDetalhamento[] = [
@@ -147,6 +163,18 @@ export function calcularTesouroDireto(
     dados: {
       resultado: montanteLiquido,
       detalhamento,
+      evolucao: {
+        titulo: 'Evolução mês a mês (venda em cada mês)',
+        colunas: [
+          { chave: 'mes', rotulo: 'Mês', formato: 'integer' },
+          { chave: 'rendimentoMes', rotulo: 'Rendimento no mês' },
+          { chave: 'montanteBruto', rotulo: 'Saldo bruto' },
+          ...(custodiaIsenta ? [] : [{ chave: 'custodia', rotulo: 'Custódia acumulada' }]),
+          { chave: 'ir', rotulo: 'IR na venda' },
+          { chave: 'montanteLiquido', rotulo: 'Líquido na venda' },
+        ],
+        linhas,
+      },
       baseCalculo: `Taxa efetiva anual: ${(taxaAnualEfetiva * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}% a.a.`,
       fonteJuridica:
         'Lei 11.033/2004 (IR regressivo) | Decreto 6.306/2007 (IOF) | Resolução B3 (custódia)',

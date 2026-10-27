@@ -103,3 +103,21 @@ describe('calcularPoupanca', () => {
     })
   })
 })
+
+describe('evolução mês a mês (F86)', () => {
+  it('o rendimento de cada mês soma o rendimento total e o saldo final bate', () => {
+    const r = calcularPoupanca({ valorInicial: 1000, prazoMeses: 36, aporteMensal: 150 })
+    if (!r.sucesso) throw new Error('cálculo falhou')
+    const { dados, evolucao } = r.dados
+    expect(evolucao?.linhas).toHaveLength(36)
+    expect(evolucao!.linhas.at(-1)!.saldo).toBe(dados.montanteFinal)
+    const soma = evolucao!.linhas.reduce((t, l) => t + l.rendimentoMes!, 0)
+    expect(soma).toBeCloseTo(dados.rendimentoTotal, 2)
+  })
+
+  it('sem aporte, não mostra a coluna de aporte', () => {
+    const r = calcularPoupanca({ valorInicial: 1000, prazoMeses: 12 })
+    if (!r.sucesso) throw new Error('cálculo falhou')
+    expect(r.dados.evolucao!.colunas.map((c) => c.chave)).not.toContain('aporte')
+  })
+})
