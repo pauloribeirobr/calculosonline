@@ -14,6 +14,7 @@ Stack: **Next.js + TypeScript** em monorepo **Turborepo**, com aplicativos **Tau
 - [prompts/](prompts/) — `sprint-*.md`: prompts de IA por sprint (0.1 a 2.4)
 - [CHANGELOG.md](CHANGELOG.md) — funcionalidades entregues em produção, versionado por app (mesmo padrão do Recibo Fácil)
 - [FEATURES.md](FEATURES.md) — lista numerada de features (`F1`, `F2`, ...), histórico + backlog, mesmo padrão do Recibo Fácil
+- [dados/README.md](dados/README.md) — leituras de GSC, GA4, Clarity e concorrência (Serper) por API (F89); boletins em `docs/semanas/`
 - [MEMORY.md](MEMORY.md) — diário de decisões/growth (o "porquê" por trás do Changelog/Features), mesmo padrão do Recibo Fácil. **Ao encerrar uma sessão com decisão de growth/negócio ou feature nova, atualizar `FEATURES.md`/`MEMORY.md` em vez de só crescer a seção "Estado atual das sprints" abaixo.**
 
 ## Projeto irmão — Recibo Fácil
@@ -133,8 +134,24 @@ o Bing relê o conteúdo antigo. Atende Bing/Yandex, **não o Google**. A chave 
 constante em `route.ts` de propósito (é pública por protocolo); o segredo é
 `INTERNAL_API_KEY` na Vercel.
 
-**Ciclo "avalie / leia a pasta gsc".** Paulo põe exports de GSC, GA4, Clarity,
-BWT e Semrush em `gsc/` (no `.gitignore`, sobrescrita a cada rodada; às vezes
+**GSC, GA4 e Clarity: a leitura sai da API** (F89, 17/11/2026, porte do F284
+do Recibo Fácil; comandos em [`dados/README.md`](dados/README.md)). Eu mesmo rodo
+`node dados/semana.mjs` (boletim em `docs/semanas/<dia>.md`), `dados/gsc.mjs`,
+`dados/ga4.mjs <leitura.json>` e `dados/clarity-dias.mjs`, **sem pedir export
+ao Paulo**. Leitura nova vira um JSON em `dados/leituras/`. Validado contra o
+export de 25/10 (GA4 3/3, GSC total e páginas iguais). Chaves só em
+`~/.config/calculosonline/` (o OAuth e o Serper vêm do `~/.config/recibofacil/`,
+porque são da conta, não do site); o Clarity tem token próprio e coleta diária
+no servidor do Recibo Fácil (cron 00:10, desde 17/11/2026). Serper gasta
+crédito dividido com o Recibo Fácil: rodar `dados/serp.mjs` ou
+`semana.mjs --serp` só quando a análise de concorrência pedir. **Continuam
+manuais:** BWT (é de onde vem o tráfego, ~60% das sessões em nov/2026), Semrush
+(volume e KD) e o mapa de calor do Clarity.
+
+**Ciclo "avalie / leia a pasta gsc".** Desde o F89, começa pelo boletim da API
+(acima), e a pasta `gsc/` fica para o que a API não cobre. Paulo põe exports de
+BWT, Semrush e mapas de calor do Clarity (e, antes do F89, de GSC e GA4) em `gsc/`
+(no `.gitignore`, sobrescrita a cada rodada; às vezes
 em partes, em subpastas como `gsc/pasta-01/`, no meio da conversa). Ele espera:
 diagnóstico cruzando as fontes, comparação com o estado anterior do
 `MEMORY.md`, recomendações priorizadas (ele escolhe itens e manda executar) e

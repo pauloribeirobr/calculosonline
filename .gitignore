@@ -45,3 +45,6 @@ coverage
 playwright-report
 test-results
 gsc/
+
+# F89 — saídas das leituras por API (CSV/JSON); as chaves ficam em ~/.config/calculosonline/
+dados/saida/
