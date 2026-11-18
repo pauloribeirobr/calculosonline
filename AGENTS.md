@@ -60,9 +60,11 @@ calculosonline/
 - **Commits e PRs:** mensagens em pt-BR; seguir convenção `feat:`, `fix:`, `chore:` etc.
 - **Quem commita/dá push é o Paulo.** Assistente deixa o working tree pronto
   (código + `FEATURES.md`/`CHANGELOG.md`/`MEMORY.md` atualizados, testes
-  passando) e para aí — não roda `git commit`/`git push` por conta própria,
+  escritos) e para aí — não roda `git commit`/`git push` por conta própria,
   mesmo quando o pedido foi "implementar"/"vamos fazer". Confirmado
   explicitamente em 2026-08-13.
+- **Quem roda os testes é o Paulo** (2026-11-18: *"deixe registrado que os
+  testes sou eu quem roda"*). Detalhe em "Regras de trabalho" abaixo.
 - **Código:** identificadores e comentários em inglês quando técnicos; comentários de domínio (regras CLT, INSS, IRRF) podem ficar em pt-BR.
 
 ## Regras de trabalho para assistentes (memória de IA)
@@ -85,6 +87,18 @@ instrução literal de ir ler o código de lá. Onde procurar: `frontend/src/lib
 **Controles de processo.** `FEATURES.md` (o quê), `CHANGELOG.md` (como),
 `MEMORY.md` (porquê), no mesmo formato do Recibo Fácil. Em projeto irmão novo,
 oferecer o mesmo trio sem esperar pedido.
+
+**Testes: quem roda é o Paulo** (18/11/2026, depois de uma suíte e2e completa
+que o assistente deixou rodando em segundo plano na F70). O assistente
+**escreve e atualiza** os testes (Vitest no `packages/core`, Playwright em
+`apps/web/tests/e2e/`), mas **não executa** `pnpm test`, `test:e2e`,
+`npx playwright test` nem `vitest`. Ao entregar, diz quais specs cobrem a
+mudança e o comando exato, por exemplo
+`pnpm --filter web exec playwright test tests/e2e/cliques-mortos.spec.ts`, e
+lembra de apagar `apps/web/.next` antes quando for o caso (ver "Cache local do
+Next" em Decisões técnicas). Typecheck e lint não são teste e continuam com o
+assistente (rápidos, sem servidor). Se o Paulo mandar o resultado de um teste
+que falhou, aí sim o assistente lê, corrige e devolve para ele rodar de novo.
 
 **Commits.** Quem commita é o Paulo. Sugerir **um commit por feature**
 (`feat: F<n> - <descrição>`); o agregado F38-F42 (20/08) foi exceção. O

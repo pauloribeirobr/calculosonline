@@ -16,6 +16,14 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **18/11/2026 — F70 (v0.43.0): o valor clicado copia, e o card do hub abre
+  pelo card inteiro.** Linha de base: `ferias-e-decimo-terceiro` no PC com
+  62,5% de clique morto em 17/11 (Clarity, 8 sessões). **Medir ~1 semana depois
+  do deploy:** `result_copied` no boletim e clique morto da página em
+  `dados/clarity-dias.mjs`; leitura e critério no Diário de 18/11. A coleta
+  diária do Clarity no servidor rodou em 18/11 às 00:10 (4 de 4 chamadas).
+  **Pendente: o Paulo rodar a suíte e2e completa** (desde 18/11, os testes são
+  dele; regra no `AGENTS.md`).
 - **17/11/2026 — F89: GSC, GA4 e Clarity agora saem da API** (`dados/`,
   `node dados/semana.mjs` → `docs/semanas/<dia>.md`), validados contra o
   export de 25/10 (GA4 3/3, GSC igual). Clarity com coleta diária no servidor
@@ -1289,6 +1297,62 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-11-18 — F70: o clique que não fazia nada agora copia, e o card do hub abre pelo card inteiro
+
+Paulo: *"Faça a F70"*, na sequência do F89, que mediu 64% de clique morto no
+PC na `ferias-e-decimo-terceiro`.
+
+**O que se sabia antes de mexer.** A API do Clarity não diz o elemento
+clicado, só a taxa por página. Os elementos vieram dos exports de heatmap de
+01 a 25/10, ainda na pasta `gsc/`:
+
+- **hub (PC, 16 pageviews):** 3 cliques no `SUMMARY` dos cards, 3 nas linhas
+  do detalhamento (`DETAILS > UL > LI > SPAN`), mais `FORM` 4, `SECTION` 1 e
+  `MAIN` 1;
+- **férias (PC, 21 pageviews):** o valor grande (`P.text-result-lg`) 1, o
+  cabeçalho do resultado 1, `#detalhamento-lista` e as linhas dele 4, e `MAIN`
+  8;
+- **hora extra (PC, 19 pageviews):** `MAIN` 18 e `SECTION` 6.
+
+O `MAIN`/`SECTION` é clique no fundo da página, quase sempre para tirar o foco
+de um campo. É comportamento normal e **não tem conserto nem precisa**. Por
+isso a meta da F70 não é zerar o clique morto, e sim tirar a parte que é alvo
+errado. Os rótulos de campo (`LABEL`, 4 cliques nas férias) já apontam para o
+input (`htmlFor`), então funcionam.
+
+**Linha de base para medir (antes do deploy):** Clarity da coleta diária,
+17/11, `ferias-e-decimo-terceiro` no PC: **8 sessões, 62,5% com clique
+morto**, 12,5% com volta rápida (72 h até 17/11: 14 sessões, 64,3%). Site
+inteiro em 17/11: 20 sessões, 30% com clique morto, cobertura de 76,9% do
+GA4 (26 sessões). `result_copied`: zero (o evento não existia).
+
+**O que mudou (v0.43.0):** o valor grande e as linhas do detalhamento copiam
+ao clicar, nas 22 calculadoras. No hub, o card inteiro alterna o detalhamento
+e o valor e as linhas copiam. Evento `result_copied` no GA4. Detalhe no
+`CHANGELOG.md`.
+
+**Como ler em ~1 semana depois do deploy** (`node dados/clarity-dias.mjs
+--de <deploy>` e `node dados/semana.mjs`):
+
+1. **`result_copied` > 0 e clique morto caindo na `ferias-e-decimo-terceiro`:**
+   a hipótese se sustenta, fica.
+2. **`result_copied` > 0 mas clique morto parado:** copiar era parte do que
+   se queria, e o resto do clique morto está em outro lugar. Pedir ao Paulo o
+   heatmap da página (Clarity → Mapas de calor → URL → Exportar).
+3. **`result_copied` ≈ 0:** o clique no valor era leitura ou mira, não
+   vontade de copiar. Rever (a cópia não atrapalha, mas a resposta para o
+   atrito é outra).
+
+Amostra pequena (8 a 14 sessões por dia nessa página): ler por semana, não
+por dia.
+
+**Testes.** Antes da regra nova, o assistente rodou os specs ligados à
+mudança (`cliques-mortos`, `trabalhista-completa`, `ferias-decimo-terceiro`,
+`irrf-aluguel-geo`): **44 de 44 verdes**. A suíte completa (desktop + mobile)
+foi interrompida no meio quando o Paulo fixou que **quem roda os testes é ele**
+(regra no `AGENTS.md`, 18/11). **Falta a rodada completa antes do commit**,
+com o `apps/web/.next` já apagado (foi apagado depois da interrupção).
 
 ### 2026-11-17 — F89: a leitura passa a sair da API, e a primeira rodada diz que o 13º é agora e o Google ainda é zero
 

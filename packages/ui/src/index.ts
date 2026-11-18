@@ -13,7 +13,7 @@ export { CalculatorForm } from './CalculatorForm'
 export type { CalculatorFormProps, FieldMeta, QuickAddButton } from './CalculatorForm'
 
 export { CalculatorResult } from './CalculatorResult'
-export type { CalculatorResultProps, CalculatorResultFormato } from './CalculatorResult'
+export type { CalculatorResultProps, CalculatorResultFormato, AlvoCopia } from './CalculatorResult'
 
 export { CalculatorLayout } from './CalculatorLayout'
 export type { CalculatorLayoutProps } from './CalculatorLayout'
@@ -34,3 +34,4 @@ export { Breadcrumb } from './Breadcrumb'
 export type { BreadcrumbItem, BreadcrumbProps } from './Breadcrumb'
 
 export { cn } from './utils/cn'
+export { copiarTexto, useCopiarValor } from './utils/copiar'

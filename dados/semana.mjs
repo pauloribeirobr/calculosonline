@@ -79,7 +79,7 @@ add(
 
 // ===== 1. Site (GA4) =====
 add('## 1. Site (GA4)', '')
-const EVENTOS = ['page_view', 'calculator_calculated', 'calculator_shared', 'calculator_saved', 'calculator_edited', 'calculator_validation_error', 'exception', 'resource_error']
+const EVENTOS = ['page_view', 'calculator_calculated', 'calculator_shared', 'calculator_saved', 'calculator_edited', 'calculator_validation_error', 'result_copied', 'exception', 'resource_error']
 const tot = porFaixa(await ga4({ metrics: [{ name: 'sessions' }, { name: 'totalUsers' }, { name: 'engagedSessions' }] }), () => 't').get('t') || {}
 const ev = porFaixa(
   await ga4({
@@ -101,6 +101,7 @@ add(
     linhaGA('Cálculos feitos (eventos)', 'calculator_calculated', 1),
     linhaGA('Compartilhamentos (eventos)', 'calculator_shared', 1),
     linhaGA('Cálculos salvos (eventos)', 'calculator_saved', 1),
+    linhaGA('Valores copiados (eventos, F70)', 'result_copied', 1),
     linhaGA('Formulário com erro (eventos)', 'calculator_validation_error', 1),
   ]),
   '',

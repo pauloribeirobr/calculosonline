@@ -203,6 +203,9 @@ export function CalculadoraPageClient({ config, relacionadas }: Props) {
               nomeCalculadora={config.titulo}
               shareUrl={shareUrl}
               onShareClick={() => analytics.calculatorShared(config.slug, config.categoria)}
+              onCopiar={(alvo, descricao) =>
+                analytics.resultCopied(config.slug, config.categoria, alvo, descricao)
+              }
               onSalvarCalculo={
                 inputData
                   ? async () => {

@@ -1,17 +1,22 @@
 'use client'
 
-import { useEffect, useState, type Ref } from 'react'
+import { useEffect, useId, useState, type Ref } from 'react'
 import {
   ArrowUpTrayIcon,
   BookmarkIcon,
   ChevronDownIcon,
+  DocumentDuplicateIcon,
   ExclamationTriangleIcon,
   PencilSquareIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline'
-import { CheckCircleIcon } from '@heroicons/react/20/solid'
+import { CheckCircleIcon, CheckIcon } from '@heroicons/react/20/solid'
 import type { ItemDetalhamento, ResultadoCalculo } from '@calculosonline/core'
 import { cn } from '../utils/cn'
+import { useCopiarValor } from '../utils/copiar'
+
+/** O que foi copiado (F70): o valor grande do resultado ou uma linha do detalhamento. */
+export type AlvoCopia = 'resultado' | 'linha'
 
 export type CalculatorResultFormato =
   | 'currency'
@@ -54,6 +59,12 @@ export interface CalculatorResultProps {
    * chega rolada até aqui e o formulário ficou para trás.
    */
   onEditarCalculo?: (() => void) | undefined
+  /**
+   * Chamado depois de copiar um valor (F70), para registrar em analytics. O
+   * valor grande e as linhas do detalhamento copiam ao clicar em qualquer
+   * caso; o callback só diz o quê (`alvo`) e de qual linha (`descricao`).
+   */
+  onCopiar?: ((alvo: AlvoCopia, descricao: string) => void) | undefined
   /**
    * Ref da região do resultado, para quem abre a página conseguir levar
    * scroll **e foco** até aqui (F59). A região é `tabIndex={-1}`: focável por
@@ -169,10 +180,17 @@ export function CalculatorResult({
   salvo = false,
   onExcluirCalculo,
   onEditarCalculo,
+  onCopiar,
   ref,
 }: CalculatorResultProps) {
   const [estadoSalvar, setEstadoSalvar] = useState<EstadoSalvar>(salvo ? 'salvo' : 'idle')
   const [excluindo, setExcluindo] = useState(false)
+  const { copiado, copiar } = useCopiarValor()
+  const dicaCopiarId = useId()
+
+  async function handleCopiar(chave: string, texto: string, alvo: AlvoCopia, descricao: string) {
+    if (await copiar(chave, texto)) onCopiar?.(alvo, descricao)
+  }
 
   // Novo cálculo (resultado trocou de referência) reseta o botão de salvar —
   // exceto quando `salvo` já vem `true` junto (aberto via cálculo salvo).
@@ -204,6 +222,7 @@ export function CalculatorResult({
   }
 
   const evolucao = resultado.evolucao
+  const textoHeadline = resultado.resultadoTexto ?? formatarValor(resultado.resultado, formato)
 
   return (
     <div
@@ -229,8 +248,34 @@ export function CalculatorResult({
           ("1 de abril de 2026") ou um número que só faz sentido com a unidade
           ("265 dias"). Ver `types.ts` (F68).
         */}
-        <p className="text-result-lg font-semibold tabular-nums tracking-normal" aria-live="polite">
-          {resultado.resultadoTexto ?? formatarValor(resultado.resultado, formato)}
+        {/*
+          F70 — o valor grande copia ao clicar. O Clarity mostrou cliques nele
+          (e nas linhas do detalhamento) que não faziam nada; copiar é o que a
+          pessoa mais provavelmente queria, e o `result_copied` no GA4 diz se
+          a hipótese se sustenta. Copia o texto exibido, igual ao da tela.
+        */}
+        <p aria-live="polite">
+          <button
+            type="button"
+            onClick={() => handleCopiar('resultado', textoHeadline, 'resultado', resultado.rotuloResultado ?? titulo ?? 'Resultado')}
+            aria-describedby={dicaCopiarId}
+            title="Copiar valor"
+            className="group -mx-1.5 inline-flex max-w-full cursor-copy items-center gap-2 rounded-md px-1.5 text-left transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+          >
+            <span className="text-result-lg font-semibold tabular-nums tracking-normal">
+              {textoHeadline}
+            </span>
+            {copiado === 'resultado' ? (
+              <span className="inline-flex shrink-0 items-center gap-1 text-xs font-medium">
+                <CheckIcon className="h-4 w-4" aria-hidden /> Copiado
+              </span>
+            ) : (
+              <DocumentDuplicateIcon
+                className="h-5 w-5 shrink-0 opacity-60 transition-opacity group-hover:opacity-100"
+                aria-hidden
+              />
+            )}
+          </button>
         </p>
         {/*
           Calculadora sem tabela legislativa manda `dataReferencia` vazia (a de
@@ -264,26 +309,67 @@ export function CalculatorResult({
         >
           {resultado.detalhamento.map((item, i) => {
             const valorFormatado = formatarItem(item)
-
-            return (
-              <li key={i} className="flex items-baseline justify-between py-1">
-                <span className="flex-1 pr-4 text-sm text-gray-600">
-                  {item.descricao}
-                  {item.formula && (
-                    <span className="ml-1 font-mono text-xs text-gray-400">({item.formula})</span>
-                  )}
-                </span>
-                {valorFormatado && (
-                  <span className={cn('text-sm font-medium tabular-nums', corNatureza(item.tipo))}>
-                    {sinalNatureza(item.tipo)}
-                    {valorFormatado}
-                  </span>
+            const descricao = (
+              <span className="flex-1 pr-4 text-sm text-gray-600">
+                {item.descricao}
+                {item.formula && (
+                  <span className="ml-1 font-mono text-xs text-gray-400">({item.formula})</span>
                 )}
+              </span>
+            )
+
+            // Linha sem valor (subtítulo de grupo) não tem o que copiar.
+            if (!valorFormatado) {
+              return (
+                <li key={i} className="flex items-baseline justify-between py-1">
+                  {descricao}
+                </li>
+              )
+            }
+
+            const chave = `linha-${i}`
+            return (
+              <li key={i}>
+                {/*
+                  F70 — a linha inteira copia o valor (sem o sinal + / −, que
+                  não cola como número numa planilha). O ícone só aparece no
+                  hover para não poluir a lista; o "✓" confirma a cópia.
+                */}
+                <button
+                  type="button"
+                  onClick={() => handleCopiar(chave, valorFormatado, 'linha', item.descricao)}
+                  aria-describedby={dicaCopiarId}
+                  title="Copiar valor"
+                  className="group -mx-1.5 flex w-[calc(100%+0.75rem)] cursor-copy items-baseline justify-between rounded px-1.5 py-1 text-left transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+                >
+                  {descricao}
+                  <span className="inline-flex items-baseline gap-1.5">
+                    {copiado === chave ? (
+                      <CheckIcon className="h-3.5 w-3.5 self-center text-brand-600" aria-hidden />
+                    ) : (
+                      <DocumentDuplicateIcon
+                        className="h-3.5 w-3.5 self-center text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+                        aria-hidden
+                      />
+                    )}
+                    <span className={cn('text-sm font-medium tabular-nums', corNatureza(item.tipo))}>
+                      {sinalNatureza(item.tipo)}
+                      {valorFormatado}
+                    </span>
+                  </span>
+                </button>
               </li>
             )
           })}
         </ul>
       </div>
+      {/* Descrição dos botões de copiar e o aviso de cópia para leitor de tela (F70). */}
+      <span id={dicaCopiarId} className="sr-only">
+        Clique para copiar o valor
+      </span>
+      <span role="status" className="sr-only">
+        {copiado ? 'Valor copiado' : ''}
+      </span>
 
       {/*
         Fechada por padrão: um financiamento de 35 anos tem 420 linhas, e o

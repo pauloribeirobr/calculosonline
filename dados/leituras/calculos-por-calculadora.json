@@ -7,6 +7,6 @@
   "valores": ["sessions"],
   "filtros": [
     { "campo": "pagePath", "regex": "/calculadora/.*|/calculadora-trabalhista-completa" },
-    { "campo": "eventName", "em": ["page_view", "calculator_calculated", "calculator_shared", "calculator_saved", "calculator_validation_error"] }
+    { "campo": "eventName", "em": ["page_view", "calculator_calculated", "calculator_shared", "calculator_saved", "calculator_validation_error", "result_copied"] }
   ]
 }
