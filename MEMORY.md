@@ -16,6 +16,24 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **18/11/2026 — F70 (v0.43.0): o valor clicado copia, e o card do hub abre
+  pelo card inteiro.** Linha de base: `ferias-e-decimo-terceiro` no PC com
+  62,5% de clique morto em 17/11 (Clarity, 8 sessões). **Medir ~1 semana depois
+  do deploy:** `result_copied` no boletim e clique morto da página em
+  `dados/clarity-dias.mjs`; leitura e critério no Diário de 18/11. A coleta
+  diária do Clarity no servidor rodou em 18/11 às 00:10 (4 de 4 chamadas).
+  **Pendente: o Paulo rodar a suíte e2e completa** (desde 18/11, os testes são
+  dele; regra no `AGENTS.md`).
+- **17/11/2026 — F89: GSC, GA4 e Clarity agora saem da API** (`dados/`,
+  `node dados/semana.mjs` → `docs/semanas/<dia>.md`), validados contra o
+  export de 25/10 (GA4 3/3, GSC igual). Clarity com coleta diária no servidor
+  do RF desde 17/11. **Primeira rodada:** 305 usuários em 28 dias (+41%), ~60%
+  pelo Bing; a `ferias-e-decimo-terceiro` é a maior página no pico do 13º, com
+  **64% de clique morto no PC** (Clarity, 14 sessões) → F70 antes de 20/12;
+  Google em zero (0 de 29 palavras no top 10 no Serper) e `tesouro reserva`
+  sem nenhuma calculadora no top 10 → F83 confirmado; Direct com 97 sessões e
+  16 engajadas (robô?). F90 cadastrado (código aberto da Receita, CBS/IBS).
+  Detalhe no Diário de 17/11.
 - **26/10/2026 — três premissas do Paulo, que valem daqui em diante** (detalhe no
   Diário de 26/10 e regras no `AGENTS.md`): (1) **nenhuma memória de IA fora do
   repo**, e tudo foi migrado para o `AGENTS.md`; (2) **revisar todos os textos e
@@ -1280,6 +1298,169 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
 
 ## Diário
 
+### 2026-11-18 — F70: o clique que não fazia nada agora copia, e o card do hub abre pelo card inteiro
+
+Paulo: *"Faça a F70"*, na sequência do F89, que mediu 64% de clique morto no
+PC na `ferias-e-decimo-terceiro`.
+
+**O que se sabia antes de mexer.** A API do Clarity não diz o elemento
+clicado, só a taxa por página. Os elementos vieram dos exports de heatmap de
+01 a 25/10, ainda na pasta `gsc/`:
+
+- **hub (PC, 16 pageviews):** 3 cliques no `SUMMARY` dos cards, 3 nas linhas
+  do detalhamento (`DETAILS > UL > LI > SPAN`), mais `FORM` 4, `SECTION` 1 e
+  `MAIN` 1;
+- **férias (PC, 21 pageviews):** o valor grande (`P.text-result-lg`) 1, o
+  cabeçalho do resultado 1, `#detalhamento-lista` e as linhas dele 4, e `MAIN`
+  8;
+- **hora extra (PC, 19 pageviews):** `MAIN` 18 e `SECTION` 6.
+
+O `MAIN`/`SECTION` é clique no fundo da página, quase sempre para tirar o foco
+de um campo. É comportamento normal e **não tem conserto nem precisa**. Por
+isso a meta da F70 não é zerar o clique morto, e sim tirar a parte que é alvo
+errado. Os rótulos de campo (`LABEL`, 4 cliques nas férias) já apontam para o
+input (`htmlFor`), então funcionam.
+
+**Linha de base para medir (antes do deploy):** Clarity da coleta diária,
+17/11, `ferias-e-decimo-terceiro` no PC: **8 sessões, 62,5% com clique
+morto**, 12,5% com volta rápida (72 h até 17/11: 14 sessões, 64,3%). Site
+inteiro em 17/11: 20 sessões, 30% com clique morto, cobertura de 76,9% do
+GA4 (26 sessões). `result_copied`: zero (o evento não existia).
+
+**O que mudou (v0.43.0):** o valor grande e as linhas do detalhamento copiam
+ao clicar, nas 22 calculadoras. No hub, o card inteiro alterna o detalhamento
+e o valor e as linhas copiam. Evento `result_copied` no GA4. Detalhe no
+`CHANGELOG.md`.
+
+**Como ler em ~1 semana depois do deploy** (`node dados/clarity-dias.mjs
+--de <deploy>` e `node dados/semana.mjs`):
+
+1. **`result_copied` > 0 e clique morto caindo na `ferias-e-decimo-terceiro`:**
+   a hipótese se sustenta, fica.
+2. **`result_copied` > 0 mas clique morto parado:** copiar era parte do que
+   se queria, e o resto do clique morto está em outro lugar. Pedir ao Paulo o
+   heatmap da página (Clarity → Mapas de calor → URL → Exportar).
+3. **`result_copied` ≈ 0:** o clique no valor era leitura ou mira, não
+   vontade de copiar. Rever (a cópia não atrapalha, mas a resposta para o
+   atrito é outra).
+
+Amostra pequena (8 a 14 sessões por dia nessa página): ler por semana, não
+por dia.
+
+**Testes.** Antes da regra nova, o assistente rodou os specs ligados à
+mudança (`cliques-mortos`, `trabalhista-completa`, `ferias-decimo-terceiro`,
+`irrf-aluguel-geo`): **44 de 44 verdes**. A suíte completa (desktop + mobile)
+foi interrompida no meio quando o Paulo fixou que **quem roda os testes é ele**
+(regra no `AGENTS.md`, 18/11). **Falta a rodada completa antes do commit**,
+com o `apps/web/.next` já apagado (foi apagado depois da interrupção).
+
+### 2026-11-17 — F89: a leitura passa a sair da API, e a primeira rodada diz que o 13º é agora e o Google ainda é zero
+
+Paulo: *"Foi implementada a validação por API do GSC, Clarity e Google… no
+projeto Recibo Fácil. Entenda o que foi feito lá, implemente aqui. Foco é
+rodarmos esses relatórios para melhorar o projeto."* E, no mesmo pedido, ver
+onde o código aberto da Receita (reforma tributária) serve aqui.
+
+**O que entrou (F89, `dados/`, comandos no `dados/README.md`).** Porte do
+`dados/` do RF: GSC, GA4, Clarity, palavras-chave + Serper e o boletim
+`semana.mjs`. Diferenças de propósito: sem o bloco do banco de produção (aqui
+não há banco), funil página → cálculo → compartilhar, corte baixo no GSC (o
+site é pequeno), Serper fora do boletim por padrão (o saldo é da conta e é
+dividido com o RF: 2.418 → 2.393 depois da rodada de 29 palavras). **Nenhum
+cadastro novo para o Google:** o token OAuth do RF é da conta e já lê o GA4
+`537095884` e o `sc-domain:calculosonline.com.br`. **Clarity:** token próprio
+gerado pelo Paulo nesta sessão (é por projeto) e coleta diária instalada no
+servidor do RF com autorização dele (cron 00:10, 5 min depois da do RF, que
+ficou intacta; primeiro dia coletado: 17/11).
+
+**Validação contra o export do console de 25/10 (antes de confiar):** GA4
+27/09–24/10 → 216 usuários ativos, 209 novos, 1.671 eventos, **3 de 3
+iguais**. GSC 24/07–23/10 → 10 cliques, 6.307 impressões, e as páginas iguais
+(`tesouro-direto` 4 / 243 @ 22,46; `datas` 2 / 2.442 @ 9,03).
+
+**Números brutos da primeira rodada** (boletim em `docs/semanas/2026-11-17.md`):
+
+- **GA4, 28 dias (20/10–16/11): 305 usuários ativos** (eram 216 em
+  27/09–24/10, +41%), 334 sessões, 205 engajadas. Por canal: Organic Search
+  192 usuários / 215 sessões / 176 engajadas; **Direct 95 / 97 / 16**; AI
+  Assistant 11 / 13 / 9; Referral 3 / 5 / 3.
+- **Semana 10–16/11 × anterior:** sessões 150 × 77 (média de 4 semanas 64),
+  usuários 138 × 74, engajadas 82 × 55, sessões com cálculo 45 × 38, cálculos
+  103 × 121. Origens da semana: `bing` 68 (59 engajadas), `(direct)` 54 (9),
+  `br.search.yahoo.com` 18 (10), `google` 4 (1), `chatgpt.com` 3 (2).
+- **Uso por calculadora, 28 dias (sessões com page_view → com cálculo):**
+  `ferias-e-decimo-terceiro` 71 → 51; hub trabalhista 27 → 12; `ferias` 22 →
+  16; `hora-extra` 22 → 9; `fgts` 18 → 8; `decimo-terceiro` 15 → 11; `irrf`
+  11 → 7; `rescisao` 10 → 5; `tesouro-direto` 9 → 5; `datas` 8 → 1; `cdb` 7 →
+  6. Total 209 → 129. Compartilhar: 2 sessões; salvar: 1.
+- **Origem × entrada, 28 dias:** `bing` → `ferias-e-decimo-terceiro` 54 (52
+  engajadas), `(direct)` → `/` 37 (11), `bing` → post do 13º proporcional 19
+  (18), `bing` → `hora-extra` 16, `yahoo` → `ferias-e-decimo-terceiro` 11,
+  `google` → `tesouro-direto` 7 (5), `chatgpt.com` → hub trabalhista 5.
+- **GSC, 90 dias (18/08–15/11): 17 cliques, 10.398 impressões, posição
+  22,1.** As consultas visíveis somam só 2.208 impressões (21%); o resto é
+  anonimizado (cauda de datas exatas). Semana 09–15/11: 3 cliques, 1.536
+  impressões (anterior 1.556, média 1.239), posição 24,9 (anterior 18,1). Por
+  página na semana: `datas` 538 @ 8,5; `rescisao-trabalhista` 296 @ 66,7
+  (+118%); `porcentagem` 210 @ 9,5; `margem-lucro` 123 @ 7,9; `tesouro-direto`
+  82 @ 28,6; post do 13º de 2026 43 @ 11,3 (era 10). **Perto da página 1 (28
+  dias):** `simulador tesouro direto grátis` 64 impr / 3 cliques @ 10,6 e a
+  variante sem acento 46 @ 10,8; `calculadora avançada tesouro direto` 17 @ 9,5.
+- **Serper, 29 palavras (20 fixas + 9 do GSC), computador: o site não está no
+  top 10 de nenhuma.** Quem domina a lista: `tesourodireto.com.br` (22
+  resultados no top 10, todas as buscas de Tesouro), `mobills.com.br` (12
+  palavras, 9 no top 3: CDB, férias, 13º, porcentagem, datas), `carmelitas`,
+  `calculoexato` e `valordotrabalho` no trabalhista, `www3.bcb.gov.br` na
+  poupança, juros e empréstimo, `caixa.gov.br` em 1º em financiamento e
+  empréstimo. **`tesouro reserva` (49.500/mês) não tem nenhum simulador
+  independente no top 10:** Tesouro Direto (1º e 3º), TJSC, Facebook, Agência
+  Brasil, investidor10, dois bancos, XP e YouTube. Em `calculadora cdb`, um
+  `rendafixa.github.io` está em 4º: página de ferramenta simples ranqueia nessa
+  SERP. Série em `docs/concorrentes/serp/2026-11-17.json`.
+- **Clarity, 72 h até 17/11 (`URL × Device`, 1 chamada):**
+  `ferias-e-decimo-terceiro` no PC, **14 sessões, 64,3% com clique morto**,
+  14,3% com volta rápida; `ferias` no PC 4 sessões, 25% e 25%; hub no PC 2
+  sessões, 50% de volta rápida. Uma sessão chegou com `?utm_source=chatgpt.com`.
+
+**Leitura:**
+
+1. **O pico sazonal do 13º é agora, e vem pelo Bing.** A `ferias-e-decimo-terceiro`
+   (F69) é a página mais visitada do site (71 sessões em 28 dias, 72% com
+   cálculo, 52 de 54 entradas do Bing engajadas). A janela fecha com a 2ª
+   parcela, em 20/12. **E é nela que o Clarity mede 64% de clique morto no
+   PC.** É o F70 (cliques mortos no hub e no resultado), na página que está
+   recebendo o tráfego. Amostra pequena (14 sessões), então o mapa de calor
+   da página confirma onde está o clique antes de mexer. É o item mais barato e
+   de efeito mais imediato da fila.
+2. **O Google segue sem mandar tráfego** (4 sessões por semana), e a rodada do
+   Serper explica: zero palavras no top 10. A única tração é o `tesouro-direto`
+   (`simulador tesouro direto grátis` @ 10,6, 3 cliques), e a SERP de
+   `tesouro reserva` sem nenhuma calculadora independente **confirma o F83**
+   como a melhor aposta de Google do backlog.
+3. **O "Direct" quadruplicou e não engaja:** 97 sessões em 28 dias com 16
+   engajadas, 37 delas entrando pela home. É ele que derruba a taxa de cálculo
+   do site (49% → 30% na semana), enquanto a taxa por calculadora fica estável.
+   Suspeita: robô ou teste do Paulo. A coleta do Clarity conta bots
+   (`totalBotSessionCount`) e responde em alguns dias, sem ação agora.
+4. **O Bing continua sendo o console que importa** (~60% das sessões, com
+   Yahoo), e o BWT não tem API neste porte: segue no export manual do Paulo.
+
+**Receita Federal no GitHub (o segundo pedido):** lido o código dos três
+repositórios (MIT, Portaria Cotec nº 342/2026). É uma API Java + SQLite com as
+tabelas oficiais da CBS/IBS (CST, cClassTrib, % de redução com fundamentação
+legal, NCM/NBS, alíquotas de referência). Não roda num site estático, mas os
+dados e as regras podem ser portados para `packages/core`, com teste contra os
+exemplos oficiais. Duas restrições lidas no código: só 2026 tem alíquota de
+referência oficial na base (0,9% + 0,1%; as de 2027 a 2033 foram apagadas em
+28/08/2026, migração `V0053`), e o motor do Simples não calcula a alíquota
+efetiva do DAS. Cadastrado como **F90**, condicionado a volume no Semrush.
+
+**Para o Paulo decidir:** (a) F70 na `ferias-e-decimo-terceiro` antes de
+20/12, depois do mapa de calor; (b) F83 (Tesouro Reserva) como próxima
+entrega de Google; (c) Semrush para o F90. **Conferir em ~3 dias:** `node
+dados/clarity-dias.mjs` (a coleta do servidor rodou? cobertura × GA4?
+quantos bots no Direct?).
+
 ### 2026-10-26 — Premissas novas, IRPF 2027 e o primeiro bloco do foco em investimentos
 
 Na sequência da retomada de 25/10, Paulo pediu foco nas correções ("o que tem
@@ -1392,8 +1573,9 @@ apareceu na tela; (2) expor a tabela revelou que a última parcela não quitava
 a dívida (resíduo de centavos a R$ 11,72), e que o exemplo do texto de
 empréstimo nunca tinha saído do motor. A fila de revisão de textos acima
 ganha um motivo para conferir empréstimo e financiamento pelo motor, e não
-só acrescentar exemplos. **Próximos passos possíveis** (não cadastrados):
-exportar a tabela em CSV e um gráfico de saldo no tempo.
+só acrescentar exemplos. **Próximos passos, cadastrados a pedido do Paulo:**
+**F87** (exportar a tabela em CSV) e **F88** (gráfico do saldo no tempo, em
+SVG inline, sem biblioteca), abaixo de F83/F84 na fila.
 
 ### 2026-10-25 — Export com o projeto parado: o Bing perdeu os termos genéricos, e o checkpoint da F68 confirma o 10/10
 

@@ -1,10 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useId, useRef, useState, type MouseEvent } from 'react'
 import Link from 'next/link'
 import { z } from 'zod'
-import { ArrowRightIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
-import { CalculatorForm } from '@calculosonline/ui'
+import {
+  ArrowRightIcon,
+  ChevronDownIcon,
+  DocumentDuplicateIcon,
+  InformationCircleIcon,
+} from '@heroicons/react/24/outline'
+import { CheckIcon } from '@heroicons/react/20/solid'
+import { CalculatorForm, useCopiarValor } from '@calculosonline/ui'
 import {
   calcularPanoramaTrabalhista,
   type PanoramaTrabalhistaResultado,
@@ -62,6 +68,153 @@ function corDe(tipo: ItemDetalhamento['tipo']): string {
     debito: 'text-result-negative',
     neutro: 'text-gray-700',
   }[tipo]
+}
+
+type Bloco = PanoramaTrabalhistaResultado['blocos'][number]
+
+/**
+ * Um card do panorama (F58), com os alvos de clique da F70.
+ *
+ * O Clarity mediu, no PC, quase metade dos cliques nos cards errando o alvo:
+ * caíam no `LI` (título, legenda, fundo), e só o texto "Ver como chegou nesse
+ * valor" abria o detalhamento. Agora **qualquer clique em área não interativa
+ * do card** abre e fecha. O `<summary>` continua sendo o controle de teclado
+ * e de leitor de tela (o título fica fora dele de propósito: heading dentro de
+ * `summary` some da navegação por títulos). O valor e as linhas do
+ * detalhamento copiam ao clicar, como no `CalculatorResult`.
+ */
+function BlocoPanorama({ bloco }: { bloco: Bloco }) {
+  const calc = findCalculator(bloco.slugCalculadora)
+  const detalhesRef = useRef<HTMLDetailsElement>(null)
+  const { copiado, copiar } = useCopiarValor()
+  const dicaId = useId()
+
+  async function handleCopiar(chave: string, texto: string, alvo: 'bloco' | 'linha', rotulo: string) {
+    if (await copiar(chave, texto)) {
+      analytics.resultCopied(HUB_TRABALHISTA.slug, HUB_TRABALHISTA.categoria, alvo, rotulo)
+    }
+  }
+
+  function alternarPeloCard(e: MouseEvent<HTMLLIElement>) {
+    const alvo = e.target as HTMLElement
+    const detalhes = detalhesRef.current
+    if (!detalhes) return
+    // Controles têm ação própria (o summary já alterna sozinho), e o conteúdo
+    // aberto é para ler e selecionar, não para fechar sem querer.
+    if (alvo.closest('a, button, summary, input, select, textarea')) return
+    if (alvo.closest('[data-conteudo-detalhes]')) return
+    // Quem arrastou para selecionar texto não clicou para alternar.
+    if (window.getSelection()?.toString()) return
+    detalhes.open = !detalhes.open
+  }
+
+  const valorTexto = formatarBRL(bloco.valor)
+
+  return (
+    <li
+      onClick={alternarPeloCard}
+      className="flex cursor-pointer flex-col rounded-xl border border-gray-200 bg-white p-5 transition-colors hover:border-brand-200"
+    >
+      <div className="flex items-start gap-3">
+        {calc && <CalculatorIcon icon={calc.icone} categoria={calc.categoria} size="lg" />}
+        <div className="min-w-0">
+          <h3 className="font-bold text-gray-900">{bloco.titulo}</h3>
+          <p className="mt-0.5 text-xs leading-snug text-gray-500">{bloco.legenda}</p>
+        </div>
+      </div>
+
+      <p className="mt-4">
+        <button
+          type="button"
+          onClick={() => handleCopiar('bloco', valorTexto, 'bloco', bloco.titulo)}
+          aria-describedby={dicaId}
+          title="Copiar valor"
+          className="group -mx-1.5 inline-flex cursor-copy items-center gap-2 rounded-md px-1.5 text-left transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+        >
+          <span className="text-result-lg text-gray-900">{valorTexto}</span>
+          {copiado === 'bloco' ? (
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-brand-700">
+              <CheckIcon className="h-4 w-4" aria-hidden /> Copiado
+            </span>
+          ) : (
+            <DocumentDuplicateIcon
+              className="h-5 w-5 shrink-0 text-gray-400 transition-colors group-hover:text-gray-600"
+              aria-hidden
+            />
+          )}
+        </button>
+      </p>
+
+      <details ref={detalhesRef} className="group/detalhes mt-3 border-t border-gray-100 pt-1">
+        {/* Faixa inteira clicável, com seta: o alvo antigo era só o texto. */}
+        <summary className="-mx-2 flex cursor-pointer list-none items-center justify-between rounded-md px-2 py-2 text-sm font-medium text-brand-600 hover:bg-gray-50 [&::-webkit-details-marker]:hidden">
+          Ver como chegou nesse valor
+          <ChevronDownIcon
+            className="h-4 w-4 shrink-0 transition-transform group-open/detalhes:rotate-180"
+            aria-hidden
+          />
+        </summary>
+        <div data-conteudo-detalhes className="cursor-auto">
+          <ul className="mt-2 space-y-0.5 text-sm">
+            {bloco.linhas.map((linha, i) => {
+              const chave = `linha-${i}`
+              const texto = formatarBRL(linha.valor)
+              return (
+                <li key={`${bloco.id}-${i}`}>
+                  <button
+                    type="button"
+                    onClick={() => handleCopiar(chave, texto, 'linha', `${bloco.titulo}: ${linha.descricao}`)}
+                    aria-describedby={dicaId}
+                    title="Copiar valor"
+                    className="group -mx-1.5 flex w-[calc(100%+0.75rem)] cursor-copy items-baseline justify-between gap-3 rounded px-1.5 py-1 text-left transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+                  >
+                    <span className="min-w-0 text-gray-600">
+                      {linha.descricao}
+                      {linha.formula && (
+                        <span className="block text-xs text-gray-400">{linha.formula}</span>
+                      )}
+                    </span>
+                    <span className="inline-flex shrink-0 items-baseline gap-1.5">
+                      {copiado === chave ? (
+                        <CheckIcon className="h-3.5 w-3.5 self-center text-brand-600" aria-hidden />
+                      ) : (
+                        <DocumentDuplicateIcon
+                          className="h-3.5 w-3.5 self-center text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+                          aria-hidden
+                        />
+                      )}
+                      <span className={`font-medium ${corDe(linha.tipo)}`}>
+                        {sinalDe(linha.tipo)}
+                        {texto}
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+          <p className="mt-3 text-xs text-gray-400">{bloco.fonteJuridica}</p>
+        </div>
+      </details>
+
+      {calc && (
+        <Link
+          href={`/calculadora/${calc.slug}`}
+          className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:underline"
+        >
+          Abrir a calculadora de {calc.titulo}
+          <ArrowRightIcon className="h-4 w-4" aria-hidden />
+        </Link>
+      )}
+
+      <span id={dicaId} className="sr-only">
+        Clique para copiar o valor
+      </span>
+      <span role="status" className="sr-only">
+        {copiado ? 'Valor copiado' : ''}
+      </span>
+    </li>
+  )
 }
 
 export function PanoramaTrabalhistaClient() {
@@ -203,73 +356,9 @@ export function PanoramaTrabalhistaClient() {
           )}
 
           <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {panorama.dados.blocos.map((bloco) => {
-              const calc = findCalculator(bloco.slugCalculadora)
-              return (
-                <li
-                  key={bloco.id}
-                  className="flex flex-col rounded-xl border border-gray-200 bg-white p-5"
-                >
-                  <div className="flex items-start gap-3">
-                    {calc && (
-                      <CalculatorIcon
-                        icon={calc.icone}
-                        categoria={calc.categoria}
-                        size="lg"
-                      />
-                    )}
-                    <div className="min-w-0">
-                      <h3 className="font-bold text-gray-900">{bloco.titulo}</h3>
-                      <p className="mt-0.5 text-xs leading-snug text-gray-500">
-                        {bloco.legenda}
-                      </p>
-                    </div>
-                  </div>
-
-                  <p className="mt-4 text-result-lg text-gray-900">
-                    {formatarBRL(bloco.valor)}
-                  </p>
-
-                  <details className="mt-3 border-t border-gray-100 pt-3">
-                    <summary className="cursor-pointer text-sm font-medium text-brand-600">
-                      Ver como chegou nesse valor
-                    </summary>
-                    <ul className="mt-3 space-y-1.5 text-sm">
-                      {bloco.linhas.map((linha, i) => (
-                        <li
-                          key={`${bloco.id}-${i}`}
-                          className="flex items-baseline justify-between gap-3"
-                        >
-                          <span className="min-w-0 text-gray-600">
-                            {linha.descricao}
-                            {linha.formula && (
-                              <span className="block text-xs text-gray-400">
-                                {linha.formula}
-                              </span>
-                            )}
-                          </span>
-                          <span className={`shrink-0 font-medium ${corDe(linha.tipo)}`}>
-                            {sinalDe(linha.tipo)}
-                            {formatarBRL(linha.valor)}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                    <p className="mt-3 text-xs text-gray-400">{bloco.fonteJuridica}</p>
-                  </details>
-
-                  {calc && (
-                    <Link
-                      href={`/calculadora/${calc.slug}`}
-                      className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:underline"
-                    >
-                      Abrir a calculadora de {calc.titulo}
-                      <ArrowRightIcon className="h-4 w-4" aria-hidden />
-                    </Link>
-                  )}
-                </li>
-              )
-            })}
+            {panorama.dados.blocos.map((bloco) => (
+              <BlocoPanorama key={bloco.id} bloco={bloco} />
+            ))}
           </ul>
         </div>
       )}

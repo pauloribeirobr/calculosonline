@@ -1,0 +1,162 @@
+{
+ "gerado": "2026-11-18",
+ "periodo": "2026-08-18 → 2026-11-15",
+ "criterio": "fixas (à mão) + páginas com 3+ cliques ou 200+ impressões: consultas de 10+ impressões (máx. 4 por página); oportunidades: 15+ impressões na posição 3–20; sem a marca, sem data exata, sem variação de acento; as 60 de mais impressões",
+ "fixas": [
+  {
+   "palavra": "tesouro reserva",
+   "pagina": "/calculadora/tesouro-direto"
+  },
+  {
+   "palavra": "simulador tesouro direto",
+   "pagina": "/calculadora/tesouro-direto"
+  },
+  {
+   "palavra": "calculadora cdb",
+   "pagina": "/calculadora/cdb"
+  },
+  {
+   "palavra": "calculadora poupança",
+   "pagina": "/calculadora/poupanca"
+  },
+  {
+   "palavra": "calculadora juros compostos",
+   "pagina": "/calculadora/juros-compostos"
+  },
+  {
+   "palavra": "simulador de financiamento",
+   "pagina": "/calculadora/financiamento"
+  },
+  {
+   "palavra": "simulador de empréstimo",
+   "pagina": "/calculadora/emprestimo"
+  },
+  {
+   "palavra": "calculadora rescisão trabalhista",
+   "pagina": "/calculadora/rescisao-trabalhista"
+  },
+  {
+   "palavra": "calculadora de férias",
+   "pagina": "/calculadora/ferias"
+  },
+  {
+   "palavra": "calcular décimo terceiro",
+   "pagina": "/calculadora/decimo-terceiro"
+  },
+  {
+   "palavra": "calcular hora extra",
+   "pagina": "/calculadora/hora-extra"
+  },
+  {
+   "palavra": "calculadora salário líquido",
+   "pagina": "/calculadora/salario-liquido"
+  },
+  {
+   "palavra": "calculadora inss",
+   "pagina": "/calculadora/inss"
+  },
+  {
+   "palavra": "calculadora irrf",
+   "pagina": "/calculadora/irrf"
+  },
+  {
+   "palavra": "calculadora fgts",
+   "pagina": "/calculadora/fgts"
+  },
+  {
+   "palavra": "calculadora de datas",
+   "pagina": "/calculadora/datas"
+  },
+  {
+   "palavra": "calculadora de porcentagem",
+   "pagina": "/calculadora/porcentagem"
+  },
+  {
+   "palavra": "calculadora imc",
+   "pagina": "/calculadora/imc"
+  },
+  {
+   "palavra": "calculadora margem de lucro",
+   "pagina": "/calculadora/margem-lucro"
+  },
+  {
+   "palavra": "das mei",
+   "pagina": "/calculadora/das-mei"
+  }
+ ],
+ "fora": [],
+ "palavras": [
+  {
+   "palavra": "simulador tesouro direto grátis",
+   "pagina": "/calculadora/tesouro-direto",
+   "impressoes": 158,
+   "cliques": 3,
+   "posicao": 10.95,
+   "motivo": "página"
+  },
+  {
+   "palavra": "calculadora de décimo terceiro",
+   "pagina": "/calculadora/decimo-terceiro",
+   "impressoes": 50,
+   "cliques": 0,
+   "posicao": 91.06,
+   "motivo": "página"
+  },
+  {
+   "palavra": "calculadora trabalhista",
+   "pagina": "/calculadora/rescisao-trabalhista",
+   "impressoes": 38,
+   "cliques": 0,
+   "posicao": 85.89,
+   "motivo": "página"
+  },
+  {
+   "palavra": "calculadora tesouro direto",
+   "pagina": "/calculadora/tesouro-direto",
+   "impressoes": 26,
+   "cliques": 3,
+   "posicao": 51.12,
+   "motivo": "página"
+  },
+  {
+   "palavra": "cálculo rescisão",
+   "pagina": "/calculadora/rescisao-trabalhista",
+   "impressoes": 24,
+   "cliques": 0,
+   "posicao": 75.29,
+   "motivo": "página"
+  },
+  {
+   "palavra": "acerto trabalhista",
+   "pagina": "/calculadora/rescisao-trabalhista",
+   "impressoes": 22,
+   "cliques": 0,
+   "posicao": 87.18,
+   "motivo": "página"
+  },
+  {
+   "palavra": "calculadora decimo terceiro",
+   "pagina": "/calculadora/decimo-terceiro",
+   "impressoes": 19,
+   "cliques": 0,
+   "posicao": 92.11,
+   "motivo": "página"
+  },
+  {
+   "palavra": "calcular rescisão contratual com fgts",
+   "pagina": "/calculadora/rescisao-trabalhista",
+   "impressoes": 19,
+   "cliques": 0,
+   "posicao": 91.42,
+   "motivo": "página"
+  },
+  {
+   "palavra": "calculadora avançada tesouro direto",
+   "pagina": "/calculadora/tesouro-direto",
+   "impressoes": 17,
+   "cliques": 0,
+   "posicao": 9.53,
+   "motivo": "página"
+  }
+ ]
+}

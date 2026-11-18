@@ -107,6 +107,28 @@ export const analytics = {
       calculator_category: category,
     }),
 
+  /**
+   * Valor copiado ao clicar no resultado (F70). O Clarity mediu cliques no
+   * valor grande, nas linhas do detalhamento e nos cards do hub que não
+   * faziam nada; a F70 transformou esses cliques em "copiar". Este evento é a
+   * prova da hipótese: se ninguém copia, o clique era outra coisa (ler, mirar,
+   * tentar abrir) e a resposta muda. `copy_target`: `resultado` (valor
+   * grande), `linha` (detalhamento) ou `bloco` (valor de um card do hub);
+   * `copy_label` diz qual linha/bloco.
+   */
+  resultCopied: (
+    calculatorSlug: string,
+    category: string,
+    target: 'resultado' | 'linha' | 'bloco',
+    label?: string,
+  ) =>
+    track('result_copied', {
+      calculator_slug: calculatorSlug,
+      calculator_category: category,
+      copy_target: target,
+      copy_label: label?.substring(0, 100),
+    }),
+
   calculatorSaved: (calculatorSlug: string, category: string) =>
     track('calculator_saved', {
       calculator_slug: calculatorSlug,

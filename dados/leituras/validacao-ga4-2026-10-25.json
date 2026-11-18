@@ -1,0 +1,12 @@
+{
+  "titulo": "Validação do F89 — o \"Resumo dos relatórios\" do GA4 exportado pelo console em 25/10/2026 (gsc/, 27/09 → 24/10)",
+  "nota": "Refaz pela API o cartão do export de 25/10 e confere: 216 usuários ativos, 209 novos usuários, 1.671 eventos. Diferença pequena é esperada se o GA4 reprocessou dados depois do export; diferença grande indica propriedade ou métrica erradas.",
+  "periodo": { "de": "2026-09-27", "ate": "2026-10-24" },
+  "linhas": [],
+  "valores": ["activeUsers", "newUsers", "eventCount", "userEngagementDuration"],
+  "esperado": [
+    { "linha": ["total (GA4)"], "coluna": "activeUsers", "valor": 216 },
+    { "linha": ["total (GA4)"], "coluna": "newUsers", "valor": 209 },
+    { "linha": ["total (GA4)"], "coluna": "eventCount", "valor": 1671 }
+  ]
+}

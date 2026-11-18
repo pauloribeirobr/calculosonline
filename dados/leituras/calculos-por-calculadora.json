@@ -1,0 +1,12 @@
+{
+  "titulo": "Uso por calculadora — sessões com cada evento por página, 28 dias",
+  "nota": "Cada calculadora tem URL própria, então pagePath faz o papel do calculator_slug (não cadastrado como dimensão personalizada no GA4; conferido em 17/11/2026). Cálculo % = calculator_calculated ÷ page_view, em sessões.",
+  "periodo": { "dias": 28 },
+  "linhas": ["pagePath"],
+  "colunas": "eventName",
+  "valores": ["sessions"],
+  "filtros": [
+    { "campo": "pagePath", "regex": "/calculadora/.*|/calculadora-trabalhista-completa" },
+    { "campo": "eventName", "em": ["page_view", "calculator_calculated", "calculator_shared", "calculator_saved", "calculator_validation_error", "result_copied"] }
+  ]
+}
