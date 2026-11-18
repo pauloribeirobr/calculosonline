@@ -22,8 +22,8 @@ que não cabe em nenhum dos outros três.
   do deploy:** `result_copied` no boletim e clique morto da página em
   `dados/clarity-dias.mjs`; leitura e critério no Diário de 18/11. A coleta
   diária do Clarity no servidor rodou em 18/11 às 00:10 (4 de 4 chamadas).
-  **Pendente: o Paulo rodar a suíte e2e completa** (desde 18/11, os testes são
-  dele; regra no `AGENTS.md`).
+  Suíte e2e completa rodada pelo Paulo: 373 de 373 (desde 18/11, os testes
+  são dele; regra no `AGENTS.md`).
 - **17/11/2026 — F89: GSC, GA4 e Clarity agora saem da API** (`dados/`,
   `node dados/semana.mjs` → `docs/semanas/<dia>.md`), validados contra o
   export de 25/10 (GA4 3/3, GSC igual). Clarity com coleta diária no servidor
@@ -1351,8 +1351,8 @@ por dia.
 mudança (`cliques-mortos`, `trabalhista-completa`, `ferias-decimo-terceiro`,
 `irrf-aluguel-geo`): **44 de 44 verdes**. A suíte completa (desktop + mobile)
 foi interrompida no meio quando o Paulo fixou que **quem roda os testes é ele**
-(regra no `AGENTS.md`, 18/11). **Falta a rodada completa antes do commit**,
-com o `apps/web/.next` já apagado (foi apagado depois da interrupção).
+(regra no `AGENTS.md`, 18/11). **O Paulo rodou a suíte completa em 18/11:
+373 de 373 verdes (14,9 min)**, desktop e mobile, com o `.next` limpo.
 
 ### 2026-11-17 — F89: a leitura passa a sair da API, e a primeira rodada diz que o 13º é agora e o Google ainda é zero
 
