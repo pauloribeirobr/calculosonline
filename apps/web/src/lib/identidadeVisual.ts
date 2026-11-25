@@ -46,6 +46,7 @@ export type IconeCalculadora =
   | 'cdb'
   | 'poupanca'
   | 'tesouroDireto'
+  | 'tesouroReserva'
   | 'imc'
   | 'calorias'
   | 'margemLucro'

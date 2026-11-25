@@ -47,10 +47,14 @@ test.describe('F82 — investimentos', () => {
   })
 
   test('nenhuma página de investimento cita banco ou corretora pelo nome', async ({ page }) => {
-    for (const slug of ['cdb', 'tesouro-direto', 'poupanca']) {
+    // F83: `Banco do Brasil` entrou porque é o distribuidor citado na notícia
+    // oficial de lançamento do Tesouro Reserva, e a página linka essa notícia.
+    for (const slug of ['cdb', 'tesouro-direto', 'tesouro-reserva', 'poupanca']) {
       await page.goto(`/calculadora/${slug}`)
       const texto = (await page.locator('main').textContent()) ?? ''
-      expect(texto, slug).not.toMatch(/Banco Master|Bradesco|Itaú|Santander|Nubank|BTG|\bXP\b|\bInter\b|Rico\b|Yubb/)
+      expect(texto, slug).not.toMatch(
+        /Banco Master|Banco do Brasil|Bradesco|Itaú|Santander|Nubank|BTG|\bXP\b|\bInter\b|Rico\b|Yubb/,
+      )
     }
   })
 })

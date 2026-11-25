@@ -609,7 +609,31 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'calculadora de investimentos tesouro direto',
       'investir no tesouro direto',
     ],
-    relacionadas: ['cdb', 'poupanca', 'irpf', 'juros-compostos'],
+    relacionadas: ['tesouro-reserva', 'cdb', 'poupanca', 'irpf', 'juros-compostos'],
+  },
+  {
+    // F83: página própria, e não uma opção dentro do Tesouro Direto, porque a
+    // busca é pelo nome do produto (`tesouro reserva`, 49.500/mês, KD 36 no
+    // Semrush de 26/10/2026, sem calculadora independente no top 10).
+    slug: 'tesouro-reserva',
+    titulo: 'Tesouro Reserva',
+    tituloLongo: 'Simulador do Tesouro Reserva',
+    descricaoCurta: 'Quanto rende, com IOF, IR e custódia.',
+    descricao:
+      'Simulador do Tesouro Reserva grátis: veja quanto rendem R$ 100, R$ 1.000 ou R$ 10.000 a 100% da Selic, com IOF, IR e custódia, comparado com poupança e CDB.',
+    categoria: 'investimentos',
+    icone: 'tesouroReserva',
+    fonteJuridica: 'Lei 11.033/2004 | Decreto 6.306/2007 | B3 — taxa de custódia',
+    dataAtualizacao: '2026-11-25',
+    palavrasChave: ['tesouro reserva', 'quanto rende tesouro reserva', 'reserva de emergência'],
+    sinonimos: [
+      'simulador tesouro reserva',
+      'calculadora tesouro reserva',
+      'tesouro reserva rendimento',
+      'tesouro reserva vale a pena',
+      'tesouro reserva ou poupança',
+    ],
+    relacionadas: ['tesouro-direto', 'poupanca', 'cdb', 'juros-compostos'],
   },
 
   // Saúde

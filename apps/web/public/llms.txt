@@ -31,6 +31,7 @@
 - [CDB](https://calculosonline.com.br/calculadora/cdb): Rendimento líquido de CDB prefixado, pós-fixado (% do CDI) ou atrelado ao IPCA+.
 - [Poupança](https://calculosonline.com.br/calculadora/poupanca): Rendimento pela regra antiga ou nova (SELIC + TR).
 - [Tesouro Direto](https://calculosonline.com.br/calculadora/tesouro-direto): Simulação SELIC, Prefixado e IPCA+, descontando taxa de custódia.
+- [Tesouro Reserva](https://calculosonline.com.br/calculadora/tesouro-reserva): Quanto rende o Tesouro Reserva (100% da Selic, resgate 24x7) com IOF antes de 30 dias, IR regressivo e custódia acima de R$ 10 mil, comparado com poupança e CDB de 100% do CDI.
 
 ## Saúde
 
