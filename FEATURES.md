@@ -115,10 +115,10 @@ Mesmo padrão do projeto irmão [Recibo Fácil](../recibofacil/FEATURES.md).
 ## 2. Próximas melhorias (backlog)
 
 Numeração segue direto de onde a Parte 1 parou (pulando F25, já usado pelo
-Clarity) — **a próxima feature nova implementada é a F91.** Fonte:
+Clarity) — **a próxima feature nova implementada é a F92.** Fonte:
 [`MEMORY.md`](MEMORY.md) (§Backlog ativo) e `AGENTS.md`/
 `docs/PLANO_IMPLEMENTACAO.md` (fases do roadmap). Prioridade dentro de cada
-grupo segue a ordem do `MEMORY.md`. **A próxima feature nova é a F91** (F22, F56-F70, F72, F75-F82, F86 e F89 já saíram; F83-F85 cadastradas em 26/10 do Semrush de investimentos, F87-F88 como desdobramento da F86 e F90 em 17/11 do código aberto da Receita; F71 segue aberta no P0 (a F70 saiu em 18/11), e F73/F74 nasceram em 23/09 do escopo que a F68 não cobriu) — os
+grupo segue a ordem do `MEMORY.md`. **A próxima feature nova é a F92** (F22, F56-F70, F72, F75-F82, F86 e F89 já saíram; F83-F85 cadastradas em 26/10 do Semrush de investimentos, F87-F88 como desdobramento da F86 e F90 em 17/11 do código aberto da Receita, F91 em 23/11 (canal no YouTube); F71 segue aberta no P0 (a F70 saiu em 18/11), e F73/F74 nasceram em 23/09 do escopo que a F68 não cobriu) — os
 números F43-F56 foram atribuídos em 2026-08-27 aos Blocos A-D do plano de
 tráfego (ver `MEMORY.md`, diário 2026-08-27, §7), e F57 saiu no mesmo dia como
 fix de precisão. **Do Bloco D, F56 saiu em 29/08 e F22 em 30/08; sobram F15
@@ -212,6 +212,7 @@ Completa"~~ — ✅ **Entregue 2026-09-01 como F58** (v0.29.0), ver Parte 1.
 | # | Feature | Contexto |
 |---|---------|----------|
 | F23 | Cauda longa via páginas programáticas | `Consultas.csv` do GSC mostra 450+ variações de query para os mesmos ~15 conceitos (ex. 37 variações só de "calculadora férias"), quase todas com posição pior que 60 — cuidar de canonical alternates para não gerar duplicate content. **Reduzido em 20/08:** F38 e F39 já cobriram os dois maiores clusters de vocabulário (simulador, demissão) sem página nova nenhuma — vale medir o efeito deles antes de investir em geração programática |
+| F91 | **Canal no YouTube "Cálculos Online", vídeo semanal sem rosto, cada vídeo refazendo uma conta do site** (pedido do Paulo em 23/11/2026: "Quero criar o canal e começar a postar vídeos semanais englobando os cálculos"). **Formato:** voz do Paulo clonada no ElevenLabs, slides (PowerPoint) com os números aparecendo conforme a narração e animação só quando explica algo (o saldo caindo mês a mês, a taxa que muda o resultado), 5 a 8 min, mais 2 ou 3 Shorts cortados de cada vídeo. **Linha editorial:** finanças para quem tem 40+, com o 40+ nas perguntas ("Tenho 45 anos e nenhuma reserva…"), não no nome do site; o site continua com todas as calculadoras. **Piloto = Tesouro Reserva / reserva de emergência, junto com a F83** (não dívidas, que não têm calculadora no site e furariam a fila; o vídeo de dívidas pode ser o segundo). **Medição antes de publicar:** link com UTM na descrição para a calculadora do vídeo (`utm_source=youtube&utm_medium=video&utm_campaign=<slug-do-video>`), origem `youtube` no boletim do F89 e critério de sucesso definido antes (sessões com cálculo vindas do vídeo em 30 dias). **Regras do `AGENTS.md` valem para os vídeos:** conteúdo educativo, sem nome de instituição, sem recomendar produto, fonte de cada número na descrição; antes do primeiro vídeo público, Paulo confere a política de atividades externas do empregador (o risco é o conteúdo, não só ser reconhecido pela voz) e o rótulo de conteúdo sintético do YouTube no upload. **Em aberto para a conversa desta semana:** ver o Diário de 23/11 | Diário de 23/11 |
 | F24 | Confirmar hreflang/geo-targeting | Tráfego internacional (Índia, Filipinas, Vietnã, 0 cliques) confirmado de novo no export 25/07 — baixa prioridade, só validar que não é bug |
 
 ### Estratégico — Fase 2 (pausada)

@@ -16,6 +16,22 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **25/11/2026 — Boletim de 18 a 24/11: a F70 passou no critério 1 e fica.**
+  Clique morto da `ferias-e-decimo-terceiro` no PC 62,5% → **31,7%** (41
+  sessões) e `result_copied` 0 → 2. O que sobrou (e os 40% da
+  `decimo-terceiro` no PC) é, pelo mapa de calor, quase todo clique em
+  `<select>` nativo (62% e 33% dos cliques): **não mexer antes de 20/12**;
+  confirmar em 2–3 gravações do Clarity. Uso subiu mais que o tráfego
+  (sessões +7%, sessões com cálculo +40%); Google −30% de impressões só nas
+  páginas genéricas; 32 sessões de bot no Clarity explicam o Direct. Primeira
+  leitura feita pelo chat de acompanhamento (regra no `AGENTS.md`). **Próxima
+  leitura: 02/12.** Detalhe no Diário de 25/11 e em `docs/semanas/2026-11-25.md`.
+- **23/11/2026 — F91 cadastrado: canal no YouTube com vídeo semanal sem rosto.**
+  Paulo quer criar o canal ainda nesta semana e conversar antes de começar.
+  Formato: voz dele clonada no ElevenLabs e slides com os números. Piloto =
+  **Tesouro Reserva junto com a F83** (não dívidas). UTM + origem `youtube` no
+  boletim antes do 1º vídeo. **Pendências para a conversa:** lista no Diário de
+  23/11.
 - **18/11/2026 — F70 (v0.43.0): o valor clicado copia, e o card do hub abre
   pelo card inteiro.** Linha de base: `ferias-e-decimo-terceiro` no PC com
   62,5% de clique morto em 17/11 (Clarity, 8 sessões). **Medir ~1 semana depois
@@ -1297,6 +1313,121 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-11-25 — Boletim de 18 a 24/11: a F70 fica, e o clique morto que sobrou é quase todo `<select>` nativo
+
+Primeira leitura feita pelo chat de acompanhamento (Paulo rodou `semana.mjs` e
+`clarity-dias.mjs --de 2026-11-18 --ate 2026-11-24`). Boletim completo em
+`docs/semanas/2026-11-25.md`, seção 5.
+
+**Números brutos da semana:**
+- **F70, critério 1 do Diário de 18/11: passou.** Clique morto da
+  `ferias-e-decimo-terceiro` no PC 62,5% (8 sessões, 17/11) / 64,3% (14
+  sessões, 72 h) → **31,7% (41 sessões)**. `result_copied` 0 → 2. A mudança
+  fica; confirmar em 02/12.
+- **`decimo-terceiro` no PC: 40,0% de clique morto (10 sessões).**
+- **Uso:** sessões 134 → 143 (+7%), sessões com cálculo 42 → 59 (+40%),
+  taxa de cálculo 31,3% → 41,3%. `ferias-e-decimo-terceiro` 61,5% → 72,3% de
+  uso; `decimo-terceiro` 3 de 7 → 11 de 12. Pico do 13º até 20/12.
+- **GSC:** impressões 1.536 → 1.080 (−30%), toda a queda em `datas` (−246),
+  `porcentagem` (−99) e `margem-lucro` (−56). Trabalhista subiu em posição
+  (`rescisao-trabalhista` 66,7 → 46,4; `calculadora trabalhista` 73,3 → 41,9;
+  `calculo verbas rescisórias` 81 → 28,6). Cliques: 3 por semana.
+- **Bot no Direct:** Clarity 32 sessões de bot em 7 dias (12 só em 18/11);
+  GA4 34 sessões Direct, 9 engajadas. Fecha a suspeita de 17/11 sem ação.
+- **ChatGPT 2 → 7 sessões** (6 engajadas); `/feriados` com 6 entradas, a
+  primeira vez no boletim.
+
+**Mapa de calor do PC (export manual, 23 a 25/11), pedido pelo critério 2:**
+
+| Página | Exibições / cliques | Cliques em `<select>` nativo | Clique morto PC |
+|---|---|---|---|
+| `decimo-terceiro` | 10 / 90 | `#mesAdmissao` 33 + `#parcela` 23 = **62%** | 40,0% |
+| `ferias-e-decimo-terceiro` | 39 / 323 | `#mesAdmissao` 68 + `#adiantarPrimeiraParcela` 38 = **33%** | 31,7% |
+
+- **Leitura: o clique morto que sobrou é, em grande parte, `<select>` nativo.**
+  O dropdown é desenhado pelo sistema operacional, fora do DOM, então abrir a
+  lista não muda nada na página e o Clarity tende a contar como clique morto.
+  A ordem bate: a página com mais clique em `<select>` tem mais clique morto.
+  Mesma mecânica anotada no IRRF em 14/09 (abrir e escolher = dois cliques).
+  **É hipótese**: confirmar em 2–3 gravações do Clarity filtradas por
+  "Cliques mortos" + URL (se o clique morto cai no "Mês de admissão", fecha).
+- **Clique morto real é pouco** na `ferias-e-decimo-terceiro`: ~9% dos
+  cliques em área sem ação (`MAIN` 8, labels 6, moldura `DIV.relative` dos
+  steppers 6, `FORM`/`SECTION` 5, texto 2) e 12 cliques (3,7%) no "−" do
+  stepper de `diasAbono`, que começa em 0 e fica `disabled` nesse valor
+  (`packages/ui/src/CalculatorForm/index.tsx`, `valor <= min`). Botão
+  Calcular, salário, steppers e quick-adds funcionam.
+- **Decisão: não mexer nas duas páginas antes de 20/12.** Trocar o `<select>`
+  nativo por listbox próprio só melhoraria a métrica do Clarity e arrisca
+  piorar o celular no pico do 13º. A opção 1 do boletim fica resolvida sem
+  ajuste.
+- **Regra nova de leitura:** clique morto do Clarity em página com
+  `<select>` nativo é inflado. Antes de propor mudança por clique morto, olhar
+  no mapa de calor quanto dos cliques está em `<select>`; só o resto conta como
+  sinal. Nota: o export do Clarity rotula o celular como "Toque_Celular"/
+  "Dispositivo móvel" e não põe a URL no nome do arquivo (só dentro, no regex).
+
+### 2026-11-23 — F91: canal no YouTube, sem rosto, e o piloto vira o Tesouro Reserva
+
+Paulo trouxe uma conversa com outro assistente sobre fazer vídeos sem
+aparecer, com a voz dele clonada no ElevenLabs ("está legal"), PowerPoint e
+animações, e pediu uma avaliação. A proposta da conversa: especializar o
+canal em **finanças para quem tem 40+**, piloto de 5 min com *"Tenho 45 anos,
+três dívidas e R$ 500 livres por mês. Por onde começo?"* e uma calculadora no
+site que refaz a conta de cada vídeo. Depois da avaliação: *"registre. Vamos
+conversar essa semana ainda. Quero criar o canal e começar a postar videos
+semanais englobando os cálculos"*.
+
+**O que ficou da proposta:** o formato sem rosto (voz e slides, com animação
+só quando explica algo), começar por um piloto e, principalmente, **cada vídeo
+ligado a uma calculadora**, que é o que faz o canal trazer gente ao site. O
+40+ entra como linha editorial (nas perguntas que o vídeo faz), não no nome
+nem no escopo do site, que continua com todas as calculadoras. O tráfego de
+hoje é trabalhista (`ferias-e-decimo-terceiro` com 39 das 150 sessões da
+semana de 10 a 16/11) e vem ~60% do Bing.
+
+**O que mudou na avaliação:**
+
+1. **O piloto é Tesouro Reserva / reserva de emergência, não dívidas.** O site
+   não tem calculadora de dívidas (só empréstimo, financiamento e
+   amortização), então o piloto proposto pedia uma ferramenta nova fora da
+   fila. Já a F83 (Tesouro Reserva, 49.500 buscas/mês, KD 36) é a próxima
+   entrega, e o foco em investimentos é a premissa de 26/10. Vídeo e
+   calculadora viram uma entrega só. Exemplo de pergunta: *"Tenho 45 anos e
+   nenhuma reserva. Quanto preciso e em quanto tempo chego lá com R$ 500 por
+   mês?"*. Dívidas pode ser o segundo vídeo.
+2. **A restrição do emprego não se resume a ser reconhecido pela voz.** A
+   conversa tratou o assunto como "alguém reconhecer", e Paulo concordou em
+   deixar isso de lado. O ponto maior é o conteúdo: um canal (monetizado ou
+   não) sobre investimentos, feito por quem trabalha em investimentos num
+   banco, pode cair na política de atividades externas e de conflito de
+   interesses e, se houver certificação (CPA/CEA), nas regras dela. **Paulo
+   confere o código de conduta antes do primeiro vídeo público.** As regras do
+   `AGENTS.md` valem para os vídeos: educativo, sem nome de instituição, sem
+   recomendar produto e com a fonte de cada número.
+3. **Medição definida antes de publicar.** Link com UTM na descrição
+   apontando para a calculadora do vídeo, origem `youtube` no boletim do F89 e
+   um critério de sucesso escrito antes, para o tráfego do vídeo não se perder
+   no meio do Bing.
+
+Extras: 2 ou 3 Shorts de 40 a 60 s por vídeo (no começo costumam trazer mais
+gente que o vídeo longo) e conferir o rótulo de conteúdo sintético do YouTube
+no upload (narração com a própria voz clonada provavelmente não exige).
+
+**Em aberto para a conversa desta semana:**
+
+- nome e identidade do canal (usar "Cálculos Online"? com "Finanças 40+" no
+  subtítulo ou só como linha editorial?), conta Google separada da pessoal;
+- consulta à política do empregador: antes do primeiro vídeo público ou só
+  antes de monetizar;
+- pauta das primeiras 4 a 6 semanas, cada vídeo ligado a uma calculadora que
+  já existe ou que está na fila (Tesouro Reserva/F83, CDB, juros compostos,
+  dívidas, Renda+/F85, e o trabalhista no pico sazonal, como o 13º);
+- modelo de slide reutilizável com a identidade visual do site;
+- critério de sucesso do piloto e quando decidir se continua;
+- quanto do roteiro sai do motor do site (números do vídeo iguais aos da
+  calculadora, com a mesma data de referência de CDI/Selic).
 
 ### 2026-11-18 — F70: o clique que não fazia nada agora copia, e o card do hub abre pelo card inteiro
 
