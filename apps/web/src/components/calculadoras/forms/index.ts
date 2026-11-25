@@ -17,6 +17,7 @@ import { EmprestimoForm, FinanciamentoForm } from './AmortizacaoForm'
 import { CDBForm } from './CDBForm'
 import { PoupancaForm } from './PoupancaForm'
 import { TesouroDiretoForm } from './TesouroDiretoForm'
+import { TesouroReservaForm } from './TesouroReservaForm'
 import { IMCForm } from './IMCForm'
 import { CaloriasForm } from './CaloriasForm'
 import { MargemLucroForm } from './MargemLucroForm'
@@ -41,6 +42,7 @@ const FORMS: Record<string, ComponentType<FormProps>> = {
   cdb: CDBForm,
   poupanca: PoupancaForm,
   'tesouro-direto': TesouroDiretoForm,
+  'tesouro-reserva': TesouroReservaForm,
   imc: IMCForm,
   calorias: CaloriasForm,
   'margem-lucro': MargemLucroForm,

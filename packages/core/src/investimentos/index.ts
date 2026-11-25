@@ -12,6 +12,16 @@ export {
   TAXA_CUSTODIA_B3,
   LIMITE_ISENCAO_SELIC,
 } from './tesouro-direto'
+export {
+  calcularTesouroReserva,
+  aliquotaIOF,
+  TABELA_IOF_REGRESSIVO,
+} from './tesouro-reserva'
+export type {
+  TesouroReservaParams,
+  TesouroReservaResultado,
+  UnidadePrazo,
+} from './tesouro-reserva'
 export type {
   TipoTesouroDireto,
   TesouroDiretoParams,

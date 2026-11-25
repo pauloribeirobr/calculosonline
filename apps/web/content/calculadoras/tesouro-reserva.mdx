@@ -1,0 +1,179 @@
+## Simulador do Tesouro Reserva Online 2026
+
+Este **simulador do Tesouro Reserva** mostra quanto o seu dinheiro rende até o dia do
+resgate. A conta já desconta o IOF, o Imposto de Renda e a taxa de custódia da B3, e
+compara o resultado com a poupança e com um CDB de 100% do CDI no mesmo prazo.
+
+**Exemplo rápido:** R$ 1.000 no Tesouro Reserva por 12 meses, com a Selic a 13,75% ao ano,
+rendem R$ 137,50 brutos. Saem R$ 24,06 de IR (17,5%, porque 12 meses passam de 360 dias) e
+nada de custódia, porque até R$ 10.000 não se paga. Você resgata **R$ 1.113,44**. Na
+poupança, o mesmo dinheiro viraria R$ 1.061,68.
+
+A simulação usa a meta Selic do Copom em 26/10/2026, 13,75% ao ano
+([Banco Central](https://www.bcb.gov.br/controleinflacao/historicotaxasjuros)). Ela muda a
+cada reunião do Copom, e o resultado muda junto.
+
+## O que é o Tesouro Reserva
+
+É um título público do Tesouro Direto, lançado em 11 de maio de 2026, feito para a
+**reserva de emergência**. As regras, segundo o Tesouro Nacional e a B3:
+
+- **Rende 100% da Selic**, todo dia útil, a partir do dia útil seguinte à aplicação.
+- **Aplicação a partir de R$ 1**, com limite de R$ 500 mil por investidor por mês.
+- **Resgate a qualquer hora**, inclusive à noite, nos fins de semana e nos feriados, com o
+  dinheiro caindo na hora por Pix. A única pausa é diária, entre 0h e 1h.
+- **Não tem marcação a mercado:** o saldo não oscila para baixo, e o valor que aparece é
+  o que você resgata.
+
+Fontes: [lançamento do Tesouro Reserva, Tesouro Nacional](https://www.gov.br/tesouronacional/pt-br/noticias/tesouro-nacional-b3-e-bb-lancam-tesouro-reserva-com-operacao-24h-nos-7-dias-da-semana)
+e [Tesouro Reserva na B3 Educação](https://edu.b3.com.br/w/tesouro-reserva).
+
+## Quanto rende o Tesouro Reserva
+
+Valores líquidos no resgate, já sem IR. Até R$ 10.000 não há custódia.
+
+| Valor aplicado | 1 mês | 6 meses | 12 meses | 24 meses |
+|---|:---:|:---:|:---:|:---:|
+| R$ 100 | R$ 100,84 | R$ 105,32 | R$ 111,34 | R$ 124,98 |
+| R$ 1.000 | R$ 1.008,36 | R$ 1.053,23 | R$ 1.113,44 | R$ 1.249,82 |
+| R$ 10.000 | R$ 10.083,65 | R$ 10.532,29 | R$ 11.134,37 | R$ 12.498,20 |
+
+**Exemplo:** R$ 10.000 por 1 mês rendem R$ 107,94 brutos. Saem R$ 24,29 de IR (22,5%,
+porque o prazo é curto) e sobram **R$ 83,65** de rendimento.
+
+## Tesouro Reserva, poupança ou CDB?
+
+O mesmo valor no mesmo prazo, com a Selic a 13,75% e o CDI a 13,65% ao ano:
+
+| R$ 10.000 por | Tesouro Reserva | Poupança | CDB 100% do CDI |
+|---|:---:|:---:|:---:|
+| 1 mês | R$ 10.083,65 | R$ 10.050,00 | R$ 10.083,08 |
+| 6 meses | R$ 10.532,29 | R$ 10.303,78 | R$ 10.528,54 |
+| 12 meses | R$ 11.134,37 | R$ 10.616,78 | R$ 11.126,12 |
+| 24 meses | R$ 12.498,20 | R$ 11.271,60 | R$ 12.478,87 |
+
+- **Contra a poupança:** com a Selic acima de 8,5%, a poupança paga 0,5% ao mês e não tem
+  IR. Mesmo assim, o Tesouro Reserva ganha em todos os prazos da tabela. A poupança também
+  só rende no aniversário: quem resgata no 29º dia não leva nada de rendimento.
+- **Contra o CDB de 100% do CDI:** fica quase empatado, porque Selic e CDI andam juntos.
+  O CDB ganha quando paga mais de 100% do CDI. O Tesouro Reserva ganha no resgate a
+  qualquer hora e no risco, que é o do governo federal. Simule o seu CDB na
+  [calculadora de CDB](/calculadora/cdb).
+- **Acima de R$ 10.000** entra a custódia sobre o excedente, e o CDB passa um pouco à
+  frente: com R$ 20.000 por 12 meses, o Tesouro Reserva devolve R$ 22.248,75 e o CDB de
+  100% do CDI, R$ 22.252,25.
+
+## IOF: o custo de resgatar antes de 30 dias
+
+O resgate é imediato, mas quem tira o dinheiro antes de 30 dias paga IOF sobre o
+rendimento. A alíquota começa em 96% do rendimento no 1º dia e cai até zero no 30º.
+
+| R$ 1.000 resgatados com | Rendimento bruto | IOF | IR | Você leva de rendimento |
+|---|:---:|:---:|:---:|:---:|
+| 7 dias | R$ 2,47 | R$ 1,88 (76%) | R$ 0,13 | R$ 0,46 |
+| 15 dias | R$ 5,31 | R$ 2,66 (50%) | R$ 0,60 | R$ 2,05 |
+| 29 dias | R$ 10,29 | R$ 0,31 (3%) | R$ 2,25 | R$ 7,73 |
+| 30 dias | R$ 10,65 | R$ 0,00 | R$ 2,40 | R$ 8,25 |
+
+O IOF só leva parte do **rendimento**, nunca do valor aplicado: resgatar cedo rende menos,
+mas não faz perder dinheiro. Para ver o seu caso, escolha "Dias" no simulador. Fonte:
+Decreto 6.306/2007, art. 32 e Anexo
+([Planalto](https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2007/decreto/d6306.htm)).
+
+## Imposto de Renda e taxa de custódia
+
+O IR é o da renda fixa: incide só sobre o rendimento e cai com o tempo. Ele é descontado
+no resgate, sem DARF.
+
+| Prazo | Alíquota | Sobre R$ 100 de rendimento |
+|---|:---:|:---:|
+| Até 180 dias | 22,5% | R$ 22,50 |
+| 181 a 360 dias | 20% | R$ 20,00 |
+| 361 a 720 dias | 17,5% | R$ 17,50 |
+| Acima de 720 dias | 15% | R$ 15,00 |
+
+Fonte: Lei 11.033/2004, art. 1º
+([Planalto](https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2004/lei/l11033.htm)).
+
+A B3 cobra **0,20% ao ano de custódia**, mas no Tesouro Reserva não cobra nada até
+R$ 10.000 por CPF. Acima disso, a taxa vale só sobre o que passar de R$ 10.000.
+**Exemplo:** R$ 20.000 por 12 meses pagam 0,20% sobre R$ 10.000, ou seja, **R$ 20,00**.
+Fontes: [B3 Educação](https://edu.b3.com.br/w/tesouro-reserva) e
+[tarifas do Tesouro Direto na B3](https://www.b3.com.br/pt_br/produtos-e-servicos/tarifas/tarifas-de-tesouro-direto/).
+
+## Tesouro Reserva ou Tesouro Selic?
+
+Os dois rendem a Selic e dão o mesmo resultado no simulador. O que muda é o uso:
+
+| | Tesouro Reserva | Tesouro Selic |
+|---|:---:|:---:|
+| Aplicação mínima | R$ 1 | Cerca de R$ 30 (1% do título) |
+| Resgate | Qualquer hora, todos os dias | Dias úteis |
+| Marcação a mercado | Não tem | Tem, pequena |
+| Rentabilidade | 100% da Selic | Selic mais uma pequena taxa que muda a cada dia |
+
+Para comparar com os outros títulos, use o [simulador de Tesouro Direto](/calculadora/tesouro-direto).
+
+## Como o simulador calcula
+
+1. Rendimento bruto: o valor cresce a 100% da Selic pelo prazo informado.
+2. IOF: só se o resgate for antes de 30 dias, pela tabela do Decreto 6.306/2007.
+3. IR: a alíquota da faixa do prazo, sobre o rendimento menos o IOF.
+4. Custódia: 0,20% ao ano sobre o que passar de R$ 10.000.
+
+A Selic fica constante no prazo, e o rendimento conta a partir do dia da aplicação. No
+produto, ele começa no dia útil seguinte, então nos prazos de poucos dias o valor real
+pode sair alguns centavos menor.
+
+Esta página é educativa e não recomenda investimento: compare custos e prazos antes de
+aplicar.
+
+## Perguntas frequentes sobre o Tesouro Reserva
+
+**Quanto rende R$ 1.000 no Tesouro Reserva?**
+
+Com a Selic a 13,75% ao ano, R$ 1.000 viram R$ 1.008,36 em 1 mês e R$ 1.113,44 em
+12 meses, já sem o IR. Até R$ 10.000 não há custódia.
+
+**Quanto rende R$ 100 no Tesouro Reserva?**
+
+R$ 100 viram R$ 111,34 em 12 meses e R$ 124,98 em 24 meses. Dá para começar com R$ 1, e o
+rendimento é proporcional ao valor.
+
+**O Tesouro Reserva vale a pena?**
+
+Para a reserva de emergência, ele junta três coisas: rende a Selic, o resgate cai na hora
+e o saldo não oscila. Com R$ 10.000 por 12 meses, devolve R$ 11.134,37, contra
+R$ 10.616,78 da poupança. O custo é o IOF de quem resgata antes de 30 dias e o IR, que a
+poupança não tem.
+
+**Tesouro Reserva ou poupança: qual rende mais?**
+
+Com a Selic acima de 8,5%, o Tesouro Reserva rende mais mesmo pagando IR. Em 6 meses,
+R$ 1.000 viram R$ 1.053,23 no Tesouro Reserva e R$ 1.030,38 na poupança.
+
+**Posso resgatar o Tesouro Reserva a qualquer hora?**
+
+Sim, todos os dias, inclusive à noite, nos fins de semana e nos feriados. O dinheiro cai
+na hora por Pix, e a única pausa é diária, entre 0h e 1h.
+
+**Tem IOF no Tesouro Reserva?**
+
+Só se você resgatar antes de 30 dias. Com R$ 1.000 resgatados em 15 dias, o rendimento
+bruto é R$ 5,31, o IOF leva metade (R$ 2,66) e sobram R$ 2,05 depois do IR. A partir do
+30º dia, o IOF é zero.
+
+**Tem taxa de custódia no Tesouro Reserva?**
+
+Até R$ 10.000 por CPF, não. Acima disso, 0,20% ao ano só sobre o excedente: R$ 20.000 por
+um ano pagam R$ 20,00.
+
+**O Tesouro Reserva pode perder dinheiro?**
+
+O saldo não cai, porque o título não tem marcação a mercado. O risco é o do governo
+federal deixar de pagar a própria dívida, o menor risco de crédito do país. O que pode
+acontecer é o rendimento ser menor que o esperado: se a Selic cair, ele cai junto.
+
+**Quanto posso investir no Tesouro Reserva?**
+
+De R$ 1 até R$ 500 mil por mês. Não há limite para resgatar.

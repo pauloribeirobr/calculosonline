@@ -16,6 +16,12 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **25/11/2026 — F83 (v0.44.0): simulador do Tesouro Reserva pronto no
+  working tree, falta o deploy.** Prazo em meses ou dias (IOF antes de 30 dias), comparação
+  com poupança e CDB de 100% do CDI, regras conferidas no Tesouro Nacional, B3
+  e Planalto. **Depois do deploy:** IndexNow (`tesouro-reserva`,
+  `tesouro-direto`); leitura de impressões ~23/12. Em aberto: se a isenção de
+  custódia é somada à do Tesouro Selic. Detalhe no Diário de 25/11.
 - **25/11/2026 — Boletim de 18 a 24/11: a F70 passou no critério 1 e fica.**
   Clique morto da `ferias-e-decimo-terceiro` no PC 62,5% → **31,7%** (41
   sessões) e `result_copied` 0 → 2. O que sobrou (e os 40% da
@@ -1313,6 +1319,49 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-11-25 — F83: simulador do Tesouro Reserva, com IOF dia a dia e poupança no mesmo prazo
+
+Paulo: *"Comece o F83"*. Entregue em v0.44.0 (`/calculadora/tesouro-reserva`).
+
+**Fontes (o site do Tesouro Direto devolve 403 para curl e WebFetch):**
+- Tesouro Nacional, notícia de lançamento de **11/05/2026**: 100% indexado à
+  Selic, sem marcação a mercado, R$ 1 de mínimo, **até R$ 500 mil por
+  investidor ao mês**, resgate sem limite, 24x7, IR regressivo e IOF até 30
+  dias. A notícia cita o distribuidor pelo nome: a página linka a notícia e não
+  repete o nome (o e2e agora proíbe `Banco do Brasil`).
+- B3 Educação (`edu.b3.com.br/w/tesouro-reserva`): **100% da Selic**, rende a
+  partir do dia útil seguinte, pausa diária de **0h a 1h**, crédito por Pix,
+  custódia isenta **"até R$ 10 mil por CPF no Tesouro Reserva"**. Em aberto:
+  nenhuma fonte diz se essa isenção é **somada ou separada** da do Tesouro
+  Selic. A página fala só do Tesouro Reserva.
+- Tarifas da B3: o Tesouro Reserva (LFT-TD1) está na lista de 0,20% a.a.
+- Planalto, Decreto 6.306/2007, art. 32 e Anexo: tabela do IOF (96% → 0%),
+  transcrita em `TABELA_IOF_REGRESSIVO`. O Planalto só respondeu com
+  `curl --http1.1 --max-time 90`.
+- Selic 13,75% e CDI 13,65% reconferidos na API do Banco Central em 25/11:
+  os exemplos de 26/10 continuam valendo.
+
+**Decisões:**
+- **Prazo em meses ou dias, por rádio.** Em dias aparece o IOF (o argumento
+  do produto é o resgate imediato, e é antes dos 30 dias que ele custa). Rádio,
+  e não `<select>`, pelo achado do mapa de calor do mesmo dia.
+- **Comparação dentro do resultado**, como linhas neutras do detalhamento:
+  poupança (só rende no aniversário: 29 dias = R$ 0) e CDB de 100% do CDI.
+  Até R$ 10 mil o Tesouro Reserva ganha dos dois; acima disso a custódia
+  põe o CDB de 100% do CDI um pouco à frente (R$ 20 mil/12 meses: R$ 22.248,75
+  × R$ 22.252,25), e a página diz isso.
+- **Em meses, o motor dá o mesmo número do Tesouro Selic do site** (mesmo
+  fator `(1+Selic)^(meses/12)`), travado em teste: os dois produtos rendem a
+  Selic, e números diferentes nas duas páginas seriam erro.
+- **Fora do escopo: aporte mensal.** Cada aporte tem o próprio relógio de IR,
+  e o F83 não pedia. É o caso do vídeo piloto do F91 ("guardar R$ X por mês"),
+  então vale como próxima melhoria se o vídeo for por esse lado.
+
+**Medição (proposta 2 do boletim de 25/11):** impressões do GSC da página
+nova e Serper de `tesouro reserva`, linha de base 0, leitura 4 semanas depois
+do deploy (~23/12). Depois do deploy: IndexNow do slug novo e do
+`tesouro-direto` (link novo).
 
 ### 2026-11-25 — Boletim de 18 a 24/11: a F70 fica, e o clique morto que sobrou é quase todo `<select>` nativo
 

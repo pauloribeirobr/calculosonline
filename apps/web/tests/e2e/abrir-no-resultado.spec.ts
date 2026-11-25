@@ -126,6 +126,7 @@ const ENTRADAS: Record<string, Record<string, unknown>> = {
   cdb: { valorInicial: 10000, taxaAnual: 110, tipo: 'cdi', prazoMeses: 24 },
   poupanca: { valorInicial: 1000, prazoMeses: 12, aporteMensal: 100, selicAnual: 0.1325 },
   'tesouro-direto': { valorInicial: 5000, tipo: 'selic', taxaAnual: 0, prazoMeses: 24 },
+  'tesouro-reserva': { valorInicial: 1000, prazo: 12, unidade: 'meses' },
   imc: { peso: 70, altura: 1.75 },
   calorias: {
     peso: 70,

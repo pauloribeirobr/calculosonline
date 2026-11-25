@@ -24,6 +24,7 @@ import {
   HeartIcon,
   HomeModernIcon,
   IdentificationIcon,
+  LifebuoyIcon,
   PercentBadgeIcon,
   PresentationChartLineIcon,
   ReceiptPercentIcon,
@@ -55,6 +56,8 @@ export const calculatorIcons: Record<IconeCalculadora, HeroIcon> = {
   cdb: CircleStackIcon,
   poupanca: WalletIcon,
   tesouroDireto: BuildingLibraryIcon,
+  // F83: boia, porque o produto é a reserva de emergência.
+  tesouroReserva: LifebuoyIcon,
   imc: ScaleIcon,
   calorias: FireIcon,
   margemLucro: TagIcon,
