@@ -109,7 +109,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'trabalhista',
     icone: 'rescisao',
     fonteJuridica: 'CLT arts. 477–487 | Lei 12.506/2011 | Lei 8.036/1990',
-    dataAtualizacao: '2026-09-13',
+    dataAtualizacao: '2026-11-27',
     palavrasChave: [
       'rescisão trabalhista',
       'calcular rescisão',
@@ -128,7 +128,14 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     // do aviso prévio — e porque a página nova do F68 nasce sem link nenhum,
     // que num site de AS 2 é o mesmo que nascer invisível (escultura de link
     // interno do F43).
-    relacionadas: ['ferias', 'fgts', 'decimo-terceiro', 'hora-extra', 'datas'],
+    relacionadas: [
+      'ferias',
+      'ferias-e-decimo-terceiro',
+      'fgts',
+      'decimo-terceiro',
+      'hora-extra',
+      'datas',
+    ],
     featured: true,
   },
   {
@@ -240,7 +247,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'trabalhista',
     icone: 'ferias',
     fonteJuridica: 'CLT arts. 129–145 | Lei 4.090/1962 | Lei 4.749/1965',
-    dataAtualizacao: '2026-09-22',
+    dataAtualizacao: '2026-11-27',
     palavrasChave: [
       'férias e 13º salário',
       'calcular férias e décimo terceiro',
@@ -272,7 +279,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'trabalhista',
     icone: 'horaExtra',
     fonteJuridica: 'CLT art. 59 | CF/88 art. 7º, XVI',
-    dataAtualizacao: '2026-09-22',
+    dataAtualizacao: '2026-11-27',
     palavrasChave: ['hora extra', 'calcular hora extra', 'adicional hora extra'],
     // F67 — a cauda média onde o AS 2 alcança. O `calculadora.com.br`, com
     // AS 14, está em **pos. 5** em `calcular hora extra online` e 10 em
@@ -291,6 +298,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     relacionadas: [
       'salario-liquido',
       'decimo-terceiro',
+      'ferias-e-decimo-terceiro',
       'fgts',
       'ferias',
       'rescisao-trabalhista',
@@ -326,7 +334,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'trabalhista',
     icone: 'salarioLiquido',
     fonteJuridica: 'Decreto 11.936/2024 (INSS) | RIR/2018 (IRRF)',
-    dataAtualizacao: '2026-10-04',
+    dataAtualizacao: '2026-11-27',
     palavrasChave: [
       'salário líquido',
       'calcular salário líquido',
@@ -346,7 +354,14 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'cálculo de salário líquido online',
       'calculadora salário líquido 2026',
     ],
-    relacionadas: ['irrf', 'decimo-terceiro', 'hora-extra', 'fgts', 'rescisao-trabalhista'],
+    relacionadas: [
+      'irrf',
+      'decimo-terceiro',
+      'ferias-e-decimo-terceiro',
+      'hora-extra',
+      'fgts',
+      'rescisao-trabalhista',
+    ],
     featured: true,
   },
 
@@ -577,7 +592,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'comparar CDB com a poupança',
       'quanto rende o CDB',
     ],
-    relacionadas: ['tesouro-direto', 'poupanca', 'irpf', 'juros-compostos'],
+    relacionadas: ['tesouro-direto', 'tesouro-reserva', 'poupanca', 'irpf', 'juros-compostos'],
   },
   {
     slug: 'poupanca',
@@ -597,7 +612,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'rendimento poupança simulador',
       'simulador poupança Caixa',
     ],
-    relacionadas: ['cdb', 'tesouro-direto', 'financiamento', 'irpf'],
+    relacionadas: ['cdb', 'tesouro-reserva', 'tesouro-direto', 'financiamento', 'irpf'],
   },
   {
     slug: 'tesouro-direto',

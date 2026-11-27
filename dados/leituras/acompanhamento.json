@@ -9,11 +9,11 @@
       "status": "no ar; 0 referência solta nas 47 URLs (27/11). Falta o Paulo repetir o teste de resultados aprimorados do /blog"
     },
     {
-      "entrega": "Velocidade: sem o <Suspense> (v0.46.0, no ar) e Inter pelo next/font (v0.46.1, falta subir)",
+      "entrega": "Velocidade: sem o <Suspense> (v0.46.0) e Inter pelo next/font (v0.46.1), no ar em 27/11",
       "medir": "PageSpeed celular (3 rodadas) do post do 13º proporcional, de uma calculadora e do hub: nota, LCP, CLS",
       "base": "post do 13º proporcional antes: notas 98/81/88/81/75, LCP até 4,5 s, CLS até 0,20. Com a v0.46.0: 86/92/86, LCP 0,9 s, CLS 0,273 (fonte)",
       "leitura": "2026-12-11",
-      "status": "v0.46.0 resolveu o LCP; falta subir a v0.46.1 (fonte) e medir de novo"
+      "status": "resolvido em 27/11 (3 rodadas por página): post do 13º proporcional 100/100/99; ferias-e-decimo-terceiro 98/99/99; hub 100/97/100; home 98/98/100; FGTS 100/100/99; /feriados 100/91/100 — LCP 0,9 s em todas, CLS 0 (0,026 em 2 rodadas do /feriados). Confirmar na medição mensal de dezembro"
     },
     {
       "entrega": "/feriados responde \"amanhã é feriado?\" (v0.46.0, no ar em 27/11)",
@@ -30,11 +30,11 @@
       "status": "aguardando o Paulo pedir a indexação"
     },
     {
-      "entrega": "Links internos para as páginas fora do índice (proposta de 27/11)",
+      "entrega": "Links internos para as páginas fora do índice (v0.46.2, falta subir)",
       "medir": "Estado na inspeção; sessões da ferias-e-decimo-terceiro no Bing não podem cair",
-      "base": "home sem link para as duas; relacionadas: 2 (férias + 13º) e 1 (Tesouro Reserva); 50 sessões/semana",
+      "base": "rodapé sem as duas; home só na grade (1 link cada); relacionadas: 2 (férias + 13º) e 1 (Tesouro Reserva); post do 13º proporcional não aparecia na férias + 13º; 50 sessões/semana na férias + 13º (GA4) e 38 cliques no Bing",
       "leitura": "2026-12-11",
-      "status": "aguardando ok do Paulo"
+      "status": "feito: rodapé, relacionadas (5 e 3) e o post na férias + 13º; falta subir"
     },
     {
       "entrega": "F84 — taxas em porcentagem (CDB, Tesouro Direto, poupança), no ar em 27/11",

@@ -97,8 +97,7 @@ export const blogRegistry: PostBlog[] = [
     calculadorasRelacionadas: ['salario-liquido', 'inss', 'irrf', 'ferias'],
     sazonalidade: {
       picoMeses: [11, 12],
-      nota:
-        'Busca pica em novembro/dezembro, com subida a partir de outubro. Publicado em agosto/setembro para maturar 60-90 dias antes do pico. Revisar as datas e a tabela de INSS/IRRF todo ano em agosto, antes da janela.',
+      nota: 'Busca pica em novembro/dezembro, com subida a partir de outubro. Publicado em agosto/setembro para maturar 60-90 dias antes do pico. Revisar as datas e a tabela de INSS/IRRF todo ano em agosto, antes da janela.',
     },
     tempoLeituraMin: 7,
   },
@@ -159,7 +158,7 @@ export const blogRegistry: PostBlog[] = [
     resumo:
       'A conta é 1/12 por mês trabalhado — mas o que decide se um mês conta são 15 dias, e um único dia de diferença na admissão chega a valer R$ 227. Tabela por mês, por faixa de salário e as regras de afastamento.',
     dataPublicacao: '2026-09-08',
-    dataAtualizacao: '2026-09-13',
+    dataAtualizacao: '2026-11-27',
     palavrasChave: [
       '13º salário proporcional',
       'calcular 13º proporcional online',
@@ -170,11 +169,16 @@ export const blogRegistry: PostBlog[] = [
       '13º proporcional na demissão',
     ],
     calculadoraPrincipal: 'decimo-terceiro',
-    calculadorasRelacionadas: ['rescisao-trabalhista', 'inss', 'irrf', 'salario-liquido'],
+    calculadorasRelacionadas: [
+      'ferias-e-decimo-terceiro',
+      'rescisao-trabalhista',
+      'inss',
+      'irrf',
+      'salario-liquido',
+    ],
     sazonalidade: {
       picoMeses: [11, 12],
-      nota:
-        'Mesma janela do guia de datas do 13º, com uma diferença: a busca por "proporcional" também pica junto das demissões (jan e jul). Revisar as tabelas de INSS/IRRF em agosto, antes do pico principal.',
+      nota: 'Mesma janela do guia de datas do 13º, com uma diferença: a busca por "proporcional" também pica junto das demissões (jan e jul). Revisar as tabelas de INSS/IRRF em agosto, antes do pico principal.',
     },
     tempoLeituraMin: 8,
   },
@@ -227,8 +231,7 @@ export const blogRegistry: PostBlog[] = [
     calculadorasRelacionadas: ['salario-liquido', 'inss', 'irrf', 'decimo-terceiro'],
     sazonalidade: {
       picoMeses: [12, 1, 7],
-      nota:
-        'A dúvida aparece junto do gozo das férias, que concentra em dezembro/janeiro (férias coletivas e escolares) e em julho. Diferente do 13º, a busca existe o ano todo, porque férias são individuais. Revisar as tabelas de INSS/IRRF em janeiro, quando as tabelas do ano mudam.',
+      nota: 'A dúvida aparece junto do gozo das férias, que concentra em dezembro/janeiro (férias coletivas e escolares) e em julho. Diferente do 13º, a busca existe o ano todo, porque férias são individuais. Revisar as tabelas de INSS/IRRF em janeiro, quando as tabelas do ano mudam.',
     },
     tempoLeituraMin: 7,
   },

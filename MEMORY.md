@@ -19,11 +19,11 @@ que não cabe em nenhum dos outros três.
 - **27/11/2026 — Leitura semanal (20–26/11): 5 URLs fora do índice do Google**,
   entre elas a `ferias-e-decimo-terceiro` (maior página do site no Bing, 0
   impressões no Google em 90 dias) e o post do 13º proporcional. Achado pela
-  inspeção de URL da API. **Pendente do Paulo:** pedir indexação das 5 no GSC e
-  subir a v0.46.1 (Inter pelo `next/font`: o CLS de 0,27 que sobrou no post era a
-  troca de fonte). v0.45.2 (JSON-LD) e v0.46.0 (sem o `<Suspense>` que pulava;
-  `/feriados` com "amanhã é feriado?", IndexNow enviado) no ar em 27/11.
-  Proposta de links internos aguardando ok. Bing pela API: 87 cliques/semana
+  inspeção de URL da API. **Pendente do Paulo:** pedir indexação das 5 no GSC. **No ar em 27/11:** v0.45.2 (JSON-LD), v0.46.0
+  (sem o `<Suspense>` que pulava; `/feriados` com "amanhã é feriado?") e v0.46.1
+  (Inter pelo `next/font`). Velocidade depois: notas 97–100, LCP 0,9 s e CLS 0 nas
+  6 maiores páginas (o post do 13º proporcional saiu de 75–98 para 99–100).
+  Links internos feitos (v0.46.2, falta subir). Bing pela API: 87 cliques/semana
   (Google: 2). Google:
   posição média 28 → 17,6, 0 de 29 palavras no top 10. Direct do exterior (35
   de 41) é robô. Detalhe no Diário de 27/11 e em `docs/semanas/2026-11-27.md`.
@@ -1393,7 +1393,10 @@ token já tem).** 47 URLs do sitemap: 42 "Enviada e indexada", 4 "Detectada, mas
 `/calculadora/ferias-e-decimo-terceiro`, `/blog/acerto-trabalhista-o-que-entra-e-quando-recebo`,
 `/blog/13-salario-proporcional-como-calcular`) e 1 "O Google não reconhece o URL" (`/calculadora/tesouro-reserva`, de
 25/11). A `ferias-e-decimo-terceiro` (F69, 22/09) tem **0 impressões no Google em 90 dias** sendo a maior página do site no
-Bing. Sinal interno: a home não linka nem ela nem o Tesouro Reserva; no `relacionadas`, 2 e 1 links (o 13º recebe 8).
+Bing. Sinal interno: no `relacionadas`, 2 e 1 links (o 13º recebe 8), e fora dos destaques do rodapé. **Correção (mesmo dia):** escrevi
+que a home não linkava as duas; linka, uma vez cada, na grade "Todas as calculadoras" — a contagem tinha cortado quem tinha 1 link.
+**Proposta 2 aprovada ("pode fazer") e feita:** v0.46.2, rodapé com as duas, `relacionadas` 2 → 5 e 1 → 3, post do 13º proporcional nos
+guias da férias + 13º.
 
 **Propostas** (detalhe na seção 10 do Raio-X): (1) Paulo pede indexação das 5 URLs no GSC, leitura 04/12; (2) feature nova
 de links internos para essas páginas (home, rodapé, `relacionadas`, posts), respeitando a F43, leitura 11/12; (3) não mexer
