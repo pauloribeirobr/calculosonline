@@ -25,9 +25,11 @@ export function Logo({ variant = 'light', showText = true, size = 'md' }: LogoPr
         alt="Calculos Online"
         width={width}
         height={height}
-        // Sem `h-auto w-auto` (27/11/2026): sobrescreviam o width/height do <img> e o
-        // Lighthouse o contava como imagem sem tamanho (causa de layout shift).
+        // Tamanho fixo no estilo (27/11/2026): o `h-auto w-auto` de antes e o `height: auto` do
+        // CSS base do Tailwind anulavam o width/height do <img>, e o Lighthouse o contava como
+        // imagem sem tamanho (causa de layout shift).
         className="shrink-0"
+        style={{ width, height }}
       />
       {showText && (
         <span className={`ml-2 font-bold ${textClass} ${textColor}`}>Calculos Online</span>

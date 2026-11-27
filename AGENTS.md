@@ -153,7 +153,7 @@ atende) e o selo de atualização na página. Origem: a F84 subiu com o lastmod 
 26/10 nas três páginas que mudou, e precisou de um segundo deploy só para isso.
 Post do blog: o mesmo, no `dataAtualizacao` do `blogRegistry`.
 
-**IndexNow.** `pnpm --filter web indexnow [slugs...]` (script
+**IndexNow.** `pnpm --filter web indexnow [slugs ou /caminhos...]` (slug = calculadora; `/feriados`, `/blog/<post>` = caminho exato, desde 27/11/2026) (script
 `apps/web/scripts/indexnow.mjs`, segredo em `apps/web/.env.local`). Nada dispara
 sozinho, e só se roda **depois do deploy** (conferir em produção antes), senão
 o Bing relê o conteúdo antigo. Atende Bing/Yandex, **não o Google**. A chave é

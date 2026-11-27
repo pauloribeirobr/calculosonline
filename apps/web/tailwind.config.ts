@@ -34,7 +34,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['"Inter Variable"', 'Inter', 'system-ui', 'sans-serif'],
+        // `--font-inter` vem do next/font/local no layout (27/11/2026), com a reserva ajustada.
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
         mono: ['ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       fontSize: {
