@@ -2,18 +2,25 @@
   "nota": "Raio-X semanal, seção 'Acompanhamento das entregas'. Cada entrega com o que medir, a linha de base e a data da leitura. Ao ler, mudar 'status' para o resultado (ex.: 'passou: 31,7%') e manter a linha até a próxima rodada; depois, apagar. Datas em AAAA-MM-DD.",
   "itens": [
     {
-      "entrega": "JSON-LD sem referência solta (v0.45.2, falta subir)",
+      "entrega": "JSON-LD sem referência solta (v0.45.2, no ar em 27/11)",
       "medir": "Teste de resultados aprimorados do /blog e de uma calculadora; GSC → Melhorias (navegação estrutural) sem erro",
       "base": "/blog: 1 erro crítico (itemListElement); 23 calculadoras com #webpage solto (27/11)",
       "leitura": "2026-12-04",
+      "status": "no ar; 0 referência solta nas 47 URLs (27/11). Falta o Paulo repetir o teste de resultados aprimorados do /blog"
+    },
+    {
+      "entrega": "Velocidade: sem o <Suspense> que trocava um bloco cinza pelo texto (v0.46.0, falta subir)",
+      "medir": "PageSpeed celular (3 rodadas) do post do 13º proporcional, de uma calculadora e do hub: nota, LCP, CLS",
+      "base": "post do 13º proporcional: notas 98/81/88/81/75, LCP até 4,5 s, CLS até 0,20 (27/11)",
+      "leitura": "2026-12-11",
       "status": "aguardando deploy"
     },
     {
-      "entrega": "Velocidade do post do 13º proporcional",
-      "medir": "PageSpeed celular: nota, LCP e CLS de /blog/13-salario-proporcional-como-calcular",
-      "base": "nota 75, LCP 4,4 s, CLS 0,20 (27/11); as outras 4 maiores páginas entre 93 e 98",
-      "leitura": "2026-12-11",
-      "status": "a investigar (proposta de 27/11)"
+      "entrega": "/feriados responde \"amanhã é feriado?\" (v0.46.0, falta subir)",
+      "medir": "Cliques e impressões do /feriados no BWT (seção 5 do Raio-X), sobretudo na semana do próximo feriado",
+      "base": "semana de 20/11: 1.036 impressões, 1 clique, posição 8",
+      "leitura": "2026-12-30",
+      "status": "aguardando deploy; o próximo feriado nacional é 25/12"
     },
     {
       "entrega": "Indexação das 5 URLs fora do índice (pedido manual no GSC)",

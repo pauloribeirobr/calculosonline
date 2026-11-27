@@ -3,7 +3,12 @@ import Link from 'next/link'
 import { UpdatedBadge } from '@calculosonline/ui'
 import { listarFeriados, diasUteisPorMes } from '@calculosonline/core/tempo'
 import { buildMetadata } from '@/lib/seo'
-import { ANOS_FERIADOS, FERIADOS_DATA_ATUALIZACAO, FERIADOS_PATH, pathDoAno } from '@/lib/feriados'
+import {
+  ANOS_FERIADOS,
+  FERIADOS_ENTRADA_ATUALIZACAO,
+  FERIADOS_PATH,
+  pathDoAno,
+} from '@/lib/feriados'
 import { Breadcrumbs } from '@/components/common/Breadcrumbs'
 import { CategoryIcon } from '@/components/common/CalculatorIcon'
 import { PageSeo } from '@/components/seo/PageSeo'
@@ -15,16 +20,28 @@ import { HojeEFeriado } from '@/components/feriados/HojeEFeriado'
  * repete a lista de um ano — isso é a página do ano, e duas páginas com a
  * mesma tabela dividiriam o sinal. Aqui a resposta é a do dia, calculada no
  * navegador, e a escolha do ano.
+ *
+ * 27/11/2026: título, descrição, H1 e o quadro do topo respondem também "amanhã é feriado?".
+ * No BWT da semana de 20/11 a página teve 1.036 impressões e 1 clique na posição 8, com
+ * "amanhã é feriado nacional", "feriado amanhã", "feriado essa semana", "hoje é feriado?".
  */
 
-const TITULO = 'Feriados Nacionais 2026 e 2027 — Hoje é Feriado?'
+const TITULO = 'Hoje ou Amanhã é Feriado? Feriados Nacionais 2026 e 2027'
 const DESCRICAO =
-  'Veja se hoje é feriado e quando é o próximo feriado nacional. Calendário completo de 2026 e 2027, com a lei de cada data e os dias úteis do ano.'
+  'Veja se hoje ou amanhã é feriado nacional e quantos dias faltam para o próximo. Calendário completo de 2026 e 2027, com a lei de cada data e os dias úteis do ano.'
 
 export const metadata: Metadata = buildMetadata({
   title: TITULO,
   description: DESCRICAO,
-  keywords: ['feriados', 'hoje é feriado', 'próximo feriado', 'feriados nacionais'],
+  keywords: [
+    'feriados',
+    'hoje é feriado',
+    'amanhã é feriado',
+    'feriado amanhã',
+    'feriado essa semana',
+    'próximo feriado',
+    'feriados nacionais',
+  ],
   path: FERIADOS_PATH,
 })
 
@@ -60,16 +77,16 @@ export default function FeriadosPage() {
           <CategoryIcon categoria="tempo" size="xl" />
           <div className="min-w-0">
             <h1 className="text-2xl font-bold leading-tight text-gray-900 md:text-3xl">
-              Feriados nacionais
+              Feriados nacionais: hoje ou amanhã é feriado?
             </h1>
             <p className="mt-2 text-sm text-gray-600 md:text-base">
-              Se hoje é feriado, quando é o próximo e o calendário completo de cada ano, com a lei
-              que cria cada data.
+              Se hoje ou amanhã é feriado, quando é o próximo e o calendário completo de cada ano,
+              com a lei que cria cada data.
             </p>
           </div>
         </div>
         <div className="mt-3 flex flex-wrap gap-2">
-          <UpdatedBadge dataAtualizacao={FERIADOS_DATA_ATUALIZACAO} />
+          <UpdatedBadge dataAtualizacao={FERIADOS_ENTRADA_ATUALIZACAO} />
         </div>
       </header>
 

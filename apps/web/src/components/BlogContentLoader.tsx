@@ -1,5 +1,3 @@
-import { Suspense } from 'react'
-
 /**
  * Carrega o corpo editorial de um post do blog (F22).
  *
@@ -18,7 +16,7 @@ async function loadPost(slug: string) {
     const mod = await import(`../../content/blog/${slug}.mdx`)
     const Content = mod.default
     return (
-      <article className="prose prose-gray max-w-none prose-headings:scroll-mt-20 prose-a:text-brand-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-table:text-sm">
+      <article className="prose prose-gray prose-headings:scroll-mt-20 prose-a:text-brand-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-table:text-sm max-w-none">
         <Content />
       </article>
     )
@@ -31,9 +29,9 @@ export async function BlogContentLoader({ slug }: { slug: string }) {
   const content = await loadPost(slug)
   if (!content) return null
 
-  return (
-    <Suspense fallback={<div className="h-64 animate-pulse rounded-xl bg-gray-100" />}>
-      {content}
-    </Suspense>
-  )
+  // Sem <Suspense> (27/11/2026): o MDX já foi aguardado acima, então o limite não protegia nada e
+  // só fazia o HTML sair com um bloco cinza de 256 px (fallback) e o texto num bloco oculto,
+  // trocados por script. Quando o navegador pintava antes da troca, o texto empurrava a página:
+  // CLS de até 0,20 e LCP de 4,2–4,5 s no post do 13º proporcional (PageSpeed, celular).
+  return content
 }

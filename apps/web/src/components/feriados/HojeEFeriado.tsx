@@ -11,7 +11,7 @@ import { hojeISO } from '@calculosonline/core/utils'
 import { ehAnoPublicado, pathDoAno } from '@/lib/feriados'
 
 /**
- * "Hoje é feriado?" e o próximo feriado nacional.
+ * "Hoje é feriado?", "amanhã é feriado?" e o próximo feriado nacional.
  *
  * **Calculado no navegador, de propósito.** As páginas são estáticas com ISR
  * de 24h: um "hoje" renderizado no servidor pode estar um dia atrasado, e
@@ -20,17 +20,29 @@ import { ehAnoPublicado, pathDoAno } from '@/lib/feriados'
  * de Brasília (`hojeISO`) é lida depois de montar.
  */
 export function HojeEFeriado() {
-  const [estado, setEstado] = useState<{ hoje: string; proximo: ProximoFeriado | null } | null>(
-    null,
-  )
+  const [estado, setEstado] = useState<{
+    hoje: string
+    proximo: ProximoFeriado | null
+    amanha: ProximoFeriado | null
+  } | null>(null)
 
   useEffect(() => {
     const hoje = hojeISO()
-    setEstado({ hoje, proximo: proximoFeriado(hoje) })
+    // Amanhã pela data de Brasília: meio-dia UTC não troca de dia ao somar 24 h.
+    const d = new Date(`${hoje}T12:00:00Z`)
+    d.setUTCDate(d.getUTCDate() + 1)
+    setEstado({
+      hoje,
+      proximo: proximoFeriado(hoje),
+      amanha: proximoFeriado(d.toISOString().slice(0, 10)),
+    })
   }, [])
 
   const proximo = estado?.proximo
   const ehHoje = proximo?.diasAte === 0
+  // "Amanhã é feriado?" é a pergunta de quem chega pelo Bing (27/11/2026). Calculado à parte
+  // do "próximo feriado" porque, num dia de feriado, o próximo é o próprio dia.
+  const amanhaEFeriado = estado?.amanha?.diasAte === 0 ? estado.amanha.feriado : null
   const anoDoProximo = proximo ? Number(proximo.feriado.data.slice(0, 4)) : null
 
   return (
@@ -38,13 +50,13 @@ export function HojeEFeriado() {
       aria-labelledby="hoje-e-feriado"
       aria-live="polite"
       data-testid="hoje-e-feriado"
-      className="border-brand-200 bg-brand-50 min-h-[7.5rem] rounded-xl border p-5"
+      className="border-brand-200 bg-brand-50 min-h-[9.5rem] rounded-xl border p-5"
     >
       <h2
         id="hoje-e-feriado"
         className="text-brand-700 text-sm font-semibold uppercase tracking-wide"
       >
-        Hoje é feriado?
+        Hoje é feriado? E amanhã?
       </h2>
       {!estado ? (
         <p className="mt-2 text-gray-500">Conferindo a data de hoje…</p>
@@ -52,6 +64,11 @@ export function HojeEFeriado() {
         <>
           <p className="mt-2 text-xl font-bold text-gray-900" data-testid="resposta-hoje">
             {ehHoje ? `Sim — hoje é ${proximo.feriado.nome}.` : 'Não, hoje não é feriado nacional.'}
+          </p>
+          <p className="mt-1 text-lg font-semibold text-gray-900" data-testid="resposta-amanha">
+            {amanhaEFeriado
+              ? `Amanhã é feriado: ${amanhaEFeriado.nome}.`
+              : 'Amanhã não é feriado nacional.'}
           </p>
           {!ehHoje && (
             <p className="mt-1 text-gray-700" data-testid="proximo-feriado">

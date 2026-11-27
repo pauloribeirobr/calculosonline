@@ -20,9 +20,10 @@ que não cabe em nenhum dos outros três.
   entre elas a `ferias-e-decimo-terceiro` (maior página do site no Bing, 0
   impressões no Google em 90 dias) e o post do 13º proporcional. Achado pela
   inspeção de URL da API. **Pendente do Paulo:** pedir indexação das 5 no GSC e
-  subir a v0.45.2 (JSON-LD sem referência solta). Propostas aguardando ok: links
-  internos, velocidade do post do 13º proporcional, `/feriados`. Bing pela API: 87
-  cliques/semana (Google: 2). Google:
+  subir a v0.46.0 (texto que não pula: CLS até 0,20 por um `<Suspense>` inútil;
+  `/feriados` responde "amanhã é feriado?"). A v0.45.2 (JSON-LD) já está no ar.
+  Proposta de links internos aguardando ok. Bing pela API: 87 cliques/semana
+  (Google: 2). Google:
   posição média 28 → 17,6, 0 de 29 palavras no top 10. Direct do exterior (35
   de 41) é robô. Detalhe no Diário de 27/11 e em `docs/semanas/2026-11-27.md`.
 - **27/11/2026 — F84 (v0.45.0) em produção.** Deploy do Paulo em 27/11,
@@ -1403,8 +1404,9 @@ gente, +9% sobre 111), IA e vídeo (V1: normal 12 visualizações, Short 167; V2
 proporcional 5º (20 / 563); `/feriados` 1.036 impressões e 1 clique ("amanhã é feriado", feriado de 20/11); Bingbot 4xx 5 → 16.
 PageSpeed celular: `ferias-e-decimo-terceiro` 98, home 95, FGTS 96, hub 93, **post do 13º proporcional 75 (LCP 4,4 s, CLS 0,20)**.
 Print do teste de resultados aprimorados do `/blog`: "itemListElement não encontrado" no `BreadcrumbList` `#breadcrumb` →
-JSON-LD corrigido (v0.45.2, falta subir; detalhe no CHANGELOG). Propostas 4 (velocidade do post) e 5 (`/feriados` responder
-"amanhã é feriado?") na seção 10 do Raio-X.
+JSON-LD corrigido (v0.45.2, no ar em 27/11, 0 referência solta nas 47 URLs; detalhe no CHANGELOG). Propostas 4 (velocidade do post) e 5 (`/feriados` responder
+"amanhã é feriado?") na seção 10 do Raio-X. **Paulo: "Faz as 2"** → feitas no mesmo dia (v0.46.0): o `<Suspense>` dos
+loaders de MDX saiu (era a causa do CLS) e o `/feriados` ganhou título, H1 e a resposta "amanhã é feriado?".
 
 ### 2026-11-25 — F91: canal "Calculos Online" no molde do Recibo Fácil, e a pauta saída dos concorrentes
 
