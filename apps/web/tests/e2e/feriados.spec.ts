@@ -137,3 +137,35 @@ test.describe('F72 — hoje é feriado?', () => {
     await expect(page.getByTestId('proximo-feriado')).toContainText('amanhã')
   })
 })
+
+// 27/11/2026: a página responde "amanhã é feriado?" — no BWT da semana de 20/11 o /feriados teve
+// 1.036 impressões e 1 clique com "amanhã é feriado nacional", "feriado amanhã" etc.
+test.describe('amanhã é feriado?', () => {
+  test('na véspera, responde sim com o nome do feriado', async ({ page }) => {
+    // 19/11/2026, meio-dia em Brasília: amanhã é o 20 de novembro.
+    await page.clock.setFixedTime(new Date('2026-11-19T15:00:00Z'))
+    await page.goto('/feriados')
+    await expect(page.getByTestId('resposta-amanha')).toHaveText(
+      'Amanhã é feriado: Dia Nacional de Zumbi e da Consciência Negra.',
+    )
+  })
+
+  test('num dia comum, responde não', async ({ page }) => {
+    await page.clock.setFixedTime(new Date('2026-10-04T15:00:00Z'))
+    await page.goto('/feriados')
+    await expect(page.getByTestId('resposta-amanha')).toHaveText('Amanhã não é feriado nacional.')
+  })
+
+  test('no próprio feriado, amanhã é dia comum', async ({ page }) => {
+    await page.clock.setFixedTime(new Date('2026-11-20T15:00:00Z'))
+    await page.goto('/feriados')
+    await expect(page.getByTestId('resposta-hoje')).toContainText('Sim — hoje é')
+    await expect(page.getByTestId('resposta-amanha')).toHaveText('Amanhã não é feriado nacional.')
+  })
+
+  test('o título e o H1 trazem a pergunta', async ({ page }) => {
+    await page.goto('/feriados')
+    await expect(page).toHaveTitle(/Hoje ou Amanhã é Feriado\?/)
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('amanhã é feriado?')
+  })
+})

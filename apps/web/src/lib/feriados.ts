@@ -31,3 +31,11 @@ export function pathDoAno(ano: number): string {
  * 2026 foram conferidas no texto oficial (Planalto e DOU) nesta data.
  */
 export const FERIADOS_DATA_ATUALIZACAO = '2026-10-04'
+
+/**
+ * Última mudança da página de entrada `/feriados` (lastmod e selo dela). Separada da revisão
+ * das leis acima, que vale para as páginas de cada ano. 27/11/2026: passa a responder
+ * "amanhã é feriado?" (o BWT da semana de 20/11 mostrou 1.036 impressões e 1 clique, com
+ * "amanhã é feriado nacional", "feriado amanhã", "hoje é feriado?").
+ */
+export const FERIADOS_ENTRADA_ATUALIZACAO = '2026-11-27'

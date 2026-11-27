@@ -25,7 +25,9 @@ export function Logo({ variant = 'light', showText = true, size = 'md' }: LogoPr
         alt="Calculos Online"
         width={width}
         height={height}
-        className="h-auto w-auto"
+        // Sem `h-auto w-auto` (27/11/2026): sobrescreviam o width/height do <img> e o
+        // Lighthouse o contava como imagem sem tamanho (causa de layout shift).
+        className="shrink-0"
       />
       {showText && (
         <span className={`ml-2 font-bold ${textClass} ${textColor}`}>Calculos Online</span>

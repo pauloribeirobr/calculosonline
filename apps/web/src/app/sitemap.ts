@@ -2,7 +2,13 @@ import type { MetadataRoute } from 'next'
 import { CATEGORIAS, calculatorRegistry, type CategoriaCalc } from '@/lib/calculators'
 import { blogRegistry, ultimaAtualizacaoDoBlog } from '@/lib/blog'
 import { HUB_TRABALHISTA } from '@/lib/hubTrabalhista'
-import { ANOS_FERIADOS, FERIADOS_DATA_ATUALIZACAO, FERIADOS_PATH, pathDoAno } from '@/lib/feriados'
+import {
+  ANOS_FERIADOS,
+  FERIADOS_DATA_ATUALIZACAO,
+  FERIADOS_ENTRADA_ATUALIZACAO,
+  FERIADOS_PATH,
+  pathDoAno,
+} from '@/lib/feriados'
 import { siteConfig } from '@/lib/seo'
 
 // <lastmod> é sinal de freshness para o Google recrawlear. `dataAtualizacao` do
@@ -85,7 +91,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const feriadosPages: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}${FERIADOS_PATH}`,
-      lastModified: new Date(FERIADOS_DATA_ATUALIZACAO),
+      lastModified: new Date(FERIADOS_ENTRADA_ATUALIZACAO),
       changeFrequency: 'daily',
       priority: 0.8,
     },
