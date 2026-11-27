@@ -16,8 +16,11 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
-- **27/11/2026 — F84 (v0.45.0) pronta e testada, falta o Paulo commitar e
-  subir.** CDB, Tesouro Direto e poupança pedem a taxa em % (um
+- **27/11/2026 — F84 (v0.45.0) em produção.** Deploy do Paulo em 27/11,
+  conferido em produção (formulários, resultados e links antigos) e IndexNow
+  (`cdb`, `tesouro-direto`, `poupanca`, `tesouro-reserva`) enviado no mesmo dia.
+  **v0.45.1 (falta subir):** `dataAtualizacao` das quatro em 27/11 (lastmod do
+  sitemap); depois do deploy, conferir o sitemap. CDB, Tesouro Direto e poupança pedem a taxa em % (um
   campo por indexador) e mostram CDI, Selic e IPCA do Banco Central
   pré-preenchidos e editáveis, com a data. Links antigos (`taxaAnual`/
   `selicAnual` decimais) abrem convertidos. Motor intacto; conferido no
@@ -25,8 +28,7 @@ que não cabe em nenhum dos outros três.
   1ª rodada deu 389/391: chips nos campos de referência e `link-interno`, que
   vinha da F83; corrigidos). Specs da F84:
   `pnpm --filter web exec playwright test tests/e2e/taxas-percentual.spec.ts tests/e2e/investimentos-referencias.spec.ts tests/e2e/abrir-no-resultado.spec.ts tests/e2e/quick-add-cobertura.spec.ts tests/e2e/link-interno.spec.ts`.
-  **Depois do deploy:** conferir em produção e rodar IndexNow
-  (`cdb`, `tesouro-direto`, `poupanca`). Medir: cliques/impressões dessas três
+  Medir: cliques/impressões dessas três
   páginas no BWT a partir de ~11/12.
 - **25/11/2026 — F83 (v0.44.0): simulador do Tesouro Reserva em produção.**
   Prazo em meses ou dias (IOF antes de 30 dias), comparação
