@@ -53,7 +53,7 @@ export default function FeriadosPage() {
           path: pathDoAno(a.ano),
         }))}
       />
-      <Breadcrumbs items={[{ label: 'Início', href: '/' }, { label: 'Feriados' }]} />
+      <Breadcrumbs jsonLd={false} items={[{ label: 'Início', href: '/' }, { label: 'Feriados' }]} />
 
       <header>
         <div className="flex items-start gap-3 md:gap-4">

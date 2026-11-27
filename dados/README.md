@@ -12,7 +12,7 @@ mapa de calor do Clarity continuam manuais.
 
 | Comando | Para quê |
 |---|---|
-| `node dados/semana.mjs [--fim AAAA-MM-DD] [--serp]` | **Boletim da semana** (GA4 + GSC + Clarity; `--serp` inclui a concorrência) em `docs/semanas/<dia>.md` |
+| `node dados/semana.mjs [--fim AAAA-MM-DD] [--serp] [--sem-inspecao] [--cwv]` | **Raio-X semanal** (GA4 com robôs separados, IA e vídeo, GSC, indexação no Google, Bing manual, concorrência com `--serp`, saúde/Clarity/velocidade, acompanhamento das entregas, calendário) em `docs/semanas/<dia>.md`; ritual no `AGENTS.md` |
 | `node dados/gsc.mjs --dias 28 --dims query,page` | Desempenho na Pesquisa, sem o corte de 1.000 linhas; `--filtro "page~/calculadora/cdb"` |
 | `node dados/gsc.mjs --sites` | Lista as propriedades do GSC |
 | `node dados/ga4.mjs dados/leituras/<leitura>.json` | Uma leitura do GA4 (Linhas / Colunas / Valores / filtros, como a Exploração) |
@@ -23,6 +23,10 @@ mapa de calor do Clarity continuam manuais.
 | `node dados/palavras-chave.mjs` | Lista de palavras-chave da concorrência (fixas + GSC de 90 dias) em `dados/leituras/palavras-chave.json` (uma vez por mês) |
 | `node dados/serp.mjs [--so "a,b"]` | Top 10 do Google Brasil de cada palavra, pelo Serper (1 crédito por palavra; uma rodada por dia) |
 | `node dados/autorizar.mjs` | Token OAuth próprio deste projeto (só se o do Recibo Fácil parar de valer) |
+
+Arquivos que o Raio-X lê em `dados/leituras/` (versionados, editados à mão): `videos.json` (vídeos do canal e campanha),
+`acompanhamento.json` (entrega, métrica, linha de base, data de leitura, status) e `calendario.json` (datas que mexem no
+tráfego). Saídas comparadas rodada a rodada em `dados/saida/` (fora do git): `indexacao/`, `videos/`, `cwv/`.
 
 Leituras prontas em `dados/leituras/`: `calculos-por-calculadora.json` (uso por calculadora, 28 dias) e
 `validacao-ga4-2026-10-25.json` (a validação abaixo).
@@ -39,6 +43,15 @@ não tem os seus. As propriedades têm padrão no código: GA4 `537095884` ("cal
 **Serper: nada a fazer.** `SERPER_CHAVE` é da conta e vem do `~/.config/recibofacil/dados.env`. O saldo é **dividido com o
 Recibo Fácil** (2.418 créditos em 17/11/2026, e o boletim de lá gasta ~81 por semana): a rodada daqui fica fora do boletim
 por padrão (`--serp` liga) e tem teto de 120 por rodada.
+
+**PageSpeed e BWT (Raio-X): nada a fazer.** `PAGESPEED_CHAVE` (Google Cloud, projeto `recibofacil-dados`, chave restrita à
+PageSpeed Insights API; o token OAuth não serve) e `BWT_CHAVE` (bing.com/webmasters → Configurações → Acesso à API) estão
+no `~/.config/recibofacil/dados.env` desde 27/11/2026; são da conta e servem a todos os sites. A API do BWT
+(`ssl.bing.com/webmaster/api.svc/json/<Método>?apikey=…&siteUrl=…`) dá tráfego por dia (`GetRankAndTrafficStats`), páginas
+e consultas por semana (`GetPageStats`, `GetQueryStats`; o balde fecha na sexta) e rastreio por dia (`GetCrawlStats`).
+`GetCrawlIssues` volta vazio e o Desempenho de IA não está na API.
+
+**Inspeção de URL (indexação, Raio-X): nada a fazer.** Usa o mesmo escopo `webmasters.readonly`; cota de 2.000 por dia.
 
 **Clarity: um token por projeto** (o do Recibo Fácil não serve). Clarity → projeto "Calculos Online" → Configurações →
 Data Export → Gerar novo token de API → `CLARITY_TOKEN=` em `~/.config/calculosonline/dados.env` (`chmod 600`). Gravado

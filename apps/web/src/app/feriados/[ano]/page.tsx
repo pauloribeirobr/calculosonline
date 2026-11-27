@@ -179,6 +179,7 @@ export default async function FeriadosDoAnoPage({ params }: { params: Promise<{ 
         faqItems={c.faq}
       />
       <Breadcrumbs
+        jsonLd={false}
         items={[
           { label: 'Início', href: '/' },
           { label: 'Feriados', href: FERIADOS_PATH },

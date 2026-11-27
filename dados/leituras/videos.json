@@ -1,0 +1,7 @@
+{
+  "nota": "Raio-X semanal, seção 'IA e vídeo'. Um item por vídeo publicado (campanha = utm_campaign da descrição). As visualizações vêm da página pública do vídeo, lida a cada boletim.",
+  "videos": [
+    { "campanha": "v1-tesouro-reserva", "titulo": "Tesouro Reserva", "publicado": "2026-11-25", "normal": "kSFT8qBrfqA", "short": "MDrxj1Vdkaw" },
+    { "campanha": "v2-segunda-parcela-13", "titulo": "2ª parcela do 13º", "publicado": "2026-11-27", "normal": "3GV6z9MdQig", "short": "mFvF4lDTv88" }
+  ]
+}

@@ -24,12 +24,12 @@ export default function ContatoPage() {
           { name: 'Contato', path: '/contato' },
         ]}
       />
-      <Breadcrumbs items={[{ label: 'Início', href: '/' }, { label: 'Contato' }]} />
+      <Breadcrumbs jsonLd={false} items={[{ label: 'Início', href: '/' }, { label: 'Contato' }]} />
       <article className="prose prose-gray max-w-none">
         <h1>Contato</h1>
         <p>
-          Quer sugerir uma nova calculadora, reportar um valor incorreto em alguma tabela ou
-          propor uma parceria? Use o e-mail abaixo — respondemos em até 3 dias úteis.
+          Quer sugerir uma nova calculadora, reportar um valor incorreto em alguma tabela ou propor
+          uma parceria? Use o e-mail abaixo — respondemos em até 3 dias úteis.
         </p>
         <p>
           <strong>E-mail:</strong>{' '}
@@ -37,7 +37,10 @@ export default function ContatoPage() {
         </p>
         <h2>O que enviar junto</h2>
         <ul>
-          <li>Para correções: link da calculadora, valores informados e o resultado esperado com fonte.</li>
+          <li>
+            Para correções: link da calculadora, valores informados e o resultado esperado com
+            fonte.
+          </li>
           <li>Para novas calculadoras: descrição da fórmula e legislação aplicável.</li>
           <li>Para parcerias: tipo de parceria e site/produto envolvido.</li>
         </ul>

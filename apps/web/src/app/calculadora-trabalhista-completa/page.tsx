@@ -75,6 +75,7 @@ export default function HubTrabalhistaPage() {
       />
 
       <Breadcrumbs
+        jsonLd={false}
         items={[
           { label: 'Início', href: '/' },
           { label: CATEGORIAS[HUB_TRABALHISTA.categoria].label, href: '/categoria/trabalhista' },
@@ -89,9 +90,7 @@ export default function HubTrabalhistaPage() {
             <h1 className="text-2xl font-bold leading-tight text-gray-900 md:text-3xl">
               {HUB_TRABALHISTA.h1}
             </h1>
-            <p className="mt-2 text-sm text-gray-600 md:text-base">
-              {HUB_TRABALHISTA.descricao}
-            </p>
+            <p className="mt-2 text-sm text-gray-600 md:text-base">{HUB_TRABALHISTA.descricao}</p>
           </div>
         </div>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -109,22 +108,20 @@ export default function HubTrabalhistaPage() {
           As calculadoras deste cálculo, uma a uma
         </h2>
         <p className="mt-2 text-sm text-gray-600">
-          Cada uma tem parâmetros que o fluxo único não cabe — faltas no período
-          aquisitivo, abono pecuniário, parcela do 13º, saque-aniversário.
+          Cada uma tem parâmetros que o fluxo único não cabe — faltas no período aquisitivo, abono
+          pecuniário, parcela do 13º, saque-aniversário.
         </p>
         <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {encadeadas.map((calc) => (
             <li key={calc.slug}>
               <Link
                 href={`/calculadora/${calc.slug}`}
-                className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-brand-300 hover:shadow-sm"
+                className="hover:border-brand-300 flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:shadow-sm"
               >
                 <CalculatorIcon icon={calc.icone} categoria={calc.categoria} size="md" />
                 <span className="min-w-0">
                   <span className="block font-medium text-gray-900">{calc.tituloLongo}</span>
-                  <span className="mt-0.5 block text-xs text-gray-500">
-                    {calc.descricaoCurta}
-                  </span>
+                  <span className="mt-0.5 block text-xs text-gray-500">{calc.descricaoCurta}</span>
                 </span>
               </Link>
             </li>

@@ -52,7 +52,8 @@ function lerEnv(arq) {
 
 // Chaves que são da CONTA do Paulo, e não de um site: podem vir do dados.env do Recibo Fácil. O CLARITY_TOKEN é por
 // projeto do Clarity e o GA4_PROPRIEDADE/GSC_SITE são deste site, então esses nunca vêm de lá.
-const DA_CONTA = ['SERPER_CHAVE']
+// PAGESPEED_CHAVE e BWT_CHAVE (Raio-X, 27/11/2026): chaves da conta (Google Cloud e Bing Webmaster), servem a todos os sites.
+const DA_CONTA = ['SERPER_CHAVE', 'PAGESPEED_CHAVE', 'BWT_CHAVE']
 
 /** Variáveis do ~/.config/calculosonline/dados.env (CHAVE=valor, uma por linha; # comenta), sobre os padrões acima. */
 export function env() {

@@ -34,6 +34,7 @@ export default function PoliticaPrivacidadePage() {
         ]}
       />
       <Breadcrumbs
+        jsonLd={false}
         items={[{ label: 'Início', href: '/' }, { label: 'Política de Privacidade' }]}
       />
       <article className="prose prose-gray max-w-none">
@@ -42,9 +43,9 @@ export default function PoliticaPrivacidadePage() {
 
         <h2>1. Quem somos</h2>
         <p>
-          O <strong>Calculos Online</strong> (calculosonline.com.br) é uma plataforma gratuita
-          de calculadoras online para trabalhadores, autônomos, MEIs e empresas brasileiras.
-          Nosso e-mail de contato é{' '}
+          O <strong>Calculos Online</strong> (calculosonline.com.br) é uma plataforma gratuita de
+          calculadoras online para trabalhadores, autônomos, MEIs e empresas brasileiras. Nosso
+          e-mail de contato é{' '}
           <a href="mailto:contato@calculosonline.com.br">contato@calculosonline.com.br</a>.
         </p>
 
@@ -55,10 +56,10 @@ export default function PoliticaPrivacidadePage() {
           formulários é transmitido a servidores.
         </p>
         <p>
-          Coletamos automaticamente, de forma anônima e agregada, dados de uso do site
-          (páginas visitadas, tempo de sessão, país/região, erros técnicos e uso das
-          calculadoras) por meio do Google Analytics 4 e do Microsoft Clarity. Os valores digitados nos formulários não são enviados como eventos de
-          analytics.
+          Coletamos automaticamente, de forma anônima e agregada, dados de uso do site (páginas
+          visitadas, tempo de sessão, país/região, erros técnicos e uso das calculadoras) por meio
+          do Google Analytics 4 e do Microsoft Clarity. Os valores digitados nos formulários não são
+          enviados como eventos de analytics.
         </p>
 
         <h2>3. Cookies</h2>
@@ -66,8 +67,8 @@ export default function PoliticaPrivacidadePage() {
         <ul>
           <li>
             <strong>Cookies de análise</strong> — Google Analytics 4, para medir a audiência de
-            forma agregada. Também usamos o Microsoft Clarity para entender
-            desempenho, navegação e erros de uso. Você pode optar por sair do Google Analytics em{' '}
+            forma agregada. Também usamos o Microsoft Clarity para entender desempenho, navegação e
+            erros de uso. Você pode optar por sair do Google Analytics em{' '}
             <a
               href="https://tools.google.com/dlpage/gaoptout"
               target="_blank"
@@ -79,13 +80,9 @@ export default function PoliticaPrivacidadePage() {
           </li>
           <li>
             <strong>Cookies de publicidade</strong> — Google AdSense, para exibir anúncios
-            relevantes. O Google pode usar cookies para personalizar anúncios com base no
-            histórico de navegação. Você pode gerenciar preferências em{' '}
-            <a
-              href="https://adssettings.google.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            relevantes. O Google pode usar cookies para personalizar anúncios com base no histórico
+            de navegação. Você pode gerenciar preferências em{' '}
+            <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">
               adssettings.google.com
             </a>
             .
@@ -94,32 +91,21 @@ export default function PoliticaPrivacidadePage() {
 
         <h2>4. Google AdSense</h2>
         <p>
-          Este site usa o Google AdSense para monetização por anúncios. O Google, como
-          fornecedor terceirizado, utiliza cookies para veicular anúncios com base em visitas
-          anteriores a este e a outros sites. A exibição de anúncios personalizados pode ser
-          desativada nas{' '}
-          <a
-            href="https://www.google.com/settings/ads"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          Este site usa o Google AdSense para monetização por anúncios. O Google, como fornecedor
+          terceirizado, utiliza cookies para veicular anúncios com base em visitas anteriores a este
+          e a outros sites. A exibição de anúncios personalizados pode ser desativada nas{' '}
+          <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">
             Configurações de Anúncios do Google
           </a>
           . Para desativar o uso de cookies por fornecedores terceirizados, visite{' '}
-          <a
-            href="https://www.aboutads.info/choices/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">
             aboutads.info
           </a>
           .
         </p>
 
         <h2>5. Seus direitos (LGPD)</h2>
-        <p>
-          Nos termos da Lei Geral de Proteção de Dados (Lei 13.709/2018), você tem direito a:
-        </p>
+        <p>Nos termos da Lei Geral de Proteção de Dados (Lei 13.709/2018), você tem direito a:</p>
         <ul>
           <li>Confirmar se tratamos dados seus;</li>
           <li>Solicitar a exclusão de dados eventualmente coletados;</li>
@@ -132,8 +118,8 @@ export default function PoliticaPrivacidadePage() {
 
         <h2>6. Alterações nesta política</h2>
         <p>
-          Podemos atualizar esta política periodicamente. A data de revisão no topo indica a
-          versão vigente. Recomendamos revisar esta página ocasionalmente.
+          Podemos atualizar esta política periodicamente. A data de revisão no topo indica a versão
+          vigente. Recomendamos revisar esta página ocasionalmente.
         </p>
 
         <h2>7. Contato</h2>

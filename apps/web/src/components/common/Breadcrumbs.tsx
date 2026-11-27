@@ -14,11 +14,29 @@ function toAbsoluteUrl(href: string): string {
 /**
  * Breadcrumbs com microdata Schema.org embutida (script JSON-LD).
  * Para a versão de microdata em-inline veja `@calculosonline/ui` Breadcrumb.
+ *
+ * Uma trilha por página, sempre com `@id` (27/11/2026). O `WebPage` aponta para
+ * `<url>#breadcrumb`; sem o `@id` aqui, o Google criava um `BreadcrumbList` vazio
+ * só com o id e acusava "O campo itemListElement não foi encontrado" (teste de
+ * resultados aprimorados do `/blog`). E a maioria das páginas publicava a trilha
+ * duas vezes: aqui e no `BreadcrumbJsonLd` (direto ou pelo `PageSeo`).
+ * - `jsonLd={false}`: a página já publica a trilha pelo `BreadcrumbJsonLd`/`PageSeo`;
+ *   este componente só desenha.
+ * - `path`: a página não tem `BreadcrumbJsonLd`; a trilha daqui ganha o `@id`.
  */
-export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
+export function Breadcrumbs({
+  items,
+  path,
+  jsonLd = true,
+}: {
+  items: BreadcrumbItem[]
+  path?: string
+  jsonLd?: boolean
+}) {
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
+    ...(path ? { '@id': `${toAbsoluteUrl(path)}#breadcrumb` } : {}),
     itemListElement: items.map((item, index) => {
       const listItem: Record<string, unknown> = {
         '@type': 'ListItem',
@@ -38,7 +56,10 @@ export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
             <li key={`${item.label}-${index}`} className="inline-flex items-center gap-2">
               {index > 0 && <span aria-hidden="true">{'>'}</span>}
               {item.href ? (
-                <Link href={item.href} className="text-brand-600 hover:text-brand-700 hover:underline">
+                <Link
+                  href={item.href}
+                  className="text-brand-600 hover:text-brand-700 hover:underline"
+                >
                   {item.label}
                 </Link>
               ) : (
@@ -50,10 +71,12 @@ export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
           ))}
         </ol>
       </nav>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        />
+      )}
     </>
   )
 }

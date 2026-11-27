@@ -48,10 +48,8 @@ export default function CategoriasPage() {
         }))}
       />
       <Breadcrumbs
-        items={[
-          { label: 'Início', href: '/' },
-          { label: 'Categorias' },
-        ]}
+        jsonLd={false}
+        items={[{ label: 'Início', href: '/' }, { label: 'Categorias' }]}
       />
 
       <header>
@@ -69,7 +67,7 @@ export default function CategoriasPage() {
               <h2 className="text-xl font-bold text-gray-900">
                 <Link
                   href={`/categoria/${slug}`}
-                  className="inline-flex items-center gap-2 hover:text-brand-700"
+                  className="hover:text-brand-700 inline-flex items-center gap-2"
                 >
                   <CategoryIcon categoria={slug} size="sm" />
                   {cat.label}
@@ -77,7 +75,7 @@ export default function CategoriasPage() {
               </h2>
               <Link
                 href={`/categoria/${slug}`}
-                className="inline-flex min-h-[24px] items-center text-sm font-medium text-brand-600 hover:underline"
+                className="text-brand-600 inline-flex min-h-[24px] items-center text-sm font-medium hover:underline"
               >
                 Ver todas ({grouped[slug].length}) →
               </Link>
@@ -87,7 +85,7 @@ export default function CategoriasPage() {
                 <li key={calc.slug}>
                   <Link
                     href={`/calculadora/${calc.slug}`}
-                    className="flex flex-col gap-1 rounded-lg border border-gray-200 bg-white p-5 transition-all hover:border-brand-300 hover:shadow-sm"
+                    className="hover:border-brand-300 flex flex-col gap-1 rounded-lg border border-gray-200 bg-white p-5 transition-all hover:shadow-sm"
                   >
                     <span className="flex items-center gap-2 font-medium text-gray-900">
                       <CalculatorIcon icon={calc.icone} categoria={calc.categoria} size="sm" />

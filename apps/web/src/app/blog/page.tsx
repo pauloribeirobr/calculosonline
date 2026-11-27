@@ -33,14 +33,14 @@ export default function BlogPage() {
         }))}
       />
 
-      <Breadcrumbs items={[{ label: 'Início', href: '/' }, { label: 'Blog' }]} />
+      <Breadcrumbs path="/blog" items={[{ label: 'Início', href: '/' }, { label: 'Blog' }]} />
 
       <header>
         <h1 className="text-3xl font-bold leading-tight text-gray-900 md:text-4xl">Blog</h1>
         <p className="mt-3 text-base text-gray-600 md:text-lg">
-          Guias práticos sobre direitos trabalhistas, impostos e finanças pessoais. Cada
-          artigo traz tabelas e exemplos com números fechados — todos gerados pelas mesmas
-          calculadoras do site, não estimados à mão.
+          Guias práticos sobre direitos trabalhistas, impostos e finanças pessoais. Cada artigo traz
+          tabelas e exemplos com números fechados — todos gerados pelas mesmas calculadoras do site,
+          não estimados à mão.
         </p>
       </header>
 
@@ -52,7 +52,7 @@ export default function BlogPage() {
             const calc = findCalculator(post.calculadoraPrincipal)
             return (
               <li key={post.slug}>
-                <article className="rounded-xl border border-gray-200 bg-white p-5 transition-all hover:border-brand-300 hover:shadow-sm md:p-6">
+                <article className="hover:border-brand-300 rounded-xl border border-gray-200 bg-white p-5 transition-all hover:shadow-sm md:p-6">
                   <div className="flex items-start gap-4">
                     {calc && (
                       <CalculatorIcon icon={calc.icone} categoria={calc.categoria} size="lg" />

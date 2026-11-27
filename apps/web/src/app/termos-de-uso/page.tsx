@@ -31,6 +31,7 @@ export default function TermosDeUsoPage() {
         ]}
       />
       <Breadcrumbs
+        jsonLd={false}
         items={[{ label: 'Início', href: '/' }, { label: 'Termos de Uso' }]}
       />
       <article className="prose prose-gray max-w-none">
@@ -54,17 +55,17 @@ export default function TermosDeUsoPage() {
         <p>
           Empenhamo-nos em manter as tabelas (INSS, IRRF, CLT etc.) atualizadas conforme a
           legislação vigente. Contudo, <strong>não garantimos</strong> que os resultados estejam
-          isentos de erros ou reflitam imediatamente mudanças legislativas muito recentes.
-          Sempre consulte um advogado trabalhista ou contador habilitado antes de tomar decisões
-          com base nos cálculos apresentados.
+          isentos de erros ou reflitam imediatamente mudanças legislativas muito recentes. Sempre
+          consulte um advogado trabalhista ou contador habilitado antes de tomar decisões com base
+          nos cálculos apresentados.
         </p>
 
         <h2>4. Isenção de responsabilidade</h2>
         <p>
-          O Calculos Online não se responsabiliza por decisões tomadas com base nos resultados
-          das calculadoras, por eventuais imprecisões causadas por alterações legislativas
-          ainda não incorporadas, nem por danos diretos ou indiretos decorrentes do uso ou
-          impossibilidade de uso do serviço.
+          O Calculos Online não se responsabiliza por decisões tomadas com base nos resultados das
+          calculadoras, por eventuais imprecisões causadas por alterações legislativas ainda não
+          incorporadas, nem por danos diretos ou indiretos decorrentes do uso ou impossibilidade de
+          uso do serviço.
         </p>
 
         <h2>5. Propriedade intelectual</h2>
@@ -76,8 +77,8 @@ export default function TermosDeUsoPage() {
 
         <h2>6. Links externos</h2>
         <p>
-          O site pode conter links para sites de terceiros. O Calculos Online não controla nem
-          se responsabiliza pelo conteúdo desses sites.
+          O site pode conter links para sites de terceiros. O Calculos Online não controla nem se
+          responsabiliza pelo conteúdo desses sites.
         </p>
 
         <h2>7. Anúncios</h2>
@@ -88,16 +89,16 @@ export default function TermosDeUsoPage() {
 
         <h2>8. Alterações nos termos</h2>
         <p>
-          Podemos revisar estes termos a qualquer momento. A data de atualização no topo indica
-          a versão vigente. O uso continuado do serviço após alterações implica aceitação dos
-          novos termos.
+          Podemos revisar estes termos a qualquer momento. A data de atualização no topo indica a
+          versão vigente. O uso continuado do serviço após alterações implica aceitação dos novos
+          termos.
         </p>
 
         <h2>9. Lei aplicável e foro</h2>
         <p>
-          Estes termos são regidos pelas leis da República Federativa do Brasil. Fica eleito o
-          foro da comarca de São Paulo/SP para dirimir eventuais litígios, com renúncia expressa
-          a qualquer outro.
+          Estes termos são regidos pelas leis da República Federativa do Brasil. Fica eleito o foro
+          da comarca de São Paulo/SP para dirimir eventuais litígios, com renúncia expressa a
+          qualquer outro.
         </p>
 
         <h2>10. Contato</h2>

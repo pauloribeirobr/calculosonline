@@ -1,17 +1,20 @@
 #!/usr/bin/env node
-// F89 — boletim da semana: GA4 + Search Console (+ Clarity, quando houver coleta; + concorrência pelo Serper, com --serp),
-// numa página só. Porte do ../recibofacil/dados/semana.mjs (F285), sem a parte do banco de produção (aqui não há banco: o site
+// Raio-X semanal (nome dado pelo Paulo em 27/11/2026; nasceu como o boletim da F89): GA4 + Search Console + indexação no
+// Google + IA e vídeo + Bing (manual) + concorrência pelo Serper (--serp) + saúde, Clarity e velocidade + acompanhamento das
+// entregas + calendário, numa página só. O ritual está no AGENTS.md ("Raio-X semanal"). Porte do ../recibofacil/dados/semana.mjs (F285), sem a parte do banco de produção (aqui não há banco: o site
 // é gratuito e o negócio é tráfego) e com o funil deste site: página da calculadora → cálculo → compartilhar/salvar.
 //
-// Uso:  node dados/semana.mjs [--fim AAAA-MM-DD] [--serp] [--sem-clarity]
+// Uso:  node dados/semana.mjs [--fim AAAA-MM-DD] [--serp] [--sem-clarity] [--sem-inspecao] [--cwv]
 //   --fim = o dia do boletim (padrão: hoje). A semana do GA4 são os 7 dias antes de --fim; a do GSC, os 7 dias mais recentes
 //   já fechados (o GSC atrasa 2 a 3 dias). Comparação: a semana anterior e a média das 4 semanas anteriores.
 //   --serp = roda também a rodada de concorrência do dia (gasta 1 crédito do Serper por palavra; repetir no mesmo dia não gasta).
 //   --sem-clarity = não tenta o rsync da coleta do Clarity no servidor (usa só o que já está em dados/saida/clarity/dias/).
+//   --sem-inspecao = pula a inspeção de URL do sitemap (cota de 2.000 por dia; ~1 s por URL).
+//   --cwv = mede a velocidade (PageSpeed) mesmo que o mês já tenha medição; sem ele, mede só a 1ª vez no mês.
 // Saída: docs/semanas/<fim>.md, versionado (é a série que mostra tendência), com a seção "Leitura e propostas" para escrever.
-import { mkdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { argumentos, env, exigir, hojeBrasilia, RAIZ_REPO, SITE, somarDias as dia } from './lib/config.mjs'
+import { argumentos, env, exigir, hojeBrasilia, pastaSaida, RAIZ_DADOS, RAIZ_REPO, SITE, somarDias as dia } from './lib/config.mjs'
 import * as clarity from './lib/clarity.mjs'
 import * as serp from './lib/serp.mjs'
 import { google } from './lib/google.mjs'
@@ -66,14 +69,27 @@ async function gsc([de, ate], dims = []) {
 }
 const pg = (u) => u.replace(SITE, '') || '/'
 
+const lerLeitura = (nome) => {
+  const arq = join(RAIZ_DADOS, 'leituras', nome)
+  return existsSync(arq) ? JSON.parse(readFileSync(arq, 'utf8')) : null
+}
+/** Guarda um JSON em dados/saida/<pasta>/<fim>.json e devolve o da rodada anterior mais recente (ou null). */
+function guardarEComparar(pasta, dados) {
+  const dir = pastaSaida(pasta)
+  const anteriores = readdirSync(dir).filter((f) => f.endsWith('.json') && f < `${fim}.json`).sort()
+  const ant = anteriores.length ? JSON.parse(readFileSync(join(dir, anteriores.at(-1)), 'utf8')) : null
+  writeFileSync(join(dir, `${fim}.json`), JSON.stringify(dados, null, 1))
+  return ant
+}
+
 // ---------- Monta ----------
 const md = []
 const add = (...l) => md.push(...l)
-console.log(`Boletim da semana ${R0.startDate} → ${R0.endDate} (GSC ${G0[0]} → ${G0[1]})…`)
+console.log(`Raio-X semanal ${R0.startDate} → ${R0.endDate} (GSC ${G0[0]} → ${G0[1]})…`)
 add(
-  `# Boletim da semana — ${fim}`,
+  `# Raio-X semanal — ${fim}`,
   '',
-  `GA4: **${R0.startDate} → ${R0.endDate}**, contra a semana anterior (${R1.startDate} → ${R1.endDate}) e a média das 4 anteriores (${RM.startDate} → ${RM.endDate}, ÷ 4). Search Console: **${G0[0]} → ${G0[1]}** (os 7 dias fechados mais recentes). Gerado por \`node dados/semana.mjs --fim ${fim}\` (F89).`,
+  `GA4: **${R0.startDate} → ${R0.endDate}**, contra a semana anterior (${R1.startDate} → ${R1.endDate}) e a média das 4 anteriores (${RM.startDate} → ${RM.endDate}, ÷ 4). Search Console: **${G0[0]} → ${G0[1]}** (os 7 dias fechados mais recentes). Gerado por \`node dados/semana.mjs --fim ${fim}${args.serp ? ' --serp' : ''}\` (Raio-X semanal).`,
   '',
 )
 
@@ -160,6 +176,26 @@ add(
   markdown(['Origem · mídia', 'Semana', 'Engajadas', 'Anterior'], [...org].map(([k, o]) => [k, o.s0?.[0] ?? 0, o.s0?.[1] ?? 0, o.s1?.[0] ?? 0]).filter((l) => l[1] + l[3] > 0).sort((x, y) => y[1] - x[1] || y[3] - x[3]).slice(0, 12)),
   '',
 )
+// Robôs: o Direct do exterior não é gente (27/11/2026: 35 de 41 sessões Direct da Índia, Egito, Paquistão, EUA…, quase tudo
+// Chrome de computador). "Sessões de gente" = total − Direct do exterior, a métrica de volume que vale.
+const dir = await ga4(
+  { dimensions: [{ name: 'country' }], metrics: [{ name: 'sessions' }, { name: 'engagedSessions' }], dimensionFilter: { filter: { fieldName: 'sessionDefaultChannelGroup', stringFilter: { value: 'Direct' } } } },
+  [R0, R1],
+)
+const dirSoma = (f, doBrasil) => dir.filter((r) => r.faixa === f && (r.dims[0] === 'Brazil') === doBrasil).reduce((a, r) => [a[0] + r.vals[0], a[1] + r.vals[1]], [0, 0])
+const [dBr0, dEx0, dBr1, dEx1] = [dirSoma('s0', true), dirSoma('s0', false), dirSoma('s1', true), dirSoma('s1', false)]
+const gente0 = s('_tot', 's0') - dEx0[0]
+const gente1 = s('_tot', 's1') - dEx1[0]
+add(
+  '**Robôs** (Direct separado por país; "sessões de gente" = total − Direct do exterior):',
+  '',
+  markdown(['Linha', 'Semana', 'Engajadas', 'Anterior', 'Variação'], [
+    ['Direct do Brasil', dBr0[0], dBr0[1], dBr1[0], sinal(pct(dBr0[0], dBr1[0]))],
+    ['Direct do exterior (robô)', dEx0[0], dEx0[1], dEx1[0], sinal(pct(dEx0[0], dEx1[0]))],
+    ['**Sessões de gente**', gente0, '', gente1, sinal(pct(gente0, gente1))],
+  ]),
+  '',
+)
 const lp = porFaixa(await ga4({ dimensions: [{ name: 'landingPage' }], metrics: [{ name: 'sessions' }, { name: 'engagedSessions' }] }, [R0, R1]))
 add(
   '**Páginas de entrada** (as 15 com mais sessões):',
@@ -168,8 +204,58 @@ add(
   '',
 )
 
-// ===== 2. Busca (GSC) =====
-add('## 2. Busca (Search Console)', '')
+// ===== 2. IA e vídeo =====
+add('## 2. IA e vídeo', '')
+// Assistentes de IA chegam como Referral ou "AI Assistant"; a citação sem clique só aparece no BWT → Desempenho de IA (manual).
+const IA = /chatgpt|openai|perplexity|gemini|copilot|claude|deepseek|meta\.ai|you\.com/i
+const ia = [...org].filter(([k]) => IA.test(k)).map(([k, o]) => [k, o.s0?.[0] ?? 0, o.s0?.[1] ?? 0, o.s1?.[0] ?? 0]).sort((a, b) => b[1] - a[1])
+add(
+  '**Assistentes de IA** (sessões por origem):',
+  '',
+  ia.length ? markdown(['Origem · mídia', 'Semana', 'Engajadas', 'Anterior'], ia) : '_Nenhuma sessão vinda de assistente de IA._',
+  '',
+)
+// Vídeos do canal: sessões por campanha (utm_campaign da descrição) e visualizações lidas da página pública de cada vídeo.
+const vids = lerLeitura('videos.json')?.videos || []
+if (vids.length) {
+  const desde = vids.map((v) => v.publicado).sort()[0]
+  const camp = porFaixa(
+    await ga4(
+      { dimensions: [{ name: 'sessionCampaignName' }], metrics: [{ name: 'sessions' }, { name: 'engagedSessions' }], dimensionFilter: { filter: { fieldName: 'sessionSource', stringFilter: { matchType: 'CONTAINS', value: 'youtube' } } } },
+      [R0, { startDate: desde, endDate: R0.endDate, name: 'tudo' }],
+    ),
+  )
+  const views = async (id) => {
+    try {
+      const h = await (await fetch(`https://www.youtube.com/watch?v=${id}`, { headers: { 'User-Agent': 'Mozilla/5.0', 'Accept-Language': 'pt-BR' } })).text()
+      const m = h.match(/"viewCount":"(\d+)"/)
+      return m ? Number(m[1]) : null
+    } catch {
+      return null
+    }
+  }
+  const atual = {}
+  for (const v of vids) atual[v.campanha] = { normal: v.normal ? await views(v.normal) : null, short: v.short ? await views(v.short) : null }
+  const antV = guardarEComparar('videos', atual)
+  const dif = (a, b) => (a === null || a === undefined ? '—' : b === null || b === undefined ? String(a) : `${a} (+${a - b})`)
+  add(
+    `**Vídeos do canal** (visualizações agora, com o ganho desde a rodada anterior; sessões da campanha no GA4, origem \`youtube\`):`,
+    '',
+    markdown(
+      ['Vídeo', 'Publicado', 'Visualizações (normal)', 'Visualizações (Short)', 'Sessões na semana', 'Engajadas', 'Sessões desde a publicação'],
+      vids.map((v) => {
+        const c = camp.get(v.campanha) || {}
+        return [`${v.titulo} (\`${v.campanha}\`)`, v.publicado, dif(atual[v.campanha].normal, antV?.[v.campanha]?.normal), dif(atual[v.campanha].short, antV?.[v.campanha]?.short), c.s0?.[0] ?? 0, c.s0?.[1] ?? 0, c.tudo?.[0] ?? 0]
+      }),
+    ),
+    '',
+    '_Vídeo novo: acrescentar em `dados/leituras/videos.json`._',
+    '',
+  )
+}
+
+// ===== 3. Busca (GSC) =====
+add('## 3. Busca (Search Console)', '')
 const gt = async (r) => (await gsc(r))[0] || { clicks: 0, impressions: 0, ctr: 0, position: 0 }
 const [t0, t1, tm] = [await gt(G0), await gt(G1), await gt(GM)]
 add(
@@ -224,8 +310,123 @@ add(
   '',
 )
 
-// ===== 3. Concorrência (Serper), só com --serp =====
-add('## 3. Concorrência (Serper)', '')
+// ===== 4. Indexação no Google =====
+// Inspeção de URL pela API (escopo webmasters.readonly, o mesmo do GSC) em todas as URLs do sitemap. Em 27/11/2026 achou 5
+// fora do índice, entre elas a maior página do site no Bing, coisa que nenhuma outra fonte mostrava.
+add('## 4. Indexação no Google (inspeção de URL)', '')
+if (args['sem-inspecao']) add('_Pulada (`--sem-inspecao`)._', '')
+else {
+  const xml = await (await fetch(`${SITE}/sitemap.xml`)).text()
+  const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])
+  const INSP = 'https://searchconsole.googleapis.com/v1/urlInspection/index:inspect'
+  const insp = {}
+  for (const u of urls) {
+    try {
+      const r = await google(INSP, { body: { inspectionUrl: u, siteUrl: exigir('GSC_SITE'), languageCode: 'pt-BR' }, lancar: true })
+      const i = r.inspectionResult?.indexStatusResult || {}
+      insp[pg(u)] = { estado: i.coverageState || '—', rastreio: (i.lastCrawlTime || '').slice(0, 10) || '—' }
+    } catch (e) {
+      insp[pg(u)] = { estado: `erro: ${e.message.slice(0, 60)}`, rastreio: '—' }
+    }
+  }
+  const antI = guardarEComparar('indexacao', insp)
+  const indexada = (e) => /indexad/i.test(e) && !/não indexad/i.test(e)
+  const contagem = {}
+  for (const v of Object.values(insp)) contagem[v.estado] = (contagem[v.estado] || 0) + 1
+  add(
+    `**${Object.values(insp).filter((v) => indexada(v.estado)).length} de ${urls.length} URLs do sitemap no índice.**`,
+    '',
+    markdown(['Estado', 'URLs'], Object.entries(contagem).sort((a, b) => b[1] - a[1])),
+    '',
+  )
+  const fora = Object.entries(insp).filter(([, v]) => !indexada(v.estado))
+  if (fora.length) add('**Fora do índice:**', '', markdown(['URL', 'Estado', 'Na rodada anterior'], fora.map(([u, v]) => [u, v.estado, antI?.[u]?.estado ?? '—'])), '')
+  const mudou = antI ? Object.entries(insp).filter(([u, v]) => antI[u] && antI[u].estado !== v.estado) : []
+  if (mudou.length) add('**Mudou de estado desde a rodada anterior:**', '', markdown(['URL', 'Antes', 'Agora'], mudou.map(([u, v]) => [u, antI[u].estado, v.estado])), '')
+  add('_Fora do índice: pedir indexação no GSC (Inspeção de URL → "Solicitar indexação"); a API não faz o pedido._', '')
+}
+
+// ===== 5. Bing (Bing Webmaster Tools) =====
+// API do BWT com BWT_CHAVE (27/11/2026): tráfego por dia, páginas e consultas por semana (o balde fecha na sexta) e rastreio
+// por dia. O "Desempenho de IA" não está na API: continua export manual em gsc/.
+add('## 5. Bing (Bing Webmaster Tools)', '')
+{
+  const chave = env().BWT_CHAVE
+  const pastaGsc = join(RAIZ_REPO, 'gsc')
+  const exportIA = existsSync(pastaGsc)
+    ? readdirSync(pastaGsc, { recursive: true }).map(String).filter((f) => /AIPerformance|AI_Performance|Desempenho.*IA/i.test(f)).map((f) => ({ f, t: statSync(join(pastaGsc, f)).mtime }))
+    : []
+  if (!chave) {
+    add('_Sem `BWT_CHAVE` (bing.com/webmasters → Configurações → Acesso à API → Chave de API → `BWT_CHAVE=` em `~/.config/recibofacil/dados.env`)._', '')
+  } else {
+    const BWT = 'https://ssl.bing.com/webmaster/api.svc/json'
+    const bwt = async (m) => {
+      try {
+        const r = await fetch(`${BWT}/${m}?apikey=${chave}&siteUrl=${encodeURIComponent(SITE + '/')}`)
+        return r.ok ? (await r.json()).d || [] : []
+      } catch {
+        return []
+      }
+    }
+    const diaBwt = (x) => new Date(Number(String(x.Date).match(/\d+/)[0])).toISOString().slice(0, 10)
+    const [trafego, paginas, consultas, rastreio] = [await bwt('GetRankAndTrafficStats'), await bwt('GetPageStats'), await bwt('GetQueryStats'), await bwt('GetCrawlStats')]
+    // Tráfego: os 7 dias mais recentes que o BWT tem × os 7 anteriores.
+    const diasT = [...new Set(trafego.map(diaBwt))].sort()
+    const ult = diasT.at(-1)
+    const somaT = (de, ate) => trafego.filter((x) => diaBwt(x) >= de && diaBwt(x) <= ate).reduce((a, x) => [a[0] + x.Clicks, a[1] + x.Impressions], [0, 0])
+    if (ult) {
+      const [a0, a1] = [somaT(dia(ult, -6), ult), somaT(dia(ult, -13), dia(ult, -7))]
+      add(
+        `**Busca no Bing** (${dia(ult, -6)} → ${ult}, contra os 7 dias anteriores):`,
+        '',
+        markdown(['Métrica', 'Semana', 'Anterior', 'Variação'], [
+          ['Cliques', a0[0], a1[0], sinal(pct(a0[0], a1[0]))],
+          ['Impressões', a0[1], a1[1], sinal(pct(a0[1], a1[1]))],
+          ['CTR %', n1(taxa(a0[0], a0[1])), n1(taxa(a1[0], a1[1])), ''],
+        ]),
+        '',
+      )
+    }
+    // Páginas e consultas: o último balde semanal × o anterior.
+    const baldes = (rows) => [...new Set(rows.map(diaBwt))].sort()
+    const porBalde = (rows, b) => new Map(rows.filter((x) => diaBwt(x) === b).map((x) => [x.Query, x]))
+    const tabelaBwt = (rows, rotulo, fmt, n) => {
+      const bs = baldes(rows)
+      if (bs.length < 1) return
+      const [r0, r1] = [porBalde(rows, bs.at(-1)), bs.length > 1 ? porBalde(rows, bs.at(-2)) : new Map()]
+      const linhas = [...r0.values()].sort((a, b) => b.Impressions - a.Impressions || b.Clicks - a.Clicks).slice(0, n).map((x) => {
+        const y = r1.get(x.Query)
+        return [fmt(x.Query), x.Clicks, x.Impressions, y?.Impressions ?? 0, x.AvgImpressionPosition > 0 ? x.AvgImpressionPosition : '—', y && y.AvgImpressionPosition > 0 ? y.AvgImpressionPosition : '—']
+      })
+      add(`**${rotulo}** (semana do BWT de ${bs.at(-1)}, contra a de ${bs.at(-2) ?? '—'}; as ${n} com mais impressões):`, '', markdown([rotulo.replace(/s$/, ''), 'Cliques', 'Impressões', 'Impr. ant.', 'Posição', 'Posição ant.'], linhas), '')
+    }
+    tabelaBwt(paginas, 'Páginas', (u) => pg(u), 15)
+    tabelaBwt(consultas, 'Consultas', (q) => q, 15)
+    // Rastreio: o Bingbot nos últimos 7 dias. 4xx/5xx e bloqueio por robots.txt são o que pede ação.
+    const diasR = [...new Set(rastreio.map(diaBwt))].sort()
+    const ultR = diasR.at(-1)
+    if (ultR) {
+      const somaR = (de, ate, f) => rastreio.filter((x) => diaBwt(x) >= de && diaBwt(x) <= ate).reduce((a, x) => a + (x[f] || 0), 0)
+      const lr = (rot, f) => [rot, somaR(dia(ultR, -6), ultR, f), somaR(dia(ultR, -13), dia(ultR, -7), f)]
+      add(
+        `**Rastreio do Bingbot** (${dia(ultR, -6)} → ${ultR}):`,
+        '',
+        markdown(['Sinal', 'Semana', 'Anterior'], [lr('Páginas rastreadas', 'CrawledPages'), lr('Respostas 2xx', 'Code2xx'), lr('Respostas 4xx', 'Code4xx'), lr('Respostas 5xx', 'Code5xx'), lr('Erros de rastreio', 'CrawlErrors'), lr('Bloqueadas pelo robots.txt', 'BlockedByRobotsTxt')]),
+        '',
+      )
+    }
+  }
+  const recIA = exportIA.filter((x) => (Date.now() - x.t) / 864e5 <= 7)
+  add(
+    recIA.length
+      ? `Desempenho de IA (export manual): ${recIA.map((x) => `\`${x.f}\``).join(', ')}. Leitura na seção 10.`
+      : '_Desempenho de IA (citações em respostas do Copilot) não está na API: export manual. bing.com/webmasters → calculosonline.com.br → **Desempenho de IA** → **Últimos 7 dias** → **Exportar** → arquivo em `gsc/`._',
+    '',
+  )
+}
+
+// ===== 6. Concorrência (Serper), só com --serp =====
+add('## 6. Concorrência (Serper)', '')
 if (!args.serp) add('_Não rodada (gasta crédito). Para incluir: `node dados/semana.mjs --serp`, ou a lista completa em `node dados/serp.mjs`._', '')
 else if (!env().SERPER_CHAVE) add('_Sem `SERPER_CHAVE`: rodada não feita._', '')
 else {
@@ -240,8 +441,8 @@ else {
   }
 }
 
-// ===== 4. Saúde =====
-add('## 4. Saúde (manutenção)', '')
+// ===== 7. Saúde =====
+add('## 7. Saúde, comportamento e velocidade', '')
 add(
   markdown(
     ['Sinal (eventos do GA4)', 'Semana', 'Anterior', 'Média 4 sem.'],
@@ -297,7 +498,82 @@ if (!cs[0].dias.length) {
   add(`_${semTrazer ? '⚠️ rsync falhou: dias locais de dados/saida/clarity/dias/. ' : ''}Detalhe: \`node dados/clarity-dias.mjs --de ${R0.startDate} --ate ${R0.endDate}\`. Mapa de calor não sai pela API._`, '')
 }
 
-add('## 5. Leitura e propostas da semana', '', '_(escrita na sessão: o que os números dizem, até 3 mudanças — hipótese, métrica, linha de base e data de leitura —, a manutenção da vez e 1 a 3 possibilidades novas)_', '')
+// Velocidade (PageSpeed / Core Web Vitals): uma vez por mês, nas 5 maiores páginas de entrada, celular. Precisa de
+// PAGESPEED_CHAVE (a API recusa o token OAuth e a cota anônima vive em 429).
+add('**Velocidade (PageSpeed, celular, mensal):**', '')
+{
+  const mes = fim.slice(0, 7)
+  const dirCwv = pastaSaida('cwv')
+  const arqMes = join(dirCwv, `${mes}.json`)
+  const chave = env().PAGESPEED_CHAVE
+  let cwv = existsSync(arqMes) && !args.cwv ? JSON.parse(readFileSync(arqMes, 'utf8')) : null
+  if (!cwv && !chave) {
+    add(
+      '_Sem `PAGESPEED_CHAVE`. Para ligar: console.cloud.google.com → projeto `recibofacil-dados` → APIs e serviços → Biblioteca → **PageSpeed Insights API** → Ativar; Credenciais → Criar credenciais → Chave de API (restringir à PageSpeed Insights API) → `PAGESPEED_CHAVE=...` em `~/.config/recibofacil/dados.env` (serve aos dois sites)._',
+      '',
+    )
+  } else {
+    if (!cwv) {
+      const topo = [...lp].map(([k, o]) => [k, o.s0?.[0] ?? 0]).filter(([k]) => k && k.startsWith('/')).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([k]) => k)
+      cwv = { dia: fim, paginas: [] }
+      for (const pth of topo) {
+        try {
+          const u = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(SITE + pth)}&strategy=mobile&category=performance&key=${chave}`
+          const j = await (await fetch(u)).json()
+          if (j.error) throw new Error(j.error.message)
+          const a = j.lighthouseResult?.audits || {}
+          const campo = j.loadingExperience?.metrics || {}
+          cwv.paginas.push({
+            pagina: pth,
+            nota: Math.round((j.lighthouseResult?.categories?.performance?.score ?? 0) * 100),
+            lcp: a['largest-contentful-paint']?.displayValue || '—',
+            cls: a['cumulative-layout-shift']?.displayValue || '—',
+            tbt: a['total-blocking-time']?.displayValue || '—',
+            campo: campo.LARGEST_CONTENTFUL_PAINT_MS ? `LCP ${campo.LARGEST_CONTENTFUL_PAINT_MS.category}` : 'sem dado de campo',
+          })
+        } catch (e) {
+          cwv.paginas.push({ pagina: pth, nota: '—', lcp: '—', cls: '—', tbt: '—', campo: `erro: ${e.message.slice(0, 50)}` })
+        }
+      }
+      writeFileSync(arqMes, JSON.stringify(cwv, null, 1))
+    }
+    add(
+      `Medição de ${cwv.dia} (Lighthouse no celular; "campo" = usuários reais do Chrome, quando há volume):`,
+      '',
+      markdown(['Página', 'Nota', 'LCP', 'CLS', 'TBT', 'Campo'], cwv.paginas.map((x) => [x.pagina, x.nota, x.lcp, x.cls, x.tbt, x.campo])),
+      '',
+    )
+  }
+}
+
+// ===== 8. Acompanhamento das entregas =====
+add('## 8. Acompanhamento das entregas', '')
+{
+  const ac = lerLeitura('acompanhamento.json')?.itens || []
+  const quando = (d) => (d < fim ? '⚠️ vencida' : d <= dia(fim, 7) ? '▶ esta semana' : '')
+  add(
+    ac.length
+      ? markdown(['Entrega', 'O que medir', 'Linha de base', 'Leitura', '', 'Status'], [...ac].sort((a, b) => a.leitura.localeCompare(b.leitura)).map((x) => [x.entrega, x.medir, x.base, x.leitura, quando(x.leitura), x.status]))
+      : '_Nada em acompanhamento._',
+    '',
+    '_Fonte: `dados/leituras/acompanhamento.json` (entrega nova entra lá com métrica, linha de base e data; ao ler, atualizar o status)._',
+    '',
+  )
+}
+
+// ===== 9. Calendário =====
+add('## 9. Calendário (próximas 6 semanas)', '')
+{
+  const ev = (lerLeitura('calendario.json')?.eventos || []).filter((e) => e.data >= fim && e.data <= dia(fim, 42)).sort((a, b) => a.data.localeCompare(b.data))
+  add(
+    ev.length ? markdown(['Data', 'O quê', 'Efeito no site', 'Fonte'], ev.map((e) => [`${e.data}${e.aprox ? ' (aprox.)' : ''}`, e.o_que, e.efeito, e.fonte])) : '_Nada nas próximas 6 semanas._',
+    '',
+    '_Fonte: `dados/leituras/calendario.json`._',
+    '',
+  )
+}
+
+add('## 10. Leitura e propostas da semana', '', '_(escrita na sessão: o que os números dizem, até 3 mudanças — hipótese, métrica, linha de base e data de leitura —, a manutenção da vez e 1 a 3 possibilidades novas)_', '')
 
 const pasta = join(RAIZ_REPO, 'docs', 'semanas')
 mkdirSync(pasta, { recursive: true })
