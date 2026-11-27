@@ -8,6 +8,7 @@ e 6 Shorts com esta estrutura. Tudo o que vale lá vale aqui, salvo o que está 
 |---|---|---|---|---|
 | V1 | Tesouro Reserva: quanto rende e quando o IOF morde | `/calculadora/tesouro-reserva` | [completo](v1-tesouro-reserva.md) (25/11/2026) | ✅ publicado em 25/11: [normal](https://youtu.be/kSFT8qBrfqA) · [Short](https://youtube.com/shorts/MDrxj1Vdkaw) |
 | V2 | Por que a 2ª parcela do 13º vem menor | `/calculadora/decimo-terceiro` | [completo](v2-segunda-parcela-13.md) (25/11/2026) | ✅ publicado em 27/11: [normal](https://youtu.be/3GV6z9MdQig) · [Short](https://youtube.com/shorts/mFvF4lDTv88) |
+| V3 | Férias e 13º juntos em dezembro: quanto cai na conta | `/calculadora/ferias-e-decimo-terceiro` | [completo](v3-ferias-e-13.md) (27/11/2026) | ⏳ texto para aprovar; sai em 29/11 |
 
 ## Formato (o do Recibo Fácil, não mais o de slides)
 
@@ -35,6 +36,11 @@ concorrentes ninguém faz isso hoje (ver "Pauta" abaixo). E a esteira já existe
 - **Créditos:** o plano Starter (40 mil caracteres/mês) é **dividido com o Recibo Fácil**. Um vídeo + Short
   gasta ~600 créditos (V4 e V6 do RF). Ver o saldo com `narrar.py --saldo` antes de cada geração, e gerar só
   com o ok do Paulo.
+- **Siglas: a voz não fala "INSS"** (Paulo, 27/11/2026). O clone falou "í, ene, êsse, ésse" (o certo é "í, êne, ésse,
+  ésse"); com a grafia "í êne ésse ésse" a sigla saía certa sozinha, mas no meio da frase o modelo fechava o "é" nas 9
+  versões testadas, e a sigla colada na frase soava como IA. **Na fala: "o desconto da Previdência"** (e "o imposto de
+  renda" no lugar de IRRF); a tela, a legenda, o título e a descrição seguem com a sigla. Sigla inevitável: gerar uma fala
+  curta de teste e o Paulo ouve antes da voz inteira. Detalhe no fim de `v2-segunda-parcela-13.md`.
 - **Atributos → Uso de IA: "Não"** (clone da própria voz; central de ajuda do YouTube, answer 14328491).
 - **Identidade do canal** (feita em 25/11): [`identidade/`](identidade/), gerada por
   `pnpm --filter web gen:identidade-video` (`apps/web/scripts/gen-identidade-video.mjs`, porte do script do

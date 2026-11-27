@@ -123,9 +123,10 @@ const ENTRADAS: Record<string, Record<string, unknown>> = {
     sistema: 'price',
     taxaSeguroMensal: 0,
   },
-  cdb: { valorInicial: 10000, taxaAnual: 110, tipo: 'cdi', prazoMeses: 24 },
-  poupanca: { valorInicial: 1000, prazoMeses: 12, aporteMensal: 100, selicAnual: 0.1325 },
-  'tesouro-direto': { valorInicial: 5000, tipo: 'selic', taxaAnual: 0, prazoMeses: 24 },
+  // F84: taxas em porcentagem (o formato antigo, em decimal, está em taxas-percentual.spec.ts).
+  cdb: { valorInicial: 10000, tipo: 'cdi', percentualCDI: 110, prazoMeses: 24 },
+  poupanca: { valorInicial: 1000, prazoMeses: 12, aporteMensal: 100, selic: 13.25 },
+  'tesouro-direto': { valorInicial: 5000, tipo: 'selic', prazoMeses: 24 },
   'tesouro-reserva': { valorInicial: 1000, prazo: 12, unidade: 'meses' },
   imc: { peso: 70, altura: 1.75 },
   calorias: {
@@ -197,10 +198,10 @@ test.describe('abrir cálculo pronto cai no resultado (F59)', () => {
       // A metade que costuma faltar: rolar sem mover o foco deixa quem navega
       // por teclado ou leitor de tela parado no topo.
       await expect
-        .poll(
-          () => page.evaluate(() => document.activeElement?.getAttribute('aria-label')),
-          { message: 'o foco não foi para a região do resultado', timeout: 5000 },
-        )
+        .poll(() => page.evaluate(() => document.activeElement?.getAttribute('aria-label')), {
+          message: 'o foco não foi para a região do resultado',
+          timeout: 5000,
+        })
         .toBe('Resultado do cálculo')
     })
   }
@@ -229,10 +230,10 @@ test.describe('"Editar cálculo" volta ao formulário (F59)', () => {
         .toBe(true)
 
       await expect
-        .poll(
-          () => page.evaluate(() => document.activeElement?.getAttribute('aria-label')),
-          { message: 'o foco não voltou para o formulário', timeout: 5000 },
-        )
+        .poll(() => page.evaluate(() => document.activeElement?.getAttribute('aria-label')), {
+          message: 'o foco não voltou para o formulário',
+          timeout: 5000,
+        })
         .toBe(`Formulário da ${calc.titulo}`)
     })
   }

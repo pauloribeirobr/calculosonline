@@ -63,7 +63,9 @@ calculosonline/
   (código + `FEATURES.md`/`CHANGELOG.md`/`MEMORY.md` atualizados, testes
   escritos) e para aí — não roda `git commit`/`git push` por conta própria,
   mesmo quando o pedido foi "implementar"/"vamos fazer". Confirmado
-  explicitamente em 2026-08-13.
+  explicitamente em 2026-08-13 e de novo em 2026-11-27 (*"Deixe registrado
+  que commit só eu faço"*): também não oferecer "faço o commit?" no fim do
+  trabalho; basta dizer que o working tree está pronto.
 - **Quem roda os testes é o Paulo** (2026-11-18: *"deixe registrado que os
   testes sou eu quem roda"*). Detalhe em "Regras de trabalho" abaixo.
 - **Código:** identificadores e comentários em inglês quando técnicos; comentários de domínio (regras CLT, INSS, IRRF) podem ficar em pt-BR.

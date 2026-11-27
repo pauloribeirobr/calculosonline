@@ -16,6 +16,18 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **27/11/2026 — F84 (v0.45.0) pronta e testada, falta o Paulo commitar e
+  subir.** CDB, Tesouro Direto e poupança pedem a taxa em % (um
+  campo por indexador) e mostram CDI, Selic e IPCA do Banco Central
+  pré-preenchidos e editáveis, com a data. Links antigos (`taxaAnual`/
+  `selicAnual` decimais) abrem convertidos. Motor intacto; conferido no
+  servidor local. **Testes do Paulo em 27/11: core 584/584, e2e 391/391** (a
+  1ª rodada deu 389/391: chips nos campos de referência e `link-interno`, que
+  vinha da F83; corrigidos). Specs da F84:
+  `pnpm --filter web exec playwright test tests/e2e/taxas-percentual.spec.ts tests/e2e/investimentos-referencias.spec.ts tests/e2e/abrir-no-resultado.spec.ts tests/e2e/quick-add-cobertura.spec.ts tests/e2e/link-interno.spec.ts`.
+  **Depois do deploy:** conferir em produção e rodar IndexNow
+  (`cdb`, `tesouro-direto`, `poupanca`). Medir: cliques/impressões dessas três
+  páginas no BWT a partir de ~11/12.
 - **25/11/2026 — F83 (v0.44.0): simulador do Tesouro Reserva em produção.**
   Prazo em meses ou dias (IOF antes de 30 dias), comparação
   com poupança e CDB de 100% do CDI, regras conferidas no Tesouro Nacional, B3
@@ -57,7 +69,10 @@ que não cabe em nenhum dos outros três.
   **Instagram e página do Facebook: o Paulo cria depois** (*"deixe registrado.
   Farei mais tarde"*); ao criar, passar os endereços
   (vão para o `sameAs` do site); ok para gerar a música. Depois: roteiro da V1
-  (Tesouro Reserva). Próxima: V3 (férias e 13º juntos), prevista para 29/11.
+  (Tesouro Reserva). Próxima: **V3 (férias e 13º juntos), prevista para 29/11:
+  roteiro escrito em 27/11 (`docs/roteiros/v3-ferias-e-13.md`), aguardando a
+  aprovação do texto do Paulo** (*"Retornaremos amanhã com ele"*); depois voz
+  (~1.630 caracteres com o ok do crédito), gravação, montagem e thumbnail.
   Detalhe no Diário de 25/11.
 - **18/11/2026 — F70 (v0.43.0): o valor clicado copia, e o card do hub abre
   pelo card inteiro.** Linha de base: `ferias-e-decimo-terceiro` no PC com
