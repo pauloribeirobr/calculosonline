@@ -1,0 +1,15 @@
+{
+ "saida": "/home/paulo/Vídeos/calculosonline-v2/voz",
+ "nota": "Texto do roteiro v2-segunda-parcela-13.md, aprovado pelo Paulo em 25/11/2026. Pronúncia: Cálculos com acento; a voz NÃO fala INSS (Paulo, 27/11: o ElevenLabs fecha o ésse no meio da frase em qualquer grafia); diz o desconto da Previdência, e a tela mostra INSS. Voz só com o ok do crédito.",
+ "falas": [
+  {"id": "01-gancho", "texto": "A primeira parcela do décimo terceiro cai inteira. A segunda vem menor. Não é erro: é que todos os descontos ficam para ela."},
+  {"id": "02-parcelas", "texto": "A primeira parcela sai até novembro, e é metade do décimo terceiro, sem desconto nenhum. A segunda sai até vinte de dezembro, e é nela que entram o desconto da Previdência e o imposto de renda."},
+  {"id": "03-preencher", "texto": "Aqui no Cálculos Online, você põe o salário, o mês em que entrou na empresa, e escolhe a parcela. Quatro mil reais, primeira parcela."},
+  {"id": "04-primeira", "texto": "Metade do décimo terceiro, sem nenhum desconto. Agora, a segunda."},
+  {"id": "05-segunda", "texto": "Olha a conta: o décimo terceiro inteiro, menos o desconto da Previdência, calculado sobre o valor todo, menos a primeira parcela, que você já recebeu. Por isso a segunda vem menor que a primeira."},
+  {"id": "06-imposto", "texto": "E o imposto de renda? Desde dois mil e vinte e seis, quem tem décimo terceiro de até cinco mil reais não paga, por causa do redutor da lei nova. Está aqui."},
+  {"id": "07-total", "texto": "Escolhendo o total, você vê quanto entra no ano, somando as duas parcelas, já com os descontos."},
+  {"id": "08-compartilhar", "texto": "Quer conferir com alguém de casa? O botão do WhatsApp manda o link, e o cálculo abre pronto."},
+  {"id": "09-fechamento", "texto": "Então, se a segunda parcela vier menor, confira aqui se o desconto bate com o seu salário. É grátis, sem cadastro. O link está na descrição."}
+ ]
+}

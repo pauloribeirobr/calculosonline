@@ -16,11 +16,12 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
-- **25/11/2026 — F83 (v0.44.0): simulador do Tesouro Reserva pronto no
-  working tree, falta o deploy.** Prazo em meses ou dias (IOF antes de 30 dias), comparação
+- **25/11/2026 — F83 (v0.44.0): simulador do Tesouro Reserva em produção.**
+  Prazo em meses ou dias (IOF antes de 30 dias), comparação
   com poupança e CDB de 100% do CDI, regras conferidas no Tesouro Nacional, B3
-  e Planalto. **Depois do deploy:** IndexNow (`tesouro-reserva`,
-  `tesouro-direto`); leitura de impressões ~23/12. Em aberto: se a isenção de
+  e Planalto. Testes do Paulo: core 584/584, e2e 61/61. Deploy, sitemap
+  (lastmod 25/11) e IndexNow (`tesouro-reserva`, `tesouro-direto`) feitos em
+  25/11. **Leitura de impressões ~23/12.** Em aberto: se a isenção de
   custódia é somada à do Tesouro Selic. Detalhe no Diário de 25/11.
 - **25/11/2026 — Boletim de 18 a 24/11: a F70 passou no critério 1 e fica.**
   Clique morto da `ferias-e-decimo-terceiro` no PC 62,5% → **31,7%** (41
@@ -32,12 +33,32 @@ que não cabe em nenhum dos outros três.
   páginas genéricas; 32 sessões de bot no Clarity explicam o Direct. Primeira
   leitura feita pelo chat de acompanhamento (regra no `AGENTS.md`). **Próxima
   leitura: 02/12.** Detalhe no Diário de 25/11 e em `docs/semanas/2026-11-25.md`.
-- **23/11/2026 — F91 cadastrado: canal no YouTube com vídeo semanal sem rosto.**
-  Paulo quer criar o canal ainda nesta semana e conversar antes de começar.
-  Formato: voz dele clonada no ElevenLabs e slides com os números. Piloto =
-  **Tesouro Reserva junto com a F83** (não dívidas). UTM + origem `youtube` no
-  boletim antes do 1º vídeo. **Pendências para a conversa:** lista no Diário de
-  23/11.
+- **25/11/2026 — F91: o canal copia a estrutura do Recibo Fácil.** Nome
+  **"Calculos Online"**; voz clonada do Paulo, sem rosto e sem nome (decisão
+  dele); formato = calculadora gravada em produção (1:30–2:40) + Short, não
+  slides. Estrutura, regras e pauta de 10 vídeos (pesquisa de concorrentes) em
+  `docs/roteiros/README.md`. **Pauta aprovada**; Shorts viram Reels no
+  Instagram e no Facebook; música = faixa nova no Eleven Music (termos do
+  Starter conferidos: uso comercial online, sem atribuição). Identidade gerada
+  (`docs/roteiros/identidade/`) e textos de criação em `docs/roteiros/canal.md`.
+  **Canal criado: https://www.youtube.com/@calculosonline** (id
+  `UCP0pocTn43bfBf70XQXxtqA`). **V1 publicada em 25/11:** normal
+  https://youtu.be/kSFT8qBrfqA e Short https://youtube.com/shorts/MDrxj1Vdkaw
+  (leitura da campanha `v1-tesouro-reserva` em 23/12). **Ritmo (Paulo, 25/11): um vídeo a
+  cada 2 dias, depois a cada 3, até um por semana** → **V2 (2ª parcela do 13º)
+  publicada em 27/11:** normal https://youtu.be/3GV6z9MdQig e Short
+  https://youtube.com/shorts/mFvF4lDTv88 (leitura da campanha
+  `v2-segunda-parcela-13` em 25/12). A voz diz "desconto da Previdência", não
+  "INSS" (o ElevenLabs erra a sigla no meio da frase). **Gravações em produção
+  (descontar nas leituras): 26/11 20:59–21:00 e 21:08–21:10; 27/11 ~08:38, ~08:47, 08:49 e 08:53**
+  (estado no fim de `docs/roteiros/v2-segunda-parcela-13.md`).
+  Calendário V1–V10 em `docs/roteiros/README.md`. Trilha = opção B, a 8 LU
+  abaixo da voz. Ferramentas de vídeo em `docs/roteiros/ferramentas/`.
+  **Instagram e página do Facebook: o Paulo cria depois** (*"deixe registrado.
+  Farei mais tarde"*); ao criar, passar os endereços
+  (vão para o `sameAs` do site); ok para gerar a música. Depois: roteiro da V1
+  (Tesouro Reserva). Próxima: V3 (férias e 13º juntos), prevista para 29/11.
+  Detalhe no Diário de 25/11.
 - **18/11/2026 — F70 (v0.43.0): o valor clicado copia, e o card do hub abre
   pelo card inteiro.** Linha de base: `ferias-e-decimo-terceiro` no PC com
   62,5% de clique morto em 17/11 (Clarity, 8 sessões). **Medir ~1 semana depois
@@ -1319,6 +1340,57 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-11-25 — F91: canal "Calculos Online" no molde do Recibo Fácil, e a pauta saída dos concorrentes
+
+Paulo: *"Sobre o Canal. Pesquise dentro do Recibo Fácil. Lá já tem toda uma
+estrutura definida. Quero replicar aqui."*, *"o Canal deveria ser 'Cálculos
+Online'"*, *"Sobre o contratante. Nesse momento sem aparecer meu nome, somente
+minha voz usando IA da Eleven Labs. Não me identifica."* e *"Sobre a Pauta.
+Pesquisar os concorrentes e sugerir ideias batendo com os recursos do site."*
+
+**Decidido:** nome do canal "Calculos Online"; voz = o clone do ElevenLabs do
+Recibo Fácil, sem rosto e sem nome em lugar nenhum (a pendência "política do
+empregador" de 23/11 fica resolvida assim, por decisão do Paulo). **Formato
+trocado:** sai a ideia de slides de 5–8 min e entra a do RF, calculadora
+gravada em produção pelo assistente sobre a voz gerada, vídeo de 1:30–2:40 +
+Short de ~30–40 s. Tudo em `docs/roteiros/README.md`, que aponta para o
+README do RF no que não muda.
+
+**Adaptações ao site:** (1) taxa e tabela fora da fala, como o preço no RF (a
+Selic muda a cada Copom; a fala diz "com a Selic de hoje", a tela mostra o
+número e a descrição traz taxa e data); (2) nenhum nome de instituição; (3)
+fonte de cada regra na descrição; (4) créditos do ElevenLabs divididos com o RF
+(~600 por vídeo + Short).
+
+**Pesquisa de concorrentes:** 12 buscas de vídeo no Serper (Google Brasil),
+`node` avulso no scratchpad, resultados não versionados. Investimentos =
+vídeos longos de opinião e Shorts "quanto rende R$ X"; os do Tesouro Reserva
+são de maio–julho e nenhum mostra IOF dia a dia nem custódia acima de R$ 10
+mil. Trabalhista = Shorts de advogados explicando de boca, quase ninguém
+fazendo a conta numa calculadora. Juros compostos = tutoriais de Excel. O
+formato "calculadora na tela em 2 min" existiu ("Calculadoras Mobills", 2022)
+e parou. Uma 2ª rodada (FGTS, INSS, isenção de IR, MEI, consignado) foi
+recusada pelo Paulo antes de rodar.
+
+**Pauta proposta (V1–V10, pela época):** Tesouro Reserva (V1, piloto) → 2ª
+parcela do 13º (até ~05/12) → férias + 13º → CDB × Tesouro Selic acima de R$ 10
+mil → poupança → R$ 500/mês em juros compostos → rescisão por modalidade →
+Price × SAC → salário líquido com o redutor da Lei 15.270 → IRPF 2027.
+
+**Respostas do Paulo no mesmo dia:** pauta aprovada; nome "Calculos Online"
+(grafado como no site, sem acento); faixa nova (*"O Eleven Labs consegue ou vc
+mesmo?"*); *"Idéia é criar o mesmo video pára Instagram e Facebook"*. Feito em
+seguida: identidade do canal em `docs/roteiros/identidade/` (script
+`apps/web/scripts/gen-identidade-video.mjs`, porte do RF, com banner 2560×1440
+e foto 1080 a mais, que o RF não tinha), textos de criação do YouTube, do
+Instagram e do Facebook em `docs/roteiros/canal.md`. **Música:** Eleven Music,
+termos lidos em 25/11 (atualizados em 09/10/2026), linha Starter: uso
+comercial online e offline, exceto cinema, TV, rádio e games de estúdio; sem
+atribuição; 17 min de geração por mês; proibido distribuir em streaming de
+música. Gerar pela API depois do ok do Paulo, com estilo diferente do synthpop
+do RF. Feita por código, uma trilha sairia pobre; não vale. Ainda falta:
+portar as ferramentas do RF e escrever o roteiro da V1.
 
 ### 2026-11-25 — F83: simulador do Tesouro Reserva, com IOF dia a dia e poupança no mesmo prazo
 

@@ -1,0 +1,16 @@
+{
+ "saida": "/home/paulo/Vídeos/calculosonline-v1/voz",
+ "nota": "Texto do roteiro v1-tesouro-reserva.md, aprovado pelo Paulo em 25/11/2026 (com a cena 09-compartilhar acrescentada no mesmo dia). Pronúncia escrita: 'Cálculos' com acento (a marca se escreve sem, mas se fala 'cálculos'), IOF, CDI e B3 por extenso como se falam. Voz só com o ok do crédito.",
+ "falas": [
+  {"id": "01-gancho", "texto": "O Tesouro Reserva deixa você resgatar a qualquer hora. Mas, se o dinheiro sair antes de trinta dias, uma parte do rendimento fica pelo caminho."},
+  {"id": "02-o-que-e", "texto": "É o título do Tesouro feito para a reserva de emergência: rende cem por cento da Selic, começa com um real, e o resgate cai no Pix, até no fim de semana."},
+  {"id": "03-preencher", "texto": "Aqui no Cálculos Online, o simulador pede três coisas: quanto você vai aplicar, por quanto tempo, e se o prazo está em meses ou em dias. Mil reais, quinze dias."},
+  {"id": "04-iof", "texto": "Olha o í ó éfe: com quinze dias, ele leva metade do rendimento. Depois ainda sai o imposto de renda. E a poupança, no mesmo prazo, não rendeu nada, porque ela só paga quando completa o mês."},
+  {"id": "05-tabela", "texto": "Na tabela, dia por dia, dá para ver o í ó éfe diminuindo: ele cai um pouco a cada dia, e zera no trigésimo."},
+  {"id": "06-trinta-dias", "texto": "Com trinta dias, não tem mais í ó éfe. Sai só o imposto de renda, sobre o que rendeu."},
+  {"id": "07-doze-meses", "texto": "E em doze meses, o Tesouro Reserva termina bem à frente da poupança, e praticamente empatado com um cê dê bê que paga cem por cento do cê dê í."},
+  {"id": "08-custodia", "texto": "Acima de dez mil reais, entra a taxa de custódia da bê três, só sobre o que passar disso. O simulador já desconta."},
+  {"id": "09-compartilhar", "texto": "Quer mandar essa conta para alguém? O botão do WhatsApp envia um link, e quem abre já vê o cálculo pronto, com os mesmos números."},
+  {"id": "10-fechamento", "texto": "Ou seja: o resgate é imediato, mas, nos primeiros trinta dias, ele custa parte do rendimento. O simulador é grátis, sem cadastro. O link está na descrição."}
+ ]
+}

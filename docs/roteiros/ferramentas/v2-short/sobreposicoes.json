@@ -1,0 +1,12 @@
+{
+ "gancho": "A 2ª PARCELA|VEIO MENOR?",
+ "rotulos": {
+  "salario": "R$ 4.000",
+  "primeira": "1ª PARCELA",
+  "segunda": "2ª PARCELA",
+  "ir": "IMPOSTO"
+ },
+ "cta": {
+  "pagina": "/calculadora/decimo-terceiro"
+ }
+}

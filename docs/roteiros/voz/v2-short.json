@@ -1,0 +1,13 @@
+{
+ "saida": "/home/paulo/Vídeos/calculosonline-v2-short/voz",
+ "nota": "Short da V2, texto aprovado em 25/11/2026. Sem o CTA: reaproveita o 10-cta do Short da V1, sem crédito.",
+ "falas": [
+  {"id": "01-gancho", "texto": "A segunda parcela do décimo terceiro veio menor?"},
+  {"id": "02-erro", "texto": "Não é erro."},
+  {"id": "03-salario", "texto": "Quatro mil reais de salário."},
+  {"id": "04-primeira", "texto": "A primeira vem inteira, sem desconto."},
+  {"id": "05-segunda", "texto": "Na segunda, sai o desconto da Previdência do décimo terceiro todo."},
+  {"id": "06-ir", "texto": "E, até cinco mil reais, não tem imposto de renda."},
+  {"id": "07-fecho", "texto": "Confira a sua conta antes do pagamento."}
+ ]
+}

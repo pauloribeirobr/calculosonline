@@ -1,0 +1,31 @@
+{
+ "nome": "v2-short",
+ "sobreposicoes": "sobreposicoes",
+ "voz_antes": true,
+ "guia_cabecalho": "# Short da V2 — linha do tempo de `v2-short-tela-montada.mp4`\n\nTela gravada em **produção** num celular emulado de 360 × 640 com escala 3 (1080 × 1920), seguindo `docs/roteiros/v2-segunda-parcela-13.md` §2 (texto aprovado em 25/11/2026). Voz antes da tela (`voz/v2-short.json`); o fecho é o `10-cta` do Short da V1.\n\n- **{TOTAL}**, 30 fps, sem abertura e sem tela final. Gancho, rótulos e cartão final na imagem.\n- GA4, Clarity, AdSense e Vercel Analytics bloqueados; nada salvo.\n",
+ "guia_rodape": "## Saídas\n\n`v2-short-final-voz.mp4` (voz, trilha e legenda queimada) sai do `short-voz.py`.",
+ "blocos": [
+  {"id": "gancho", "origem": "bruta", "de": "01-gancho", "ate": "02-erro", "duracao": 3.3,
+   "tela": "O formulário no celular · texto `A 2ª PARCELA VEIO MENOR?`",
+   "fala": "A segunda parcela do décimo terceiro veio menor?", "rotulos": [["gancho.png", null, null]]},
+  {"id": "erro", "origem": "bruta", "de": "02-erro", "ate": "03-salario", "duracao": 1.3,
+   "tela": "O formulário, com o gancho", "fala": "Não é erro.", "rotulos": [["gancho.png", null, null]]},
+  {"id": "salario", "origem": "bruta", "de": "03-salario", "ate": "04-primeira", "duracao": 2.2,
+   "tela": "R$ 4.000, 1ª parcela, Calcular (acelerado)", "fala": "Quatro mil reais de salário.",
+   "rotulos": [["rotulo-salario.png", null, null]]},
+  {"id": "primeira", "origem": "bruta", "de": "04-primeira", "ate": "05-segunda", "duracao": 2.9,
+   "tela": "A linha \"1ª Parcela (50%)\" destacada", "fala": "A primeira vem inteira, sem desconto.",
+   "rotulos": [["rotulo-primeira.png", null, null]]},
+  {"id": "segunda", "origem": "bruta", "de": "05-segunda", "ate": "06-ir", "duracao": 4.8,
+   "tela": "2ª parcela, Calcular: as três linhas do INSS destacadas", "fala": "Na segunda, sai o desconto da Previdência do décimo terceiro todo.",
+   "rotulos": [["rotulo-segunda.png", null, null]]},
+  {"id": "ir", "origem": "bruta", "de": "06-ir", "ate": "07-fecho", "duracao": 3.9,
+   "tela": "O redutor da Lei 15.270/2025 e o IRRF isento destacados", "fala": "E, até cinco mil reais, não tem imposto de renda.",
+   "rotulos": [["rotulo-ir.png", null, null]]},
+  {"id": "fecho", "origem": "bruta", "de": "07-fecho", "ate": "fim", "duracao": 2.8,
+   "tela": "A 2ª parcela líquida destacada", "fala": "Confira a sua conta antes do pagamento."},
+  {"id": "cta", "origem": "cta", "duracao": 4.7,
+   "tela": "Cartão final: logo, calculosonline.com.br, /calculadora/decimo-terceiro e \"Link fixado nos comentários\"",
+   "fala": "Cálculos Online ponto com ponto bê-érre. Link fixado nos comentários."}
+ ]
+}

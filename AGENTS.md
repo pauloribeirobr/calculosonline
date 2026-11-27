@@ -15,6 +15,7 @@ Stack: **Next.js + TypeScript** em monorepo **Turborepo**, com aplicativos **Tau
 - [CHANGELOG.md](CHANGELOG.md) — funcionalidades entregues em produção, versionado por app (mesmo padrão do Recibo Fácil)
 - [FEATURES.md](FEATURES.md) — lista numerada de features (`F1`, `F2`, ...), histórico + backlog, mesmo padrão do Recibo Fácil
 - [dados/README.md](dados/README.md) — leituras de GSC, GA4, Clarity e concorrência (Serper) por API (F89); boletins em `docs/semanas/`
+- [docs/roteiros/README.md](docs/roteiros/README.md) — canal "Calculos Online" no YouTube (F91): formato, regras dos vídeos (voz clonada do Paulo, **nunca rosto nem nome**; taxa e tabela fora da fala; sem nome de instituição) e pauta. Molde: `../recibofacil/docs/roteiros/README.md`
 - [MEMORY.md](MEMORY.md) — diário de decisões/growth (o "porquê" por trás do Changelog/Features), mesmo padrão do Recibo Fácil. **Ao encerrar uma sessão com decisão de growth/negócio ou feature nova, atualizar `FEATURES.md`/`MEMORY.md` em vez de só crescer a seção "Estado atual das sprints" abaixo.**
 
 ## Projeto irmão — Recibo Fácil

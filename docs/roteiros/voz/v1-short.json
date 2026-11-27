@@ -1,0 +1,14 @@
+{
+ "saida": "/home/paulo/Vídeos/calculosonline-v1-short/voz",
+ "nota": "Texto do roteiro v1-tesouro-reserva.md (Short), aprovado pelo Paulo em 25/11/2026. O CTA (10-cta) é gerado aqui e reaproveitado em todos os Shorts seguintes, sem crédito. Voz só com o ok do crédito.",
+ "falas": [
+  {"id": "01-gancho", "texto": "Tirou do Tesouro Reserva antes de trinta dias?"},
+  {"id": "02-conta", "texto": "Uma parte do rendimento ficou com o í ó éfe."},
+  {"id": "03-mil-reais", "texto": "Mil reais, quinze dias."},
+  {"id": "04-iof", "texto": "O í ó éfe leva metade do rendimento."},
+  {"id": "05-poupanca", "texto": "A poupança, no mesmo prazo, não rende nada."},
+  {"id": "06-trinta-dias", "texto": "Com trinta dias, o í ó éfe zera."},
+  {"id": "07-fecho", "texto": "Simule o seu prazo antes de resgatar."},
+  {"id": "10-cta", "texto": "Cálculos Online ponto com ponto bê-érre. Link fixado nos comentários."}
+ ]
+}
