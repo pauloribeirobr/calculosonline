@@ -1,4 +1,5 @@
 import type { QuickAddButton } from '@calculosonline/ui'
+import { REFERENCIAS_PERCENTUAL as REF } from './taxasInvestimento'
 
 /**
  * Presets de chips de valor rápido (mesmo padrão visual do Recibo Fácil,
@@ -152,10 +153,11 @@ export const QUICK_ADD_GENERICO: QuickAddButton[] = [
  * Taxa não se constrói somando pedaços; ela tem valores de referência
  * conhecidos, e o chip serve para dizer "é este".
  *
- * **Atenção à unidade:** os campos de taxa das calculadoras financeiras
- * guardam **decimal** (0,01 = 1%), enquanto margem, markup e adicional de hora
- * extra guardam **ponto percentual** (50 = 50%). Os presets abaixo estão
- * separados por isso, e trocá-los erra o resultado por 100×.
+ * **Atenção à unidade:** os campos de taxa de juros e de seguro guardam
+ * **decimal** (0,01 = 1%), enquanto margem, markup, adicional de hora extra e,
+ * desde a F84, as taxas de investimento (CDB, Tesouro, poupança) guardam
+ * **ponto percentual** (50 = 50%). Os presets abaixo estão separados por isso,
+ * e trocá-los erra o resultado por 100×.
  */
 
 export const QUICK_ADD_TAXA_MENSAL: QuickAddButton[] = [
@@ -165,24 +167,52 @@ export const QUICK_ADD_TAXA_MENSAL: QuickAddButton[] = [
   { label: '1,5%', value: 0.015, modo: 'definir', titulo: '1,5% ao mês' },
 ]
 
-export const QUICK_ADD_TAXA_ANUAL: QuickAddButton[] = [
-  { label: '6%', value: 0.06, modo: 'definir', titulo: '6% ao ano (juro real típico de IPCA+)' },
-  { label: '10%', value: 0.1, modo: 'definir', titulo: '10% ao ano' },
-  { label: '12%', value: 0.12, modo: 'definir', titulo: '12% ao ano' },
-  { label: '13,75%', value: 0.1375, modo: 'definir', titulo: 'Meta Selic em 26/10/2026' },
+/*
+ * Taxas de investimento em PONTO PERCENTUAL (F84: 110 = 110% do CDI, 12 = 12%
+ * ao ano). Até a F84 o CDB tinha um campo só, em decimal, que mudava de escala
+ * conforme o indexador ("1,10" era 110% do CDI e "0,12" era 12% ao ano); agora
+ * cada indexador tem o seu campo e os seus chips.
+ */
+export const QUICK_ADD_TAXA_PERCENTUAL_CDI: QuickAddButton[] = [
+  { label: '100%', value: 100, modo: 'definir', titulo: '100% do CDI' },
+  { label: '110%', value: 110, modo: 'definir', titulo: '110% do CDI' },
+  { label: '120%', value: 120, modo: 'definir', titulo: '120% do CDI' },
+]
+
+export const QUICK_ADD_TAXA_PREFIXADA: QuickAddButton[] = [
+  { label: '12%', value: 12, modo: 'definir', titulo: '12% ao ano' },
+  { label: '13%', value: 13, modo: 'definir', titulo: '13% ao ano' },
+  { label: '14%', value: 14, modo: 'definir', titulo: '14% ao ano' },
+]
+
+export const QUICK_ADD_TAXA_REAL: QuickAddButton[] = [
+  { label: '6%', value: 6, modo: 'definir', titulo: 'IPCA + 6% ao ano' },
+  { label: '7%', value: 7, modo: 'definir', titulo: 'IPCA + 7% ao ano' },
+  { label: '8%', value: 8, modo: 'definir', titulo: 'IPCA + 8% ao ano' },
 ]
 
 /**
- * O campo de taxa do CDB muda de sentido conforme o indexador — "1,10" quer
- * dizer 110% do CDI, mas "0,12" quer dizer 12% ao ano. Os chips carregam as
- * duas escalas com o rótulo dizendo qual é qual, que é o que o `hint` sozinho
- * não conseguia resolver.
+ * Referências editáveis (F84): o 1º chip volta ao valor do Banco Central de
+ * `referencias.ts`, os outros simulam cenário. Em ponto percentual.
  */
-export const QUICK_ADD_TAXA_CDB: QuickAddButton[] = [
-  { label: '100% CDI', value: 1, modo: 'definir', titulo: 'Pós-fixado: 100% do CDI' },
-  { label: '110% CDI', value: 1.1, modo: 'definir', titulo: 'Pós-fixado: 110% do CDI' },
-  { label: '12% a.a.', value: 0.12, modo: 'definir', titulo: 'Prefixado: 12% ao ano' },
-  { label: '6% real', value: 0.06, modo: 'definir', titulo: 'IPCA+: 6% de juro real' },
+const atual = (n: number) => `${n.toLocaleString('pt-BR')}% (atual)`
+
+export const QUICK_ADD_TAXA_CDI: QuickAddButton[] = [
+  { label: atual(REF.cdi), value: REF.cdi, modo: 'definir', titulo: 'CDI do Banco Central' },
+  { label: '10%', value: 10, modo: 'definir', titulo: 'CDI de 10% ao ano' },
+  { label: '15%', value: 15, modo: 'definir', titulo: 'CDI de 15% ao ano' },
+]
+
+export const QUICK_ADD_TAXA_SELIC: QuickAddButton[] = [
+  { label: atual(REF.selic), value: REF.selic, modo: 'definir', titulo: 'Meta Selic do Copom' },
+  { label: '10%', value: 10, modo: 'definir', titulo: 'Selic de 10% ao ano' },
+  { label: '15%', value: 15, modo: 'definir', titulo: 'Selic de 15% ao ano' },
+]
+
+export const QUICK_ADD_TAXA_IPCA: QuickAddButton[] = [
+  { label: atual(REF.ipca), value: REF.ipca, modo: 'definir', titulo: 'IPCA de 12 meses' },
+  { label: '3%', value: 3, modo: 'definir', titulo: 'IPCA de 3% ao ano' },
+  { label: '6%', value: 6, modo: 'definir', titulo: 'IPCA de 6% ao ano' },
 ]
 
 export const QUICK_ADD_SEGURO_FINANCIAMENTO: QuickAddButton[] = [

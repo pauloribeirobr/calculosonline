@@ -8,6 +8,9 @@ import { encodeShareData } from '../../src/lib/shareLink'
 // Antes: o CDB simulava com CDI de 10,65% (real: 13,65%), 12 meses caíam na
 // faixa de 20% (um ano tem 365 dias e paga 17,5%) e o Tesouro Selic acima de
 // R$ 10.000 pagava custódia sobre o valor inteiro.
+//
+// Os links abaixo estão no formato anterior à F84 (taxa em decimal, `taxaAnual`)
+// de propósito: continuarem abrindo é parte do contrato da F84.
 
 const resultado = (page: import('@playwright/test').Page) =>
   page.getByRole('region', { name: 'Resultado do cálculo' })

@@ -15,6 +15,7 @@ Stack: **Next.js + TypeScript** em monorepo **Turborepo**, com aplicativos **Tau
 - [CHANGELOG.md](CHANGELOG.md) — funcionalidades entregues em produção, versionado por app (mesmo padrão do Recibo Fácil)
 - [FEATURES.md](FEATURES.md) — lista numerada de features (`F1`, `F2`, ...), histórico + backlog, mesmo padrão do Recibo Fácil
 - [dados/README.md](dados/README.md) — leituras de GSC, GA4, Clarity e concorrência (Serper) por API (F89); boletins em `docs/semanas/`
+- [docs/roteiros/README.md](docs/roteiros/README.md) — canal "Calculos Online" no YouTube (F91): formato, regras dos vídeos (voz clonada do Paulo, **nunca rosto nem nome**; taxa e tabela fora da fala; sem nome de instituição) e pauta. Molde: `../recibofacil/docs/roteiros/README.md`
 - [MEMORY.md](MEMORY.md) — diário de decisões/growth (o "porquê" por trás do Changelog/Features), mesmo padrão do Recibo Fácil. **Ao encerrar uma sessão com decisão de growth/negócio ou feature nova, atualizar `FEATURES.md`/`MEMORY.md` em vez de só crescer a seção "Estado atual das sprints" abaixo.**
 
 ## Projeto irmão — Recibo Fácil
@@ -62,7 +63,9 @@ calculosonline/
   (código + `FEATURES.md`/`CHANGELOG.md`/`MEMORY.md` atualizados, testes
   escritos) e para aí — não roda `git commit`/`git push` por conta própria,
   mesmo quando o pedido foi "implementar"/"vamos fazer". Confirmado
-  explicitamente em 2026-08-13.
+  explicitamente em 2026-08-13 e de novo em 2026-11-27 (*"Deixe registrado
+  que commit só eu faço"*): também não oferecer "faço o commit?" no fim do
+  trabalho; basta dizer que o working tree está pronto.
 - **Quem roda os testes é o Paulo** (2026-11-18: *"deixe registrado que os
   testes sou eu quem roda"*). Detalhe em "Regras de trabalho" abaixo.
 - **Código:** identificadores e comentários em inglês quando técnicos; comentários de domínio (regras CLT, INSS, IRRF) podem ficar em pt-BR.

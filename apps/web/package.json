@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "0.44.0",
+  "version": "0.45.0",
   "private": true,
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0",
@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "indexnow": "node --env-file-if-exists=.env.local scripts/indexnow.mjs"
+    "gen:identidade-video": "node scripts/gen-identidade-video.mjs",
+    "indexnow":"node --env-file-if-exists=.env.local scripts/indexnow.mjs"
   },
   "dependencies": {
     "@calculosonline/core": "workspace:*",

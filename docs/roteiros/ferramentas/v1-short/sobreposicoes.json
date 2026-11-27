@@ -1,0 +1,12 @@
+{
+ "gancho": "RESGATOU ANTES|DE 30 DIAS?",
+ "rotulos": {
+  "mil": "R$ 1.000 · 15 DIAS",
+  "iof": "IOF",
+  "poupanca": "POUPANÇA",
+  "trinta": "30 DIAS"
+ },
+ "cta": {
+  "pagina": "/calculadora/tesouro-reserva"
+ }
+}

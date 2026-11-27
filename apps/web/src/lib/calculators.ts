@@ -14,7 +14,6 @@ export type { CategoriaCalc, IconeCalculadora }
 
 export type ResultadoFormato = 'currency' | 'percent' | 'number' | 'integer' | 'kcal'
 
-
 export interface CalculadoraRegistro {
   slug: string
   /** Nome curto exibido no header da calculadora e em listagens */
@@ -172,7 +171,14 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'cálculo de férias',
       'férias de 10 dias',
     ],
-    relacionadas: ['decimo-terceiro', 'ferias-e-decimo-terceiro', 'fgts', 'hora-extra', 'rescisao-trabalhista', 'datas'],
+    relacionadas: [
+      'decimo-terceiro',
+      'ferias-e-decimo-terceiro',
+      'fgts',
+      'hora-extra',
+      'rescisao-trabalhista',
+      'datas',
+    ],
   },
   {
     slug: 'decimo-terceiro',
@@ -282,7 +288,14 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'calculadora de hora extra noturna',
       'simulador de hora extra',
     ],
-    relacionadas: ['salario-liquido', 'decimo-terceiro', 'fgts', 'ferias', 'rescisao-trabalhista', 'datas'],
+    relacionadas: [
+      'salario-liquido',
+      'decimo-terceiro',
+      'fgts',
+      'ferias',
+      'rescisao-trabalhista',
+      'datas',
+    ],
   },
   {
     slug: 'fgts',
@@ -633,7 +646,10 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
       'tesouro reserva vale a pena',
       'tesouro reserva ou poupança',
     ],
-    relacionadas: ['tesouro-direto', 'poupanca', 'cdb', 'juros-compostos'],
+    // Sem `juros-compostos`: com ele, a página de 3 impressões empatava com
+    // `financiamento` em links recebidos (6 a 6), o contrário do que o F43 trava
+    // (link-interno.spec.ts). As três que ficam são as que a página compara.
+    relacionadas: ['tesouro-direto', 'poupanca', 'cdb'],
   },
 
   // Saúde

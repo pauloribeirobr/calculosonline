@@ -1,0 +1,121 @@
+{
+ "nome": "v1-short",
+ "sobreposicoes": "sobreposicoes",
+ "voz_antes": true,
+ "guia_cabecalho": "# Short da V1 — linha do tempo de `v1-short-tela-montada.mp4`\n\nTela gravada em **produção** num celular emulado de 360 × 640 com escala 3 (1080 × 1920), seguindo `docs/roteiros/v1-tesouro-reserva.md` §2 (texto aprovado em 25/11/2026). Voz antes da tela (`voz/v1-short.json`).\n\n- **{TOTAL}**, 30 fps, sem abertura e sem tela final. Gancho, rótulos e cartão final na imagem.\n- GA4, Clarity, AdSense e Vercel Analytics bloqueados; nada salvo.\n",
+ "guia_rodape": "## Saídas\n\n`v1-short-final-voz.mp4` (voz, trilha e legenda queimada) sai do `short-voz.py`.",
+ "blocos": [
+  {
+   "id": "gancho",
+   "origem": "bruta",
+   "de": "01-gancho",
+   "ate": "02-conta",
+   "duracao": 3.4,
+   "tela": "O formulário no celular · texto `RESGATOU ANTES DE 30 DIAS?`",
+   "fala": "Tirou do Tesouro Reserva antes de trinta dias?",
+   "rotulos": [
+    [
+     "gancho.png",
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "id": "conta",
+   "origem": "bruta",
+   "de": "02-conta",
+   "ate": "03-mil",
+   "duracao": 3.2,
+   "tela": "Toque no \"Dias\" (a dica do IOF)",
+   "fala": "Uma parte do rendimento ficou com o í ó éfe.",
+   "rotulos": [
+    [
+     "gancho.png",
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "id": "mil",
+   "origem": "bruta",
+   "de": "03-mil",
+   "ate": "04-iof",
+   "duracao": 2.4,
+   "tela": "R$ 1.000, 15 dias, Simular (acelerado)",
+   "fala": "Mil reais, quinze dias.",
+   "rotulos": [
+    [
+     "rotulo-mil.png",
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "id": "iof",
+   "origem": "bruta",
+   "de": "04-iof",
+   "ate": "05-poupanca",
+   "duracao": 2.9,
+   "tela": "A linha do IOF (50%) destacada",
+   "fala": "O í ó éfe leva metade do rendimento.",
+   "rotulos": [
+    [
+     "rotulo-iof.png",
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "id": "poupanca",
+   "origem": "bruta",
+   "de": "05-poupanca",
+   "ate": "06-trinta",
+   "duracao": 3.4,
+   "tela": "A linha da poupança (não rende) destacada",
+   "fala": "A poupança, no mesmo prazo, não rende nada.",
+   "rotulos": [
+    [
+     "rotulo-poupanca.png",
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "id": "trinta",
+   "origem": "bruta",
+   "de": "06-trinta",
+   "ate": "07-fecho",
+   "duracao": 3.0,
+   "tela": "Prazo 30, Simular: sem a linha do IOF",
+   "fala": "Com trinta dias, o í ó éfe zera.",
+   "rotulos": [
+    [
+     "rotulo-trinta.png",
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "id": "fecho",
+   "origem": "bruta",
+   "de": "07-fecho",
+   "ate": "fim",
+   "duracao": 2.8,
+   "tela": "O líquido de 30 dias destacado",
+   "fala": "Simule o seu prazo antes de resgatar."
+  },
+  {
+   "id": "cta",
+   "origem": "cta",
+   "duracao": 4.7,
+   "tela": "Cartão final: logo, calculosonline.com.br, /calculadora/tesouro-reserva e \"Link fixado nos comentários\"",
+   "fala": "Cálculos Online ponto com ponto bê-érre. Link fixado nos comentários."
+  }
+ ]
+}
