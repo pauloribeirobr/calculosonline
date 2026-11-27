@@ -144,6 +144,15 @@ trocar valores e data, e regerar pelo motor os exemplos dos MDX de CDB, poupanç
 e Tesouro (os e2e de `investimentos-referencias.spec.ts` comparam texto e
 calculadora). Fazer depois de cada reunião do Copom em que a Selic mudar.
 
+**`dataAtualizacao` sempre atualizada** (Paulo, 27/11/2026: *"sempre
+atualize"*). Toda entrega que muda uma calculadora (formulário, texto, motor,
+relacionados, FAQ) leva, no mesmo trabalho, `dataAtualizacao` daquela
+calculadora em `apps/web/src/lib/calculators.ts` para a data da entrega. É o
+`<lastmod>` do sitemap (sinal de recrawl para o Google, que o IndexNow não
+atende) e o selo de atualização na página. Origem: a F84 subiu com o lastmod de
+26/10 nas três páginas que mudou, e precisou de um segundo deploy só para isso.
+Post do blog: o mesmo, no `dataAtualizacao` do `blogRegistry`.
+
 **IndexNow.** `pnpm --filter web indexnow [slugs...]` (script
 `apps/web/scripts/indexnow.mjs`, segredo em `apps/web/.env.local`). Nada dispara
 sozinho, e só se roda **depois do deploy** (conferir em produção antes), senão

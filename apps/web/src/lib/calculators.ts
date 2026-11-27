@@ -564,7 +564,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'investimentos',
     icone: 'cdb',
     fonteJuridica: 'Lei 11.033/2004 | Decreto 6.306/2007',
-    dataAtualizacao: '2026-10-26',
+    dataAtualizacao: '2026-11-27',
     palavrasChave: ['calcular CDB', 'rendimento CDB', 'CDB CDI', 'CDB prefixado'],
     sinonimos: [
       'simulador de CDB',
@@ -589,7 +589,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'investimentos',
     icone: 'poupanca',
     fonteJuridica: 'Lei 8.177/1991 | Lei 12.703/2012',
-    dataAtualizacao: '2026-10-26',
+    dataAtualizacao: '2026-11-27',
     palavrasChave: ['calcular poupança', 'rendimento poupança 2026', 'quanto rende poupança'],
     sinonimos: [
       'simulador de poupança',
@@ -609,7 +609,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'investimentos',
     icone: 'tesouroDireto',
     fonteJuridica: 'Lei 11.033/2004 | Resolução B3 — taxa de custódia',
-    dataAtualizacao: '2026-10-26',
+    dataAtualizacao: '2026-11-27',
     palavrasChave: ['tesouro direto', 'tesouro selic', 'tesouro prefixado', 'tesouro IPCA'],
     sinonimos: [
       'simulador de tesouro direto',
@@ -637,7 +637,7 @@ export const calculatorRegistry: CalculadoraRegistro[] = [
     categoria: 'investimentos',
     icone: 'tesouroReserva',
     fonteJuridica: 'Lei 11.033/2004 | Decreto 6.306/2007 | B3 — taxa de custódia',
-    dataAtualizacao: '2026-11-25',
+    dataAtualizacao: '2026-11-27',
     palavrasChave: ['tesouro reserva', 'quanto rende tesouro reserva', 'reserva de emergência'],
     sinonimos: [
       'simulador tesouro reserva',
