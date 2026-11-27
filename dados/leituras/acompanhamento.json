@@ -9,18 +9,18 @@
       "status": "no ar; 0 referência solta nas 47 URLs (27/11). Falta o Paulo repetir o teste de resultados aprimorados do /blog"
     },
     {
-      "entrega": "Velocidade: sem o <Suspense> que trocava um bloco cinza pelo texto (v0.46.0, falta subir)",
+      "entrega": "Velocidade: sem o <Suspense> (v0.46.0, no ar) e Inter pelo next/font (v0.46.1, falta subir)",
       "medir": "PageSpeed celular (3 rodadas) do post do 13º proporcional, de uma calculadora e do hub: nota, LCP, CLS",
-      "base": "post do 13º proporcional: notas 98/81/88/81/75, LCP até 4,5 s, CLS até 0,20 (27/11)",
+      "base": "post do 13º proporcional antes: notas 98/81/88/81/75, LCP até 4,5 s, CLS até 0,20. Com a v0.46.0: 86/92/86, LCP 0,9 s, CLS 0,273 (fonte)",
       "leitura": "2026-12-11",
-      "status": "aguardando deploy"
+      "status": "v0.46.0 resolveu o LCP; falta subir a v0.46.1 (fonte) e medir de novo"
     },
     {
-      "entrega": "/feriados responde \"amanhã é feriado?\" (v0.46.0, falta subir)",
+      "entrega": "/feriados responde \"amanhã é feriado?\" (v0.46.0, no ar em 27/11)",
       "medir": "Cliques e impressões do /feriados no BWT (seção 5 do Raio-X), sobretudo na semana do próximo feriado",
       "base": "semana de 20/11: 1.036 impressões, 1 clique, posição 8",
       "leitura": "2026-12-30",
-      "status": "aguardando deploy; o próximo feriado nacional é 25/12"
+      "status": "no ar e conferido; IndexNow enviado em 27/11; o próximo feriado nacional é 25/12"
     },
     {
       "entrega": "Indexação das 5 URLs fora do índice (pedido manual no GSC)",

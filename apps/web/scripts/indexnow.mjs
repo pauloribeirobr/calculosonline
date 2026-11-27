@@ -12,6 +12,7 @@
  * Uso:
  *   pnpm --filter web indexnow              # todas as URLs do sitemap
  *   pnpm --filter web indexnow ferias inss  # só essas calculadoras
+ *   pnpm --filter web indexnow /feriados /blog/13-salario-proporcional-como-calcular  # caminho exato (27/11/2026)
  *
  * Sem argumentos, envia a home, as institucionais e as 20 calculadoras.
  */
@@ -46,7 +47,10 @@ const xml = await fetch(`${SITE}/sitemap.xml`).then((r) => {
 
 let urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])
 if (slugs.length > 0) {
-  urls = urls.filter((u) => slugs.some((s) => u.endsWith(`/calculadora/${s}`)))
+  // Slug → calculadora; começando com "/" → caminho exato (feriados, blog, hub…).
+  urls = urls.filter((u) =>
+    slugs.some((s) => (s.startsWith('/') ? u === `${SITE}${s}` : u.endsWith(`/calculadora/${s}`))),
+  )
   if (urls.length === 0) {
     console.error(`Nenhuma URL casou com: ${slugs.join(', ')}`)
     process.exit(1)

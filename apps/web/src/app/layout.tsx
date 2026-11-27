@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Suspense } from 'react'
-import '@fontsource-variable/inter'
+import localFont from 'next/font/local'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { Header } from '@/components/common/Header'
 import { Footer } from '@/components/common/Footer'
@@ -11,6 +11,21 @@ import { RouteTracker } from '@/components/analytics/RouteTracker'
 import { WebsiteJsonLd, OrganizationJsonLd } from '@/components/seo/JsonLd'
 import { siteConfig } from '@/lib/seo'
 import './globals.css'
+
+// Inter pelo `next/font/local` (27/11/2026), com o mesmo arquivo do `@fontsource-variable/inter`.
+// Pelo CSS comum, o texto aparecia primeiro numa fonte reserva de medidas diferentes e, quando a
+// Inter chegava, as linhas quebravam em outro lugar: o artigo inteiro do post do 13º
+// proporcional se mexia (CLS de 0,27 no PageSpeed, causa "Web font loaded"). O `next/font`
+// pré-carrega o arquivo e gera uma reserva com as medidas da Inter (size-adjust), então a troca
+// não reorganiza o texto.
+const inter = localFont({
+  src: '../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2',
+  weight: '100 900',
+  style: 'normal',
+  display: 'swap',
+  variable: '--font-inter',
+  adjustFontFallback: 'Arial',
+})
 
 export const metadata: Metadata = {
   title: {
@@ -76,7 +91,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
+    <html lang="pt-BR" className={inter.variable} suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://www.clarity.ms" />
       </head>
@@ -92,9 +107,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Suspense fallback={null}>
           <RouteTracker />
         </Suspense>
-        {process.env.NEXT_PUBLIC_GA_ID && (
-          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
-        )}
+        {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
         <MicrosoftClarity />
         <ErrorLogger />
       </body>

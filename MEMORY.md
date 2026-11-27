@@ -20,8 +20,9 @@ que não cabe em nenhum dos outros três.
   entre elas a `ferias-e-decimo-terceiro` (maior página do site no Bing, 0
   impressões no Google em 90 dias) e o post do 13º proporcional. Achado pela
   inspeção de URL da API. **Pendente do Paulo:** pedir indexação das 5 no GSC e
-  subir a v0.46.0 (texto que não pula: CLS até 0,20 por um `<Suspense>` inútil;
-  `/feriados` responde "amanhã é feriado?"). A v0.45.2 (JSON-LD) já está no ar.
+  subir a v0.46.1 (Inter pelo `next/font`: o CLS de 0,27 que sobrou no post era a
+  troca de fonte). v0.45.2 (JSON-LD) e v0.46.0 (sem o `<Suspense>` que pulava;
+  `/feriados` com "amanhã é feriado?", IndexNow enviado) no ar em 27/11.
   Proposta de links internos aguardando ok. Bing pela API: 87 cliques/semana
   (Google: 2). Google:
   posição média 28 → 17,6, 0 de 29 palavras no top 10. Direct do exterior (35
