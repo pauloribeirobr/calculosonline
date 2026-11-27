@@ -33,6 +33,10 @@ const destaques: FooterLink[] = [
   { name: 'Rescisão Trabalhista', href: '/calculadora/rescisao-trabalhista' },
   { name: '13º Salário', href: '/calculadora/decimo-terceiro' },
   { name: 'Salário Líquido', href: '/calculadora/salario-liquido' },
+  // 27/11/2026 (Raio-X): as duas estavam em "Detectada, mas não indexada" no Google; a de férias + 13º
+  // é a maior página do site no Bing. Com estas, 10 destaques: o teto do link-interno.spec.ts.
+  { name: 'Férias + 13º', href: '/calculadora/ferias-e-decimo-terceiro' },
+  { name: 'Tesouro Reserva', href: '/calculadora/tesouro-reserva' },
 ]
 
 const footerSections: FooterSection[] = [
