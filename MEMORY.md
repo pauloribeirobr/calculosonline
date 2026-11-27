@@ -16,11 +16,20 @@ que não cabe em nenhum dos outros três.
 
 ## Ao voltar (resumo rápido)
 
+- **27/11/2026 — Leitura semanal (20–26/11): 5 URLs fora do índice do Google**,
+  entre elas a `ferias-e-decimo-terceiro` (maior página do site no Bing, 0
+  impressões no Google em 90 dias) e o post do 13º proporcional. Achado pela
+  inspeção de URL da API. **Pendente do Paulo:** pedir indexação das 5 no GSC e
+  subir a v0.45.2 (JSON-LD sem referência solta). Propostas aguardando ok: links
+  internos, velocidade do post do 13º proporcional, `/feriados`. Bing pela API: 87
+  cliques/semana (Google: 2). Google:
+  posição média 28 → 17,6, 0 de 29 palavras no top 10. Direct do exterior (35
+  de 41) é robô. Detalhe no Diário de 27/11 e em `docs/semanas/2026-11-27.md`.
 - **27/11/2026 — F84 (v0.45.0) em produção.** Deploy do Paulo em 27/11,
   conferido em produção (formulários, resultados e links antigos) e IndexNow
   (`cdb`, `tesouro-direto`, `poupanca`, `tesouro-reserva`) enviado no mesmo dia.
-  **v0.45.1 (falta subir):** `dataAtualizacao` das quatro em 27/11 (lastmod do
-  sitemap); depois do deploy, conferir o sitemap. CDB, Tesouro Direto e poupança pedem a taxa em % (um
+  **v0.45.1 no ar:** `dataAtualizacao` das quatro em 27/11; sitemap conferido
+  em produção (lastmod 2026-11-27 nas quatro, selo da página idem). CDB, Tesouro Direto e poupança pedem a taxa em % (um
   campo por indexador) e mostram CDI, Selic e IPCA do Banco Central
   pré-preenchidos e editáveis, com a data. Links antigos (`taxaAnual`/
   `selicAnual` decimais) abrem convertidos. Motor intacto; conferido no
@@ -1357,6 +1366,45 @@ reestruturação de 25/07, prioridade mais baixa que grupos 1-2):
   trabalho · simulador de aposentadoria simples
 
 ## Diário
+
+### 2026-11-27 — Leitura semanal de 20 a 26/11: 5 URLs fora do índice do Google, e são as que vão bem no Bing
+
+Paulo pediu a leitura antes da data (02/12): GSC, GA4, Clarity, BWT, posição no Google, concorrentes e sugestões, e
+pediu outros pontos para o diagnóstico e um nome para ele. Boletim em `docs/semanas/2026-11-27.md` (`node dados/semana.mjs
+--serp`, 29 créditos do Serper). BWT e mapa de calor do Clarity não entraram (manuais; export pedido ao Paulo).
+
+**Números brutos.** GA4 20–26/11: 156 sessões (126 na anterior; média 4 sem. 95), 143 usuários, 101 engajadas, 66 com
+cálculo (49), 171 cálculos (98), 0 compartilhamentos, 0 `result_copied`, 1 erro de formulário. Canais: Organic Search 102
+(104), Direct 41 (15), AI Assistant 7, Organic Video 3 (youtube, campanha `v1-tesouro-reserva`, 0 engajadas), Organic Social
+2. Origens: bing 80, direct 41, br.search.yahoo 16, chatgpt 7, google 5, youtube 3. **Direct: 35 de 41 do exterior** (Índia,
+Egito, Paquistão, EUA, Emirados etc., Chrome de computador, 9 engajadas) = robô. Entradas: `ferias-e-decimo-terceiro` 50,
+`/` 21, post do 13º proporcional 16, hub 10. GSC 18–24/11: 2 cliques (`datas` 1, `financiamento` 1), 1.726 impressões
+(1.200), posição 17,6 (28,2). Por página: datas 556 @ 8,7; rescisão 352 @ 41,7 (67,2); porcentagem 255 @ 9,8; margem 125 @
+7,3; tesouro-direto 112 @ 19,2 (31,4); 13º 71 @ 21,8 (46,6); CDB 22 @ 12,5 (46); hora extra 21 @ 10,3 (32,8); FGTS 19 @ 12,1
+(32,1). Perto da página 1 (28 dias): "simulador tesouro direto gratis/grátis" 40 + 32 impressões @ ~11, 0 cliques. Serper
+27/11: site fora do top 10 nas 29 palavras (igual a 17/11); `tesourodireto.com.br` em 23 listas (14 no top 3), `mobills` 12
+(8), `serasa` 7, `investidor10` 7, `controlid` 6, `calculoexato` 6, BCB 6. Clarity: 134 sessões (7 de 7 dias), clique morto
+20,1% (27,1%), rolagem 28,5%, volta rápida 5,2%; `ferias-e-decimo-terceiro` PC 34,9% de clique morto (43 sessões).
+
+**Achado: inspeção de URL pela API (primeira vez, `urlInspection.index.inspect` com o escopo `webmasters.readonly` que o
+token já tem).** 47 URLs do sitemap: 42 "Enviada e indexada", 4 "Detectada, mas não indexada no momento" (`/blog`,
+`/calculadora/ferias-e-decimo-terceiro`, `/blog/acerto-trabalhista-o-que-entra-e-quando-recebo`,
+`/blog/13-salario-proporcional-como-calcular`) e 1 "O Google não reconhece o URL" (`/calculadora/tesouro-reserva`, de
+25/11). A `ferias-e-decimo-terceiro` (F69, 22/09) tem **0 impressões no Google em 90 dias** sendo a maior página do site no
+Bing. Sinal interno: a home não linka nem ela nem o Tesouro Reserva; no `relacionadas`, 2 e 1 links (o 13º recebe 8).
+
+**Propostas** (detalhe na seção 10 do Raio-X): (1) Paulo pede indexação das 5 URLs no GSC, leitura 04/12; (2) feature nova
+de links internos para essas páginas (home, rodapé, `relacionadas`, posts), respeitando a F43, leitura 11/12; (3) não mexer
+em título de Tesouro Direto e CDB até 11/12, para não misturar com a reavaliação do Google e a F84. **No mesmo dia o boletim virou o "Raio-X semanal"** (nome escolhido pelo Paulo), com robôs separados (121 sessões de
+gente, +9% sobre 111), IA e vídeo (V1: normal 12 visualizações, Short 167; V2 no 1º dia: 8 e 34), indexação, Bing
+(último export de 26/10), velocidade mensal (falta `PAGESPEED_CHAVE`), acompanhamento e calendário. Ritual no `AGENTS.md`.
+**Depois, no mesmo dia:** Paulo criou `BWT_CHAVE` e `PAGESPEED_CHAVE`; o Bing passou a vir da API. BWT 19–25/11: **87 cliques**,
+3.569 impressões (80 e 4.132 antes), CTR 2,4%; `ferias-e-decimo-terceiro` 4º no Bing (38 cliques / 599 impr.), post do 13º
+proporcional 5º (20 / 563); `/feriados` 1.036 impressões e 1 clique ("amanhã é feriado", feriado de 20/11); Bingbot 4xx 5 → 16.
+PageSpeed celular: `ferias-e-decimo-terceiro` 98, home 95, FGTS 96, hub 93, **post do 13º proporcional 75 (LCP 4,4 s, CLS 0,20)**.
+Print do teste de resultados aprimorados do `/blog`: "itemListElement não encontrado" no `BreadcrumbList` `#breadcrumb` →
+JSON-LD corrigido (v0.45.2, falta subir; detalhe no CHANGELOG). Propostas 4 (velocidade do post) e 5 (`/feriados` responder
+"amanhã é feriado?") na seção 10 do Raio-X.
 
 ### 2026-11-25 — F91: canal "Calculos Online" no molde do Recibo Fácil, e a pauta saída dos concorrentes
 

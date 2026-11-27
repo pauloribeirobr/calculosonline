@@ -174,6 +174,28 @@ crédito dividido com o Recibo Fácil: rodar `dados/serp.mjs` ou
 manuais:** BWT (é de onde vem o tráfego, ~60% das sessões em nov/2026), Semrush
 (volume e KD) e o mapa de calor do Clarity.
 
+**Raio-X semanal** (nome e escopo do Paulo, 27/11/2026: *"Inclua os outros itens no
+Raio-X semanal e execute"*). Pedido como "faça o Raio-X" (ou "avaliação semanal"):
+1. `node dados/semana.mjs --serp` → `docs/semanas/<dia>.md`, com 10 seções: (1) site
+   no GA4, com robôs separados (Direct Brasil × exterior, "sessões de gente"); (2) IA
+   e vídeo (sessões de assistentes; visualizações e sessões de cada vídeo de
+   `dados/leituras/videos.json`); (3) Search Console; (4) indexação no Google
+   (inspeção de URL de todo o sitemap, comparando com a rodada anterior); (5) Bing pela API
+   do BWT (tráfego, páginas, consultas, rastreio; só o Desempenho de IA é export manual); (6) concorrência e
+   posição no Google (Serper); (7) saúde, Clarity e velocidade (PageSpeed, 1×/mês,
+   precisa de `PAGESPEED_CHAVE`); (8) acompanhamento das entregas
+   (`dados/leituras/acompanhamento.json`); (9) calendário das próximas 6 semanas
+   (`dados/leituras/calendario.json`); (10) leitura e propostas, escrita na sessão.
+2. Ler junto o que for manual: Desempenho de IA do BWT e mapa de calor do Clarity em
+   `gsc/`. Faltando, pedir ao Paulo com o passo a passo (está no próprio boletim).
+3. Escrever a seção 10: o que os números dizem, **até 3 mudanças** (hipótese,
+   métrica, linha de base, data de leitura), a manutenção da vez e 1 a 3
+   possibilidades novas. Mudança aprovada entra em `acompanhamento.json`.
+4. Registrar no Diário do `MEMORY.md` **com os números brutos** e uma linha no
+   "Ao voltar". Descontar as gravações e testes em produção listados no `MEMORY.md`.
+O prompt para replicar o Raio-X nos outros projetos está em
+[`docs/raio-x-semanal-prompt.md`](docs/raio-x-semanal-prompt.md).
+
 **Ciclo "avalie / leia a pasta gsc".** Desde o F89, começa pelo boletim da API
 (acima), e a pasta `gsc/` fica para o que a API não cobre. Paulo põe exports de
 BWT, Semrush e mapas de calor do Clarity (e, antes do F89, de GSC e GA4) em `gsc/`

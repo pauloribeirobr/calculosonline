@@ -1,0 +1,68 @@
+{
+  "nota": "Raio-X semanal, seção 'Acompanhamento das entregas'. Cada entrega com o que medir, a linha de base e a data da leitura. Ao ler, mudar 'status' para o resultado (ex.: 'passou: 31,7%') e manter a linha até a próxima rodada; depois, apagar. Datas em AAAA-MM-DD.",
+  "itens": [
+    {
+      "entrega": "JSON-LD sem referência solta (v0.45.2, falta subir)",
+      "medir": "Teste de resultados aprimorados do /blog e de uma calculadora; GSC → Melhorias (navegação estrutural) sem erro",
+      "base": "/blog: 1 erro crítico (itemListElement); 23 calculadoras com #webpage solto (27/11)",
+      "leitura": "2026-12-04",
+      "status": "aguardando deploy"
+    },
+    {
+      "entrega": "Velocidade do post do 13º proporcional",
+      "medir": "PageSpeed celular: nota, LCP e CLS de /blog/13-salario-proporcional-como-calcular",
+      "base": "nota 75, LCP 4,4 s, CLS 0,20 (27/11); as outras 4 maiores páginas entre 93 e 98",
+      "leitura": "2026-12-11",
+      "status": "a investigar (proposta de 27/11)"
+    },
+    {
+      "entrega": "Indexação das 5 URLs fora do índice (pedido manual no GSC)",
+      "medir": "Estado na inspeção de URL e impressões no GSC de /calculadora/ferias-e-decimo-terceiro, /calculadora/tesouro-reserva, /blog, /blog/13-salario-proporcional-como-calcular, /blog/acerto-trabalhista-o-que-entra-e-quando-recebo",
+      "base": "5 fora do índice; 0 impressões (27/11)",
+      "leitura": "2026-12-04",
+      "status": "aguardando o Paulo pedir a indexação"
+    },
+    {
+      "entrega": "Links internos para as páginas fora do índice (proposta de 27/11)",
+      "medir": "Estado na inspeção; sessões da ferias-e-decimo-terceiro no Bing não podem cair",
+      "base": "home sem link para as duas; relacionadas: 2 (férias + 13º) e 1 (Tesouro Reserva); 50 sessões/semana",
+      "leitura": "2026-12-11",
+      "status": "aguardando ok do Paulo"
+    },
+    {
+      "entrega": "F84 — taxas em porcentagem (CDB, Tesouro Direto, poupança), no ar em 27/11",
+      "medir": "Posição e impressões no GSC; cliques no BWT; sessões com cálculo das três no GA4",
+      "base": "GSC 18–24/11: CDB 22 @ 12,5; Tesouro Direto 112 @ 19,2; poupança 18 @ 22. GA4 20–26/11: CDB 5 na página / 2 com cálculo",
+      "leitura": "2026-12-11",
+      "status": "não mexer em título de CDB e Tesouro Direto até a leitura"
+    },
+    {
+      "entrega": "F70 — clique morto (o valor clicado copia)",
+      "medir": "Clique morto da ferias-e-decimo-terceiro no PC (Clarity) e result_copied (GA4)",
+      "base": "62,5% em 17/11 → 31,7% em 25/11 → 34,9% em 27/11",
+      "leitura": "2026-12-20",
+      "status": "passou; o resto é <select> nativo, decidir depois de 20/12"
+    },
+    {
+      "entrega": "F83 — simulador do Tesouro Reserva, no ar em 25/11",
+      "medir": "Impressões no GSC e sessões no GA4 de /calculadora/tesouro-reserva",
+      "base": "0 impressões (não reconhecida pelo Google em 27/11); 2 sessões em 20–26/11",
+      "leitura": "2026-12-23",
+      "status": "esperando o Google indexar"
+    },
+    {
+      "entrega": "Canal: V1 (Tesouro Reserva), publicada em 25/11",
+      "medir": "Visualizações e sessões da campanha v1-tesouro-reserva",
+      "base": "27/11: normal 12 visualizações, Short 167 (o print de 159 e 7 VPH era o Short); 3 sessões em 20–26/11",
+      "leitura": "2026-12-23",
+      "status": "em andamento"
+    },
+    {
+      "entrega": "Canal: V2 (2ª parcela do 13º), publicada em 27/11",
+      "medir": "Visualizações e sessões da campanha v2-segunda-parcela-13",
+      "base": "0 (publicada em 27/11)",
+      "leitura": "2026-12-25",
+      "status": "em andamento"
+    }
+  ]
+}

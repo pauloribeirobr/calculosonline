@@ -1,0 +1,10 @@
+{
+  "nota": "Raio-X semanal, seção 'Calendário'. Datas que mexem no tráfego ou pedem trabalho no site, com a fonte. O boletim mostra as das próximas 6 semanas. 'aprox: true' = data ainda não publicada pela fonte; conferir antes de agir.",
+  "eventos": [
+    { "data": "2026-11-30", "o_que": "Prazo da 1ª parcela do 13º", "efeito": "Pico de 13º e de férias + 13º; depois cai a 1ª parcela e sobe a dúvida da 2ª", "fonte": "Lei 4.749/1965, art. 2º" },
+    { "data": "2026-12-18", "o_que": "2ª parcela do 13º (20/12 cai no domingo e antecipa para sexta, 18/12)", "efeito": "Última semana de pico do 13º; V2 do canal no auge", "fonte": "Lei 4.749/1965, art. 1º" },
+    { "data": "2026-12-20", "o_que": "Decisão sobre os <select> nativos (clique morto)", "efeito": "Combinado no boletim de 25/11: não mexer antes", "fonte": "MEMORY.md, Diário de 25/11" },
+    { "data": "2027-01-02", "o_que": "Tabelas de 2027 (salário mínimo, INSS, IRRF)", "efeito": "Todas as calculadoras trabalhistas e os exemplos dos MDX mudam de número; rodar a disciplina do F64", "fonte": "Portaria interministerial do INSS e decreto do salário mínimo, publicados em janeiro", "aprox": true },
+    { "data": "2027-03-01", "o_que": "Abertura da declaração do IRPF 2027", "efeito": "Pico da calculadora de IRPF (F81); V10 do canal", "fonte": "Instrução normativa da Receita, publicada em fevereiro", "aprox": true }
+  ]
+}

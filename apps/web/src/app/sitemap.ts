@@ -35,7 +35,10 @@ import { siteConfig } from '@/lib/seo'
 // 2026-10-04: F72 (feriados). Acrescenta `/feriados` ao rodapé de todas as
 // páginas e muda os dias úteis da calculadora de datas, que passam a descontar
 // os feriados nacionais.
-const seoRefreshDate = new Date('2026-10-04')
+// 2026-11-27: JSON-LD sem referência solta — `WebPage` nas 23 calculadoras (o HowTo e o
+// Dataset apontavam para um `#webpage` que não existia) e uma trilha só por página, com `@id`
+// (o teste de resultados aprimorados do `/blog` acusava "itemListElement não encontrado").
+const seoRefreshDate = new Date('2026-11-27')
 const staticLastModified = new Date('2026-05-11')
 
 export default function sitemap(): MetadataRoute.Sitemap {

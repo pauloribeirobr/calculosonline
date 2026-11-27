@@ -39,8 +39,11 @@ async function tokenDeAcesso() {
   return cache.valor
 }
 
-/** Chamada JSON a uma API do Google, com 3 novas tentativas em 429/5xx. */
-export async function google(url, { method = 'POST', body } = {}) {
+/**
+ * Chamada JSON a uma API do Google, com 3 novas tentativas em 429/5xx. Erro encerra o processo; com `lancar: true`,
+ * vira exceção (Raio-X: uma URL que a inspeção recusa não pode derrubar o boletim inteiro).
+ */
+export async function google(url, { method = 'POST', body, lancar = false } = {}) {
   for (let tentativa = 0; ; tentativa++) {
     const r = await fetch(url, {
       method,
@@ -56,6 +59,7 @@ export async function google(url, { method = 'POST', body } = {}) {
     if (!r.ok) {
       const msg = j.error?.message || texto
       const dica = r.status === 403 ? ' (a API está ligada no projeto do Google Cloud? a sua conta tem acesso à propriedade?)' : ''
+      if (lancar) throw new Error(`${r.status}: ${msg}`)
       falhar(`${r.status} em ${url}: ${msg}${dica}`)
     }
     return j

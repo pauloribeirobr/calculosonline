@@ -17,7 +17,10 @@ export const metadata: Metadata = {
 export default function MeusCalculosPage() {
   return (
     <main className="mx-auto max-w-3xl space-y-6 px-4 py-12">
-      <Breadcrumbs items={[{ label: 'Início', href: '/' }, { label: 'Meus Cálculos' }]} />
+      <Breadcrumbs
+        path="/meus-calculos"
+        items={[{ label: 'Início', href: '/' }, { label: 'Meus Cálculos' }]}
+      />
       <div>
         <h1 className="text-2xl font-bold text-gray-900 md:text-3xl">Meus Cálculos</h1>
         <p className="mt-2 text-sm text-gray-600">{description}</p>

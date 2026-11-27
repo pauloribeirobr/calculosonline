@@ -100,7 +100,7 @@ export default async function CategoriaPage({
           description: calc.descricaoCurta,
         }))}
       />
-      <Breadcrumbs items={[{ label: 'Início', href: '/' }, { label: cat.label }]} />
+      <Breadcrumbs jsonLd={false} items={[{ label: 'Início', href: '/' }, { label: cat.label }]} />
 
       <header>
         <div className="mb-2 flex items-center gap-3">

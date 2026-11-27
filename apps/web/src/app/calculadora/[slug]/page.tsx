@@ -1,10 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import {
-  calculatorRegistry,
-  findCalculator,
-  getRelacionadas,
-} from '@/lib/calculators'
+import { calculatorRegistry, findCalculator, getRelacionadas } from '@/lib/calculators'
 import { buildCalculatorSchemaData } from '@/lib/schema'
 import { buildCalculatorTitle, buildMetadata } from '@/lib/seo'
 import { CalculadoraPageClient } from '@/components/calculadoras/CalculadoraPageClient'
@@ -12,11 +8,12 @@ import { ContentLoader } from '@/components/ContentLoader'
 import { GuiasRelacionados } from '@/components/blog/GuiasRelacionados'
 import { HubTrabalhistaCta } from '@/components/trabalhista/HubTrabalhistaCta'
 import {
-  CalculatorJsonLd,
   BreadcrumbJsonLd,
+  CalculatorJsonLd,
   DatasetJsonLd,
-  HowToJsonLd,
   FAQJsonLd,
+  HowToJsonLd,
+  WebPageJsonLd,
 } from '@/components/seo/JsonLd'
 
 // SSG — gera todas as páginas em build time
@@ -46,11 +43,7 @@ export async function generateMetadata({
   })
 }
 
-export default async function CalculadoraPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
+export default async function CalculadoraPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const calc = findCalculator(slug)
   if (!calc) notFound()
@@ -62,6 +55,9 @@ export default async function CalculadoraPage({
   return (
     <>
       <CalculatorJsonLd path={path} name={calc.tituloLongo} description={calc.descricao} />
+      {/* O HowTo e o Dataset apontam para `#webpage` (mainEntityOfPage); sem este bloco
+          a referência ficava solta nas 23 calculadoras (27/11/2026). */}
+      <WebPageJsonLd title={buildCalculatorTitle(calc)} description={calc.descricao} path={path} />
       <BreadcrumbJsonLd items={breadcrumbItems} />
       <HowToJsonLd
         name={`Como usar a ${calc.tituloLongo}`}

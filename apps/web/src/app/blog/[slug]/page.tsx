@@ -92,7 +92,12 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       />
 
       <Breadcrumbs
-        items={[{ label: 'Início', href: '/' }, { label: 'Blog', href: '/blog' }, { label: post.titulo }]}
+        jsonLd={false}
+        items={[
+          { label: 'Início', href: '/' },
+          { label: 'Blog', href: '/blog' },
+          { label: post.titulo },
+        ]}
       />
 
       <header>
@@ -130,14 +135,14 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       {destino && (
         <Link
           href={destino.href}
-          className="flex items-center gap-4 rounded-xl border border-brand-200 bg-brand-50 p-4 transition-colors hover:bg-brand-100 md:p-5"
+          className="border-brand-200 bg-brand-50 hover:bg-brand-100 flex items-center gap-4 rounded-xl border p-4 transition-colors md:p-5"
         >
           <CalculatorIcon icon={destino.icone} categoria={destino.categoria} size="lg" />
           <span className="min-w-0 flex-1">
             <span className="block font-semibold text-gray-900">{destino.titulo}</span>
             <span className="mt-0.5 block text-sm text-gray-600">{destino.descricaoCurta}</span>
           </span>
-          <ArrowRightIcon className="h-5 w-5 shrink-0 text-brand-600" aria-hidden />
+          <ArrowRightIcon className="text-brand-600 h-5 w-5 shrink-0" aria-hidden />
         </Link>
       )}
 
@@ -156,7 +161,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               <li key={calc.slug}>
                 <Link
                   href={`/calculadora/${calc.slug}`}
-                  className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-brand-300 hover:shadow-sm"
+                  className="hover:border-brand-300 flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:shadow-sm"
                 >
                   <CalculatorIcon icon={calc.icone} categoria={calc.categoria} size="md" />
                   <span className="min-w-0">

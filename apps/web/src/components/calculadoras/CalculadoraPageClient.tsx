@@ -118,6 +118,7 @@ export function CalculadoraPageClient({ config, relacionadas }: Props) {
         dataAtualizacao={config.dataAtualizacao}
         breadcrumb={
           <Breadcrumbs
+            jsonLd={false}
             items={[
               { label: 'Início', href: '/' },
               {
